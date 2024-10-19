@@ -1,0 +1,133 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { FaFilter, FaChevronDown } from "react-icons/fa";
+import { MdMap } from "react-icons/md";
+import { BiSolidBuildingHouse } from "react-icons/bi";
+
+type FilterMapControlsProps = {
+  filterOpen: boolean;
+  setFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  showMap: boolean;
+  setShowMap: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function FilterMapControls({
+  filterOpen,
+  setFilterOpen,
+  showMap,
+  setShowMap,
+}: FilterMapControlsProps) {
+  const [showMapButton, setShowMapButton] = useState(false);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      let scrollThreshold = 550;
+
+      if (window.matchMedia("(min-width: 640px)").matches) {
+        scrollThreshold = 400;
+      }
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        scrollThreshold = 300;
+      }
+
+      if (showMap) {
+        setShowMapButton(true);
+        setFilterOpen(false);
+      } else {
+        if (window.scrollY > scrollThreshold) {
+          setShowMapButton(true);
+        } else {
+          setShowMapButton(false);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [showMap]);
+
+  const handleToggleMap = () => {
+    setShowMap((prev) => !prev);
+    setIsFilterVisible(false);
+  };
+
+  const toggleFilterVisibility = () => {
+    setIsFilterVisible((prev) => !prev);
+    setFilterOpen((prev) => !prev);
+  };
+
+  return (
+    <>
+      <div
+        className={`flex items-center px-4 sm:px-20 gap-4 ${
+          showMap ? "justify-end my-4 hidden" : "justify-between mt-4"
+        }`}
+      >
+        <button
+          onClick={toggleFilterVisibility}
+          className={`flex items-center space-x-2 px-6 py-2 bg-transparent border border-borderColor dark:border-darkBorderColor rounded-full hover:bg-backgroundLight dark:hover:bg-darkBackground transition-colors whitespace-nowrap ${
+            showMap ? "hidden" : "block"
+          }`}
+        >
+          <span className="text-textPrimary dark:text-darkTextPrimary">
+            Filtro
+          </span>
+          <FaFilter className="text-textPrimary dark:text-darkTextPrimary" />
+          <FaChevronDown
+            className={`${
+              isFilterVisible ? "rotate-180" : ""
+            } transition-transform duration-300 text-textPrimary dark:text-darkTextPrimary`}
+          />
+        </button>
+
+        <button
+          className="flex items-center space-x-2 px-6 py-2 rounded-full bg-transparent border border-borderColor dark:border-darkBorderColor hover:bg-backgroundLight dark:hover:bg-darkBackground transition-colors whitespace-nowrap"
+          onClick={handleToggleMap}
+        >
+          <span className="text-textPrimary dark:text-darkTextPrimary">
+            {showMap ? "Propiedades" : "Mapa"}
+          </span>
+          {showMap ? (
+            <BiSolidBuildingHouse
+              size={18}
+              className="text-textPrimary dark:text-darkTextPrimary"
+            />
+          ) : (
+            <MdMap
+              size={18}
+              className="text-textPrimary dark:text-darkTextPrimary"
+            />
+          )}
+        </button>
+      </div>
+
+      {showMapButton && (
+        <button
+          className={`fixed px-4 right-6 z-50 py-3 mt-24 text-sm rounded-full bg-background dark:bg-darkBackgroundLight shadow-lg hover:bg-backgroundLight dark:hover:bg-darkBackground border border-borderColor dark:border-darkBorderColor transition-colors flex items-center space-x-2 ${
+            showMap ? "bottom-4 lg:top-0 lg:bottom-auto" : "top-6"
+          }`}
+          onClick={handleToggleMap}
+        >
+          <span className="text-textPrimary dark:text-darkTextPrimary">
+            {showMap ? "Propiedades" : "Mapa"}
+          </span>
+          {showMap ? (
+            <BiSolidBuildingHouse
+              size={18}
+              className="text-textPrimary dark:text-darkTextPrimary"
+            />
+          ) : (
+            <MdMap
+              size={18}
+              className="text-textPrimary dark:text-darkTextPrimary"
+            />
+          )}
+        </button>
+      )}
+    </>
+  );
+}

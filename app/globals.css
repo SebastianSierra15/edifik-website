@@ -3,25 +3,62 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Modo claro */
+  --primary: #D4AF37; /* Dorado metálico premium */
+  --primary-light: #E1BF64;
+  --primary-dark: #B79522;
+
+  --secondary: #0D0D0D; /* Negro profundo */
+  --secondary-light: #1C1C1C;
+  --secondary-dark: #000000;
+
+  --background: #F5F5F5; /* Blanco perla */
+  --background-light: #FAFAFA;
+  --background-dark: #E5E5E5;
+
+  --text-primary: #333333; /* Gris carbón */
+  --text-secondary: #4D4D4D;
+  --text-placeholder: #9E9E9E;
+
+  --border-color: #E1BF64;
+  --border-color-hover: #D4AF37;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Modo oscuro */
+    --background: #1A1A1A;
+    --background-light: #2E2E2E;
+    --background-dark: #121212;
+
+    --text-primary: #E5E5E5;
+    --text-secondary: #BFBFBF;
+    --text-placeholder: #777777;
+
+    --header-background: #0D0D0D;
+    
+    --border-color: #E1BF64;
+    --border-color-hover: #D4AF37;
   }
 }
 
-body {
-  color: var(--foreground);
+/* Estilos para el scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 10px;
+  border: 3px solid var(--background);
+}
+
+/* Soporte para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--background);
 }
