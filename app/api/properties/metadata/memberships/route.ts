@@ -26,12 +26,12 @@ export async function GET(request: Request) {
       name: row.name,
       benefits: row.benefits,
       price: row.price,
-      discountThreeMonths: row.discount_three_months,
-      discountSixMonths: row.discount_six_months,
-      discountTwelveMonths: row.discount_twelve_months,
-      maxProperties: row.max_properties,
-      maxImagesProperty: row.max_images_property,
-      propertiesFeatured: row.properties_featured,
+      discountThreeMonths: row.discountThreeMonths,
+      discountSixMonths: row.discountSixMonths,
+      discountTwelveMonths: row.discountTwelveMonths,
+      maxProperties: row.maxProperties,
+      maxImagesProperty: row.maxImagesProperty,
+      propertiesFeatured: row.propertiesFeatured,
     }));
 
     return NextResponse.json({ memberships, totalEntries });

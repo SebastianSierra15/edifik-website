@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { inter } from "@/app/ui/fonts";
+import { montserrat } from "@/app/ui/fonts";
 import "../globals.css";
 import Header from "../ui/header";
 import Footer from "../ui/footer";
@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${inter.className} antialiased bg-gray-100 min-h-screen flex flex-col`}
+        className={`${montserrat.className} antialiased bg-gray-100 min-h-screen flex flex-col`}
       >
         <Header />
         <main className="flex-grow">{children}</main>

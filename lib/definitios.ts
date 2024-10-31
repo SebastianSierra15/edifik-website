@@ -43,16 +43,16 @@ export type Departament = {
   name: string;
 };
 
-export type PaymentMethod = {
-  id: number;
-  name: string;
-  state: boolean;
-};
-
 export type City = {
   id: number;
   name: string;
   departament: Departament;
+};
+
+export type PaymentMethod = {
+  id: number;
+  name: string;
+  state: boolean;
 };
 
 export type Property = {
@@ -64,7 +64,8 @@ export type Property = {
   bathrooms: number;
   rooms: number;
   lobbies: number;
-  description: string;
+  shortDescription: string;
+  detailedDescription: string | null;
   address: string;
   latitude: number;
   longitude: number;
@@ -76,9 +77,23 @@ export type Property = {
   membership: number;
   commonAreas: CommonArea[];
   nearbyService: NearbyService[];
+  propertyMedia: PropertyMedia[];
 };
 
-export type PropertySummary = Pick<Property, "id" | "name" | "price" | "area" | "address" | "longitude" | "latitude" | "city" | "membership">
+export type PropertyData = Partial<Property>;
+
+export type PropertySummary = Pick<
+  Property,
+  | "id"
+  | "name"
+  | "price"
+  | "area"
+  | "address"
+  | "longitude"
+  | "latitude"
+  | "city"
+  | "membership"
+>;
 
 export type PropertyType = {
   id: number;
@@ -96,9 +111,9 @@ export type Membership = {
   maxProperties: number;
   maxImagesProperty: number;
   propertiesFeatured: number;
-}
+};
 
-export type MembershipSummary = Pick<Membership, "id" | "name">
+export type MembershipSummary = Pick<Membership, "id" | "name">;
 
 export type Reservation = {
   id: number;
@@ -121,3 +136,21 @@ export type Permission = {
   id: number;
   name: string;
 };
+
+export type ImageType = {
+  id: number;
+  name: string;
+  description: string;
+  maxImagesAllowed: number;
+  isRequired: boolean;
+};
+
+export type PropertyMedia = {
+  id: number;
+  url: string;
+  propertyId: number;
+  commonArea: number | null;
+  imageType: number | null;
+};
+
+export type PropertyMediaData = Partial<PropertyMedia>;

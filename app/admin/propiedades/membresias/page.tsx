@@ -208,7 +208,7 @@ export default function MembershipsPage() {
         Gestión de Membresías
       </h1>
 
-      <div className="px-4 lg:px-8 py-5 bg-white dark:bg-secondary rounded-3xl lg:mx-4 shadow-lg">
+      <div className="px-4 lg:px-8 py-5 bg-backgroundLight dark:bg-secondaryLight rounded-3xl lg:mx-4 shadow-lg">
         <Table
           data={memberships.filter((membership) => membership.id !== 1004)}
           headers={headers}
@@ -241,7 +241,7 @@ export default function MembershipsPage() {
 
       <button
         onClick={() => router.push("/admin/propiedades")}
-        className="px-4 py-2 mt-4 bg-primary text-white rounded-lg hover:bg-primaryDark dark:bg-primary dark:text-secondaryLight dark:hover:bg-primaryDark mx-auto block transition-colors"
+        className="px-4 py-2 mt-4 bg-primary text-white rounded-lg hover:bg-primaryDark transition-colors dark:bg-primary dark:hover:bg-primaryDark dark:text-backgroundLight mx-auto block"
       >
         Volver
       </button>

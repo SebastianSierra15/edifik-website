@@ -69,37 +69,35 @@ export default function FilterMapControls({
       >
         <button
           onClick={toggleFilterVisibility}
-          className={`flex items-center space-x-2 px-6 py-2 bg-transparent border border-borderColor dark:border-darkBorderColor rounded-full hover:bg-backgroundLight dark:hover:bg-darkBackground transition-colors whitespace-nowrap ${
+          className={`flex items-center space-x-2 px-6 py-2 bg-transparent border border-borderColor dark:border-borderColorHover rounded-full hover:bg-backgroundLight dark:hover:bg-backgroundDark transition-colors whitespace-nowrap ${
             showMap ? "hidden" : "block"
           }`}
         >
-          <span className="text-textPrimary dark:text-darkTextPrimary">
-            Filtro
-          </span>
-          <FaFilter className="text-textPrimary dark:text-darkTextPrimary" />
+          <span className="text-textPrimary dark:text-textPrimary">Filtro</span>
+          <FaFilter className="text-textPrimary dark:text-textPrimary" />
           <FaChevronDown
             className={`${
               isFilterVisible ? "rotate-180" : ""
-            } transition-transform duration-300 text-textPrimary dark:text-darkTextPrimary`}
+            } transition-transform duration-300 text-textPrimary dark:text-textPrimary`}
           />
         </button>
 
         <button
-          className="flex items-center space-x-2 px-6 py-2 rounded-full bg-transparent border border-borderColor dark:border-darkBorderColor hover:bg-backgroundLight dark:hover:bg-darkBackground transition-colors whitespace-nowrap"
+          className="flex items-center space-x-2 px-6 py-2 rounded-full bg-transparent border border-borderColor dark:border-borderColorHover hover:bg-backgroundLight dark:hover:bg-backgroundDark transition-colors whitespace-nowrap"
           onClick={handleToggleMap}
         >
-          <span className="text-textPrimary dark:text-darkTextPrimary">
+          <span className="text-textPrimary dark:text-textPrimary">
             {showMap ? "Propiedades" : "Mapa"}
           </span>
           {showMap ? (
             <BiSolidBuildingHouse
               size={18}
-              className="text-textPrimary dark:text-darkTextPrimary"
+              className="text-textPrimary dark:text-textPrimary"
             />
           ) : (
             <MdMap
               size={18}
-              className="text-textPrimary dark:text-darkTextPrimary"
+              className="text-textPrimary dark:text-textPrimary"
             />
           )}
         </button>
@@ -107,23 +105,23 @@ export default function FilterMapControls({
 
       {showMapButton && (
         <button
-          className={`fixed px-4 right-6 z-50 py-3 mt-24 text-sm rounded-full bg-background dark:bg-darkBackgroundLight shadow-lg hover:bg-backgroundLight dark:hover:bg-darkBackground border border-borderColor dark:border-darkBorderColor transition-colors flex items-center space-x-2 ${
+          className={`fixed px-4 right-6 z-50 py-3 mt-24 text-sm rounded-full bg-background dark:bg-backgroundDark shadow-lg hover:bg-backgroundLight dark:hover:bg-backgroundDark transition-colors border border-borderColor dark:border-borderColorHover flex items-center space-x-2 ${
             showMap ? "bottom-4 lg:top-0 lg:bottom-auto" : "top-6"
           }`}
           onClick={handleToggleMap}
         >
-          <span className="text-textPrimary dark:text-darkTextPrimary">
+          <span className="text-textPrimary dark:text-textPrimary">
             {showMap ? "Propiedades" : "Mapa"}
           </span>
           {showMap ? (
             <BiSolidBuildingHouse
               size={18}
-              className="text-textPrimary dark:text-darkTextPrimary"
+              className="text-textPrimary dark:text-textPrimary"
             />
           ) : (
             <MdMap
               size={18}
-              className="text-textPrimary dark:text-darkTextPrimary"
+              className="text-textPrimary dark:text-textPrimary"
             />
           )}
         </button>

@@ -54,7 +54,6 @@ export default function PropertiesMap({ properties }: PropertiesMapProps) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
 
-        {/* Marcadores de propiedades (botones con precios) */}
         {properties.map((property) => (
           <PriceMarker
             key={property.id}
@@ -66,9 +65,8 @@ export default function PropertiesMap({ properties }: PropertiesMapProps) {
         ))}
       </MapContainer>
 
-      {/* Mostrar la tarjeta de propiedad seleccionada */}
       {selectedProperty && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 bg-transparent shadow-lg rounded-lg w-72">
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 bg-backgroundLight dark:bg-backgroundDark shadow-lg rounded-lg w-72">
           <PropertyCard
             images={[
               "/images/image2.jpg",
@@ -81,6 +79,7 @@ export default function PropertiesMap({ properties }: PropertiesMapProps) {
             area={0}
             idMembership={selectedProperty.membership}
             isFromMap={true}
+            showActions={true}
             onClose={handleCloseCard}
             url={`/admin/propiedades/${selectedProperty.id}`}
           />

@@ -26,9 +26,11 @@ export default function FilterOption({
         onClick={onToggleOpen}
       >
         <div
-          className={`flex items-center space-x-2 text-lg font-medium text-textPrimary dark:text-darkTextPrimary ${
-            selectedItems.length ? "text-primary dark:text-primary" : ""
-          } `}
+          className={`flex items-center space-x-2 text-lg font-medium ${
+            selectedItems.length
+              ? "text-primary dark:text-primaryLight"
+              : "text-textPrimary dark:text-textPrimary"
+          }`}
         >
           {icon}
           <span>{label}</span>
@@ -37,7 +39,7 @@ export default function FilterOption({
         <FaChevronDown
           className={`transition-transform duration-300 transform ${
             isOpen ? "rotate-180" : ""
-          } text-textPrimary dark:text-darkTextPrimary`}
+          } text-textPrimary dark:text-textPrimary`}
         />
       </div>
 
@@ -48,13 +50,13 @@ export default function FilterOption({
             <button
               key={item.id}
               onClick={() => onToggleItem(item.id)}
-              className={`relative overflow-hidden px-3 py-2 rounded-full text-xs border border-borderColor dark:border-darkBorderColor transition-colors duration-300 ${
+              className={`relative overflow-hidden px-3 py-2 rounded-full text-xs border border-borderColor dark:border-borderColorHover transition-colors duration-300 ${
                 selectedItems.includes(item.id)
                   ? "bg-primary dark:bg-primaryLight text-white"
-                  : "bg-transparent hover:bg-backgroundLight dark:hover:bg-darkBackgroundLight"
+                  : "bg-transparent hover:bg-backgroundLight dark:hover:bg-backgroundDark"
               }`}
             >
-              <span className="relative z-10 text-textPrimary dark:text-darkTextPrimary">
+              <span className="relative z-10 text-textPrimary dark:text-textPrimary">
                 {item.name}
               </span>
             </button>

@@ -112,13 +112,13 @@ export default function Table<
       {/* Opciones de mostrar por página y campo de búsqueda */}
       <div className="flex flex-col sm:flex-row sm:justify-between gap-3 sm:gap-0 sm:items-center mb-4 md:px-3 text-xs sm:text-sm">
         <div className="flex items-center space-x-2 px-2 sm:px-0">
-          <span className="text-textPrimary dark:text-darkTextPrimary">
+          <span className="text-textPrimary dark:text-textPrimary">
             Mostrar
           </span>
           <select
             value={entriesPerPage}
             onChange={handleEntriesPerPageChange}
-            className="border border-borderColor dark:border-borderColor focus:border-borderColorHover dark:focus:border-borderColorHover rounded-md px-2 py-1 focus:outline-none bg-background dark:bg-darkBackground text-textPrimary dark:text-darkTextPrimary"
+            className="border border-borderColor dark:border-borderColorHover focus:border-borderColorHover dark:focus:border-borderColorHover rounded-md px-2 py-1 focus:outline-none bg-background dark:bg-backgroundDark text-textPrimary dark:text-textPrimary"
           >
             {[5, 10, 15, 20].map((num) => (
               <option key={num} value={num}>
@@ -126,7 +126,7 @@ export default function Table<
               </option>
             ))}
           </select>
-          <span className="text-textPrimary dark:text-darkTextPrimary">
+          <span className="text-textPrimary dark:text-textPrimary">
             {entry} por página
           </span>
         </div>
@@ -135,7 +135,7 @@ export default function Table<
             type="text"
             onChange={handleSearchChange}
             placeholder="Buscar..."
-            className="border border-borderColor dark:border-borderColor focus:border-borderColorHover dark:focus:border-borderColorHover rounded-md px-3 py-2 w-full sm:w-auto focus:outline-none bg-background dark:bg-darkBackground text-textPrimary dark:text-darkTextPrimary"
+            className="border border-borderColor dark:border-borderColorHover focus:border-borderColorHover dark:focus:border-borderColorHover rounded-md px-3 py-2 w-full sm:w-auto focus:outline-none bg-background dark:bg-backgroundDark text-textPrimary dark:text-textPrimary"
           />
         </div>
       </div>
@@ -148,7 +148,7 @@ export default function Table<
               {headers.map(({ label, key }) => (
                 <th
                   key={key as string}
-                  className="py-2 px-4 text-left cursor-pointer text-textPrimary dark:text-darkTextPrimary"
+                  className="py-2 px-4 text-left cursor-pointer text-textPrimary dark:text-textPrimary"
                   onClick={() => handleSort(key)}
                 >
                   <div className="flex items-center">
@@ -158,21 +158,21 @@ export default function Table<
                         className={`hover:text-primary dark:hover:text-primaryDark ${
                           sortColumn === key && sortDirection === "asc"
                             ? "text-primary dark:text-primary"
-                            : "text-gray-400 dark:text-darkTextSecondary"
+                            : "text-textPlaceholder dark:text-textSecondary"
                         }`}
                       />
                       <FaSortDown
                         className={`hover:text-primary dark:hover:text-primaryDark ${
                           sortColumn === key && sortDirection === "desc"
                             ? "text-primary dark:text-primary"
-                            : "text-gray-400 dark:text-darkTextSecondary"
+                            : "text-textPlaceholder dark:text-textSecondary"
                         }`}
                       />
                     </div>
                   </div>
                 </th>
               ))}
-              <th className="py-2 px-4 text-left text-textPrimary dark:text-darkTextPrimary">
+              <th className="py-2 px-4 text-left text-textPrimary dark:text-textPrimary">
                 ACCIÓN
               </th>
             </tr>
@@ -181,12 +181,12 @@ export default function Table<
             {sortedData.map((item) => (
               <tr
                 key={item.id}
-                className="border-t border-borderColor dark:border-darkBackgroundLight max-h-28 hover:bg-backgroundLight dark:hover:bg-darkBackgroundLight"
+                className="border-t border-borderColor dark:border-borderColorHover max-h-28 hover:bg-backgroundLight dark:hover:bg-backgroundDark"
               >
                 {headers.map(({ key }, index) => (
                   <td
                     key={index}
-                    className="py-2 px-4 text-textPrimary dark:text-darkTextPrimary"
+                    className="py-2 px-4 text-textPrimary dark:text-textPrimary"
                   >
                     {typeof item[key] === "number" ? (
                       item[key]?.toLocaleString()
@@ -223,7 +223,7 @@ export default function Table<
       </div>
 
       {/* Paginación */}
-      <div className="flex justify-between items-center text-sm mt-4 md:px-3 text-textPrimary dark:text-darkTextPrimary">
+      <div className="flex justify-between items-center text-sm mt-4 md:px-3 text-textPrimary dark:text-textPrimary">
         <span>
           Mostrando {currentPage * entriesPerPage - entriesPerPage + 1} a{" "}
           {Math.min(currentPage * entriesPerPage, totalEntries)} de{" "}
@@ -237,7 +237,7 @@ export default function Table<
               currentPage === 1
                 ? "text-textPlaceholder"
                 : "text-primary dark:text-primaryLight"
-            } p-2 rounded-full border border-borderColor dark:border-darkBackgroundLight focus:outline-none`}
+            } p-2 rounded-full border border-borderColor dark:border-borderColorHover focus:outline-none`}
             disabled={currentPage === 1}
           >
             <FaChevronLeft />
@@ -250,7 +250,7 @@ export default function Table<
               className={`px-3 py-1 rounded-full transition-colors duration-300 ${
                 currentPage === i + 1
                   ? "bg-primaryLight dark:bg-primary hover:bg-primary dark:hover:bg-primaryDark text-white"
-                  : "bg-backgroundLight dark:bg-darkBackgroundLight hover:bg-primaryLight dark:hover:bg-primary text-textPrimary dark:text-darkTextPrimary"
+                  : "bg-backgroundLight dark:bg-backgroundDark hover:bg-primaryLight dark:hover:bg-primary text-textPrimary dark:text-textPrimary"
               }`}
             >
               {i + 1}
@@ -263,7 +263,7 @@ export default function Table<
               currentPage === totalPages
                 ? "text-textPlaceholder"
                 : "text-primary dark:text-primaryLight"
-            } p-2 rounded-full border border-borderColor dark:border-darkBackgroundLight focus:outline-none`}
+            } p-2 rounded-full border border-borderColor dark:border-borderColorHover focus:outline-none`}
             disabled={currentPage === totalPages}
           >
             <FaChevronRight />

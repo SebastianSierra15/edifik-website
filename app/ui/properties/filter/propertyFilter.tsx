@@ -191,7 +191,7 @@ export default function PropertyFilter({
   return (
     <div
       ref={filterRef}
-      className={`w-full sm:w-72 md:w-80 bg-background dark:bg-darkBackgroundLight shadow-md rounded-lg py-4 transition-all duration-300 ease-in-out ${
+      className={`w-full sm:w-72 md:w-80 bg-background dark:bg-backgroundDark shadow-md rounded-lg py-4 transition-all duration-300 ease-in-out ${
         isFixed ? "sticky top-32 lg:top-20 z-10" : ""
       }`}
     >
@@ -199,23 +199,21 @@ export default function PropertyFilter({
         <div className="flex items-center justify-between rounded-md pl-2 pr-6">
           <button
             onClick={resetFilters}
-            className="font-medium text-lg py-1 px-4 text-textPrimary dark:text-darkTextPrimary transition-transform duration-200 transform hover:scale-110 hover:font-semibold"
+            className="font-medium text-lg py-1 px-4 text-textPrimary dark:text-textPrimary transition-transform duration-200 transform hover:scale-110 hover:font-semibold"
           >
             Borrar filtros
           </button>
           <div
-            className="flex items-center cursor-pointer text-textPrimary dark:text-darkTextPrimary"
+            className="flex items-center cursor-pointer text-textPrimary dark:text-textPrimary"
             onClick={() => setFilterOpen((prev) => !prev)}
           >
             <FaTimes className="transition-transform duration-200 transform hover:scale-125" />
           </div>
         </div>
 
-        <hr className="border-gray-300 dark:border-gray-600" />
+        <hr className="border-borderColor dark:border-borderColorHover" />
 
-        {/* Contenedor con scroll vertical y sin scroll horizontal */}
         <div className="space-y-4 px-3 py-1 sm:max-h-[65vh] sm:overflow-y-auto overflow-x-hidden">
-          {/* Filter options */}
           {[
             {
               label: "Ciudades",
@@ -266,7 +264,6 @@ export default function PropertyFilter({
             />
           ))}
 
-          {/* Price and Area Sliders */}
           {[
             {
               label: "Precio",
@@ -276,7 +273,7 @@ export default function PropertyFilter({
               max: priceRange.max || 0,
               step: 100000,
               category: "price" as Category,
-              prefixText: "Desde $",
+              prefixText: "Desde",
               suffixText: "COP",
             },
             {
@@ -313,13 +310,13 @@ export default function PropertyFilter({
                 onChange={(newValue) => updateFilterValue(category, newValue)}
                 isOpen={isOpen[category]}
                 setIsOpen={() => toggleOpen(category)}
+                category={category}
                 prefixText={prefixText}
                 suffixText={suffixText}
               />
             )
           )}
 
-          {/* Numeric Counters */}
           {[
             {
               label: "Nº de habitaciones",

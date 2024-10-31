@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { inter } from "@/app/ui/fonts";
+import { montserrat } from "@/app/ui/fonts";
 import "../globals.css";
 import AdminHeader from "../ui/adminHeader";
 import AdminFooter from "../ui/adminFooter";
@@ -17,7 +17,7 @@ export default function AdminLayout({
   return (
     <html lang="es">
       <body
-        className={`${inter.className} antialiased bg-background dark:bg-backgroundDark`}
+        className={`${montserrat.className} antialiased bg-background dark:bg-background min-h-screen flex flex-col`}
       >
         <AdminHeader />
         <main className="flex-grow">{children}</main>

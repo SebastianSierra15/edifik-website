@@ -42,16 +42,16 @@ export default function PropertyCard({
   }, [isHovered, images.length]);
 
   return (
-    <div className="bg-backgroundDark rounded-lg">
+    <div className="bg-background dark:bg-backgroundDark rounded-lg">
       <Link href={url} target="_blank" rel="noopener noreferrer">
         <div
-          className={`relative max-w-xs shadow-black rounded-lg overflow-hidden bg-secondary dark:bg-secondary dark:shadow-textPrimary cursor-pointer p-1 shadow-lg dark:shadow-md ${
+          className={`relative max-w-xs shadow-secondary dark:shadow-white rounded-lg overflow-hidden bg-secondary dark:bg-secondaryDark cursor-pointer p-1 shadow-md dark:shadow-md ${
             isFromMap
               ? "z-50 hover:scale-105 transition-transform duration-300"
               : "h-[370px] z-0"
           } ${
             idMembership === 1003
-              ? "bg-gradient-to-r from-primaryLight to-primaryDark hover:from-primaryLight hover:to-primary"
+              ? "bg-gradient-to-r from-primaryLight to-primaryDark hover:from-primary hover:to-primaryDark"
               : ""
           }`}
           onMouseEnter={() => setIsHovered(true)}
@@ -71,14 +71,14 @@ export default function PropertyCard({
             </div>
           )}
 
-          <div className="bg-background dark:bg-secondary rounded-lg h-full flex flex-col relative">
+          <div className="bg-background dark:bg-secondaryDark rounded-lg h-full flex flex-col relative">
             {onClose && (
               <button
                 onClick={(e) => {
                   e.preventDefault();
                   onClose();
                 }}
-                className="absolute top-2 right-2 z-20 bg-black dark:bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all"
+                className="absolute top-2 right-2 z-20 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all"
               >
                 <FaTimes />
               </button>
@@ -101,17 +101,19 @@ export default function PropertyCard({
               ))}
             </div>
 
-            <div className="p-2 pb-2 z-20 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-secondary dark:from-darkBackground via-secondaryDark dark:via-darkBackgroundDark to-transparent">
-              <h3 className="text-xl font-bold text-white leading-tight break-words line-clamp-1">
+            {/* Precio fijo en la esquina superior izquierda */}
+            <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-sm px-2 py-1 rounded-full z-50">
+              ${price.toLocaleString()}
+            </div>
+
+            <div className="px-2 pt-16 pb-2 z-20 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-secondaryDark dark:from-black via-secondaryDark dark:via-gray-800 to-transparent">
+              <h3 className="text-lg font-semibold text-white leading-tight break-words line-clamp-1">
                 {name}
               </h3>
-              <p className="text-base text-gray-300 z-50">{location}</p>
+              <p className="text-sm text-gray-300">{location}</p>
               {area > 0 && (
-                <p className="text-sm text-gray-300 z-50">Área: {area} m²</p>
+                <p className="text-xs text-gray-300">Área: {area} m²</p>
               )}
-              <p className="text-lg font-bold text-white z-50">
-                ${price.toLocaleString()} COP
-              </p>
             </div>
           </div>
         </div>

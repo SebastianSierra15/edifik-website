@@ -11,8 +11,8 @@ import {
 
 export default function Page() {
   return (
-    <div className="container mt-24 mx-auto py-12 px-4 bg-background dark:bg-backgroundDark">
-      <h1 className="mb-10 -mt-4 text-center text-4xl font-semibold text-primary dark:text-primaryLight">
+    <div className="container mx-auto py-12 px-4 bg-background dark:bg-background">
+      <h1 className="mb-10 mt-20 lg:mt-16 text-center text-4xl font-semibold text-primary dark:text-primaryLight">
         Bienvenido al Panel de Administración de EdifiK
       </h1>
 
@@ -55,15 +55,15 @@ export default function Page() {
           },
         ].map(({ href, icon: Icon, title, description }) => (
           <Link key={href} href={href}>
-            <div className="p-6 text-center h-full bg-white dark:bg-darkBackgroundLight rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-backgroundLight dark:hover:bg-darkBackground">
+            <div className="p-6 text-center h-full bg-backgroundAlt dark:bg-secondaryLight rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-backgroundLight dark:hover:bg-secondaryDark">
               <Icon
                 size={40}
                 className="mx-auto mb-4 text-primary dark:text-primaryLight"
               />
-              <h2 className="text-2xl font-semibold text-textPrimary dark:text-darkTextPrimary">
+              <h2 className="text-2xl font-semibold text-textPrimary dark:text-textPrimary">
                 {title}
               </h2>
-              <p className="mt-2 text-textSecondary dark:text-darkTextSecondary">
+              <p className="mt-2 text-textSecondary dark:text-textSecondary">
                 {description}
               </p>
             </div>

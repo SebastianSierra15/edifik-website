@@ -26,9 +26,11 @@ export default function FilterNumericCounter({
         onClick={() => setIsOpen(!isOpen)}
       >
         <div
-          className={`flex items-center space-x-2 text-lg font-medium text-textPrimary dark:text-darkTextPrimary ${
-            value > 1 ? "text-primary dark:text-primary" : ""
-          } `}
+          className={`flex items-center space-x-2 text-lg font-medium ${
+            value > 1
+              ? "text-primary dark:text-primaryLight"
+              : "text-textPrimary dark:text-textPrimary"
+          }`}
         >
           {icon}
           <span>{label}</span>
@@ -36,7 +38,7 @@ export default function FilterNumericCounter({
         <FaChevronDown
           className={`transition-transform duration-300 transform ${
             isOpen ? "rotate-180" : ""
-          } text-textPrimary dark:text-darkTextPrimary`}
+          } text-textPrimary dark:text-textPrimary`}
         />
       </div>
 
@@ -45,7 +47,7 @@ export default function FilterNumericCounter({
         <div className="flex items-center justify-center space-x-1 px-10 mt-2">
           <button
             onClick={() => value > 1 && decrement()}
-            className="w-8 h-8 flex items-center justify-center bg-background dark:bg-darkBackground text-textSecondary dark:text-darkTextPrimary rounded-l-md transition-colors hover:bg-primary hover:text-white"
+            className="w-8 h-8 flex items-center justify-center bg-background dark:bg-backgroundDark text-textSecondary dark:text-textPrimary rounded-l-md transition-colors hover:bg-primary hover:text-white"
           >
             -
           </button>
@@ -53,11 +55,11 @@ export default function FilterNumericCounter({
             readOnly
             type="text"
             value={value}
-            className="w-12 text-center bg-background dark:bg-darkBackground text-textPrimary dark:text-darkTextPrimary border border-borderColor dark:border-darkBorderColor"
+            className="w-12 text-center bg-background dark:bg-backgroundDark text-textPrimary dark:text-textPrimary border border-borderColor dark:border-borderColorHover"
           />
           <button
             onClick={increment}
-            className="w-8 h-8 flex items-center justify-center bg-background dark:bg-darkBackground text-textSecondary dark:text-darkTextPrimary rounded-r-md transition-colors hover:bg-primary hover:text-white"
+            className="w-8 h-8 flex items-center justify-center bg-background dark:bg-backgroundDark text-textSecondary dark:text-textPrimary rounded-r-md transition-colors hover:bg-primary hover:text-white"
           >
             +
           </button>

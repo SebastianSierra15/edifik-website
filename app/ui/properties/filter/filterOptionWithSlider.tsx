@@ -11,6 +11,7 @@ type FilterOptionWithSliderProps = {
   onChange: (value: number) => void;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  category: string;
   prefixText: string;
   suffixText: string;
 };
@@ -25,6 +26,7 @@ export default function FilterOptionWithSlider({
   onChange,
   isOpen,
   setIsOpen,
+  category,
   prefixText,
   suffixText,
 }: FilterOptionWithSliderProps) {
@@ -68,13 +70,15 @@ export default function FilterOptionWithSlider({
   return (
     <div>
       <div
-        className="flex items-center justify-between cursor-pointer mb-4 transition-transform duration-200 transform hover:scale-105 hover:font-semibold text-textPrimary dark:text-darkTextPrimary"
+        className="flex items-center justify-between cursor-pointer mb-4 transition-transform duration-200 transform hover:scale-105 hover:font-semibold text-textPrimary dark:text-textPrimary"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div
-          className={`flex items-center space-x-2 text-lg font-medium text-textPrimary dark:text-darkTextPrimary ${
-            sliderValue > 1 ? "text-primary dark:text-primary" : ""
-          } `}
+          className={`flex items-center space-x-2 text-lg font-medium ${
+            sliderValue > 1
+              ? "text-primary dark:text-primaryLight"
+              : "text-textPrimary dark:text-textPrimary"
+          }`}
         >
           {icon}
           <span>{label}</span>
@@ -82,7 +86,7 @@ export default function FilterOptionWithSlider({
         <FaChevronDown
           className={`transition-transform duration-300 transform ${
             isOpen ? "rotate-180" : ""
-          } text-textPrimary dark:text-darkTextPrimary`}
+          } text-textPrimary dark:text-textPrimary`}
         />
       </div>
       {isOpen && (
@@ -106,7 +110,7 @@ export default function FilterOptionWithSlider({
               background-color: var(--primary);
               border-radius: 50%;
               cursor: pointer;
-              border: 2px solid white;
+              border: 2px solid var(--backgroundAlt);
             }
 
             input[type="range"]::-moz-range-thumb {
@@ -115,7 +119,7 @@ export default function FilterOptionWithSlider({
               background-color: var(--primary);
               border-radius: 50%;
               cursor: pointer;
-              border: 2px solid white;
+              border: 2px solid var(--backgroundAlt);
             }
 
             input[type="range"]::-ms-thumb {
@@ -124,14 +128,15 @@ export default function FilterOptionWithSlider({
               background-color: var(--primary);
               border-radius: 50%;
               cursor: pointer;
-              border: 2px solid white;
+              border: 2px solid var(--backgroundAlt);
             }
           `}</style>
           {sliderValue > 1 && (
-            <div className="text-center text-base text-textPrimary dark:text-darkTextPrimary">
+            <div className="text-center text-base text-textPrimary dark:text-textPrimary">
               <span>{prefixText} </span>
               <span className="font-bold text-2xl">
-                {formatDisplayValue(sliderValue)}+
+                {category === "price" ? "$" : "+"}
+                {formatDisplayValue(sliderValue)}
               </span>
               <span> {suffixText}</span>
             </div>

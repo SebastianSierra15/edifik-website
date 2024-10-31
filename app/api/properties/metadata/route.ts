@@ -20,7 +20,6 @@ function mapResults<T>(
 
 export async function GET() {
   try {
-    // Llamada al procedimiento almacenado 'get_metadata'
     const [result] = await db.query<RowDataPacket[][]>("CALL get_metadata()");
 
     if (!result || result.length < 6) {

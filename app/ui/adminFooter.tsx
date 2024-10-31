@@ -3,7 +3,7 @@ import { FaTools, FaUserShield, FaChartLine } from "react-icons/fa";
 
 export default function AdminFooter() {
   return (
-    <footer className="pt-5 pb-1 bg-secondary text-textSecondary dark:bg-darkHeader dark:text-darkTextSecondary">
+    <footer className="pt-5 pb-1 bg-secondary dark:bg-secondaryDark text-textSecondary dark:text-textPlaceholder transition-colors duration-300">
       <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-7">
         {/* Herramientas Administrativas */}
         <div className="text-center md:text-left">
@@ -15,7 +15,7 @@ export default function AdminFooter() {
               <FaChartLine className="text-primary dark:text-primaryLight" />
               <Link
                 href="/admin/dashboard"
-                className="hover:underline hover:text-primaryLight"
+                className="hover:underline hover:text-primary dark:hover:text-primaryLight"
               >
                 Panel de Control
               </Link>
@@ -24,7 +24,7 @@ export default function AdminFooter() {
               <FaUserShield className="text-primary dark:text-primaryLight" />
               <Link
                 href="/admin/usuarios"
-                className="hover:underline hover:text-primaryLight"
+                className="hover:underline hover:text-primary dark:hover:text-primaryLight"
               >
                 Gestión de Usuarios
               </Link>
@@ -41,7 +41,7 @@ export default function AdminFooter() {
             <li>
               <Link
                 href="/admin/help"
-                className="hover:underline hover:text-primaryLight"
+                className="hover:underline hover:text-primary dark:hover:text-primaryLight"
               >
                 Centro de ayuda
               </Link>
@@ -49,7 +49,7 @@ export default function AdminFooter() {
             <li>
               <Link
                 href="/admin/docs"
-                className="hover:underline hover:text-primaryLight"
+                className="hover:underline hover:text-primary dark:hover:text-primaryLight"
               >
                 Documentación
               </Link>
@@ -66,7 +66,7 @@ export default function AdminFooter() {
             <li>
               <Link
                 href="/admin/propiedades"
-                className="hover:underline hover:text-primaryLight"
+                className="hover:underline hover:text-primary dark:hover:text-primaryLight"
               >
                 Propiedades
               </Link>
@@ -74,7 +74,7 @@ export default function AdminFooter() {
             <li>
               <Link
                 href="/admin/reservas"
-                className="hover:underline hover:text-primaryLight"
+                className="hover:underline hover:text-primary dark:hover:text-primaryLight"
               >
                 Reservas
               </Link>
@@ -82,7 +82,7 @@ export default function AdminFooter() {
             <li>
               <Link
                 href="/admin/estadias"
-                className="hover:underline hover:text-primaryLight"
+                className="hover:underline hover:text-primary dark:hover:text-primaryLight"
               >
                 Estadías
               </Link>
@@ -99,7 +99,7 @@ export default function AdminFooter() {
             <li>
               <Link
                 href="/admin/terms"
-                className="hover:underline hover:text-primaryLight"
+                className="hover:underline hover:text-primary dark:hover:text-primaryLight"
               >
                 Términos y Condiciones
               </Link>
@@ -107,7 +107,7 @@ export default function AdminFooter() {
             <li>
               <Link
                 href="/admin/privacy"
-                className="hover:underline hover:text-primaryLight"
+                className="hover:underline hover:text-primary dark:hover:text-primaryLight"
               >
                 Política de Privacidad
               </Link>
@@ -116,7 +116,7 @@ export default function AdminFooter() {
         </div>
       </div>
 
-      <div className="container mx-auto mt-6 border-t border-borderColor dark:border-darkBorderColor px-7 pt-4 mb-4">
+      <div className="container mx-auto mt-6 border-t border-borderColor dark:border-borderColorHover px-7 pt-4 mb-4">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           {/* Información de Copyright */}
           <div className="text-sm text-center md:text-left">
@@ -134,7 +134,7 @@ export default function AdminFooter() {
               <Link
                 key={href}
                 href={href}
-                className="hover:text-primaryLight dark:hover:text-darkPrimary"
+                className="hover:text-primary dark:hover:text-primaryLight"
                 aria-label={label}
                 passHref
               >

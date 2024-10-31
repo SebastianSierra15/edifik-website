@@ -12,7 +12,7 @@ interface UsePropertiesOptions {
   currentProperties: PropertySummary[];
 }
 
-export function useProperties({
+export function useGetProperties({
   entriesPerPage,
   selectedCategory,
   selectedButtons,
@@ -66,7 +66,7 @@ export function useProperties({
             ]
           : newProperties
       );
-      console.log(properties);
+
       setTotalEntries(response.data.totalEntries);
     } catch (error) {
       console.error("Error fetching properties:", error);
@@ -81,8 +81,8 @@ export function useProperties({
 
   const fetchMoreProperties = () => {
     const nextPage = currentPage + 1;
-    fetchProperties(true, nextPage);
     setCurrentPage(nextPage);
+    fetchProperties(true, nextPage);
   };
 
   return {

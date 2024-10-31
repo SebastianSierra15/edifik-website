@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useProperties } from "@/app/hooks/useProperties";
+import { useGetProperties } from "@/app/hooks/useGetProperties";
 import { PropertySummary } from "@/lib/definitios";
-import PropertyFilter from "@/app/ui/properties/propertyFilter";
+import PropertyFilter from "@/app/ui/properties/filter/propertyFilter";
 import PropertyCard from "@/app/ui/properties/propertyCard";
-import FilterMapControls from "@/app/ui/properties/filterMapControls";
+import FilterMapControls from "@/app/ui/properties/filter/filterMapControls";
 import PropertiesMap from "@/app/ui/properties/propertiesMap";
 import {
   FaGlobe,
@@ -51,7 +51,7 @@ export default function PropertiesPage() {
   });
 
   const [selectedCategory, setSelectedCategory] = useState("1002,1003,1004");
-  const [entriesPerPage, setEntriesPerPage] = useState(15);
+  const [entriesPerPage, setEntriesPerPage] = useState(16);
   const [filterOpen, setFilterOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [currentProperties, setCurrentProperties] = useState<PropertySummary[]>(
@@ -66,7 +66,7 @@ export default function PropertiesPage() {
     fetchMoreProperties,
     debouncedSearch,
     isLoading,
-  } = useProperties({
+  } = useGetProperties({
     entriesPerPage,
     selectedCategory,
     selectedButtons,
@@ -112,7 +112,7 @@ export default function PropertiesPage() {
   return (
     <div className="relative">
       {/* Header */}
-      <div className="bg-backgroundDark dark:bg-darkBackgroundLight px-6 pt-6 pb-2">
+      <div className="bg-backgroundDark dark:bg-backgroundLight px-6 pt-6 pb-2">
         <h1 className="mt-24 text-3xl text-center font-semibold mb-10 text-primary dark:text-primaryLight">
           Gestión de Propiedades
         </h1>
@@ -130,8 +130,8 @@ export default function PropertiesPage() {
               onClick={() => setSelectedCategory(id)}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg shadow-md transition-colors ${
                 selectedCategory === id
-                  ? "bg-primary dark:bg-primary hover:bg-primaryDark text-white"
-                  : "bg-white dark:bg-darkBackgroundLight text-primary dark:text-primaryLight hover:bg-backgroundDark dark:hover:bg-darkBackground"
+                  ? "bg-primary dark:bg-primaryLight hover:bg-primaryDark text-white"
+                  : "bg-backgroundLight dark:bg-background hover:bg-backgroundDark dark:hover:bg-backgroundLight text-primary dark:text-primaryLight"
               }`}
             >
               <Icon />
@@ -151,19 +151,19 @@ export default function PropertiesPage() {
               type="text"
               placeholder="Buscar propiedades..."
               onChange={(e) => debouncedSearch(e.target.value)}
-              className="p-2 pl-10 border border-borderColor dark:border-borderColor focus:border-borderColorHover dark:focus:border-borderColorHover rounded-md w-full bg-white dark:bg-darkBackgroundLight text-textPrimary dark:text-darkTextPrimary"
+              className="p-2 pl-10 border border-borderColor dark:border-borderColorHover rounded-md w-full bg-backgroundLight dark:bg-background text-textPrimary dark:text-textPrimary"
             />
-            <FaSearch className="absolute left-3 top-3 text-gray-400 dark:text-darkTextSecondary" />
+            <FaSearch className="absolute left-3 top-3 text-textPlaceholder dark:text-textSecondary" />
           </div>
 
           <div className="flex flex-col gap-4 sm:flex-row items-center">
             <Link href="/admin/propiedades/membresias" passHref>
-              <button className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-primary dark:bg-primary text-white hover:bg-primaryDark dark:hover:bg-primaryDark transition-colors whitespace-nowrap">
+              <button className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-primary dark:bg-primaryLight text-white hover:bg-primaryDark transition-colors whitespace-nowrap">
                 <span>Membresías</span>
               </button>
             </Link>
 
-            <Link href="/admin/propiedades/crearPropiedad">
+            <Link href="/admin/propiedades/crear-propiedad">
               <button className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-green-600 dark:bg-green-700 text-white hover:bg-green-700 dark:hover:bg-green-800 transition-colors whitespace-nowrap">
                 <FaPlus />
                 <span>Nueva Propiedad</span>
@@ -174,13 +174,13 @@ export default function PropertiesPage() {
       </div>
 
       <hr
-        className={`border-borderColor dark:border-darkBorderColor w-full ${
+        className={`border-borderColor dark:border-borderColorHover w-full ${
           showMap ? "hidden" : "block"
         }`}
       />
 
       <div
-        className={`bg-backgroundDark dark:bg-darkBackgroundLight px-6 pt-2 ${
+        className={`bg-backgroundDark dark:bg-backgroundLight px-6 pt-2 ${
           showMap ? "pb-2" : "pb-14"
         }`}
       >
@@ -195,7 +195,7 @@ export default function PropertiesPage() {
       <div>
         {showMap ? (
           <div
-            className="relative z-0 border-t border-t-gray-500"
+            className="relative z-0 border-t border-t-borderColorHover"
             style={{
               height: showMap ? "calc(100vh - 160px)" : "calc(100vh - 86px)",
             }}
@@ -203,7 +203,7 @@ export default function PropertiesPage() {
             <PropertiesMap properties={properties} />
           </div>
         ) : (
-          <div className="-mt-10 mb-10 flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-4 md:gap-8 py-4 px-6 lg:px-8 xl:px-20">
+          <div className="-mt-10 mb-10 flex flex-col sm:flex-row sm:justify-between gap-4 py-4 px-6 lg:px-8 xl:px-20">
             {/* Sidebar de filtros */}
             {!showMap && (
               <div
@@ -263,7 +263,7 @@ export default function PropertiesPage() {
                 <button
                   onClick={fetchMoreProperties}
                   disabled={isLoading}
-                  className="mt-6 px-6 py-2 rounded-lg shadow-lg bg-primary dark:bg-primary text-white hover:bg-primaryDark dark:hover:bg-primaryDark transition-colors self-center"
+                  className="mt-6 px-6 py-2 rounded-lg shadow-lg bg-primary dark:bg-primaryLight text-white hover:bg-primaryDark transition-colors self-center"
                 >
                   {isLoading ? "Cargando..." : "Mostrar más"}
                 </button>

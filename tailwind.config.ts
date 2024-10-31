@@ -20,26 +20,14 @@ const config: Config = {
         background: "var(--background)",
         backgroundLight: "var(--background-light)",
         backgroundDark: "var(--background-dark)",
-
-        darkBackground: "var(--background)",
-        darkBackgroundLight: "var(--background-light)",
-        darkBackgroundDark: "var(--background-dark)",
-
-        darkHeader: "var(--secondary)",
+        backgroundAlt: "var(--background-alt)",
 
         textPrimary: "var(--text-primary)",
         textSecondary: "var(--text-secondary)",
         textPlaceholder: "var(--text-placeholder)",
 
-        darkTextPrimary: "var(--text-primary)",
-        darkTextSecondary: "var(--text-secondary)",
-        darkTextPlaceholder: "var(--text-placeholder)",
-
         borderColor: "var(--border-color)",
         borderColorHover: "var(--border-color-hover)",
-
-        darkBorderColor: "var(--border-color)",
-        darkBorderColorHover: "var(--border-color-hover)",
 
         hoverColor: "var(--primary-dark)",
         focusColor: "var(--secondary-light)",

@@ -47,7 +47,7 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
               <div
                 className={`h-1 transition-colors duration-300 ${
                   currentStep > index
-                    ? "bg-primary dark:bg-primaryLight"
+                    ? "bg-borderColor dark:bg-borderColorHover"
                     : "bg-backgroundDark dark:bg-backgroundLight"
                 }`}
                 style={{
