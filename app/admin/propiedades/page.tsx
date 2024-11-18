@@ -246,7 +246,7 @@ export default function PropertiesPage() {
                         name={property.name}
                         location={`${property.city.name}, ${property.city.departament.name}`}
                         price={property.price}
-                        area={property.area}
+                        area={property.totalArea}
                         idMembership={property.membership}
                         isFromMap={false}
                         showActions={true}

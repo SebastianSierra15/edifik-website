@@ -11,7 +11,7 @@ export async function POST(request: Request) {
 
     if (!file || !folderPath) {
       return NextResponse.json(
-        { error: "Faltan el archivo o la ruta del folder" },
+        { error: "File or folder path is missing" },
         { status: 400 }
       );
     }
@@ -32,16 +32,16 @@ export async function POST(request: Request) {
 
     await s3.send(command);
 
-    const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${fileKey}`;
+    const cloudFrontUrl = `https://${process.env.CLOUDFRONT_DOMAIN}/${fileKey}`;
 
     return NextResponse.json({
-      message: "Imagen subida exitosamente",
-      url: fileUrl,
+      message: "Image successfully uploaded",
+      url: cloudFrontUrl,
     });
   } catch (error) {
-    console.error("Error al subir la imagen:", error);
+    console.error("Error uploading image:", error);
     return NextResponse.json(
-      { error: "Error al subir la imagen" },
+      { error: "Error uploading image" },
       { status: 500 }
     );
   }

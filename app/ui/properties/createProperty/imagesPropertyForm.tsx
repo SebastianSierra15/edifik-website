@@ -2,11 +2,7 @@
 
 import { useState, ChangeEvent, useEffect } from "react";
 import { PropertyData, ImageType } from "@/lib/definitios";
-import {
-  AiOutlineClose,
-  AiOutlineExclamationCircle,
-  AiOutlineDown,
-} from "react-icons/ai";
+import ImageUploadSection from "./ImageUploadSection";
 import StepNavigationButtons from "../../stepNavigationButtons";
 
 type UploadImagesFormProps = {
@@ -41,6 +37,7 @@ export default function ImagesPropertyForm({
   const [expandedSections, setExpandedSections] = useState<
     Record<string, boolean>
   >({});
+  const [imageTags, setImageTags] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
     const initialExpandedState: Record<string, boolean> = {};
@@ -78,6 +75,11 @@ export default function ImagesPropertyForm({
       [category]: [...currentImages, ...selectedFiles],
     }));
     setErrors((prev) => ({ ...prev, [category]: "" }));
+
+    setImageTags((prev) => ({
+      ...prev,
+      [category]: [...(prev[category] || []), ...selectedFiles.map(() => "")],
+    }));
   };
 
   const handleRemoveImage = (category: string, index: number) => {
@@ -105,6 +107,14 @@ export default function ImagesPropertyForm({
           area.name
         ] = `Debe subir al menos una imagen para ${area.name}.`;
       }
+    });
+
+    Object.entries(imageTags).forEach(([category, tags]) => {
+      tags.forEach((tag, index) => {
+        if (!tag) {
+          newErrors[`${category}-tag-${index}`] = `Etiqueta obligatoria.`;
+        }
+      });
     });
 
     setErrors(newErrors);
@@ -153,83 +163,15 @@ export default function ImagesPropertyForm({
     }
   };
 
-  const renderImageUploadSection = (
-    name: string,
-    description?: string,
-    maxImages: number = 4,
-    titleSize: string = "base"
-  ) => (
-    <div
-      key={name}
-      className={`pb-1 rounded-md bg-backgroundAlt dark:bg-backgroundDarkAlt hover:bg-backgroundLight hover:dark:bg-backgroundLight ${
-        errors[name] ? "border border-red-500" : "border-none"
-      }`}
-    >
-      <div
-        className="flex justify-between items-center cursor-pointer p-4"
-        onClick={() => toggleSection(name)}
-      >
-        <h4 className={`text-${titleSize} font-semibold text-textPrimary`}>
-          {name}
-        </h4>
-        <AiOutlineDown
-          className={`${
-            expandedSections[name] ? "rotate-180" : ""
-          } transition-transform duration-300 text-textPrimary dark:text-textSecondary`}
-        />
-      </div>
-
-      {description && (
-        <p
-          className="text-sm text-gray-600 dark:text-gray-400 -mt-3 mb-4 px-4 cursor-pointer"
-          onClick={() => toggleSection(name)}
-        >
-          {description}
-        </p>
-      )}
-
-      {expandedSections[name] && (
-        <div className="px-4 pb-4">
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) => handleImageChange(name, e, maxImages)}
-            className={`w-full px-3 py-2 rounded-lg bg-backgroundDark dark:bg-background text-textPrimary mt-2 ${
-              errors[name] ? "border-red-500" : "border-none"
-            }`}
-          />
-          <p className="mt-1 ml-2 text-sm text-gray-600 dark:text-gray-400">
-            {images[name]?.length || 0} archivo(s) subido(s)
-          </p>
-
-          {errors[name] && (
-            <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-              <AiOutlineExclamationCircle className="w-5 h-5" />
-              {errors[name]}
-            </div>
-          )}
-          <div className="flex flex-wrap mt-2">
-            {images[name]?.map((file, index) => (
-              <div
-                key={index}
-                className="relative m-1 w-20 h-20 bg-cover bg-center rounded-md"
-                style={{ backgroundImage: `url(${URL.createObjectURL(file)})` }}
-              >
-                <button
-                  type="button"
-                  className="absolute top-0 right-0 bg-textPrimary dark:bg-textSecondary bg-opacity-50 text-white rounded-full p-1"
-                  onClick={() => handleRemoveImage(name, index)}
-                >
-                  <AiOutlineClose className="w-3 h-3" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  const handleTagChange = (category: string, index: number, tag: string) => {
+    setImageTags((prev) => {
+      const updatedTags = { ...prev };
+      const categoryTags = [...(updatedTags[category] || [])];
+      categoryTags[index] = tag;
+      updatedTags[category] = categoryTags;
+      return updatedTags;
+    });
+  };
 
   return (
     <div className="container mx-auto max-w-2xl p-6 bg-backgroundLight dark:bg-backgroundDark rounded-lg shadow-lg">
@@ -243,31 +185,27 @@ export default function ImagesPropertyForm({
         }}
         className="space-y-6"
       >
-        {imagesTypes.map((type) =>
-          renderImageUploadSection(
-            type.name,
-            type.description,
-            type.maxImagesAllowed,
-            "lg"
-          )
-        )}
-
-        {Array.isArray(formData.commonAreas) &&
-          formData.commonAreas.length > 0 && (
-            <div>
-              <h3 className="text-lg font-semibold text-textPrimary dark:text-textPrimary">
-                Imágenes por Áreas Comunes
-              </h3>
-              <p className="text-sm mb-3 text-gray-600 dark:text-gray-400">
-                Sube imágenes relevantes de cada área común para proporcionar
-                más información visual a los usuarios.
-              </p>
-
-              {formData.commonAreas?.map((area) =>
-                renderImageUploadSection(area.name, undefined, 4, "base")
-              )}
-            </div>
-          )}
+        {imagesTypes.map((type) => (
+          <ImageUploadSection
+            key={type.name}
+            name={type.name}
+            description={type.description}
+            maxImages={type.maxImagesAllowed}
+            titleSize="lg"
+            expanded={expandedSections[type.name]}
+            images={images[type.name] || []}
+            tags={imageTags[type.name] || []}
+            error={errors[type.name] || null}
+            onToggleExpand={() => toggleSection(type.name)}
+            onImageChange={(e) =>
+              handleImageChange(type.name, e, type.maxImagesAllowed)
+            }
+            onRemoveImage={(index) => handleRemoveImage(type.name, index)}
+            onTagChange={(index, newTag) =>
+              handleTagChange(type.name, index, newTag)
+            }
+          />
+        ))}
 
         <StepNavigationButtons
           currentStep={currentStep}

@@ -26,7 +26,8 @@ export default function FeaturesPropertyForm({
   housingTypes,
 }: FeaturesPropertyFormProps) {
   const [errors, setErrors] = useState({
-    areaError: "",
+    builtAreaError: "",
+    totalAreaError: "",
     housingTypeError: "",
   });
 
@@ -53,7 +54,10 @@ export default function FeaturesPropertyForm({
   const validateForm = () => {
     const newErrors = { ...errors };
 
-    if (!formData.area) newErrors.areaError = "El área es obligatoria.";
+    if (!formData.builtArea)
+      newErrors.builtAreaError = "El área construida es obligatoria.";
+    if (!formData.totalArea)
+      newErrors.totalAreaError = "El área total es obligatoria.";
     if (!formData.housingType)
       newErrors.housingTypeError = "Seleccione un tipo de vivienda.";
 
@@ -82,22 +86,48 @@ export default function FeaturesPropertyForm({
             </label>
             <input
               type="number"
-              name="area"
+              name="builtArea"
               min="0"
-              value={formData.area || ""}
+              value={formData.builtArea || ""}
               onChange={handleChange}
               className={`w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary ${
-                errors.areaError
+                errors.builtAreaError
                   ? "border-red-500"
                   : "border-borderColor dark:border-borderColorHover"
               }`}
-              placeholder="Ingrese el área"
+              placeholder="Ingrese el área construida"
               required
             />
-            {errors.areaError && (
+            {errors.builtAreaError && (
               <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
                 <AiOutlineExclamationCircle className="w-5 h-5" />
-                {errors.areaError}
+                {errors.builtAreaError}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-textPrimary dark:text-textPrimary mb-2">
+              Área Total (m²) <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              name="totalArea"
+              min="0"
+              value={formData.totalArea || ""}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary ${
+                errors.totalAreaError
+                  ? "border-red-500"
+                  : "border-borderColor dark:border-borderColorHover"
+              }`}
+              placeholder="Ingrese el área total"
+              required
+            />
+            {errors.totalAreaError && (
+              <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
+                <AiOutlineExclamationCircle className="w-5 h-5" />
+                {errors.totalAreaError}
               </div>
             )}
           </div>
@@ -140,8 +170,9 @@ export default function FeaturesPropertyForm({
               type="number"
               name="rooms"
               min={0}
-              value={formData.rooms || "0"}
+              value={formData.rooms || ""}
               onChange={handleChange}
+              placeholder="Número de habitacioens"
               className="w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary border-borderColor dark:border-borderColorHover"
             />
           </div>
@@ -154,8 +185,9 @@ export default function FeaturesPropertyForm({
               type="number"
               name="bathrooms"
               min={0}
-              value={formData.bathrooms || "0"}
+              value={formData.bathrooms || ""}
               onChange={handleChange}
+              placeholder="Número de baños"
               className="w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary border-borderColor dark:border-borderColorHover"
             />
           </div>
@@ -168,8 +200,9 @@ export default function FeaturesPropertyForm({
               type="number"
               name="lobbies"
               min={0}
-              value={formData.lobbies || "0"}
+              value={formData.lobbies || ""}
               onChange={handleChange}
+              placeholder="Número de salas de estar"
               className="w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary border-borderColor dark:border-borderColorHover"
             />
           </div>

@@ -42,6 +42,10 @@ export default function BasicPropertyForm({
     setErrors({ ...errors, [`${e.target.name}Error`]: "" });
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange({ isCompanyOwned: e.target.checked });
+  };
+
   const handleSelectChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
     field: "category" | "propertyType"
@@ -223,6 +227,19 @@ export default function BasicPropertyForm({
               {errors.detailedDescriptionError}
             </div>
           )}
+        </div>
+
+        <div className="flex items-center mt-4">
+          <input
+            type="checkbox"
+            name="isCompanyOwned"
+            checked={formData.isCompanyOwned || false}
+            onChange={handleCheckboxChange}
+            className="mr-2"
+          />
+          <label className="text-textPrimary dark:text-textPrimary">
+            Propiedad de la empresa
+          </label>
         </div>
 
         <StepNavigationButtons

@@ -25,10 +25,10 @@ export default function CreatePropertyPage() {
 
   const locations = useColombianLocations();
 
-  const { metadata, loadingMetadata, errorMetadata } = useBasicMetadata();
+  const { metadata } = useBasicMetadata();
   const { imagesTypes } = useImageTypes();
   const { createProperty } = useCreateProperty();
-  const { uploadImages, uploadStatus } = useUploadImages();
+  const { uploadImages } = useUploadImages();
   const { insertPropertyMedia } = useInsertPropertyMedia();
   const [loading, setLoading] = useState(false);
 
@@ -81,10 +81,10 @@ export default function CreatePropertyPage() {
         throw new Error("Error al subir las imágenes.");
       }
 
+      router.push("/admin/propiedades");
     } catch (err) {
       console.error("Error durante el proceso:", err);
     } finally {
-      router.push("/admin/propiedades");
       setLoading(false);
     }
   };

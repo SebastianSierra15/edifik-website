@@ -4,11 +4,11 @@ interface ConfirmDeleteModalProps {
   onDelete: () => void;
 }
 
-const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
+export default function ConfirmDeleteModal({
   show,
   onClose,
   onDelete,
-}) => {
+}: ConfirmDeleteModalProps) {
   if (!show) return null;
 
   return (
@@ -38,6 +38,4 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
       </div>
     </div>
   );
-};
-
-export default ConfirmDeleteModal;
+}

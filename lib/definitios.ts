@@ -1,6 +1,6 @@
 import { DateTime } from "next-auth/providers/kakao";
 
-export type User = {
+export interface User {
   id: number;
   identityDocument: number;
   names: string;
@@ -11,56 +11,57 @@ export type User = {
   password: string;
   state: boolean;
   role: Role;
-};
+}
 
-export type Role = {
+export interface Role {
   id: number;
   name: string;
-};
+}
 
-export type Category = {
+export interface Category {
   id: number;
   name: string;
-};
+}
 
-export type CommonArea = {
+export interface CommonArea {
   id: number;
   name: string;
-};
+}
 
-export type HousingType = {
+export interface HousingType {
   id: number;
   name: string;
-};
+}
 
-export type NearbyService = {
+export interface NearbyService {
   id: number;
   name: string;
-};
+}
 
-export type Departament = {
+export interface Departament {
   id: number;
   name: string;
-};
+}
 
-export type City = {
+export interface City {
   id: number;
   name: string;
   departament: Departament;
-};
+}
 
-export type PaymentMethod = {
+export interface PaymentMethod {
   id: number;
   name: string;
   state: boolean;
-};
+}
 
-export type Property = {
+export interface Property {
   id: number;
   name: string;
   state: boolean;
   price: number;
-  area: number;
+  totalArea: number;
+  builtArea: number;
   bathrooms: number;
   rooms: number;
   lobbies: number;
@@ -70,6 +71,7 @@ export type Property = {
   latitude: number;
   longitude: number;
   availabeDate: Date | null;
+  isCompanyOwned: boolean;
   category: Category;
   propertyType: PropertyType;
   housingType: HousingType;
@@ -78,29 +80,14 @@ export type Property = {
   commonAreas: CommonArea[];
   nearbyService: NearbyService[];
   propertyMedia: PropertyMedia[];
-};
+}
 
-export type PropertyData = Partial<Property>;
-
-export type PropertySummary = Pick<
-  Property,
-  | "id"
-  | "name"
-  | "price"
-  | "area"
-  | "address"
-  | "longitude"
-  | "latitude"
-  | "city"
-  | "membership"
->;
-
-export type PropertyType = {
+export interface PropertyType {
   id: number;
   name: string;
-};
+}
 
-export type Membership = {
+export interface Membership {
   id: number;
   name: string;
   benefits: string;
@@ -111,11 +98,9 @@ export type Membership = {
   maxProperties: number;
   maxImagesProperty: number;
   propertiesFeatured: number;
-};
+}
 
-export type MembershipSummary = Pick<Membership, "id" | "name">;
-
-export type Reservation = {
+export interface Reservation {
   id: number;
   startDate: Date;
   endDate: Date;
@@ -125,32 +110,50 @@ export type Reservation = {
   paymentMethodId: number;
   propertyId: number;
   statusReservationId: number;
-};
+}
 
-export type StatusReservation = {
+export interface StatusReservation {
   id: number;
   name: string;
-};
+}
 
-export type Permission = {
+export interface Permission {
   id: number;
   name: string;
-};
+}
 
-export type ImageType = {
+export interface ImageType {
   id: number;
   name: string;
   description: string;
   maxImagesAllowed: number;
   isRequired: boolean;
-};
+}
 
-export type PropertyMedia = {
+export interface PropertyMedia {
   id: number;
   url: string;
+  tag: string;
   propertyId: number;
   commonArea: number | null;
   imageType: number | null;
-};
+}
+
+export type PropertyData = Partial<Property>;
+
+export type PropertySummary = Pick<
+  Property,
+  | "id"
+  | "name"
+  | "price"
+  | "totalArea"
+  | "address"
+  | "longitude"
+  | "latitude"
+  | "city"
+  | "membership"
+>;
+
+export type MembershipSummary = Pick<Membership, "id" | "name">;
 
 export type PropertyMediaData = Partial<PropertyMedia>;

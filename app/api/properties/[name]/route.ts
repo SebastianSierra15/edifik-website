@@ -24,7 +24,8 @@ export async function GET(
       name: rows[0].name,
       state: rows[0].state,
       price: rows[0].price,
-      area: rows[0].area,
+      builtArea: rows[0].builtArea,
+      totalArea: rows[0].totalArea,
       bathrooms: rows[0].bathrooms,
       rooms: rows[0].rooms,
       lobbies: rows[0].lobbies,
@@ -36,6 +37,7 @@ export async function GET(
       availabeDate: rows[0].availabeDate
         ? new Date(rows[0].availabeDate)
         : null,
+      isCompanyOwned: rows[0].isCompanyOwned,
       category: {
         id: rows[0].categoryId,
         name: rows[0].categoryName,

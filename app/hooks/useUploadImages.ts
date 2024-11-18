@@ -16,7 +16,7 @@ export function useUploadImages() {
     typesArray: { id: number; category: "imageType" | "commonArea" }[];
   } | void> => {
     try {
-      setUploadStatus("Subiendo imágenes...");
+      setUploadStatus("Uploading images...");
 
       const uploadPromises = images.map((imageArray, index) =>
         imageArray.map(async (file) => {
@@ -27,13 +27,13 @@ export function useUploadImages() {
             `properties/images/${propertyId}/${imageTypes[index].type}/`
           );
 
-          const response = await fetch("/api/s3/images", {
+          const response = await fetch("/api/s3/properties/images/upload", {
             method: "POST",
             body: formData,
           });
 
           if (!response.ok) {
-            throw new Error(`Error al subir la imagen: ${file.name}`);
+            throw new Error(`Error uploading the image: ${file.name}`);
           }
 
           const { url } = await response.json();
@@ -50,12 +50,12 @@ export function useUploadImages() {
         category,
       }));
 
-      setUploadStatus("Imágenes subidas exitosamente.");
+      setUploadStatus("Images uploaded successfully");
 
       return { urlsMatrix, typesArray };
     } catch (error) {
-      console.error("Error al subir las imágenes:", error);
-      setUploadStatus("Error al subir las imágenes.");
+      console.error("Error uploading images:", error);
+      setUploadStatus("Error uploading images");
     }
   };
 

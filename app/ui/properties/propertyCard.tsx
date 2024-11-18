@@ -45,14 +45,10 @@ export default function PropertyCard({
     <div className="bg-background dark:bg-backgroundDark rounded-lg">
       <Link href={url} target="_blank" rel="noopener noreferrer">
         <div
-          className={`relative max-w-xs shadow-secondary dark:shadow-white rounded-lg overflow-hidden bg-secondary dark:bg-secondaryDark cursor-pointer p-1 shadow-md dark:shadow-md ${
+          className={`relative max-w-xs shadow-secondary dark:shadow-white rounded-lg overflow-hidden bg-secondary dark:bg-secondaryDark cursor-pointer shadow-md dark:shadow-md ${
             isFromMap
               ? "z-50 hover:scale-105 transition-transform duration-300"
               : "h-[370px] z-0"
-          } ${
-            idMembership === 1003
-              ? "bg-gradient-to-r from-primaryLight to-primaryDark hover:from-primary hover:to-primaryDark"
-              : ""
           }`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => {

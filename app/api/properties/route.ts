@@ -28,7 +28,6 @@ export async function GET(request: Request) {
 
     const page = parseInt(getQueryParam("page") || "1", 10);
     const pageSize = parseInt(getQueryParam("pageSize") || "16", 10);
-    const categories = getQueryParam("categories");
     const cities = getQueryParam("cities");
     const propertyTypes = getQueryParam("propertyTypes");
     const housingTypes = getQueryParam("housingTypes");
@@ -46,11 +45,10 @@ export async function GET(request: Request) {
     const validatedPageSize = !isNaN(pageSize) && pageSize > 0 ? pageSize : 15;
 
     const [result] = await db.query(
-      "CALL get_properties(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "CALL get_properties(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         validatedPage,
         validatedPageSize,
-        categories,
         cities,
         propertyTypes,
         housingTypes,
@@ -78,7 +76,7 @@ export async function GET(request: Request) {
       id: row.id,
       name: row.name,
       price: row.price,
-      area: row.area,
+      totalArea: row.area,
       longitude: row.longitude,
       latitude: row.latitude,
       address: row.address,
@@ -111,7 +109,8 @@ export async function POST(request: Request) {
       name,
       state,
       price,
-      area,
+      builtArea,
+      totalArea,
       bathrooms,
       rooms,
       lobbies,
@@ -121,6 +120,7 @@ export async function POST(request: Request) {
       latitude,
       longitude,
       availabeDate,
+      isCompanyOwned,
       category,
       propertyType,
       housingType,
@@ -129,11 +129,12 @@ export async function POST(request: Request) {
       commonAreas,
       nearbyServices,
     } = propertyData;
-
+    
     if (
       !name ||
       !price ||
-      !area ||
+      !builtArea ||
+      !totalArea ||
       !shortDescription ||
       !address ||
       !latitude ||
@@ -151,12 +152,13 @@ export async function POST(request: Request) {
     }
 
     const [result] = await db.query(
-      "CALL create_property(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "CALL create_property(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         name,
         state || true,
         price,
-        area,
+        builtArea,
+        totalArea,
         rooms || 0,
         bathrooms || 0,
         lobbies || 0,
@@ -166,6 +168,7 @@ export async function POST(request: Request) {
         latitude,
         longitude,
         formatDateForMySQL(availabeDate),
+        isCompanyOwned || 0,
         category.id,
         city.name,
         city.departament.name,
@@ -186,10 +189,7 @@ export async function POST(request: Request) {
       console.log("Adding common areas...");
       await Promise.all(
         commonAreas.map((area: CommonArea) =>
-          db.query("CALL add_common_area(?, ?)", [
-            propertyId,
-            area.id,
-          ])
+          db.query("CALL add_common_area(?, ?)", [propertyId, area.id])
         )
       );
     }
@@ -198,10 +198,7 @@ export async function POST(request: Request) {
       console.log("Adding nearby services...");
       await Promise.all(
         nearbyServices.map((service: NearbyService) =>
-          db.query("CALL add_nearby_service(?, ?)", [
-            propertyId,
-            service.id,
-          ])
+          db.query("CALL add_nearby_service(?, ?)", [propertyId, service.id])
         )
       );
     }

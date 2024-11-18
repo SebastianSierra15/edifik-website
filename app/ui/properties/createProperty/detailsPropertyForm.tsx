@@ -170,7 +170,7 @@ export default function DetailsPropertyForm({
           </label>
           <select
             onChange={(e) => handleSelectChange(e, "commonAreas")}
-            className="w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary"
+            className="w-full px-3 py-2 border rounded-md bg-background border-borderColor dark:border-borderColorHover dark:bg-backgroundLight text-textPrimary"
           >
             <option value="">Seleccione un área común</option>
             {commonAreas.map((area) => (
