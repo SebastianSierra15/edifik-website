@@ -3,7 +3,7 @@ import {
   CommonArea,
   HousingType,
   NearbyService,
-  PropertyType,
+  propertyType,
   Category,
 } from "@/lib/definitios";
 
@@ -11,7 +11,7 @@ interface BasicMetadata {
   commonAreas: CommonArea[];
   housingTypes: HousingType[];
   nearbyServices: NearbyService[];
-  propertyTypes: PropertyType[];
+  propertyTypes: propertyType[];
   categories: Category[];
 }
 
@@ -23,7 +23,7 @@ export default function useBasicMetadata() {
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        const response = await fetch("/api/properties/metadata/basic-metadata");
+        const response = await fetch("/api/projects/metadata/basic-metadata");
         if (!response.ok) throw new Error("Error al obtener los datos");
 
         const data: BasicMetadata = await response.json();

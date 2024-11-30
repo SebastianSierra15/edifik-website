@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import {
-  FaBuilding,
-  FaProjectDiagram,
+  FaDraftingCompass,
+  FaHome,
   FaBed,
   FaClipboardList,
   FaUsers,
@@ -19,18 +19,18 @@ export default function Page() {
       <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {[
           {
-            href: "/admin/propiedades",
-            icon: FaBuilding,
-            title: "Propiedades",
-            description:
-              "Administra todas las propiedades disponibles en venta, arriendo, o sobre planos.",
-          },
-          {
             href: "/admin/proyectos",
-            icon: FaProjectDiagram,
+            icon: FaDraftingCompass,
             title: "Proyectos",
             description:
-              "Gestiona los proyectos actuales y futuros de la empresa constructora.",
+              "Administra y gestiona todos los proyectos en desarrollo, incluyendo información y detalles de cada proyecto.",
+          },
+          {
+            href: "/admin/viviendas",
+            icon: FaHome,
+            title: "Viviendas",
+            description:
+              "Gestiona las propiedades disponibles para venta y arriendo, incluyendo tipos de vivienda y características.",
           },
           {
             href: "/admin/estadias",
@@ -44,14 +44,14 @@ export default function Page() {
             icon: FaClipboardList,
             title: "Reservas",
             description:
-              "Revisa y gestiona todas las reservas realizadas por los clientes.",
+              "Monitorea y organiza todas las reservas y solicitudes de vivienda de los clientes.",
           },
           {
             href: "/admin/usuarios",
             icon: FaUsers,
             title: "Usuarios",
             description:
-              "Gestiona los usuarios registrados y sus roles dentro del sistema.",
+              "Administra los usuarios, permisos y roles dentro de la plataforma.",
           },
         ].map(({ href, icon: Icon, title, description }) => (
           <Link key={href} href={href}>

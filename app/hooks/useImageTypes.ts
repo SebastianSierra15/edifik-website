@@ -9,7 +9,7 @@ export default function useImageTypes() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await fetch("/api/properties/metadata/image-types");
+        const response = await fetch("/api/projects/metadata/image-types");
         if (!response.ok) throw new Error("Error al obtener los datos");
 
         const data: ImageType[] = await response.json();

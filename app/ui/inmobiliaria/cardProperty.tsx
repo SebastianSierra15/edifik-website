@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import Link from "next/link";
 
-type PropertyCardProps = {
+type ProjectCardProps = {
   images: string[];
   name: string;
   location: string;
@@ -16,7 +16,7 @@ type PropertyCardProps = {
   url: string;
 };
 
-export default function PropertyCard({
+export default function ProjectCard({
   images,
   name,
   location,
@@ -28,7 +28,7 @@ export default function PropertyCard({
   showDetails,
   onClose,
   url,
-}: PropertyCardProps) {
+}: ProjectCardProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -75,7 +75,7 @@ export default function PropertyCard({
               <img
                 key={index}
                 src={img}
-                alt="Property"
+                alt="Project"
                 className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-1000 ease-in-out ${
                   index === currentImage ? "opacity-100" : "opacity-0"
                 }`}

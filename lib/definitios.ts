@@ -55,34 +55,46 @@ export interface PaymentMethod {
   state: boolean;
 }
 
-export interface Property {
+export interface Project {
   id: number;
   name: string;
   state: boolean;
   price: number;
   totalArea: number;
   builtArea: number;
-  bathrooms: number;
-  rooms: number;
-  lobbies: number;
+  freeHeight?: number;
+  width?: number;
+  length?: number;
+  parkingSpots?: number;
+  elevators?: number;
+  heavyParking?: number;
+  availableUnits: number;
+  bathrooms?: number;
+  bedrooms?: number;
+  lobbies?: number;
+  towers?: number;
+  storageUnits?: number;
+  customizationOptions?: boolean;
+  terrace?: boolean;
+  balcony?: boolean;
+  garden?: boolean;
+  laundryArea?: boolean;
   shortDescription: string;
-  detailedDescription: string | null;
+  detailedDescription: string;
   address: string;
   latitude: number;
   longitude: number;
-  availabeDate: Date | null;
-  isCompanyOwned: boolean;
-  category: Category;
-  propertyType: PropertyType;
-  housingType: HousingType;
+  availableDate?: Date;
+  propertyType: propertyType;
+  housingType?: HousingType;
   city: City;
   membership: number;
   commonAreas: CommonArea[];
-  nearbyService: NearbyService[];
-  propertyMedia: PropertyMedia[];
+  nearbyServices: NearbyService[];
+  projectMedia: ProjectMedia[];
 }
 
-export interface PropertyType {
+export interface propertyType {
   id: number;
   name: string;
 }
@@ -95,9 +107,8 @@ export interface Membership {
   discountThreeMonths: number;
   discountSixMonths: number;
   discountTwelveMonths: number;
-  maxProperties: number;
-  maxImagesProperty: number;
-  propertiesFeatured: number;
+  maxProjects: number;
+  projectsFeatured: number;
 }
 
 export interface Reservation {
@@ -108,7 +119,7 @@ export interface Reservation {
   price: number;
   userId: number;
   paymentMethodId: number;
-  propertyId: number;
+  projectId: number;
   statusReservationId: number;
 }
 
@@ -125,24 +136,34 @@ export interface Permission {
 export interface ImageType {
   id: number;
   name: string;
-  description: string;
+  description?: string;
   maxImagesAllowed: number;
   isRequired: boolean;
 }
 
-export interface PropertyMedia {
-  id: number;
+export interface ProjectMedia {
+  id?: number;
   url: string;
   tag: string;
-  propertyId: number;
-  commonArea: number | null;
-  imageType: number | null;
+  description?: string;
+  projectId: number;
+  commonArea?: number;
+  imageType?: number;
 }
 
-export type PropertyData = Partial<Property>;
+export interface Media {
+  tag: string;
+  file: File;
+  description?: string;
+  idType: number;
+  type: string;
+  category: string;
+}
 
-export type PropertySummary = Pick<
-  Property,
+export type ProjectData = Partial<Project>;
+
+export type ProjectSummary = Pick<
+  Project,
   | "id"
   | "name"
   | "price"
@@ -156,4 +177,4 @@ export type PropertySummary = Pick<
 
 export type MembershipSummary = Pick<Membership, "id" | "name">;
 
-export type PropertyMediaData = Partial<PropertyMedia>;
+export type ProjectMediaData = Partial<ProjectMedia>;

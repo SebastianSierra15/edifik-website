@@ -5,6 +5,7 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./ui/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -31,6 +32,15 @@ const config: Config = {
 
         hoverColor: "var(--primary-dark)",
         focusColor: "var(--secondary-light)",
+      },
+      animation: {
+        gradient: "gradient 3s ease-in-out infinite",
+      },
+      keyframes: {
+        gradient: {
+          "0%": { "background-position": "200% 0%" },
+          "100%": { "background-position": "-200% 0%" },
+        },
       },
     },
   },
