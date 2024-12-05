@@ -179,6 +179,7 @@ export default function ImagesProjectForm({
       files.forEach((_, index) => {
         const tag = imageTags[category]?.[index];
         const description = imageDescriptions[category]?.[index];
+        const imageType = imagesTypes.find((type) => type.name === category);
 
         if (!tag || tag.trim() === "") {
           newErrors[`${category}-tag-${index}`] =
@@ -186,11 +187,11 @@ export default function ImagesProjectForm({
         }
 
         if (
-          category === "descriptionCategory" &&
+          imageType?.id === 1005 &&
           (!description || description.trim() === "")
         ) {
           newErrors[`${category}-description-${index}`] =
-            "La descripción es obligatoria.";
+            "La descripción es obligatoria para esta imagen.";
         }
       });
     });
@@ -261,6 +262,12 @@ export default function ImagesProjectForm({
             tags={imageTags[type.name] || []}
             descriptions={imageDescriptions[type.name] || []}
             error={errors[type.name] || null}
+            errors={Object.keys(errors)
+              .filter((key) => key.startsWith(`${type.name}-`))
+              .reduce((acc, key) => {
+                acc[key] = errors[key];
+                return acc;
+              }, {} as Record<string, string>)}
             onToggleExpand={() => toggleSection(type.name)}
             onImageChange={(e) =>
               handleImageChange(type.name, e, type.maxImagesAllowed)
@@ -295,6 +302,12 @@ export default function ImagesProjectForm({
             tags={imageTags[area.name] || []}
             descriptions={imageDescriptions[area.name] || []}
             error={errors[area.name] || null}
+            errors={Object.keys(errors)
+              .filter((key) => key.startsWith(`${area.name}-`))
+              .reduce((acc, key) => {
+                acc[key] = errors[key];
+                return acc;
+              }, {} as Record<string, string>)}
             onToggleExpand={() => toggleSection(area.name)}
             onImageChange={(e) => handleImageChange(area.name, e, 5)}
             onRemoveImage={(index) => handleRemoveImage(area.name, index)}

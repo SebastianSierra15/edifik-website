@@ -64,12 +64,28 @@ export async function GET(request: Request) {
     );
 
     const rows = (result as RowDataPacket[][])[0];
-    const totalEntriesRow = (result as RowDataPacket[][])[1][0];
+    const projectMediaRows = (result as RowDataPacket[][])[1];
+    const totalEntriesRow = (result as RowDataPacket[][])[2][0];
     const totalEntries = totalEntriesRow.totalEntries;
 
     if (rows.length === 0) {
       return NextResponse.json({ projects: [], totalEntries: 0 });
     }
+
+    const projectMediaMap: Record<
+      number,
+      { url: string; tag: string; projectId: number }[]
+    > = {};
+    projectMediaRows.forEach((media: any) => {
+      if (!projectMediaMap[media.projectId]) {
+        projectMediaMap[media.projectId] = [];
+      }
+      projectMediaMap[media.projectId].push({
+        url: media.url,
+        tag: media.tag,
+        projectId: media.projectId,
+      });
+    });
 
     const projects: ProjectSummary[] = rows.map((row: any) => ({
       id: row.id,
@@ -87,7 +103,7 @@ export async function GET(request: Request) {
           name: row.departamentName,
         },
       },
-      membership: row.membershipId,
+      projectMedia: projectMediaMap[row.id] || [],
     }));
 
     return NextResponse.json({ projects, totalEntries });
@@ -212,7 +228,7 @@ export async function POST(request: Request) {
     ];
 
     console.log(queryParams);
-    
+
     const [result] = await db.query(
       "CALL create_project(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       queryParams

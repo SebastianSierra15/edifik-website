@@ -172,7 +172,7 @@ export type ProjectSummary = Pick<
   | "longitude"
   | "latitude"
   | "city"
-  | "membership"
+  | "projectMedia"
 >;
 
 export type MembershipSummary = Pick<Membership, "id" | "name">;

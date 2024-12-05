@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { motion } from "framer-motion";
 import DetailCard from "./detailCard";
 import { Project } from "@/lib/definitios";
@@ -11,16 +14,20 @@ import {
   FaWarehouse,
   FaCar,
   FaTruck,
-  FaArrowUp,
   FaSeedling,
   FaTools,
-  FaWindowRestore,
+  FaArrowsAltV,
   FaTshirt,
-  FaLevelUpAlt,
-  FaExpandArrowsAlt,
   FaRulerHorizontal,
   FaRulerVertical,
 } from "react-icons/fa";
+import { PiElevatorFill } from "react-icons/pi";
+import {
+  MdOutlineBalcony,
+  MdOutlineDeck,
+  MdOutlineHomeWork,
+} from "react-icons/md";
+import { RiRuler2Fill } from "react-icons/ri";
 
 type ProjectDetailsProps = {
   project: Project;
@@ -32,14 +39,6 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
       group: "Características generales",
       items: [
         {
-          label: "Área construida",
-          value:
-            project.builtArea && project.builtArea > 0
-              ? `${project.builtArea} m²`
-              : null,
-          icon: <FaRulerCombined />,
-        },
-        {
           label: "Área total",
           value:
             project.totalArea && project.totalArea > 0
@@ -48,12 +47,20 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
           icon: <FaRulerCombined />,
         },
         {
+          label: "Área construida",
+          value:
+            project.builtArea && project.builtArea > 0
+              ? `${project.builtArea} m²`
+              : null,
+          icon: <RiRuler2Fill />,
+        },
+        {
           label: "Altura libre",
           value:
             project.freeHeight && project.freeHeight > 0
               ? `${project.freeHeight} m`
               : null,
-          icon: <FaExpandArrowsAlt />,
+          icon: <FaArrowsAltV />,
         },
         {
           label: "Ancho",
@@ -72,8 +79,18 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
           value: project.housingType?.name || "",
           icon: <FaHome />,
         },
+        {
+          label: "Unds. Disponibles",
+          value:
+            project.availableUnits && project.availableUnits > 0
+              ? project.availableUnits.toString()
+              : null,
+          icon: <MdOutlineHomeWork />,
+        },
+        
       ],
     },
+
     {
       group: "Espacios y comodidades",
       items: [
@@ -115,7 +132,7 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
             project.elevators && project.elevators > 0
               ? project.elevators.toString()
               : null,
-          icon: <FaArrowUp />,
+          icon: <PiElevatorFill />,
         },
         {
           label: "Est. vehículos pesados",
@@ -143,37 +160,52 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
         },
       ],
     },
-    {
-      group: "Opciones adicionales",
-      items: [
-        {
-          label: "Personalizable",
-          value: project.customizationOptions ? "Sí" : "NO",
-          icon: <FaTools />,
-        },
-        {
-          label: "Balcón",
-          value: project.balcony ? "Sí" : "No",
-          icon: <FaWindowRestore />,
-        },
-        {
-          label: "Jardín",
-          value: project.garden ? "Sí" : "No",
-          icon: <FaSeedling />,
-        },
-        {
-          label: "Cuarto de ropas",
-          value: project.laundryArea ? "Sí" : "No",
-          icon: <FaTshirt />,
-        },
-        {
-          label: "Terraza",
-          value: project.terrace ? "Sí" : "No",
-          icon: <FaLevelUpAlt />,
-        },
-      ],
-    },
+
+    ...(project.propertyType.id === 1001 || project.propertyType.id === 1002
+      ? [
+          {
+            group: "Opciones adicionales",
+            items: [
+              {
+                label: "Personalizable",
+                value: project.customizationOptions ? "Sí" : "NO",
+                icon: <FaTools />,
+              },
+              {
+                label: "Balcón",
+                value: project.balcony ? "Sí" : "No",
+                icon: <MdOutlineBalcony />,
+              },
+              {
+                label: "Jardín",
+                value: project.garden ? "Sí" : "No",
+                icon: <FaSeedling />,
+              },
+              {
+                label: "Cuarto de ropas",
+                value: project.laundryArea ? "Sí" : "No",
+                icon: <FaTshirt />,
+              },
+              {
+                label: "Terraza",
+                value: project.terrace ? "Sí" : "No",
+                icon: <MdOutlineDeck />,
+              },
+            ],
+          },
+        ]
+      : []),
   ];
+
+  const [openGroups, setOpenGroups] = useState<boolean[]>(
+    new Array(details.length).fill(true)
+  );
+
+  const toggleGroup = (index: number) => {
+    setOpenGroups((prev) =>
+      prev.map((isOpen, i) => (i === index ? !isOpen : isOpen))
+    );
+  };
 
   return (
     <div className="my-8">
@@ -182,37 +214,61 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
       </h2>
       <div className="space-y-6">
         {details.map((group, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.3, duration: 0.6 }}
-          >
-            {index !== 0 && <hr className="my-3 border-t border-amber-950" />}
-            <h3 className="text-lg font-semibold text-brown-500 mb-4">
-              {group.group}
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-              {group.items.map(
-                (item, index) =>
-                  item.value && (
-                    <DetailCard
-                      key={index}
-                      icon={
-                        <motion.div
-                          className="text-yellow-600"
-                          whileHover={{ scale: 1.1 }}
-                        >
-                          {item.icon}
-                        </motion.div>
-                      }
-                      label={item.label}
-                      value={item.value}
-                    />
-                  )
-              )}
+          <div key={index} className="mb-4">
+            <div
+              className="p-4 rounded-lg shadow flex justify-between items-center cursor-pointer"
+              style={{
+                backgroundColor: "#ffffff",
+                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+              }}
+              onClick={() => toggleGroup(index)}
+            >
+              <span
+                className="text-lg font-semibold"
+                style={{ color: "#5D4037" }}
+              >
+                {group.group}
+              </span>
+              <motion.div
+                className={`transition-transform ${
+                  openGroups[index] ? "rotate-180" : "rotate-0"
+                }`}
+                style={{ color: "#DAA520" }}
+              >
+                ▼
+              </motion.div>
             </div>
-          </motion.div>
+
+            {openGroups[index] && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                transition={{ duration: 0.3 }}
+                className="mt-2"
+              >
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {group.items.map(
+                    (item, index) =>
+                      item.value && (
+                        <DetailCard
+                          key={index}
+                          icon={
+                            <motion.div
+                              className="text-yellow-600"
+                              whileHover={{ scale: 1.1 }}
+                            >
+                              {item.icon}
+                            </motion.div>
+                          }
+                          label={item.label}
+                          value={item.value}
+                        />
+                      )
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </div>
         ))}
       </div>
     </div>

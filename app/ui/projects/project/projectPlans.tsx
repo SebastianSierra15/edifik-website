@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import ImageModal from "./imageModal";
 import { ProjectMedia } from "@/lib/definitios";
 
 type ProjectPlansProps = {
@@ -8,17 +10,12 @@ type ProjectPlansProps = {
 };
 
 export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
-  const plans = projectMedia
-    .filter((media) => media.imageType === 1005)
-    .map((media) => ({
-      label: media.tag,
-      image: media.url,
-      description: media.description,
-    }));
+  const [currentImage, setCurrentImage] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [activeTab, setActiveTab] = useState(0);
 
-  if (plans.length === 0) {
+  if (projectMedia.length === 0) {
     return (
       <div
         className="p-6 rounded-lg"
@@ -48,7 +45,7 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
           borderColor: "#5D4037",
         }}
       >
-        {plans.map((plan, index) => (
+        {projectMedia.map((plan, index) => (
           <button
             key={index}
             onClick={() => setActiveTab(index)}
@@ -58,7 +55,7 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
                 : "text-[#5D4037] hover:text-[#8b45137a] hover:scale-105"
             }`}
           >
-            {plan.label}
+            {plan.tag}
           </button>
         ))}
       </div>
@@ -67,14 +64,24 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
       <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-4">
         {/* Image */}
         <div className="w-full lg:w-2/3">
-          <img
-            src={plans[activeTab].image}
-            alt={plans[activeTab].label}
-            className="rounded-lg w-full"
+          <div
+            className="relative w-full h-96"
             style={{
               border: "1px solid #8B4513",
             }}
-          />
+          >
+            <Image
+              src={projectMedia[activeTab].url}
+              alt={projectMedia[activeTab].tag}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 500px"
+              className="rounded-lg object-cover cursor-pointer"
+              onClick={() => {
+                setIsModalOpen(true);
+                setCurrentImage(activeTab);
+              }}
+            />
+          </div>
         </div>
 
         {/* Description */}
@@ -85,17 +92,24 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
               color: "#5D4037",
             }}
           >
-            {plans[activeTab].label}
+            {projectMedia[activeTab].tag}
           </h3>
           <p
             style={{
               color: "#5D4037",
             }}
           >
-            {plans[activeTab].description}
+            {projectMedia[activeTab].description}
           </p>
         </div>
       </div>
+
+      <ImageModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        media={projectMedia}
+        initialIndex={currentImage}
+      />
     </div>
   );
 }

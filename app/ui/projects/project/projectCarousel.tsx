@@ -129,7 +129,7 @@ export default function ProjectCarousel({
       >
         &#10094;
       </button>
-      
+
       <button
         onClick={nextSlide}
         className="absolute top-1/2 right-2 sm:right-3 lg:right-4 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full w-8 h-8 flex items-center justify-center text-black text-xl font-bold hover:bg-opacity-100 z-10 mx-5"
@@ -139,7 +139,7 @@ export default function ProjectCarousel({
         &#10095;
       </button>
 
-      <div className="flex justify-center mt-2 space-x-2">
+      <div className="flex justify-center space-x-2">
         {getVisibleDots().map((index) => (
           <button
             key={index}

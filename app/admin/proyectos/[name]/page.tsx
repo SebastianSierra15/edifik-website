@@ -10,11 +10,12 @@ import ProjectDetails from "@/app/ui/projects/project/projectDetails";
 import ProjectNearbyServices from "@/app/ui/projects/project/projectNearbyServices";
 import ProjectCommonAreas from "@/app/ui/projects/project/projectCommonAreas";
 import ContactForm from "@/app/ui/projects/contactForm";
+import CarouselRecommendedProjects from "@/app/ui/projects/project/carouselRecommendedProjects";
 
 import ProjectHeaderSkeleton from "@/app/ui/projects/project/skeleton/projectHeaderSkeleton";
 import { ProjectCarouselSkeleton } from "@/app/ui/projects/project/skeleton/projectCarouselSkeleton";
 import { ProjectPlansSkeleton } from "@/app/ui/projects/project/skeleton/projectPlansSkeleton";
-import { ProjectDetailsSkeleton } from "@/app/ui/projects/project/skeleton/projectDetailsSkeleton";
+import ProjectDetailsSkeleton from "@/app/ui/projects/project/skeleton/projectDetailsSkeleton";
 import { ProjectNearbyServicesSkeleton } from "@/app/ui/projects/project/skeleton/projectNearbyServicesSkeleton";
 import { ProjectCommonAreasSkeleton } from "@/app/ui/projects/project/skeleton/projectCommonAreasSkeleton";
 import { ProjectShortDescriptionSkeleton } from "@/app/ui/projects/project/skeleton/projectShortDescriptionSkeleton";
@@ -23,7 +24,9 @@ import { ProjectDetailedDescriptionSkeleton } from "@/app/ui/projects/project/sk
 import Map from "@/app/ui/projects/project/map";
 
 export default function ProjectPage({ params }: { params: { name: string } }) {
-  const { project, loading } = useProjectByName(params.name);
+  const { project, projectRecommended, loading } = useProjectByName(
+    params.name
+  );
 
   return (
     <div
@@ -68,9 +71,9 @@ export default function ProjectPage({ params }: { params: { name: string } }) {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-8">
             <div className="lg:col-span-2 px-16 lg:pr-10 space-y-8">
-              <ProjectShortDescriptionSkeleton />
-
               <ProjectPlansSkeleton />
+
+              <ProjectShortDescriptionSkeleton />
 
               <ProjectDetailsSkeleton />
 
@@ -98,7 +101,11 @@ export default function ProjectPage({ params }: { params: { name: string } }) {
           <>
             <ProjectHeader project={project} />
 
-            <ProjectCarousel projectMedia={project.projectMedia} />
+            <ProjectCarousel
+              projectMedia={project.projectMedia.filter(
+                (media) => media.imageType !== null && media.imageType !== 1005
+              )}
+            />
 
             <div className="flex justify-center mt-4">
               <hr
@@ -115,20 +122,24 @@ export default function ProjectPage({ params }: { params: { name: string } }) {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                  <p className="text-lg my-8" style={{ color: "#000000" }}>
-                    {project.shortDescription}
-                  </p>
+                  <ProjectPlans
+                    projectMedia={project.projectMedia.filter(
+                      (media) => media.imageType === 1005
+                    )}
+                  />
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
+                  transition={{ duration: 0.8 }}
                 >
-                  <ProjectPlans projectMedia={project.projectMedia} />
+                  <p className="text-lg my-8" style={{ color: "#000000" }}>
+                    {project.shortDescription}
+                  </p>
                 </motion.div>
 
                 <motion.div
@@ -177,7 +188,9 @@ export default function ProjectPage({ params }: { params: { name: string } }) {
                   >
                     <ProjectCommonAreas
                       areas={project.commonAreas}
-                      projectMedia={project.projectMedia}
+                      projectMedia={project.projectMedia.filter(
+                        (media) => media.commonArea !== null
+                      )}
                     />
                   </motion.div>
                 )}
@@ -196,15 +209,14 @@ export default function ProjectPage({ params }: { params: { name: string } }) {
                 </motion.div>
               </div>
 
-              {/* Contact Form */}
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                className="transition-all pt-8 duration-300 pr-16"
-              >
-                <ContactForm />
-              </motion.div>
+              <div className="pt-8 pr-16">
+                {/*
+                <ContactForm />*/}
+              </div>
+            </div>
+
+            <div className="mt-20 mx-32">
+              <CarouselRecommendedProjects projects={projectRecommended} />
             </div>
           </>
         )

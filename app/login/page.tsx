@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { FaGoogle, FaFacebook, FaApple } from "react-icons/fa";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { AiOutlineExclamationCircle } from "react-icons/ai"; // Icono de advertencia
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -46,7 +46,6 @@ export default function Page() {
     }
 
     if (isValid) {
-      // Redirigir al inicio del sitio web si las validaciones locales son correctas
       router.push("/");
     }
   };

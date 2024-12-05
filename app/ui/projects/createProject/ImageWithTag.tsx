@@ -9,8 +9,8 @@ type ImageWithTagProps = {
   onRemove: () => void;
   onTagChange: (newTag: string) => void;
   onDescriptionChange: (newDescription: string) => void;
-  error?: boolean;
-  showError?: boolean;
+  error?: string;
+  descriptionError?: string;
 };
 
 export default function ImageWithTag({
@@ -22,7 +22,7 @@ export default function ImageWithTag({
   onTagChange,
   onDescriptionChange,
   error,
-  showError = false,
+  descriptionError,
 }: ImageWithTagProps) {
   const imageUrl = useMemo(() => URL.createObjectURL(file), [file]);
 
@@ -63,12 +63,10 @@ export default function ImageWithTag({
         maxLength={50}
         aria-invalid={!!error}
         className={`w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-backgroundLight text-textPrimary dark:text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary ${
-          error && showError
-            ? "border-red-500 focus:ring-red-500"
-            : "border-gray-300"
+          error ? "border-red-500 focus:ring-red-500" : "border-gray-300"
         }`}
       />
-      {error && showError && (
+      {error && (
         <p className="text-red-500 text-xs mt-2">Etiqueta obligatoria.</p>
       )}
 
@@ -82,8 +80,15 @@ export default function ImageWithTag({
             onChange={handleDescriptionChange}
             placeholder="Descripción"
             maxLength={100}
-            className="w-full h-20 px-3 py-2 text-sm border rounded-md bg-white dark:bg-backgroundLight text-textPrimary dark:text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+            className={`w-full h-20 px-3 py-2 text-sm border rounded-md bg-white dark:bg-backgroundLight text-textPrimary dark:text-textPrimary focus:outline-none focus:ring-2 ${
+              descriptionError
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300"
+            }`}
           />
+          {descriptionError && (
+            <p className="text-red-500 text-xs mt-1">{descriptionError}</p>
+          )}
         </>
       )}
     </div>

@@ -116,17 +116,20 @@ export default function ProjectsPage() {
             </div>
 
             <div className="flex flex-col gap-4 sm:flex-row items-center">
-              <Link href="/admin/proyectos/membresias" passHref>
-                <button className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-primary dark:bg-primaryLight text-white hover:bg-primaryDark transition-colors whitespace-nowrap">
-                  <span>Membresías</span>
-                </button>
+              <Link
+                href="/admin/proyectos/membresias"
+                className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-primary dark:bg-primaryLight text-white hover:bg-primaryDark transition-colors whitespace-nowrap"
+              >
+                <span>Membresías</span>
               </Link>
 
-              <Link href="/admin/proyectos/crear-proyecto">
-                <button className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-green-600 dark:bg-green-700 text-white hover:bg-green-700 dark:hover:bg-green-800 transition-colors whitespace-nowrap">
-                  <FaPlus />
-                  <span>Nuevo Proyecto</span>
-                </button>
+              {/* Botón de Nuevo Proyecto */}
+              <Link
+                href="/admin/proyectos/crear-proyecto"
+                className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-green-600 dark:bg-green-700 text-white hover:bg-green-700 dark:hover:bg-green-800 transition-colors whitespace-nowrap"
+              >
+                <FaPlus />
+                <span>Nuevo Proyecto</span>
               </Link>
             </div>
           </div>
@@ -192,20 +195,17 @@ export default function ProjectsPage() {
                     <div className="w-full max-w-xs">
                       <ProjectCard
                         key={project.id}
-                        images={[
-                          "/images/image2.jpg",
-                          "/images/image3.jpg",
-                          "/images/image4.jpg",
-                        ]}
+                        images={project.projectMedia}
                         name={project.name}
                         location={`${project.city.name}, ${project.city.departament.name}`}
                         price={project.price}
                         area={project.totalArea}
-                        idMembership={project.membership}
                         isFromMap={false}
                         showActions={true}
                         onClose={null}
-                        url={`/admin/proyectos/${project.name}`}
+                        url={`/admin/proyectos/${project.name
+                          .toLowerCase()
+                          .replace(/\s+/g, "-")}`}
                       />
                     </div>
                   </div>

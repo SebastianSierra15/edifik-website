@@ -7,7 +7,7 @@ type DetailCardProps = {
 export default function DetailCard({ icon, label, value }: DetailCardProps) {
   return (
     <div
-      className="flex items-center p-2 py-4 shadow-md rounded-lg bg-white"
+      className="flex items-center p-2 py-3 shadow-md rounded-lg bg-white"
       style={{ boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)" }}
     >
       <div className="p-3 rounded-full mr-2 bg-gray-200">{icon}</div>

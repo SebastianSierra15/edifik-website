@@ -20,6 +20,14 @@ export default function ModalAlert({
 
   useEffect(() => {
     setIsVisible(isOpen);
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, [isOpen]);
 
   const handleClose = () => {
@@ -38,16 +46,16 @@ export default function ModalAlert({
       >
         <div className="flex flex-col items-center text-center">
           <AiOutlineInfoCircle className="text-primary dark:text-primaryLight text-3xl mb-4" />
-          
+
           <h2 className="text-lg font-semibold text-textPrimary dark:text-textSecondary mb-2">
             {title}
           </h2>
-          
+
           <p className="text-sm text-textSecondary dark:text-textPlaceholder mb-6">
             {message}
           </p>
         </div>
-        
+
         <button
           onClick={handleClose}
           className="w-full bg-primary dark:bg-primary text-white py-2 rounded-md hover:bg-primaryDark dark:hover:bg-primaryDark transition"

@@ -9,6 +9,7 @@ type ImageUploadSectionProps = {
   tags: string[];
   descriptions: string[];
   error: string | null;
+  errors: Record<string, string>;
   onToggleExpand: () => void;
   onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveImage: (index: number) => void;
@@ -23,6 +24,7 @@ export default function ImageUploadSection({
   tags,
   descriptions,
   error,
+  errors,
   onToggleExpand,
   onImageChange,
   onRemoveImage,
@@ -89,6 +91,10 @@ export default function ImageUploadSection({
                 onTagChange={(newTag) => onTagChange(index, newTag)}
                 onDescriptionChange={(newDescription) =>
                   onDescriptionChange(index, newDescription)
+                }
+                error={errors[`${imageType.name}-tag-${index}`]}
+                descriptionError={
+                  errors[`${imageType.name}-description-${index}`]
                 }
               />
             ))}

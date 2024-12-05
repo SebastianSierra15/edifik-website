@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { Project } from "@/lib/definitios";
+import { RowDataPacket } from "mysql2";
+import { Project, ProjectSummary } from "@/lib/definitios";
 
 export async function GET(
   request: Request,
   { params }: { params: { name: string } }
 ) {
   try {
-    const { name } = params;
+    const name = params.name.replace(/-/g, " ");
 
     const [result] = await db.query("CALL get_project_by_name(?)", [name]);
     const rows = (result as any[][])[0];
@@ -96,7 +97,54 @@ export async function GET(
       imageType: row.imageType,
     }));
 
-    return NextResponse.json(project);
+    const [recommendedResult] = await db.query(
+      "CALL get_recommended_projects(1000, ?, 10, 5, 3, 2)",
+      [project.propertyType.id]
+    );
+
+    const recommendedRows = (recommendedResult as RowDataPacket[][])[0] || [];
+    const recommendedProjectMediaRows =
+      (recommendedResult as RowDataPacket[][])[1] || [];
+
+    let projectRecommended: ProjectSummary[] = [];
+
+    if (recommendedRows.length > 0) {
+      const projectMediaMap: Record<
+        number,
+        { url: string; tag: string; projectId: number }[]
+      > = {};
+      recommendedProjectMediaRows.forEach((media: any) => {
+        if (!projectMediaMap[media.projectId]) {
+          projectMediaMap[media.projectId] = [];
+        }
+        projectMediaMap[media.projectId].push({
+          url: media.url,
+          tag: media.tag,
+          projectId: media.projectId,
+        });
+      });
+
+      projectRecommended = recommendedRows.map((row: any) => ({
+        id: row.id,
+        name: row.name,
+        price: row.price,
+        totalArea: row.area,
+        address: row.address,
+        longitude: row.longitude,
+        latitude: row.latitude,
+        city: {
+          id: row.cityId,
+          name: row.cityName,
+          departament: {
+            id: row.departamentId,
+            name: row.departamentName,
+          },
+        },
+        projectMedia: projectMediaMap[row.id] || [],
+      }));
+    }
+
+    return NextResponse.json({ project, projectRecommended });
   } catch (error) {
     return NextResponse.json(
       { error: "Error al buscar el proyecto" },

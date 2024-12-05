@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     const originalBuffer = await file.arrayBuffer();
 
     const webpBuffer = await sharp(Buffer.from(originalBuffer))
-      .webp({ quality: 80 })
+      .webp({ quality: 100 })
       .toBuffer();
 
     const fileKey = `${folderPath}${Date.now()}/${uuidv4()}.webp`;

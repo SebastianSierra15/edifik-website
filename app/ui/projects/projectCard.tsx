@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { FaTimes, FaEdit, FaTrash } from "react-icons/fa";
+import { ProjectMedia } from "@/lib/definitios";
 import Link from "next/link";
 
 type ProjectCardProps = {
-  images: string[];
+  images: ProjectMedia[];
   name: string;
   location: string;
   price: number;
   area: number;
-  idMembership: number;
   isFromMap: boolean;
   showActions: boolean;
   onClose?: (() => void) | null;
@@ -21,7 +21,6 @@ export default function ProjectCard({
   location,
   price,
   area,
-  idMembership,
   isFromMap,
   showActions,
   onClose,
@@ -42,7 +41,7 @@ export default function ProjectCard({
   }, [isHovered, images.length]);
 
   return (
-    <div className="bg-background dark:bg-backgroundDark rounded-lg">
+    <div className="bg-transparent dark:bg-transparent rounded-lg transform transition-transform hover:scale-105 duration-300">
       <Link href={url} target="_blank" rel="noopener noreferrer">
         <div
           className={`relative max-w-xs shadow-secondary dark:shadow-white rounded-lg overflow-hidden bg-secondary dark:bg-secondaryDark cursor-pointer shadow-md dark:shadow-md ${
@@ -88,8 +87,8 @@ export default function ProjectCard({
               {images.map((img, index) => (
                 <img
                   key={index}
-                  src={img}
-                  alt="Project"
+                  src={img.url}
+                  alt={img.tag}
                   className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-1000 ease-in-out ${
                     index === currentImage ? "opacity-100" : "opacity-0"
                   }`}

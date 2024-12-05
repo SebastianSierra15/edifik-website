@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import { ProjectSummary } from "@/lib/definitios";
 import ProjectCard from "./projectCard";
-import PriceMarker from "./PriceMarker";
+import PriceMarker from "./priceMarker";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),

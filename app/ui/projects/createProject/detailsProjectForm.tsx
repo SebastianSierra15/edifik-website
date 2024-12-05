@@ -133,7 +133,11 @@ export default function DetailsProjectForm({
         "La cantidad de unidades disponibles es obligatoria";
     }
 
-    if (!formData.housingType)
+    if (
+      (formData.propertyType?.id === 1001 ||
+        formData.propertyType?.id === 1002) &&
+      !formData.housingType
+    )
       newErrors.housingTypeError = "Seleccione un tipo de vivienda.";
 
     setErrors(newErrors);

@@ -210,7 +210,7 @@ export default function CreateProjectPage() {
       <div className="text-center mt-4">
         <button
           className="bg-secondary text-white px-4 py-2 rounded-md hover:bg-secondaryLight transition-colors dark:bg-secondaryDark dark:hover:bg-secondaryLight"
-          onClick={() => router.push("/admin/propiedades")}
+          onClick={() => router.push("/admin/proyectos")}
         >
           Volver
         </button>

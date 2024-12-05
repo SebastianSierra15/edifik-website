@@ -1,10 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Project } from "@/lib/definitios";
+import { Project, ProjectSummary } from "@/lib/definitios";
+
+type ProjectData = {
+  project: Project;
+  projectRecommended: ProjectSummary[];
+};
 
 export function useProjectByName(name: string) {
   const [project, setProject] = useState<Project | null>(null);
+  const [projectRecommended, setProjectRecommended] = useState<
+    ProjectSummary[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -13,17 +21,19 @@ export function useProjectByName(name: string) {
       try {
         setLoading(true);
         const response = await fetch(`/api/projects/${name}`);
-        
+
         if (!response.ok) {
           throw new Error("Propiedad no encontrada");
         }
 
-        const data = await response.json();
-        setProject(data);
+        const data: ProjectData = await response.json();
+        setProject(data.project);
+        setProjectRecommended(data.projectRecommended || []);
         setError(null);
       } catch (error) {
         setError(error instanceof Error ? error.message : "Error desconocido");
         setProject(null);
+        setProjectRecommended([]);
       } finally {
         setLoading(false);
       }
@@ -32,5 +42,5 @@ export function useProjectByName(name: string) {
     fetchProject();
   }, [name]);
 
-  return { project, loading, error };
+  return { project, projectRecommended, loading, error };
 }

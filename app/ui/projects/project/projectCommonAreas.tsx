@@ -1,7 +1,11 @@
+"use client";
+
 import React, { useState } from "react";
 import Image from "next/image";
+import ImageModal from "./imageModal";
 import { CommonArea, ProjectMedia } from "@/lib/definitios";
-import { AiOutlineClose, AiOutlineDown } from "react-icons/ai";
+import { AiOutlineDown } from "react-icons/ai";
+import { motion } from "framer-motion";
 
 type ProjectCommonAreasProps = {
   areas: CommonArea[];
@@ -12,31 +16,22 @@ export default function ProjectCommonAreas({
   areas,
   projectMedia,
 }: ProjectCommonAreasProps) {
-  const [openAccordion, setOpenAccordion] = useState<number | null>(null);
+  const [openAccordions, setOpenAccordions] = useState<number[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
 
   const toggleAccordion = (index: number) => {
-    setOpenAccordion(openAccordion === index ? null : index);
+    setOpenAccordions(
+      (prev) =>
+        prev.includes(index)
+          ? prev.filter((i) => i !== index)
+          : [...prev, index]
+    );
   };
 
   const handleImageClick = (index: number) => {
     setModalImageIndex(index);
     setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const nextModalImage = () => {
-    setModalImageIndex((prev) => (prev + 1) % projectMedia.length);
-  };
-
-  const prevModalImage = () => {
-    setModalImageIndex(
-      (prev) => (prev - 1 + projectMedia.length) % projectMedia.length
-    );
   };
 
   return (
@@ -48,6 +43,8 @@ export default function ProjectCommonAreas({
         const areaImages = projectMedia.filter(
           (media) => media.commonArea === area.id
         );
+
+        const isOpen = openAccordions.includes(index);
 
         return (
           <div
@@ -66,19 +63,31 @@ export default function ProjectCommonAreas({
               <span>{area.name}</span>
               <AiOutlineDown
                 className={`transition-transform ${
-                  openAccordion === index ? "rotate-180" : "rotate-0"
+                  isOpen ? "rotate-180" : "rotate-0"
                 }`}
                 style={{ color: "#DAA520" }}
               />
             </button>
-            {openAccordion === index && areaImages.length > 0 && (
-              <div className="mt-2">
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{
+                opacity: isOpen ? 1 : 0,
+                height: isOpen ? "auto" : 0,
+              }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden mt-2"
+            >
+              {isOpen && areaImages.length > 0 && (
                 <div className="flex overflow-x-auto space-x-2">
                   {areaImages.map((media, imgIndex) => (
                     <div
                       key={imgIndex}
                       className="flex-shrink-0 cursor-pointer"
                       onClick={() => handleImageClick(imgIndex)}
+                      style={{
+                        width: "150px",
+                        height: "100px",
+                      }}
                     >
                       <Image
                         src={media.url}
@@ -87,79 +96,27 @@ export default function ProjectCommonAreas({
                         height={100}
                         className="rounded-lg object-cover"
                         style={{
+                          objectFit: "cover",
                           border: "2px solid #EDEDED",
+                          width: "100%",
+                          height: "100%",
                         }}
                       />
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
+              )}
+            </motion.div>
           </div>
         );
       })}
 
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
-          onClick={closeModal}
-        >
-          <div
-            className="relative max-w-3xl w-full p-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 z-50 bg-white bg-opacity-80 rounded-full w-8 h-8 flex items-center justify-center text-black text-xl font-bold hover:bg-opacity-100 m-2"
-              style={{ color: "#8B4513", backgroundColor: "#DAA520" }}
-              aria-label="Close Modal"
-            >
-              <AiOutlineClose size={16} />
-            </button>
-
-            <Image
-              src={projectMedia[modalImageIndex]?.url}
-              alt={`Imagen ${modalImageIndex + 1}`}
-              width={1200}
-              height={700}
-              className="w-full h-auto rounded-lg object-cover"
-            />
-
-            <div
-              className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm py-1 px-4 rounded"
-              style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
-            >
-              {modalImageIndex + 1}/{projectMedia.length}
-            </div>
-
-            <div className="absolute inset-0 flex justify-between items-center px-4">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  prevModalImage();
-                }}
-                className="rounded-full w-9 h-9 flex items-center justify-center text-black text-2xl font-bold hover:bg-opacity-100 m-1"
-                style={{ color: "#8B4513", backgroundColor: "#DAA520" }}
-                aria-label="Previous Image in Modal"
-              >
-                &#10094;
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  nextModalImage();
-                }}
-                className="rounded-full w-9 h-9 flex items-center justify-center text-black text-2xl font-bold hover:bg-opacity-100 m-1"
-                style={{ color: "#8B4513", backgroundColor: "#DAA520" }}
-                aria-label="Next Image in Modal"
-              >
-                &#10095;
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ImageModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        media={projectMedia}
+        initialIndex={modalImageIndex}
+      />
     </div>
   );
 }

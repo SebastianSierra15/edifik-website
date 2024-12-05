@@ -33,8 +33,6 @@ export default function AdminHeader() {
               ? "text-primary dark:text-primaryLight font-semibold"
               : "text-textPrimary dark:text-textSecondary hover:text-primary dark:hover:text-primaryLight"
           }`}
-          aria-label="Admin Panel"
-          aria-current={pathname === "/admin" ? "page" : undefined}
         >
           <Image
             src="/images/logo.png"
@@ -53,23 +51,23 @@ export default function AdminHeader() {
           aria-label="Navegación de administrador"
         >
           {menuItems.map(({ path, label }) => (
-            <div key={path} className="relative group">
-              <Link
-                href={path}
-                className={`transition-colors duration-300 ${
-                  pathname.startsWith(path)
-                    ? "text-primary dark:text-primaryLight font-semibold"
-                    : "text-textPrimary dark:text-textSecondary hover:text-primary dark:hover:text-primaryLight"
-                }`}
-                aria-current={pathname.startsWith(path) ? "page" : undefined}
-              >
-                {label}
-              </Link>
+            <Link
+              key={path}
+              href={path}
+              className={`relative group transition-colors duration-300 ${
+                pathname.startsWith(path)
+                  ? "text-primary dark:text-primaryLight font-semibold"
+                  : "text-textPrimary dark:text-textSecondary hover:text-primary dark:hover:text-primaryLight"
+              }`}
+            >
+              {label}
               {/* Línea horizontal animada */}
               <span
-                className="absolute left-0 bottom-0 h-[2px] w-0 bg-primary dark:bg-primaryLight transition-all duration-300 group-hover:w-full"
+                className={`absolute left-0 bottom-0 h-[2px] bg-primary dark:bg-primaryLight transition-all duration-300 ${
+                  pathname.startsWith(path) ? "w-full" : "w-0 group-hover:w-full"
+                }`}
               ></span>
-            </div>
+            </Link>
           ))}
         </nav>
 
