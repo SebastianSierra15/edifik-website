@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   CommonArea,
   HousingType,
@@ -23,13 +24,14 @@ export default function useBasicMetadata() {
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        const response = await fetch("/api/projects/metadata/basic-metadata");
-        if (!response.ok) throw new Error("Error al obtener los datos");
-
-        const data: BasicMetadata = await response.json();
-        setMetadata(data);
+        const response = await axios.get<BasicMetadata>(
+          "/api/projects/metadata/basic-metadata"
+        );
+        setMetadata(response.data);
       } catch (err: any) {
-        setErrorMetadata(err.message || "Error desconocido");
+        setErrorMetadata(
+          err.response?.data?.message || err.message || "Error desconocido"
+        );
       } finally {
         setLoadingMetadata(false);
       }

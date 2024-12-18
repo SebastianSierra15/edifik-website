@@ -66,7 +66,7 @@ export default function ProjectsMap({ projects }: ProjectsMapProps) {
       </MapContainer>
 
       {selectedProject && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 bg-backgroundLight dark:bg-backgroundDark shadow-lg rounded-lg w-72">
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 bg-premium-backgroundLight dark:bg-premium-backgroundDark shadow-lg rounded-lg w-72">
           <ProjectCard
             images={[
               "/images/image2.jpg",
@@ -81,7 +81,7 @@ export default function ProjectsMap({ projects }: ProjectsMapProps) {
             isFromMap={true}
             showActions={true}
             onClose={handleCloseCard}
-            url={`/admin/propiedades/${selectedProject.id}`}
+            url={`/admin/proyectos/${selectedProject.id}`}
           />
         </div>
       )}

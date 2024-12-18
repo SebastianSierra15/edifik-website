@@ -31,24 +31,22 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
             key={index}
             className={`flex items-center ${isLastStep ? "" : "flex-1"}`}
           >
-            {/* Icono dentro del círculo */}
             <div
               className={`w-12 h-12 z-10 rounded-full flex items-center justify-center transition-colors duration-300 ${
                 isActive
-                  ? "bg-primary text-white dark:bg-primaryLight"
-                  : "bg-backgroundDark text-textSecondary dark:bg-backgroundLight dark:text-textPlaceholder"
+                  ? "bg-premium-primary text-white dark:bg-premium-primaryLight"
+                  : "bg-premium-backgroundDark text-premium-textSecondary dark:bg-premium-backgroundLight dark:text-premium-textPlaceholder"
               }`}
             >
               <Icon size={25} />
             </div>
 
-            {/* Línea de separación, solo si no es el último paso */}
             {!isLastStep && (
               <div
                 className={`h-1 transition-colors duration-300 ${
                   currentStep > index
-                    ? "bg-borderColor dark:bg-borderColorHover"
-                    : "bg-backgroundDark dark:bg-backgroundLight"
+                    ? "bg-premium-borderColor dark:bg-premium-borderColorHover"
+                    : "bg-premium-backgroundDark dark:bg-premium-backgroundLight"
                 }`}
                 style={{
                   width: "calc(100% - 2.25rem)",

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { montserrat } from "@/app/ui/fonts";
-import "../globals.css";
+import { inter } from "@/app/ui/fonts";
 import AdminHeader from "../ui/adminHeader";
 import AdminFooter from "../ui/adminFooter";
+import { Providers } from "../providers";
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: "EdifiK Admin",
@@ -17,11 +18,13 @@ export default function AdminLayout({
   return (
     <html lang="es">
       <body
-        className={`${montserrat.className} antialiased bg-background dark:bg-background min-h-screen flex flex-col`}
+        className={`${inter.className} antialiased bg-premium-background dark:bg-premium-background min-h-screen flex flex-col`}
       >
-        <AdminHeader />
-        <main className="flex-grow">{children}</main>
-        <AdminFooter />
+        <Providers>
+          <AdminHeader />
+          <main className="flex-grow">{children}</main>
+          <AdminFooter />
+        </Providers>
       </body>
     </html>
   );

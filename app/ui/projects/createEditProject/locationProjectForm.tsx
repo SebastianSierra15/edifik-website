@@ -10,7 +10,7 @@ import {
 import StepNavigationButtons from "../../stepNavigationButtons";
 import LocationMap from "../locationMap";
 import { useAddressSearch } from "@/app/hooks/useAddressSearch";
-import { ProjectData } from "@/lib/definitios";
+import { ProjectData, City, Departament } from "@/lib/definitios";
 
 interface LocationProjectFormProps {
   formData: ProjectData;
@@ -20,10 +20,8 @@ interface LocationProjectFormProps {
   onNext: () => void;
   currentStep: number;
   totalSteps: number;
-  locations: {
-    departaments: { id: number; name: string }[];
-    cities: Record<number, { id: number; name: string }[]>;
-  };
+  departaments: Departament[];
+  cities: City[];
 }
 
 export default function LocationProjectForm({
@@ -33,7 +31,8 @@ export default function LocationProjectForm({
   onNext,
   currentStep,
   totalSteps,
-  locations,
+  departaments,
+  cities,
 }: LocationProjectFormProps) {
   const [errors, setErrors] = useState({
     departamentError: "",
@@ -58,7 +57,7 @@ export default function LocationProjectForm({
 
   const handleDepartamentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const departamentId = parseInt(e.target.value);
-    const selectedDepartament = locations.departaments.find(
+    const selectedDepartament = departaments.find(
       (dep) => dep.id === departamentId
     );
 
@@ -77,16 +76,11 @@ export default function LocationProjectForm({
 
   const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const cityId = parseInt(e.target.value);
-    const selectedCity = locations.cities[
-      formData.city?.departament?.id || 0
-    ]?.find((city) => city.id === cityId);
+    const selectedCity = cities.find((city) => city.id === cityId);
 
-    if (selectedCity && formData.city?.departament) {
+    if (selectedCity) {
       onChange({
-        city: {
-          ...selectedCity,
-          departament: formData.city.departament,
-        },
+        city: selectedCity,
       });
 
       setErrors((prevErrors) => ({ ...prevErrors, cityError: "" }));
@@ -143,23 +137,29 @@ export default function LocationProjectForm({
   }, []);
 
   return (
-    <div className="container mx-auto max-w-2xl p-6 bg-backgroundLight dark:bg-backgroundDark rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-primary dark:text-primaryLight text-center mb-6">
-        Ubicación del Proyecto
+    <div className="container mx-auto max-w-2xl p-6 bg-premium-backgroundLight dark:bg-premium-backgroundDark rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold text-premium-primary dark:text-premium-primaryLight text-center mb-6">
+        {formData.projectType?.id
+          ? "Ubicación del Proyecto"
+          : "Ubicación de la Propiedad"}
       </h2>
 
       <form className="space-y-6">
-        {/* Departamento y Ciudad */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-textPrimary dark:text-textPrimary mb-2 flex items-center gap-1">
+            <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
               Departamento
-              <span className="text-textPrimary dark:text-textPrimary">*</span>
+              <span className="text-premium-textPrimary dark:text-premium-textPrimary">
+                *
+              </span>
               <span className="group relative">
                 <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute hidden group-hover:block bg-backgroundLight dark:bg-backgroundDark text-textPrimary dark:text-textPrimary border border-borderColor dark:border-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                <div className="absolute hidden group-hover:block bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
                   <p className="text-xs">
-                    Seleccione el departamento donde se encuentra el proyecto.
+                    {formData.projectType?.id === 2 ||
+                    formData.projectType?.id === 3
+                      ? "Seleccione el departamento donde se encuentra la propiedad."
+                      : "Seleccione el departamento donde se encuentra el proyecto."}
                   </p>
                 </div>
               </span>
@@ -168,14 +168,14 @@ export default function LocationProjectForm({
               name="departament"
               value={formData.city?.departament?.id || ""}
               onChange={handleDepartamentChange}
-              className={`w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary ${
+              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
                 errors.departamentError
                   ? "border-red-500"
-                  : "border-borderColor"
+                  : "border-premium-borderColor"
               }`}
             >
               <option value="">Seleccione un departamento</option>
-              {locations.departaments.map((dep) => (
+              {departaments.map((dep) => (
                 <option key={dep.id} value={dep.id}>
                   {dep.name}
                 </option>
@@ -190,14 +190,19 @@ export default function LocationProjectForm({
           </div>
 
           <div>
-            <label className="text-textPrimary dark:text-textPrimary mb-2 flex items-center gap-1">
+            <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
               Ciudad
-              <span className="text-textPrimary dark:text-textPrimary">*</span>
+              <span className="text-premium-textPrimary dark:text-premium-textPrimary">
+                *
+              </span>
               <span className="group relative">
                 <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute hidden group-hover:block bg-backgroundLight dark:bg-backgroundDark text-textPrimary dark:text-textPrimary border border-borderColor dark:border-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                <div className="absolute hidden group-hover:block bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
                   <p className="text-xs">
-                    Seleccione la ciudad correspondiente al proyecto.
+                    {formData.projectType?.id === 2 ||
+                    formData.projectType?.id === 3
+                      ? "Seleccione la ciudad correspondiente la propiedad."
+                      : "Seleccione la ciudad correspondiente al proyecto."}
                   </p>
                 </div>
               </span>
@@ -206,18 +211,21 @@ export default function LocationProjectForm({
               name="city"
               value={formData.city?.id || ""}
               onChange={handleCityChange}
-              className={`w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary ${
+              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
                 errors.cityError ? "border-red-500" : "border-borderColor"
               }`}
             >
               <option value="">Seleccione una ciudad</option>
-              {locations.cities[formData.city?.departament?.id || 0]?.map(
-                (city) => (
+              {cities
+                .filter(
+                  (city) =>
+                    city.departament.id === formData.city?.departament?.id
+                )
+                .map((city) => (
                   <option key={city.id} value={city.id}>
                     {city.name}
                   </option>
-                )
-              )}
+                ))}
             </select>
             {errors.cityError && (
               <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
@@ -228,16 +236,20 @@ export default function LocationProjectForm({
           </div>
         </div>
 
-        {/* Dirección */}
         <div className="relative">
-          <label className="text-textPrimary dark:text-textPrimary mb-2 flex items-center gap-1">
+          <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
             Dirección
-            <span className="text-textPrimary dark:text-textPrimary">*</span>
+            <span className="text-premium-textPrimary dark:text-premium-textPrimary">
+              *
+            </span>
             <span className="group relative">
               <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-              <div className="absolute hidden group-hover:block bg-backgroundLight dark:bg-backgroundDark text-textPrimary dark:text-textPrimary border border-borderColor dark:border-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+              <div className="absolute hidden group-hover:block bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
                 <p className="text-xs">
-                  Ingrese la dirección del proyecto.
+                  {formData.projectType?.id === 2 ||
+                  formData.projectType?.id === 3
+                    ? "Ingrese la dirección de la propiedad."
+                    : "Ingrese la dirección del proyecto."}
                 </p>
               </div>
             </span>
@@ -250,8 +262,10 @@ export default function LocationProjectForm({
               value={formData.address || ""}
               onChange={handleAddressInput}
               disabled={!formData.city || !formData.city.id}
-              className={`w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary ${
-                errors.addressError ? "border-red-500" : "border-borderColor"
+              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                errors.addressError
+                  ? "border-red-500"
+                  : "border-premium-borderColor"
               }`}
               placeholder="Ingrese la dirección"
             />
@@ -274,7 +288,6 @@ export default function LocationProjectForm({
           )}
         </div>
 
-        {/* Mapa */}
         <LocationMap
           coordinates={
             [

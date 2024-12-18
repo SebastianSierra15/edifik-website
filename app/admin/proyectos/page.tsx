@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useGetProjects } from "@/app/hooks/useGetProjects";
 import { ProjectSummary } from "@/lib/definitios";
-import ProjectFilter from "@/app/ui/projects/filter/projectFilter";
-import ProjectCard from "@/app/ui/projects/projectCard";
+import ProjectsContainer from "@/app/ui/projects/projectsContainer";
 import FilterMapControls from "@/app/ui/projects/filter/filterMapControls";
 import ProjectsMap from "@/app/ui/projects/projectsMap";
 import { FaSearch, FaPlus } from "react-icons/fa";
@@ -40,8 +39,7 @@ export default function ProjectsPage() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [currentProjects, setCurrentProjects] = useState<ProjectSummary[]>([]);
-
-  const mapRef = useRef<HTMLDivElement>(null);
+  const projectTypeId = 1;
 
   const {
     projects,
@@ -53,6 +51,7 @@ export default function ProjectsPage() {
     entriesPerPage,
     selectedButtons,
     currentProjects,
+    projectTypeId,
   });
 
   useEffect(() => {
@@ -68,40 +67,14 @@ export default function ProjectsPage() {
 
   return (
     <div className="relative">
-      {/* Header */}
       {!showMap && (
-        <div className="bg-backgroundDark dark:bg-backgroundLight px-6 pt-6 pb-2">
-          <h1 className="mt-24 text-3xl text-center font-semibold mb-16 text-primary dark:text-primaryLight">
+        <div className="bg-premium-backgroundDark dark:bg-premium-backgroundLight px-6 pt-6 pb-2">
+          <h1 className="mt-24 text-3xl text-center font-semibold mb-16 text-premium-primary dark:text-premium-primaryLight">
             Gestión de Proyectos
           </h1>
 
-          {/* Botones de categorías */}
-          {/*
-        <div
-          className={`flex flex-wrap justify-center items-center gap-4 ${
-            showMap ? "mb-0" : "mb-6"
-          }`}
-          ref={mapRef}
-        >
-          {categoryButtons.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => setSelectedCategory(id)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg shadow-md transition-colors ${
-                selectedCategory === id
-                  ? "bg-primary dark:bg-primaryLight hover:bg-primaryDark text-white"
-                  : "bg-backgroundLight dark:bg-background hover:bg-backgroundDark dark:hover:bg-backgroundLight text-primary dark:text-primaryLight"
-              }`}
-            >
-              <Icon />
-              <span>{label}</span>
-            </button>
-          ))}
-        </div>
-        */}
-
           <div
-            className={`flex flex-col md:flex-row md:justify-between items-center gap-8 mb-10 px-6 ${
+            className={`flex flex-col md:flex-row md:justify-between items-center gap-8 mb-10 sm:px-6 ${
               showMap ? "hidden" : "block"
             }`}
           >
@@ -110,40 +83,30 @@ export default function ProjectsPage() {
                 type="text"
                 placeholder="Buscar proyectos..."
                 onChange={(e) => debouncedSearch(e.target.value)}
-                className="p-2 pl-10 border border-borderColor dark:border-borderColorHover rounded-md w-full bg-backgroundLight dark:bg-background text-textPrimary dark:text-textPrimary"
+                className="p-2 pl-10 border border-premium-borderColor dark:border-premium-borderColorHover rounded-md w-full bg-premium-backgroundLight dark:bg-premium-background text-premium-textPrimary dark:text-premium-textPrimary"
               />
-              <FaSearch className="absolute left-3 top-3 text-textPlaceholder dark:text-textSecondary" />
+              <FaSearch className="absolute left-3 top-3 text-premium-textPlaceholder dark:text-premium-textSecondary" />
             </div>
 
-            <div className="flex flex-col gap-4 sm:flex-row items-center">
-              <Link
-                href="/admin/proyectos/membresias"
-                className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-primary dark:bg-primaryLight text-white hover:bg-primaryDark transition-colors whitespace-nowrap"
-              >
-                <span>Membresías</span>
-              </Link>
-
-              {/* Botón de Nuevo Proyecto */}
-              <Link
-                href="/admin/proyectos/crear-proyecto"
-                className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-green-600 dark:bg-green-700 text-white hover:bg-green-700 dark:hover:bg-green-800 transition-colors whitespace-nowrap"
-              >
-                <FaPlus />
-                <span>Nuevo Proyecto</span>
-              </Link>
-            </div>
+            <Link
+              href="/admin/proyectos/crear-proyecto"
+              className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-green-600 dark:bg-green-700 text-white hover:bg-green-700 dark:hover:bg-green-800 transition-colors whitespace-nowrap"
+            >
+              <FaPlus />
+              <span>Nuevo Proyecto</span>
+            </Link>
           </div>
         </div>
       )}
 
       <hr
-        className={`border-borderColor dark:border-borderColorHover w-full ${
+        className={`border-premium-borderColor dark:border-premium-borderColorHover w-full ${
           showMap ? "hidden" : "block"
         }`}
       />
 
       <div
-        className={`bg-backgroundDark dark:bg-backgroundLight px-6 pt-2 ${
+        className={`bg-premium-backgroundDark dark:bg-premium-backgroundLight px-6 pt-2 ${
           showMap ? "pb-2" : "pb-14"
         }`}
       >
@@ -155,76 +118,26 @@ export default function ProjectsPage() {
         />
       </div>
 
-      <div>
-        {showMap ? (
-          <div className="relative top-32 z-0 border-t border-t-borderColorHover h-screen">
-            <ProjectsMap projects={projects} />
-          </div>
-        ) : (
-          <div className="-mt-10 mb-10 flex flex-col sm:flex-row sm:justify-between space-x-6 gap-4 py-4 px-6 lg:px-8 xl:px-20">
-            {/* Sidebar de filtros */}
-            {!showMap && (
-              <div
-                className={`flex flex-col items-center w-full sm:px-10 sm:w-72 ${
-                  filterOpen ? "block" : "hidden"
-                }`}
-              >
-                <ProjectFilter
-                  selectedButtons={selectedButtons}
-                  setSelectedButtons={setSelectedButtons}
-                  setFilterOpen={setFilterOpen}
-                  priceRange={priceRange}
-                  areaRange={areaRange}
-                />
-              </div>
-            )}
-
-            <div className="flex flex-col w-full">
-              <div
-                className={`grid gap-x-4 gap-y-6 mb-8 ${
-                  filterOpen
-                    ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
-                    : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5"
-                }`}
-              >
-                {projects.map((project) => (
-                  <div
-                    key={project.id}
-                    className="flex justify-center items-center relative"
-                  >
-                    <div className="w-full max-w-xs">
-                      <ProjectCard
-                        key={project.id}
-                        images={project.projectMedia}
-                        name={project.name}
-                        location={`${project.city.name}, ${project.city.departament.name}`}
-                        price={project.price}
-                        area={project.totalArea}
-                        isFromMap={false}
-                        showActions={true}
-                        onClose={null}
-                        url={`/admin/proyectos/${project.name
-                          .toLowerCase()
-                          .replace(/\s+/g, "-")}`}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {currentProjects.length < totalEntries && (
-                <button
-                  onClick={fetchMoreProjects}
-                  disabled={isLoading}
-                  className="mt-6 px-6 py-2 rounded-lg shadow-lg bg-primary dark:bg-primaryLight text-white hover:bg-primaryDark transition-colors self-center"
-                >
-                  {isLoading ? "Cargando..." : "Mostrar más"}
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+      {showMap ? (
+        <div className="relative top-32 z-0 border-t border-t-premium-borderColorHover h-screen">
+          <ProjectsMap projects={projects} />
+        </div>
+      ) : (
+        <ProjectsContainer
+          projects={projects}
+          totalEntries={totalEntries}
+          isLoading={isLoading}
+          fetchMoreProjects={fetchMoreProjects}
+          filterOpen={filterOpen}
+          showMap={showMap}
+          setFilterOpen={setFilterOpen}
+          priceRange={priceRange}
+          areaRange={areaRange}
+          selectedButtons={selectedButtons}
+          setSelectedButtons={setSelectedButtons}
+          isProperty={false}
+        />
+      )}
     </div>
   );
 }

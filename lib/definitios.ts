@@ -1,16 +1,37 @@
 import { DateTime } from "next-auth/providers/kakao";
 
+export type ColumnType = "string" | "number" | "boolean" | "date";
+
+export interface Header<T> {
+  label: string;
+  key: keyof T;
+  type: ColumnType;
+}
+
 export interface User {
   id: number;
-  identityDocument: number;
-  names: string;
-  lastnames: string;
-  birthdate: Date;
+  username: string;
+  identityDocument?: number;
+  names?: string;
+  lastnames?: string;
+  birthdate?: Date;
   email: string;
-  phoneNumber: string;
-  password: string;
-  state: boolean;
-  role: Role;
+  phoneNumber?: string;
+  gender?: string;
+  password?: string;
+  state?: boolean;
+  registrationDate?: DateTime;
+  lastLogin?: DateTime;
+  roleId: number;
+  roleName: string;
+  membershipId: number;
+  membershipName?: string;
+  provider: string;
+}
+
+export interface Gender {
+  id: number;
+  name: string;
 }
 
 export interface Role {
@@ -74,27 +95,44 @@ export interface Project {
   lobbies?: number;
   towers?: number;
   storageUnits?: number;
+  socioeconomicLevel?: number;
+  floorNumber?: number;
+  yearBuilt?: number;
   customizationOptions?: boolean;
   terrace?: boolean;
   balcony?: boolean;
   garden?: boolean;
   laundryArea?: boolean;
+  complexName?: string;
   shortDescription: string;
   detailedDescription: string;
   address: string;
   latitude: number;
   longitude: number;
   availableDate?: Date;
+  projectType?: projectType;
+  statusProject?: statusProject;
   propertyType: propertyType;
   housingType?: HousingType;
   city: City;
   membership: number;
   commonAreas: CommonArea[];
+  user?: User;
   nearbyServices: NearbyService[];
   projectMedia: ProjectMedia[];
 }
 
+export interface projectType {
+  id: number;
+  name: string;
+}
+
 export interface propertyType {
+  id: number;
+  name: string;
+}
+
+export interface statusProject {
   id: number;
   name: string;
 }
@@ -161,6 +199,7 @@ export interface Media {
 }
 
 export type ProjectData = Partial<Project>;
+export type UserData = Partial<User>;
 
 export type ProjectSummary = Pick<
   Project,

@@ -2,31 +2,33 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import useColombianLocations from "@/app/hooks/useColombianLocations";
+import useLocations from "@/app/hooks/useLocations";
 import useBasicMetadata from "@/app/hooks/useBasicMetadata";
 import useImageTypes from "@/app/hooks/useImageTypes";
 import { useUploadImages } from "@/app/hooks/useUploadImages";
 import { useCreateProject } from "@/app/hooks/useCreateProject";
 import { useInsertProjectMedia } from "@/app/hooks/useInsertProjectMedia";
-import ProgressBar from "@/app/ui/projects/createProject/progressBar";
-import BasicProjectForm from "@/app/ui/projects/createProject/basicProjectForm";
-import LocationProjectForm from "@/app/ui/projects/createProject/locationProjectForm";
-import FeaturesProjectForm from "@/app/ui/projects/createProject/featuresProjectForm";
-import DetailsProjectForm from "@/app/ui/projects/createProject/detailsProjectForm";
-import ImagesProjectForm from "@/app/ui/projects/createProject/imagesProjectForm";
+import ProgressBar from "@/app/ui/projects/createEditProject/progressBar";
+import BasicProjectForm from "@/app/ui/projects/createEditProject/basicProjectForm";
+import LocationProjectForm from "@/app/ui/projects/createEditProject/locationProjectForm";
+import FeaturesProjectForm from "@/app/ui/projects/createEditProject/featuresProjectForm";
+import DetailsProjectForm from "@/app/ui/projects/createEditProject/detailsProjectForm";
+import ImagesProjectForm from "@/app/ui/projects/createEditProject/imagesProjectForm";
 import Loader from "@/app/ui/loader";
 import ModalConfirmation from "@/app/ui/modalConfirmation";
-import CreateProjectSkeleton from "@/app/ui/projects/createProject/skeleton/createProjectSkeleton";
+import CreateProjectSkeleton from "@/app/ui/projects/createEditProject/skeleton/createProjectSkeleton";
 import { ProjectData, Media } from "@/lib/definitios";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 
 export default function CreateProjectPage() {
-  const [projectData, setProjectData] = useState<Partial<ProjectData>>({});
+  const [projectData, setProjectData] = useState<Partial<ProjectData>>({
+    projectType: { id: 1, name: "Sobre Planos" },
+  });
   const [currentStep, setCurrentStep] = useState(0);
   const totalSteps = 5;
   const router = useRouter();
 
-  const locations = useColombianLocations();
+  const { locations } = useLocations();
 
   const { metadata } = useBasicMetadata();
   const { imagesTypes } = useImageTypes();
@@ -67,7 +69,7 @@ export default function CreateProjectPage() {
 
       const projectId = await createProject(projectData);
       if (!projectId) {
-        console.error("No se pudo crear la propiedad.");
+        console.error("No se pudo crear el proyecto.");
         return;
       }
 
@@ -110,7 +112,7 @@ export default function CreateProjectPage() {
   return (
     <div className="container mx-auto p-6">
       {loading && <Loader message="Subiendo proyecto, por favor espera..." />}
-      <h1 className="mt-24 lg:mt-20 text-3xl text-center font-semibold mb-10 text-primary dark:text-primaryLight">
+      <h1 className="mt-24 lg:mt-20 text-3xl text-center font-semibold mb-10 text-premium-primary dark:text-premium-primaryLight">
         Agregar Proyecto
       </h1>
 
@@ -132,6 +134,7 @@ export default function CreateProjectPage() {
               propertyTypes={metadata.propertyTypes}
               currentStep={currentStep}
               totalSteps={totalSteps}
+              isProperty={false}
             />
           )}
 
@@ -144,7 +147,8 @@ export default function CreateProjectPage() {
               onNext={handleNextStep}
               currentStep={currentStep}
               totalSteps={totalSteps}
-              locations={locations}
+              departaments={locations.departaments}
+              cities={locations.cities}
             />
           )}
 
@@ -200,16 +204,18 @@ export default function CreateProjectPage() {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onConfirm={handleConfirmSubmit}
-        icon={<AiOutlineCheckCircle className="w-10 h-10 text-primary" />}
+        icon={
+          <AiOutlineCheckCircle className="w-10 h-10 text-premium-primary" />
+        }
         title="Confirmar Acción"
-        message="¿Estás seguro de que quieres subir este proyecto? Una vez confirmado, no podrás realizar más cambios."
+        message={"¿Estás seguro de que quieres subir este proyecto?"}
         confirmLabel="Confirmar"
         cancelLabel="Cancelar"
       />
 
       <div className="text-center mt-4">
         <button
-          className="bg-secondary text-white px-4 py-2 rounded-md hover:bg-secondaryLight transition-colors dark:bg-secondaryDark dark:hover:bg-secondaryLight"
+          className="bg-premium-secondary text-white px-4 py-2 rounded-md hover:bg-premium-secondaryLight transition-colors dark:bg-premium-secondaryDark dark:hover:bg-premium-secondaryLight"
           onClick={() => router.push("/admin/proyectos")}
         >
           Volver

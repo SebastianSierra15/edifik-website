@@ -15,7 +15,7 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
   }).format(project.price);
 
   return (
-    <div className="w-full pt-28 lg:pt-20 px-4 sm:px-6 lg:px-12">
+    <div className="w-full pt-28 lg:pt-24 px-4 sm:px-6 lg:px-12">
       <div className="flex flex-col gap-2">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center space-x-4">

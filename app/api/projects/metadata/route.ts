@@ -45,31 +45,31 @@ export async function GET() {
     }));
 
     const commonAreas: CommonArea[] = mapResults(commonAreasResult, (row) => ({
-      id: row.commonAreaId,
-      name: row.commonAreaName,
+      id: row.id,
+      name: row.name,
     }));
 
     const housingTypes: HousingType[] = mapResults(
       housingTypesResult,
       (row) => ({
-        id: row.housingTypeId,
-        name: row.housingTypeName,
+        id: row.id,
+        name: row.name,
       })
     );
 
     const nearbyServices: NearbyService[] = mapResults(
       nearbyServicesResult,
       (row) => ({
-        id: row.nearbyServiceId,
-        name: row.nearbyServiceName,
+        id: row.id,
+        name: row.name,
       })
     );
 
     const propertyTypes: propertyType[] = mapResults(
       propertyTypesResult,
       (row) => ({
-        id: row.propertyTypeId,
-        name: row.propertyTypeName,
+        id: row.id,
+        name: row.name,
       })
     );
 

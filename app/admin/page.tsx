@@ -4,15 +4,16 @@ import Link from "next/link";
 import {
   FaDraftingCompass,
   FaHome,
-  FaBed,
+  FaTag,
   FaClipboardList,
   FaUsers,
+  FaUserShield,
 } from "react-icons/fa";
 
 export default function Page() {
   return (
-    <div className="container mx-auto py-12 px-4 bg-background dark:bg-background">
-      <h1 className="mb-10 mt-20 lg:mt-16 text-center text-4xl font-semibold text-primary dark:text-primaryLight">
+    <div className="container mx-auto py-12 px-4 bg-premium-background dark:bg-premium-background">
+      <h1 className="mb-10 mt-20 lg:mt-16 text-center text-4xl font-semibold text-premium-primary dark:text-premium-primaryLight">
         Bienvenido al Panel de Administración de EdifiK
       </h1>
 
@@ -26,44 +27,50 @@ export default function Page() {
               "Administra y gestiona todos los proyectos en desarrollo, incluyendo información y detalles de cada proyecto.",
           },
           {
-            href: "/admin/viviendas",
+            href: "/admin/propiedades",
             icon: FaHome,
-            title: "Viviendas",
+            title: "Propiedades",
             description:
               "Gestiona las propiedades disponibles para venta y arriendo, incluyendo tipos de vivienda y características.",
-          },
-          {
-            href: "/admin/estadias",
-            icon: FaBed,
-            title: "Estadías",
-            description:
-              "Controla las estadías disponibles para reserva y gestión de alquileres temporales.",
-          },
-          {
-            href: "/admin/reservas",
-            icon: FaClipboardList,
-            title: "Reservas",
-            description:
-              "Monitorea y organiza todas las reservas y solicitudes de vivienda de los clientes.",
           },
           {
             href: "/admin/usuarios",
             icon: FaUsers,
             title: "Usuarios",
+            description: "Gestiona los usuarios registrados en la plataforma.",
+          },
+          {
+            href: "/admin/roles",
+            icon: FaUserShield,
+            title: "Roles",
             description:
-              "Administra los usuarios, permisos y roles dentro de la plataforma.",
+              "Administra los roles, permisos y accesos de los usuarios.",
+          },
+          {
+            href: "/admin/membresias",
+            icon: FaTag,
+            title: "Membresías",
+            description:
+              "Gestiona las membresías disponibles para usuarios y propiedades, incluyendo niveles y beneficios.",
+          },
+          {
+            href: "/admin/peticiones",
+            icon: FaClipboardList,
+            title: "Peticiones",
+            description:
+              "Revisa y gestiona las solicitudes de los usuarios relacionadas con proyectos y propiedades.",
           },
         ].map(({ href, icon: Icon, title, description }) => (
           <Link key={href} href={href}>
-            <div className="p-6 text-center h-full bg-backgroundAlt dark:bg-secondaryLight rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-backgroundLight dark:hover:bg-secondaryDark">
+            <div className="p-6 text-center h-full bg-premium-backgroundAlt dark:bg-premium-secondaryLight rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-premium-backgroundLight dark:hover:bg-premium-secondaryDark">
               <Icon
                 size={40}
-                className="mx-auto mb-4 text-primary dark:text-primaryLight"
+                className="mx-auto mb-4 text-premium-primary dark:text-premium-primaryLight"
               />
-              <h2 className="text-2xl font-semibold text-textPrimary dark:text-textPrimary">
+              <h2 className="text-2xl font-semibold text-premium-textPrimary dark:text-premium-textPrimary">
                 {title}
               </h2>
-              <p className="mt-2 text-textSecondary dark:text-textSecondary">
+              <p className="mt-2 text-premium-textSecondary dark:text-premium-textSecondary">
                 {description}
               </p>
             </div>

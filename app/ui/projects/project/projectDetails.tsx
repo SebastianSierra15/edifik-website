@@ -20,6 +20,9 @@ import {
   FaTshirt,
   FaRulerHorizontal,
   FaRulerVertical,
+  FaCalendarAlt,
+  FaSortNumericUp,
+  FaMoneyBillWave,
 } from "react-icons/fa";
 import { PiElevatorFill } from "react-icons/pi";
 import {
@@ -38,6 +41,11 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
     {
       group: "Características generales",
       items: [
+        {
+          label: "Conjunto",
+          value: project.housingType?.name || "",
+          icon: <FaBuilding />,
+        },
         {
           label: "Área total",
           value:
@@ -87,7 +95,14 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
               : null,
           icon: <MdOutlineHomeWork />,
         },
-        
+        {
+          label: "Año de Construcción",
+          value:
+            project.yearBuilt && project.yearBuilt > 0
+              ? project.yearBuilt.toString()
+              : null,
+          icon: <FaCalendarAlt />,
+        },
       ],
     },
 
@@ -157,6 +172,22 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
               ? project.storageUnits.toString()
               : null,
           icon: <FaWarehouse />,
+        },
+        {
+          label: "Nivel Socioeconómico",
+          value:
+            project.socioeconomicLevel && project.socioeconomicLevel > 0
+              ? project.socioeconomicLevel.toString()
+              : null,
+          icon: <FaMoneyBillWave />,
+        },
+        {
+          label: "Número de Piso",
+          value:
+            project.floorNumber && project.floorNumber > 0
+              ? project.floorNumber.toString()
+              : null,
+          icon: <FaSortNumericUp />,
         },
       ],
     },

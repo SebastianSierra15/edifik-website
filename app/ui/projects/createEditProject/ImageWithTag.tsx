@@ -35,7 +35,7 @@ export default function ImageWithTag({
   };
 
   return (
-    <div className="relative bg-backgroundLight dark:bg-backgroundDark border border-gray-300 dark:border-gray-700 rounded-md p-3 w-48">
+    <div className="relative bg-premium-backgroundLight dark:bg-premium-backgroundDark border border-gray-300 dark:border-gray-700 rounded-md p-3 w-48">
       <div
         className="relative w-full h-32 bg-cover bg-center rounded-md mb-4"
         style={{
@@ -52,7 +52,7 @@ export default function ImageWithTag({
         </button>
       </div>
 
-      <label className="block text-sm font-medium text-textPrimary dark:text-textSecondary mb-2">
+      <label className="block text-sm font-medium text-premium-textPrimary dark:text-premium-textSecondary mb-2">
         Nombre de imagen
       </label>
       <input
@@ -62,7 +62,7 @@ export default function ImageWithTag({
         placeholder="Nombre"
         maxLength={50}
         aria-invalid={!!error}
-        className={`w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-backgroundLight text-textPrimary dark:text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary ${
+        className={`w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary focus:outline-none focus:ring-2 focus:ring-premium-primary ${
           error ? "border-red-500 focus:ring-red-500" : "border-gray-300"
         }`}
       />
@@ -72,7 +72,7 @@ export default function ImageWithTag({
 
       {imageTypeId === 1005 && (
         <>
-          <label className="block text-sm font-medium text-textPrimary dark:text-textSecondary mt-4 mb-2">
+          <label className="block text-sm font-medium text-premium-textPrimary dark:text-premium-textSecondary mt-4 mb-2">
             Descripción corta
           </label>
           <textarea
@@ -80,7 +80,7 @@ export default function ImageWithTag({
             onChange={handleDescriptionChange}
             placeholder="Descripción"
             maxLength={100}
-            className={`w-full h-20 px-3 py-2 text-sm border rounded-md bg-white dark:bg-backgroundLight text-textPrimary dark:text-textPrimary focus:outline-none focus:ring-2 ${
+            className={`w-full h-20 px-3 py-2 text-sm border rounded-md bg-white dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary focus:outline-none focus:ring-2 ${
               descriptionError
                 ? "border-red-500 focus:ring-red-500"
                 : "border-gray-300"

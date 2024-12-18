@@ -68,16 +68,16 @@ export default function FilterOptionWithSlider({
   };
 
   return (
-    <div>
+    <>
       <div
-        className="flex items-center justify-between cursor-pointer mb-4 transition-transform duration-200 transform hover:scale-105 hover:font-semibold text-textPrimary dark:text-textPrimary"
+        className="flex items-center justify-between cursor-pointer mb-4 transition-transform duration-200 transform hover:scale-105 hover:font-semibold text-premium-textPrimary dark:text-premium-textPrimary"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div
           className={`flex items-center space-x-2 text-lg font-medium ${
             sliderValue > 1
-              ? "text-primary dark:text-primaryLight"
-              : "text-textPrimary dark:text-textPrimary"
+              ? "text-premium-primary dark:text-premium-primaryLight"
+              : "text-premium-textPrimary dark:text-premium-textPrimary"
           }`}
         >
           {icon}
@@ -86,7 +86,7 @@ export default function FilterOptionWithSlider({
         <FaChevronDown
           className={`transition-transform duration-300 transform ${
             isOpen ? "rotate-180" : ""
-          } text-textPrimary dark:text-textPrimary`}
+          } text-premium-textPrimary dark:text-premium-textPrimary`}
         />
       </div>
       {isOpen && (
@@ -100,7 +100,7 @@ export default function FilterOptionWithSlider({
             onChange={handleSliderChange}
             onMouseUp={handleSliderComplete}
             onTouchEnd={handleSliderComplete}
-            className="w-full h-1 bg-primary rounded-full appearance-none cursor-pointer dark:bg-primaryLight"
+            className="w-full h-1 bg-premium-primary rounded-full appearance-none cursor-pointer dark:bg-premium-primaryLight"
           />
           <style jsx>{`
             input[type="range"]::-webkit-slider-thumb {
@@ -132,7 +132,7 @@ export default function FilterOptionWithSlider({
             }
           `}</style>
           {sliderValue > 1 && (
-            <div className="text-center text-base text-textPrimary dark:text-textPrimary">
+            <div className="text-center text-base text-premium-textPrimary dark:text-premium-textPrimary">
               <span>{prefixText} </span>
               <span className="font-bold text-2xl">
                 {category === "price" ? "$" : "+"}
@@ -143,6 +143,6 @@ export default function FilterOptionWithSlider({
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }

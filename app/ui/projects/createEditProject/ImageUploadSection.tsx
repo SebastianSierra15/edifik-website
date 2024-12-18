@@ -33,7 +33,7 @@ export default function ImageUploadSection({
 }: ImageUploadSectionProps) {
   return (
     <div
-      className={`pb-1 rounded-md bg-backgroundAlt dark:bg-backgroundDarkAlt hover:bg-backgroundLight hover:dark:bg-backgroundLight ${
+      className={`pb-1 rounded-md bg-premium-backgroundAlt dark:bg-premium-backgroundDarkAlt hover:bg-premium-backgroundLight hover:dark:bg-premium-backgroundLight ${
         error ? "border border-red-500" : "border-none"
       }`}
     >
@@ -41,13 +41,13 @@ export default function ImageUploadSection({
         className="flex justify-between items-center cursor-pointer p-4"
         onClick={onToggleExpand}
       >
-        <h4 className="text-lg font-semibold text-textPrimary">
+        <h4 className="text-lg font-semibold text-premium-textPrimary">
           {imageType.name}
         </h4>
         <AiOutlineDown
           className={`${
             expanded ? "rotate-180" : ""
-          } transition-transform duration-300 text-textPrimary dark:text-textSecondary`}
+          } transition-transform duration-300 text-premium-textPrimary dark:text-premium-textSecondary`}
         />
       </div>
 
@@ -64,7 +64,7 @@ export default function ImageUploadSection({
             accept="image/*"
             multiple
             onChange={onImageChange}
-            className={`w-full px-3 py-2 rounded-lg bg-backgroundDark dark:bg-background text-textPrimary mt-2 ${
+            className={`w-full px-3 py-2 rounded-lg bg-premium-backgroundDark dark:bg-premium-background text-premium-textPrimary mt-2 ${
               error ? "border-red-500" : "border-none"
             }`}
           />

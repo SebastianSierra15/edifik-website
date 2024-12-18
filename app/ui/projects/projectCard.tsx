@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaTimes, FaEdit, FaTrash } from "react-icons/fa";
 import { ProjectMedia } from "@/lib/definitios";
 import Link from "next/link";
+import Image from "next/image";
 
 type ProjectCardProps = {
   images: ProjectMedia[];
@@ -13,6 +14,7 @@ type ProjectCardProps = {
   showActions: boolean;
   onClose?: (() => void) | null;
   url: string;
+  urlEdit: string;
 };
 
 export default function ProjectCard({
@@ -25,6 +27,7 @@ export default function ProjectCard({
   showActions,
   onClose,
   url,
+  urlEdit,
 }: ProjectCardProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -44,7 +47,7 @@ export default function ProjectCard({
     <div className="bg-transparent dark:bg-transparent rounded-lg transform transition-transform hover:scale-105 duration-300">
       <Link href={url} target="_blank" rel="noopener noreferrer">
         <div
-          className={`relative max-w-xs shadow-secondary dark:shadow-white rounded-lg overflow-hidden bg-secondary dark:bg-secondaryDark cursor-pointer shadow-md dark:shadow-md ${
+          className={`relative max-w-xs shadow-premium-secondary dark:shadow-white rounded-lg overflow-hidden bg-premium-secondary dark:bg-premium-secondaryDark cursor-pointer shadow-md dark:shadow-md ${
             isFromMap
               ? "z-50 hover:scale-105 transition-transform duration-300"
               : "h-[370px] z-0"
@@ -56,17 +59,20 @@ export default function ProjectCard({
           }}
         >
           {showActions && (
-            <div className="absolute top-3 right-3 flex space-x-2 z-50">
-              <button className="p-2 rounded-full bg-primaryLight text-white hover:bg-primaryDark transition-colors">
+            <div className="absolute top-2 right-2 flex space-x-2 z-50">
+              <Link
+                href={urlEdit}
+                className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors"
+              >
                 <FaEdit />
-              </button>
+              </Link>
               <button className="p-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors">
                 <FaTrash />
               </button>
             </div>
           )}
 
-          <div className="bg-background dark:bg-secondaryDark rounded-lg h-full flex flex-col relative">
+          <div className="bg-premium-background dark:bg-premium-secondaryDark rounded-lg h-full flex flex-col relative">
             {onClose && (
               <button
                 onClick={(e) => {
@@ -85,10 +91,11 @@ export default function ProjectCard({
               }`}
             >
               {images.map((img, index) => (
-                <img
+                <Image
                   key={index}
                   src={img.url}
                   alt={img.tag}
+                  fill
                   className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-1000 ease-in-out ${
                     index === currentImage ? "opacity-100" : "opacity-0"
                   }`}
@@ -96,12 +103,11 @@ export default function ProjectCard({
               ))}
             </div>
 
-            {/* Precio fijo en la esquina superior izquierda */}
             <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-sm px-2 py-1 rounded-full z-50">
               ${price.toLocaleString()}
             </div>
 
-            <div className="px-2 pt-16 pb-2 z-20 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-secondaryDark dark:from-black via-secondaryDark dark:via-gray-800 to-transparent">
+            <div className="px-2 pt-16 pb-2 z-20 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-premium-secondaryDark dark:from-black via-premium-secondaryDark dark:via-gray-800 to-transparent">
               <h3 className="text-lg font-semibold text-white leading-tight break-words line-clamp-1">
                 {name}
               </h3>

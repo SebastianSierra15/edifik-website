@@ -24,8 +24,8 @@ export default function PriceMarker({
       icon: L.divIcon({
         html: `<button class="text-white font-semibold py-2 px-3 rounded-full shadow-md ${
           isSelected
-            ? "bg-primaryDark dark:bg-primaryDark"
-            : "bg-primary dark:bg-primary hover:bg-primaryLight focus:outline-none focus:bg-primaryDark dark:focus:bg-primaryDark"
+            ? "bg-premium-primaryDark dark:bg-premium-primaryDark"
+            : "bg-premium-primary dark:bg-premium-primary hover:bg-premium-primaryLight focus:outline-none focus:bg-premium-primaryDark dark:focus:bg-premium-primaryDark"
         }">$${price.toLocaleString()}</button>`,
         iconAnchor: [12, 41],
         popupAnchor: [0, -41],
@@ -38,7 +38,7 @@ export default function PriceMarker({
     return () => {
       map.removeLayer(marker);
     };
-  }, [map, position, price, onClick, isSelected]); // isSelected agregado como dependencia
+  }, [map, position, price, onClick, isSelected]);
 
   return null;
 }

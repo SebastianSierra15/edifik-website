@@ -32,13 +32,12 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
 
   return (
     <div
-      className="p-3 rounded-lg mt-8"
+      className="p-3 rounded-lg mt-4"
       style={{
         backgroundColor: "transparent",
         border: "1px solid #5D4037",
       }}
     >
-      {/* Tabs */}
       <div
         className="flex space-x-4 border-b-2 mb-4"
         style={{
@@ -60,9 +59,7 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
         ))}
       </div>
 
-      {/* Plan Details */}
       <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-4">
-        {/* Image */}
         <div className="w-full lg:w-2/3">
           <div
             className="relative w-full h-96"
@@ -84,7 +81,6 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
           </div>
         </div>
 
-        {/* Description */}
         <div className="w-full lg:w-1/3">
           <h3
             className="text-xl font-bold mb-2"

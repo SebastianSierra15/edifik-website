@@ -7,6 +7,7 @@ import {
   FaSortUp,
   FaSortDown,
 } from "react-icons/fa";
+import { Header } from "@/lib/definitios";
 
 const mergeSort = <T,>(
   array: T[],
@@ -56,7 +57,7 @@ const merge = <T,>(
 
 type TableProps<T extends Record<string, any>> = {
   data: T[];
-  headers: { label: string; key: keyof T }[];
+  headers: Header<T>[];
   totalEntries: number;
   entry: string;
   stateLabels?: { true: string; false: string };
@@ -73,13 +74,12 @@ type TableProps<T extends Record<string, any>> = {
 };
 
 export default function Table<
-  T extends { id: number; price?: number; state?: boolean }
+  T extends { id?: number; price?: number; state?: boolean }
 >({
   data,
   headers,
   totalEntries,
   entry,
-  stateLabels = { true: "Activo", false: "Inactivo" },
   currentPage,
   totalPages,
   goToPage,
@@ -109,38 +109,37 @@ export default function Table<
 
   return (
     <>
-      {/* Opciones de mostrar por página y campo de búsqueda */}
       <div className="flex flex-col sm:flex-row sm:justify-between gap-3 sm:gap-0 sm:items-center mb-4 md:px-3 text-xs sm:text-sm">
         <div className="flex items-center space-x-2 px-2 sm:px-0">
-          <span className="text-textPrimary dark:text-textPrimary">
+          <span className="text-premium-textPrimary dark:text-premium-textPrimary">
             Mostrar
           </span>
           <select
             value={entriesPerPage}
             onChange={handleEntriesPerPageChange}
-            className="border border-borderColor dark:border-borderColorHover focus:border-borderColorHover dark:focus:border-borderColorHover rounded-md px-2 py-1 focus:outline-none bg-background dark:bg-backgroundDark text-textPrimary dark:text-textPrimary"
+            className="border border-premium-borderColor dark:border-premium-borderColorHover focus:border-premium-borderColorHover dark:focus:border-premium-borderColorHover rounded-md px-2 py-1 focus:outline-none bg-premium-background dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary"
           >
-            {[5, 10, 15, 20].map((num) => (
+            {[5, 10, 15, 20, 30].map((num) => (
               <option key={num} value={num}>
                 {num}
               </option>
             ))}
           </select>
-          <span className="text-textPrimary dark:text-textPrimary">
+          <span className="text-premium-textPrimary dark:text-premium-textPrimary">
             {entry} por página
           </span>
         </div>
         <div className="relative">
           <input
             type="text"
+            max={100}
             onChange={handleSearchChange}
             placeholder="Buscar..."
-            className="border border-borderColor dark:border-borderColorHover focus:border-borderColorHover dark:focus:border-borderColorHover rounded-md px-3 py-2 w-full sm:w-auto focus:outline-none bg-background dark:bg-backgroundDark text-textPrimary dark:text-textPrimary"
+            className="border border-premium-borderColor dark:border-premium-borderColorHover focus:border-premium-borderColorHover dark:focus:border-premium-borderColorHover rounded-md px-3 py-2 w-full sm:w-auto focus:outline-none bg-premium-background dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary"
           />
         </div>
       </div>
 
-      {/* Tabla dinámica */}
       <div className="table-responsive overflow-x-auto">
         <table className="table table-flush text-sm">
           <thead className="thead-light text-xs">
@@ -148,70 +147,96 @@ export default function Table<
               {headers.map(({ label, key }) => (
                 <th
                   key={key as string}
-                  className="py-2 px-4 text-left cursor-pointer text-textPrimary dark:text-textPrimary"
+                  className="py-2 px-4 text-left cursor-pointer text-premium-textPrimary dark:text-premium-textPrimary"
                   onClick={() => handleSort(key)}
                 >
                   <div className="flex items-center">
                     {label.toUpperCase()}
                     <div className="ml-2 flex flex-col gap-0">
                       <FaSortUp
-                        className={`hover:text-primary dark:hover:text-primaryDark ${
+                        className={`hover:text-premium-primary dark:hover:text-premium-primaryDark ${
                           sortColumn === key && sortDirection === "asc"
-                            ? "text-primary dark:text-primary"
-                            : "text-textPlaceholder dark:text-textSecondary"
+                            ? "text-premium-primary dark:text-premium-primary"
+                            : "text-premium-textPlaceholder dark:text-premium-textSecondary"
                         }`}
                       />
                       <FaSortDown
-                        className={`hover:text-primary dark:hover:text-primaryDark ${
+                        className={`hover:text-premium-primary dark:hover:text-premium-primaryDark ${
                           sortColumn === key && sortDirection === "desc"
-                            ? "text-primary dark:text-primary"
-                            : "text-textPlaceholder dark:text-textSecondary"
+                            ? "text-premium-primary dark:text-premium-primary"
+                            : "text-premium-textPlaceholder dark:text-premium-textSecondary"
                         }`}
                       />
                     </div>
                   </div>
                 </th>
               ))}
-              <th className="py-2 px-4 text-left text-textPrimary dark:text-textPrimary">
+              <th className="py-2 px-4 text-left text-premium-textPrimary dark:text-premium-textPrimary">
                 ACCIÓN
               </th>
             </tr>
           </thead>
+
           <tbody>
             {sortedData.map((item) => (
               <tr
                 key={item.id}
-                className="border-t border-borderColor dark:border-borderColorHover max-h-28 hover:bg-backgroundLight dark:hover:bg-backgroundDark"
+                className="border-t border-premium-borderColor dark:border-premium-borderColorHover h-16 max-h-28 hover:bg-premium-backgroundLight dark:hover:bg-premium-backgroundDark"
               >
                 {headers.map(({ key }, index) => (
                   <td
                     key={index}
-                    className="py-2 px-4 text-textPrimary dark:text-textPrimary"
+                    className="py-2 px-4 text-premium-textPrimary dark:text-premium-textPrimary"
                   >
-                    {typeof item[key] === "number" ? (
-                      item[key]?.toLocaleString()
-                    ) : typeof item[key] === "boolean" ? (
-                      <span
-                        className={`py-1 px-3 rounded-full text-white ${
-                          item[key] ? "bg-green-500" : "bg-red-500"
-                        }`}
-                      >
-                        {item[key] ? stateLabels.true : stateLabels.false}
-                      </span>
-                    ) : (
-                      String(item[key] ?? "")
-                    )}
+                    {(() => {
+                      const columnType = headers.find(
+                        (h) => h.key === key
+                      )?.type;
+
+                      if (columnType === "boolean") {
+                        return (
+                          <span
+                            className={`inline-block py-1 px-3 rounded-full text-sm font-medium ${
+                              item[key]
+                                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                                : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                            }`}
+                          >
+                            {item[key] ? "Activo" : "Inactivo"}
+                          </span>
+                        );
+                      }
+
+                      if (columnType === "number") {
+                        return item[key]?.toLocaleString();
+                      }
+
+                      if (columnType === "date") {
+                        const dateValue = item[key] as string | number;
+                        return new Date(dateValue).toLocaleString("es-ES", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                          hour12: false,
+                        });
+                      }
+
+                      return String(item[key] ?? "");
+                    })()}
                   </td>
                 ))}
                 <td className="py-2 px-4 flex justify-center items-center space-x-2">
                   <button
                     onClick={() => onEditClick(item)}
-                    className="text-primary dark:text-primaryLight hover:text-primaryDark dark:hover:text-primaryDark"
+                    className="text-blue-500 hover:text-blue-600 shadow-md transition-colors"
                   >
                     <FaEdit className="w-4 h-4" />
                   </button>
                   {canDelete && (
-                    <button className="text-red-500 hover:text-red-700">
+                    <button className="text-red-500 hover:text-red-700 shadow-md transition-colors">
                       <FaTrash className="w-4 h-4" />
                     </button>
                   )}
@@ -222,8 +247,7 @@ export default function Table<
         </table>
       </div>
 
-      {/* Paginación */}
-      <div className="flex justify-between items-center text-sm mt-4 md:px-3 text-textPrimary dark:text-textPrimary">
+      <div className="flex justify-between items-center text-sm mt-4 md:px-3 text-premium-textPrimary dark:text-premium-textPrimary">
         <span>
           Mostrando {currentPage * entriesPerPage - entriesPerPage + 1} a{" "}
           {Math.min(currentPage * entriesPerPage, totalEntries)} de{" "}
@@ -235,35 +259,51 @@ export default function Table<
             onClick={goToPreviousPage}
             className={`${
               currentPage === 1
-                ? "text-textPlaceholder"
-                : "text-primary dark:text-primaryLight"
-            } p-2 rounded-full border border-borderColor dark:border-borderColorHover focus:outline-none`}
+                ? "text-premium-textPlaceholder"
+                : "text-premium-primary dark:text-premium-primaryLight"
+            } p-2 rounded-full border border-premium-borderColor dark:border-premium-borderColorHover focus:outline-none`}
             disabled={currentPage === 1}
           >
             <FaChevronLeft />
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => goToPage(i + 1)}
-              className={`px-3 py-1 rounded-full transition-colors duration-300 ${
-                currentPage === i + 1
-                  ? "bg-primaryLight dark:bg-primary hover:bg-primary dark:hover:bg-primaryDark text-white"
-                  : "bg-backgroundLight dark:bg-backgroundDark hover:bg-primaryLight dark:hover:bg-primary text-textPrimary dark:text-textPrimary"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
+          {Array.from(
+            {
+              length: Math.min(window.innerWidth >= 768 ? 5 : 3, totalPages),
+            },
+            (_, i) => {
+              const startPage = Math.max(
+                1,
+                Math.min(
+                  currentPage -
+                    Math.floor((window.innerWidth >= 768 ? 5 : 3) / 2),
+                  totalPages - (window.innerWidth >= 768 ? 5 : 3) + 1
+                )
+              );
+              const pageNumber = startPage + i;
+              return (
+                <button
+                  key={pageNumber}
+                  onClick={() => goToPage(pageNumber)}
+                  className={`px-3 py-1 rounded-full transition-colors duration-300 ${
+                    currentPage === pageNumber
+                      ? "bg-premium-primaryLight dark:bg-premium-primary hover:bg-premium-primary dark:hover:bg-premium-primaryDark text-white"
+                      : "bg-premium-backgroundLight dark:bg-premium-backgroundDark hover:bg-premium-primaryLight dark:hover:bg-premium-primary text-premium-textPrimary dark:text-premium-textPrimary"
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              );
+            }
+          )}
 
           <button
             onClick={goToNextPage}
             className={`${
               currentPage === totalPages
-                ? "text-textPlaceholder"
-                : "text-primary dark:text-primaryLight"
-            } p-2 rounded-full border border-borderColor dark:border-borderColorHover focus:outline-none`}
+                ? "text-premium-textPlaceholder"
+                : "text-premium-primary dark:text-premium-primaryLight"
+            } p-2 rounded-full border border-premium-borderColor dark:border-premium-borderColorHover focus:outline-none`}
             disabled={currentPage === totalPages}
           >
             <FaChevronRight />

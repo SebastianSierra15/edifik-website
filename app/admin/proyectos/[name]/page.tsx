@@ -1,226 +1,238 @@
 "use client";
 
-import Head from "next/head";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import useBasicMetadata from "@/app/hooks/useBasicMetadata";
+import useImageTypes from "@/app/hooks/useImageTypes";
+import useLocations from "@/app/hooks/useLocations";
+import { useUploadImages } from "@/app/hooks/useUploadImages";
+import { useCreateProject } from "@/app/hooks/useCreateProject";
+import { useInsertProjectMedia } from "@/app/hooks/useInsertProjectMedia";
 import { useProjectByName } from "@/app/hooks/useProjectByName";
-import ProjectHeader from "@/app/ui/projects/project/projectHeader";
-import ProjectCarousel from "@/app/ui/projects/project/projectCarousel";
-import ProjectPlans from "@/app/ui/projects/project/projectPlans";
-import ProjectDetails from "@/app/ui/projects/project/projectDetails";
-import ProjectNearbyServices from "@/app/ui/projects/project/projectNearbyServices";
-import ProjectCommonAreas from "@/app/ui/projects/project/projectCommonAreas";
-import ContactForm from "@/app/ui/projects/contactForm";
-import CarouselRecommendedProjects from "@/app/ui/projects/project/carouselRecommendedProjects";
+import ProgressBar from "@/app/ui/projects/createEditProject/progressBar";
+import BasicProjectForm from "@/app/ui/projects/createEditProject/basicProjectForm";
+import LocationProjectForm from "@/app/ui/projects/createEditProject/locationProjectForm";
+import FeaturesProjectForm from "@/app/ui/projects/createEditProject/featuresProjectForm";
+import DetailsProjectForm from "@/app/ui/projects/createEditProject/detailsProjectForm";
+import ImagesProjectForm from "@/app/ui/projects/createEditProject/imagesProjectForm";
+import Loader from "@/app/ui/loader";
+import ModalConfirmation from "@/app/ui/modalConfirmation";
+import CreateProjectSkeleton from "@/app/ui/projects/createEditProject/skeleton/createProjectSkeleton";
+import { ProjectData, Media } from "@/lib/definitios";
+import { AiOutlineCheckCircle } from "react-icons/ai";
 
-import ProjectHeaderSkeleton from "@/app/ui/projects/project/skeleton/projectHeaderSkeleton";
-import { ProjectCarouselSkeleton } from "@/app/ui/projects/project/skeleton/projectCarouselSkeleton";
-import { ProjectPlansSkeleton } from "@/app/ui/projects/project/skeleton/projectPlansSkeleton";
-import ProjectDetailsSkeleton from "@/app/ui/projects/project/skeleton/projectDetailsSkeleton";
-import { ProjectNearbyServicesSkeleton } from "@/app/ui/projects/project/skeleton/projectNearbyServicesSkeleton";
-import { ProjectCommonAreasSkeleton } from "@/app/ui/projects/project/skeleton/projectCommonAreasSkeleton";
-import { ProjectShortDescriptionSkeleton } from "@/app/ui/projects/project/skeleton/projectShortDescriptionSkeleton";
-import { ProjectDetailedDescriptionSkeleton } from "@/app/ui/projects/project/skeleton/projectDetailedDescriptionSkeleton";
+export default function EditProjectPage({
+  params,
+}: {
+  params: { name: string };
+}) {
+  const { project, loading } = useProjectByName(params.name);
+  const [projectData, setProjectData] = useState<Partial<ProjectData>>({});
+  const [currentStep, setCurrentStep] = useState(0);
+  const totalSteps = 5;
+  const router = useRouter();
 
-import Map from "@/app/ui/projects/project/map";
+  const { locations } = useLocations();
 
-export default function ProjectPage({ params }: { params: { name: string } }) {
-  const { project, projectRecommended, loading } = useProjectByName(
-    params.name
-  );
+  const { metadata } = useBasicMetadata();
+  const { imagesTypes } = useImageTypes();
+  const { createProject } = useCreateProject();
+  const { uploadImages } = useUploadImages();
+  const { insertProjectMedia } = useInsertProjectMedia();
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mediaToSubmit, setMediaToSubmit] = useState<Media[] | null>(null);
+
+  useEffect(() => {
+    if (project) {
+      setProjectData(project);
+    }
+  }, [project]);
+
+  const handleUpdateProject = (updatedData: Partial<ProjectData>) => {
+    setProjectData((prevData) => ({
+      ...prevData,
+      ...updatedData,
+    }));
+  };
+
+  const handleNextStep = () => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep((prevStep) => prevStep + 1);
+    }
+  };
+
+  const handlePreviousStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prevStep) => prevStep - 1);
+    }
+  };
+
+  const handleSubmit = (data: Partial<ProjectData>) => {
+    handleUpdateProject(data);
+    handleNextStep();
+  };
+
+  const handleFinalSubmit = async (media: Media[]) => {
+    try {
+      setLoadingSubmit(true);
+
+      const projectId = await createProject(projectData);
+      if (!projectId) {
+        console.error("No se pudo crear el proyecto.");
+        return;
+      }
+
+      const result = await uploadImages(
+        projectId,
+        media,
+        projectData.propertyType?.name ?? "default"
+      );
+
+      if (result) {
+        await insertProjectMedia(result);
+      } else {
+        throw new Error("Error al subir las imágenes.");
+      }
+    } catch (err) {
+      console.error("Error durante el proceso:", err);
+    } finally {
+      setLoadingSubmit(false);
+      router.push("/admin/proyectos");
+    }
+  };
+
+  const handleOpenModal = (media: Media[]) => {
+    setMediaToSubmit(media);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setMediaToSubmit(null);
+    setIsModalOpen(false);
+  };
+
+  const handleConfirmSubmit = () => {
+    if (mediaToSubmit) {
+      handleFinalSubmit(mediaToSubmit);
+    }
+    handleCloseModal();
+  };
 
   return (
-    <div
-      className="w-full min-h-screen"
-      style={{ backgroundColor: "#EDEDED", color: "#5D4037" }}
-    >
-      <Head>
-        <title>{project?.name || "Cargando proyecto..."} - EdifiK</title>
-        <meta
-          property="og:title"
-          content={project?.name || "Cargando proyecto..."}
-        />
-        <meta
-          property="og:description"
-          content={
-            project?.shortDescription ||
-            "Descubre este increíble proyecto con EdifiK"
-          }
-        />
-        <meta
-          property="og:url"
-          content={`https://tu-dominio.com/proyectos/${params.name}`}
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="EdifiK" />
-      </Head>
+    <div className="container mx-auto p-6">
+      {loadingSubmit && (
+        <Loader message="Subiendo proyecto, por favor espera..." />
+      )}
+      <h1 className="mt-24 lg:mt-20 text-3xl text-center font-semibold mb-10 text-premium-primary dark:text-premium-primaryLight">
+        Editar Proyecto
+      </h1>
 
-      {loading ? (
-        <>
-          <ProjectHeaderSkeleton />
+      <div className="mb-10 text-center mx-auto">
+        <ProgressBar currentStep={currentStep} />
+      </div>
 
-          <ProjectCarouselSkeleton />
-
-          <div className="flex justify-center mt-4">
-            <hr
-              className="w-3/4"
-              style={{
-                borderTop: "2px solid #DAA520",
-              }}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-8">
-            <div className="lg:col-span-2 px-16 lg:pr-10 space-y-8">
-              <ProjectPlansSkeleton />
-
-              <ProjectShortDescriptionSkeleton />
-
-              <ProjectDetailsSkeleton />
-
-              <ProjectDetailedDescriptionSkeleton />
-
-              <ProjectNearbyServicesSkeleton />
-
-              <ProjectCommonAreasSkeleton />
-
-              <div className="h-80 w-full bg-gray-300 rounded animate-pulse"></div>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="transition-all pt-8 duration-300 pr-16"
-            >
-              <ContactForm />
-            </motion.div>
-          </div>
-        </>
+      {!metadata || !locations || loading ? (
+        <CreateProjectSkeleton />
       ) : (
-        project && (
-          <>
-            <ProjectHeader project={project} />
-
-            <ProjectCarousel
-              projectMedia={project.projectMedia.filter(
-                (media) => media.imageType !== null && media.imageType !== 1005
-              )}
+        <div className="mt-6">
+          {currentStep === 0 && metadata && (
+            <BasicProjectForm
+              formData={projectData || {}}
+              onChange={handleUpdateProject}
+              onSubmit={handleSubmit}
+              onPrevious={handlePreviousStep}
+              onNext={handleNextStep}
+              propertyTypes={metadata.propertyTypes}
+              currentStep={currentStep}
+              totalSteps={totalSteps}
+              isProperty={false}
             />
+          )}
 
-            <div className="flex justify-center mt-4">
-              <hr
-                className="w-3/4"
-                style={{
-                  borderTop: "2px solid #DAA520",
-                }}
+          {currentStep === 1 && (
+            <LocationProjectForm
+              formData={projectData || {}}
+              onChange={handleUpdateProject}
+              onSubmit={handleSubmit}
+              onPrevious={handlePreviousStep}
+              onNext={handleNextStep}
+              currentStep={currentStep}
+              totalSteps={totalSteps}
+              departaments={locations.departaments}
+              cities={locations.cities}
+            />
+          )}
+
+          {currentStep === 2 && metadata && (
+            <div>
+              <FeaturesProjectForm
+                formData={projectData || {}}
+                onChange={handleUpdateProject}
+                onSubmit={handleSubmit}
+                onPrevious={handlePreviousStep}
+                onNext={handleNextStep}
+                currentStep={currentStep}
+                totalSteps={totalSteps}
               />
             </div>
+          )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-8">
-              <div className="lg:col-span-2 px-4 sm:px-6 lg:px-12 lg:pr-10">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                >
-                  <ProjectPlans
-                    projectMedia={project.projectMedia.filter(
-                      (media) => media.imageType === 1005
-                    )}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <p className="text-lg my-8" style={{ color: "#000000" }}>
-                    {project.shortDescription}
-                  </p>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                >
-                  <ProjectDetails project={project} />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <div className="text-base my-8">
-                    <h2
-                      className="text-2xl font-semibold mb-2"
-                      style={{ color: "#8B4513" }}
-                    >
-                      Descripción General
-                    </h2>
-                    <p className="text-black whitespace-pre-line">
-                      {project.detailedDescription}
-                    </p>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  transition={{ staggerChildren: 0.2 }}
-                >
-                  <ProjectNearbyServices services={project.nearbyServices} />
-                </motion.div>
-
-                {project.commonAreas && project.commonAreas.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                  >
-                    <ProjectCommonAreas
-                      areas={project.commonAreas}
-                      projectMedia={project.projectMedia.filter(
-                        (media) => media.commonArea !== null
-                      )}
-                    />
-                  </motion.div>
-                )}
-
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <Map
-                    latitude={project.latitude}
-                    longitude={project.longitude}
-                    address={project.address}
-                  />
-                </motion.div>
-              </div>
-
-              <div className="pt-8 pr-16">
-                {/*
-                <ContactForm />*/}
-              </div>
+          {currentStep === 3 && metadata && (
+            <div>
+              <DetailsProjectForm
+                formData={projectData || {}}
+                onChange={handleUpdateProject}
+                onSubmit={handleSubmit}
+                onPrevious={handlePreviousStep}
+                onNext={handleNextStep}
+                currentStep={currentStep}
+                totalSteps={totalSteps}
+                commonAreas={metadata.commonAreas}
+                nearbyServices={metadata.nearbyServices}
+                housingTypes={metadata.housingTypes}
+              />
             </div>
+          )}
 
-            <div className="mt-20 mx-32">
-              <CarouselRecommendedProjects projects={projectRecommended} />
+          {currentStep === 4 && (
+            <div>
+              <ImagesProjectForm
+                formData={projectData}
+                onChange={handleUpdateProject}
+                onSubmit={handleOpenModal}
+                onPrevious={handlePreviousStep}
+                onNext={handleNextStep}
+                currentStep={currentStep}
+                totalSteps={totalSteps}
+                imagesTypes={imagesTypes}
+              />
             </div>
-          </>
-        )
+          )}
+        </div>
       )}
+
+      <ModalConfirmation
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmSubmit}
+        icon={
+          <AiOutlineCheckCircle className="w-10 h-10 text-premium-primary" />
+        }
+        title="Confirmar Acción"
+        message={"¿Estás seguro de que quieres guardar los cambios?"}
+        confirmLabel="Confirmar"
+        cancelLabel="Cancelar"
+      />
+
+      <div className="text-center mt-4">
+        <button
+          className="bg-premium-secondary text-white px-4 py-2 rounded-md hover:bg-premium-secondaryLight transition-colors dark:bg-premium-secondaryDark dark:hover:bg-premium-secondaryLight"
+          onClick={() => router.push("/admin/proyectos")}
+        >
+          Volver
+        </button>
+      </div>
     </div>
   );
 }

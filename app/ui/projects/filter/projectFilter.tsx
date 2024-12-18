@@ -46,7 +46,7 @@ type ProjectFilterProps = {
   setSelectedButtons: React.Dispatch<
     React.SetStateAction<Record<Category, number[]>>
   >;
-  setFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setFilterOpen: (open: boolean) => void;
   priceRange: { min: number; max: number };
   areaRange: { min: number; max: number };
 };
@@ -191,7 +191,7 @@ export default function ProjectFilter({
   return (
     <div
       ref={filterRef}
-      className={`w-full sm:w-72 md:w-80 bg-background dark:bg-backgroundDark shadow-md rounded-lg py-4 transition-all duration-300 ease-in-out ${
+      className={`w-full sm:w-72 md:w-80 bg-premium-background dark:bg-premium-backgroundDark shadow-md rounded-lg py-4 transition-all duration-300 ease-in-out ${
         isFixed ? "sticky top-32 lg:top-20 z-10" : ""
       }`}
     >
@@ -199,21 +199,22 @@ export default function ProjectFilter({
         <div className="flex items-center justify-between rounded-md pl-2 pr-6">
           <button
             onClick={resetFilters}
-            className="font-medium text-lg py-1 px-4 text-textPrimary dark:text-textPrimary transition-transform duration-200 transform hover:scale-110 hover:font-semibold"
+            className="font-medium text-lg py-1 px-4 text-premium-textPrimary dark:text-premium-textPrimary transition-transform duration-200 transform hover:scale-110 hover:font-semibold"
           >
             Borrar filtros
           </button>
           <div
-            className="flex items-center cursor-pointer text-textPrimary dark:text-textPrimary"
-            onClick={() => setFilterOpen((prev) => !prev)}
+            className="flex items-center cursor-pointer text-premium-textPrimary dark:text-premium-textPrimary"
+            onClick={() => setFilterOpen(false)}
           >
             <FaTimes className="transition-transform duration-200 transform hover:scale-125" />
           </div>
         </div>
 
-        <hr className="border-borderColor dark:border-borderColorHover" />
+        <hr className="border-premium-borderColor dark:border-premium-borderColorHover" />
 
         <div className="space-y-4 px-3 py-1 sm:max-h-[65vh] sm:overflow-y-auto overflow-x-hidden">
+          {/* Filtros principales */}
           {[
             {
               label: "Ciudades",
@@ -264,6 +265,7 @@ export default function ProjectFilter({
             />
           ))}
 
+          {/* Filtros con sliders */}
           {[
             {
               label: "Precio",
@@ -317,6 +319,7 @@ export default function ProjectFilter({
             )
           )}
 
+          {/* Contadores */}
           {[
             {
               label: "Nº de habitaciones",

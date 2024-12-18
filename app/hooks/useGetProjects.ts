@@ -9,15 +9,16 @@ interface UseProjectsOptions {
   entriesPerPage: number;
   selectedButtons: Record<string, number[]>;
   currentProjects: ProjectSummary[];
+  projectTypeId: number | null;
 }
 
 export function useGetProjects({
   entriesPerPage,
   selectedButtons,
   currentProjects,
+  projectTypeId,
 }: UseProjectsOptions) {
-  const [projects, setProjects] =
-    useState<ProjectSummary[]>(currentProjects);
+  const [projects, setProjects] = useState<ProjectSummary[]>(currentProjects);
   const [totalEntries, setTotalEntries] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -42,6 +43,7 @@ export function useGetProjects({
         page,
         pageSize: entriesPerPage,
         searchTerm,
+        projectTypeId,
         ...Object.fromEntries(
           Object.entries(selectedButtons).map(([key, value]) => [
             key,
@@ -74,7 +76,7 @@ export function useGetProjects({
 
   useEffect(() => {
     fetchProjects();
-  }, [searchTerm, selectedButtons]);
+  }, [searchTerm, selectedButtons, projectTypeId]);
 
   const fetchMoreProjects = () => {
     const nextPage = currentPage + 1;

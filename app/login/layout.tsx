@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { inter } from '@/app/ui/fonts';
-import '../globals.css';
+import { inter } from "@/app/ui/fonts";
+import { Providers } from "../providers";
+import "../globals.css";
 
 export const metadata: Metadata = {
-  title: "EdifiK",
-  description: "Somos la mejor opción para tu vivienda",
+  title: "Iniciar Sesión",
+  description: "Inicia sesión para acceder a EdifiK",
 };
 
-export default function RootLayout({
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -15,9 +16,11 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${inter.className} antialiased bg-white`}
+        className={`${inter.className} antialiased min-h-screen flex flex-col`}
       >
-        {children}
+        <Providers>
+          <main className="flex-grow">{children}</main>
+        </Providers>
       </body>
     </html>
   );

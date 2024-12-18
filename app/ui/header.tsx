@@ -10,7 +10,7 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="fixed top-0 left-0 z-10 w-full bg-gray-100 bg-opacity-70 backdrop-blur-md shadow-md text-black">
+    <header className="fixed top-0 left-0 z-50 w-full bg-gray-100 bg-opacity-70 backdrop-blur-md shadow-md text-black">
       <div className="container mx-auto flex items-center justify-between py-4 px-4">
         <Link
           href="/"

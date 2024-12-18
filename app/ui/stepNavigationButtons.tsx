@@ -17,7 +17,7 @@ export default function StepNavigationButtons({
     <div className="mt-6 flex justify-between">
       {currentStep > 0 && (
         <button
-          className="bg-secondary text-sm text-white px-4 py-2 rounded-md hover:bg-secondaryLight dark:bg-secondary dark:hover:bg-secondaryLight"
+          className="bg-premium-secondary text-sm text-white px-4 py-2 rounded-md hover:bg-premium-secondaryLight dark:bg-premium-secondary dark:hover:bg-premium-secondaryLight"
           onClick={(e) => onPrevious(e)}
         >
           Anterior
@@ -26,7 +26,7 @@ export default function StepNavigationButtons({
       <div className="flex-grow"></div>
       {currentStep < totalSteps && (
         <button
-          className="bg-primary text-sm text-white px-4 py-2 rounded-md hover:bg-primaryLight dark:bg-primaryDark dark:hover:bg-primaryLight"
+          className="bg-premium-primary text-sm text-white px-4 py-2 rounded-md hover:bg-premium-primaryLight dark:bg-premium-primaryDark dark:hover:bg-premium-primaryLight"
           onClick={(e) => onNext(e)}
         >
           {currentStep != totalSteps - 1 ? "Siguiente" : "Confirmar"}

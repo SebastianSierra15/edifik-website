@@ -243,9 +243,11 @@ export default function ImagesProjectForm({
   };
 
   return (
-    <div className="container mx-auto max-w-2xl p-6 bg-backgroundLight dark:bg-backgroundDark rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-primary dark:text-primaryLight text-center mb-6">
-        Subir Imágenes del Proyecto
+    <div className="container mx-auto max-w-2xl p-6 bg-premium-backgroundLight dark:bg-premium-backgroundDark rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold text-premium-primary dark:text-premium-primaryLight text-center mb-6">
+        {formData.projectType?.id === 1
+          ? "Subir Imágenes del Proyecto"
+          : "Subir Imágenes de la Propiedad"}
       </h2>
 
       <form
@@ -283,7 +285,7 @@ export default function ImagesProjectForm({
         ))}
 
         {formData.commonAreas && (
-          <h3 className="text-xl font-bold text-primary text-center dark:text-primaryLight mb-6">
+          <h3 className="text-xl font-bold text-premium-primary text-center dark:text-premium-primaryLight mb-6">
             Subir imágenes de las áreas comunes
           </h3>
         )}

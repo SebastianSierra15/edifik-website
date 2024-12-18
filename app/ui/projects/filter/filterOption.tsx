@@ -28,8 +28,8 @@ export default function FilterOption({
         <div
           className={`flex items-center space-x-2 text-lg font-medium ${
             selectedItems.length
-              ? "text-primary dark:text-primaryLight"
-              : "text-textPrimary dark:text-textPrimary"
+              ? "text-premium-primary dark:text-premium-primaryLight"
+              : "text-premium-textPrimary dark:text-premium-textPrimary"
           }`}
         >
           {icon}
@@ -39,7 +39,7 @@ export default function FilterOption({
         <FaChevronDown
           className={`transition-transform duration-300 transform ${
             isOpen ? "rotate-180" : ""
-          } text-textPrimary dark:text-textPrimary`}
+          } text-premium-textPrimary dark:text-premium-textPrimary`}
         />
       </div>
 
@@ -50,13 +50,13 @@ export default function FilterOption({
             <button
               key={item.id}
               onClick={() => onToggleItem(item.id)}
-              className={`relative overflow-hidden px-3 py-2 rounded-full text-xs border border-borderColor dark:border-borderColorHover transition-colors duration-300 ${
+              className={`relative overflow-hidden px-3 py-2 rounded-full text-xs border border-premium-borderColor dark:border-premium-borderColorHover transition-colors duration-300 ${
                 selectedItems.includes(item.id)
-                  ? "bg-primary dark:bg-primaryLight text-white"
-                  : "bg-transparent hover:bg-backgroundLight dark:hover:bg-backgroundDark"
+                  ? "bg-premium-primary dark:bg-premium-primaryLight text-white"
+                  : "bg-transparent hover:bg-premium-backgroundLight dark:hover:bg-premium-backgroundDark"
               }`}
             >
-              <span className="relative z-10 text-textPrimary dark:text-textPrimary">
+              <span className="relative z-10 text-premium-textPrimary dark:text-premium-textPrimary">
                 {item.name}
               </span>
             </button>

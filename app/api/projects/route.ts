@@ -25,26 +25,40 @@ export async function GET(request: Request) {
       return value !== null && value.trim() !== "" ? value : null;
     };
 
+    const parseCommaSeparatedToJson = (param: string | null): string | null => {
+      if (!param) return null;
+      const array = param.split(",").map((id) => parseInt(id.trim(), 10));
+      return JSON.stringify(array);
+    };
+
     const page = parseInt(getQueryParam("page") || "1", 10);
     const pageSize = parseInt(getQueryParam("pageSize") || "16", 10);
-    const cities = getQueryParam("cities");
-    const propertyTypes = getQueryParam("propertyTypes");
-    const housingTypes = getQueryParam("housingTypes");
-    const memberships = getQueryParam("memberships");
     const price = getQueryParam("price");
     const area = getQueryParam("area");
     const bedrooms = getQueryParam("bedrooms");
     const bathrooms = getQueryParam("bathrooms");
     const lobbies = getQueryParam("lobbies");
-    const commonAreas = getQueryParam("commonAreas");
-    const nearbyServices = getQueryParam("nearbyServices");
+    const projectTypeId = getQueryParam("projectTypeId");
     const searchTerm = getQueryParam("searchTerm");
 
+    const cities = parseCommaSeparatedToJson(getQueryParam("cities"));
+    const propertyTypes = parseCommaSeparatedToJson(
+      getQueryParam("propertyTypes")
+    );
+    const housingTypes = parseCommaSeparatedToJson(
+      getQueryParam("housingTypes")
+    );
+    const memberships = parseCommaSeparatedToJson(getQueryParam("memberships"));
+    const commonAreas = parseCommaSeparatedToJson(getQueryParam("commonAreas"));
+    const nearbyServices = parseCommaSeparatedToJson(
+      getQueryParam("nearbyServices")
+    );
+
     const validatedPage = !isNaN(page) && page > 0 ? page : 1;
-    const validatedPageSize = !isNaN(pageSize) && pageSize > 0 ? pageSize : 15;
+    const validatedPageSize = !isNaN(pageSize) && pageSize > 0 ? pageSize : 16;
 
     const [result] = await db.query(
-      "CALL get_projects(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "CALL get_projects(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         validatedPage,
         validatedPageSize,
@@ -57,6 +71,7 @@ export async function GET(request: Request) {
         bedrooms,
         bathrooms,
         lobbies,
+        projectTypeId || 1,
         commonAreas,
         nearbyServices,
         searchTerm,
@@ -120,8 +135,6 @@ export async function POST(request: Request) {
   try {
     const projectData = await request.json();
 
-    console.log(projectData);
-
     const {
       name,
       state,
@@ -140,11 +153,15 @@ export async function POST(request: Request) {
       lobbies,
       towers,
       storageUnits,
+      socioeconomicLevel,
+      floorNumber,
+      yearBuilt,
       customizationOptions,
       terrace,
       balcony,
       garden,
       laundryArea,
+      complexName,
       shortDescription,
       detailedDescription,
       address,
@@ -155,6 +172,9 @@ export async function POST(request: Request) {
       housingType,
       city,
       membership,
+      user,
+      projectType,
+      statusProject,
       commonAreas,
       nearbyServices,
     } = projectData;
@@ -165,12 +185,11 @@ export async function POST(request: Request) {
       !builtArea ||
       !totalArea ||
       !shortDescription ||
+      !detailedDescription ||
       !address ||
       !latitude ||
       !longitude ||
-      !availableUnits ||
       !propertyType?.id ||
-      !housingType?.id ||
       !city?.name ||
       !city?.departament?.name
     ) {
@@ -190,9 +209,17 @@ export async function POST(request: Request) {
         )
       : "[]";
 
+    const housingTypeId = housingType?.id || null;
+    const statusProjectId = statusProject?.id || null;
+    const userId = user?.id || null;
+
     const queryParams = [
       name,
-      state || true,
+      state !== undefined && state !== null
+        ? state
+        : userId === 1
+        ? true
+        : false,
       price,
       builtArea,
       totalArea,
@@ -201,40 +228,44 @@ export async function POST(request: Request) {
       length || null,
       parkingSpots || 0,
       elevators || 0,
+      availableUnits || 0,
       heavyParking || null,
       bedrooms || null,
       bathrooms || 0,
       lobbies || 0,
       towers || null,
       storageUnits || null,
+      socioeconomicLevel || null,
+      floorNumber || null,
+      yearBuilt || null,
       customizationOptions || false,
       balcony || false,
       terrace || null,
       garden || null,
       laundryArea || false,
+      complexName || null,
       shortDescription,
       detailedDescription,
       address,
       latitude,
       longitude,
-      formatDateForMySQL(availableDate),
+      formatDateForMySQL(availableDate) || null,
       city.name,
       city.departament.name,
-      housingType.id,
+      housingTypeId || null,
       membership || 1001,
       propertyType.id,
+      userId || 1,
+      projectType.id,
+      statusProjectId || 1,
       commonAreaIds,
       nearbyServiceIds,
     ];
 
-    console.log(queryParams);
-
     const [result] = await db.query(
-      "CALL create_project(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "CALL create_project(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       queryParams
     );
-
-    console.log("Resultado de la consulta:", result);
 
     const projectIdRow = (result as any[][])[0][0];
     const projectId = projectIdRow?.projectId;

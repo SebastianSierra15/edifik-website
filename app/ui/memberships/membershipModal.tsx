@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { Membership } from "@/lib/definitios";
+import ModalConfirmation from "../modalConfirmation";
 
 interface MembershipModalProps {
   show: boolean;
@@ -62,16 +63,16 @@ export default function MembershipModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-background dark:bg-backgroundLight rounded-lg shadow-xl w-full max-w-2xl mx-4 overflow-hidden">
+      <div className="bg-premium-background dark:bg-premium-backgroundLight rounded-lg shadow-xl w-full max-w-2xl mx-4 overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-borderColor dark:border-borderColorHover py-3 px-6">
-          <h5 className="text-xl font-semibold text-primary dark:text-primaryLight">
+        <div className="flex items-center justify-between border-b border-premium-borderColor dark:border-premium-borderColorHover py-3 px-6">
+          <h5 className="text-xl font-semibold text-premium-primary dark:text-premium-primaryLight">
             Editar Membresía
           </h5>
           <button
             type="button"
             onClick={onClose}
-            className="text-secondary dark:text-textPrimary hover:text-primary text-3xl"
+            className="text-premium-secondary dark:text-premium-textPrimary hover:text-premium-primary text-3xl"
           >
             &times;
           </button>
@@ -85,7 +86,7 @@ export default function MembershipModal({
           className="h-[60vh] overflow-y-auto px-6 py-4 space-y-4"
         >
           <div>
-            <label className="text-sm font-medium mb-2 text-textPrimary dark:text-textPrimary">
+            <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
               Nombre
             </label>
             <input
@@ -94,10 +95,10 @@ export default function MembershipModal({
               value={membership.name}
               onChange={handleChange}
               placeholder="Nombre de la membresía"
-              className={`w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary ${
+              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
                 errors.nameError
                   ? "border-red-500 bg-red-50"
-                  : "border-borderColor dark:border-borderColorHover"
+                  : "border-premium-borderColor dark:border-premium-borderColorHover"
               }`}
             />
             {errors.nameError && (
@@ -109,7 +110,7 @@ export default function MembershipModal({
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 text-textPrimary dark:text-textPrimary">
+            <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
               Descripción
             </label>
             <textarea
@@ -117,10 +118,10 @@ export default function MembershipModal({
               value={membership.benefits}
               onChange={handleChange}
               placeholder="Descripción de la membresía"
-              className={`w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary resize-none ${
+              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary resize-none ${
                 errors.benefitsError
                   ? "border-red-500 bg-red-50"
-                  : "border-borderColor dark:border-borderColorHover"
+                  : "border-premium-borderColor dark:border-premium-borderColorHover"
               }`}
               rows={4}
             />
@@ -134,7 +135,7 @@ export default function MembershipModal({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium mb-2 text-textPrimary dark:text-textPrimary">
+              <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
                 Precio
               </label>
               <input
@@ -143,12 +144,12 @@ export default function MembershipModal({
                 value={formatPrice(Number(membership.price))}
                 onChange={handlePriceChange}
                 placeholder="Precio"
-                className="w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary border-borderColor dark:border-borderColorHover"
+                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-2 text-textPrimary dark:text-textPrimary">
+              <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
                 Proyectos Destacados
               </label>
               <input
@@ -158,14 +159,14 @@ export default function MembershipModal({
                 value={membership.projectsFeatured}
                 onChange={handleChange}
                 placeholder="Cantidad de proyectos destacados"
-                className="w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary border-borderColor dark:border-borderColorHover"
+                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium mb-2 text-textPrimary dark:text-textPrimary">
+              <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
                 Cantidad Máxima de Proyectos
               </label>
               <input
@@ -175,12 +176,12 @@ export default function MembershipModal({
                 value={membership.maxProjects}
                 onChange={handleChange}
                 placeholder="Máximo de proyectos permitidos"
-                className="w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary border-borderColor dark:border-borderColorHover"
+                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-2 text-textPrimary dark:text-textPrimary">
+              <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
                 Descuento 3 Meses (%)
               </label>
               <input
@@ -191,12 +192,12 @@ export default function MembershipModal({
                 value={membership.discountThreeMonths}
                 onChange={handleChange}
                 placeholder="Descuento en %"
-                className="w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary border-borderColor dark:border-borderColorHover"
+                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-2 text-textPrimary dark:text-textPrimary">
+              <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
                 Descuento 6 Meses (%)
               </label>
               <input
@@ -207,12 +208,12 @@ export default function MembershipModal({
                 value={membership.discountSixMonths}
                 onChange={handleChange}
                 placeholder="Descuento en %"
-                className="w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary border-borderColor dark:border-borderColorHover"
+                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-2 text-textPrimary dark:text-textPrimary">
+              <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
                 Descuento 12 Meses (%)
               </label>
               <input
@@ -223,18 +224,18 @@ export default function MembershipModal({
                 value={membership.discountTwelveMonths}
                 onChange={handleChange}
                 placeholder="Descuento en %"
-                className="w-full px-3 py-2 border rounded-md bg-background dark:bg-backgroundLight text-textPrimary dark:text-textPrimary border-borderColor dark:border-borderColorHover"
+                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
               />
             </div>
           </div>
         </form>
 
         {/* Footer */}
-        <div className="flex justify-end p-4 border-t border-borderColor dark:border-borderColorHover">
+        <div className="flex justify-end p-4 border-t border-premium-borderColor dark:border-premium-borderColorHover">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 bg-textPlaceholder hover:bg-borderColor dark:bg-secondary dark:hover:bg-secondaryLight text-white rounded-lg mr-2 hover:scale-105 transition transform duration-300"
+            className="px-4 py-2 bg-premium-textPlaceholder hover:bg-premium-borderColor dark:bg-premium-secondary dark:hover:bg-premium-secondaryLight text-white rounded-lg mr-2 hover:scale-105 transition transform duration-300"
           >
             Cancelar
           </button>
@@ -242,7 +243,7 @@ export default function MembershipModal({
           <button
             type="submit"
             form="membershipForm"
-            className="px-4 py-2 bg-primary hover:bg-primaryDark dark:bg-primaryLight dark:hover:bg-primaryDark text-white rounded-lg hover:scale-105 transition transform duration-300"
+            className="px-4 py-2 bg-premium-primary hover:bg-premium-primaryDark dark:bg-premium-primaryLight dark:hover:bg-premium-primaryDark text-white rounded-lg hover:scale-105 transition transform duration-300"
           >
             Confirmar
           </button>
