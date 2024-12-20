@@ -1,59 +1,27 @@
-import { useState } from "react";
-import {
-  FaTrash,
-  FaEdit,
-  FaChevronLeft,
-  FaChevronRight,
-  FaSortUp,
-  FaSortDown,
-} from "react-icons/fa";
+import React, { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Header } from "@/lib/definitios";
+import { mergeSort } from "@/utils/mergeSort";
+import { formatNumber } from "@/utils/formatters";
 
-const mergeSort = <T,>(
-  array: T[],
-  key: keyof T,
-  direction: "asc" | "desc"
-): T[] => {
-  if (array.length <= 1) return array;
-
-  const middle = Math.floor(array.length / 2);
-  const left = mergeSort(array.slice(0, middle), key, direction);
-  const right = mergeSort(array.slice(middle), key, direction);
-
-  return merge(left, right, key, direction);
-};
-
-const merge = <T,>(
-  left: T[],
-  right: T[],
-  key: keyof T,
-  direction: "asc" | "desc"
-): T[] => {
-  const result: T[] = [];
-  let indexLeft = 0;
-  let indexRight = 0;
-
-  while (indexLeft < left.length && indexRight < right.length) {
-    const leftValue = left[indexLeft][key];
-    const rightValue = right[indexRight][key];
-
-    const comparison =
-      typeof leftValue === "string"
-        ? leftValue.localeCompare(rightValue as string)
-        : (leftValue as number) - (rightValue as number);
-
-    if (
-      (direction === "asc" && comparison <= 0) ||
-      (direction === "desc" && comparison > 0)
-    ) {
-      result.push(left[indexLeft++]);
-    } else {
-      result.push(right[indexRight++]);
-    }
-  }
-
-  return result.concat(left.slice(indexLeft), right.slice(indexRight));
-};
+const FaTrash = dynamic(() =>
+  import("react-icons/fa").then((mod) => mod.FaTrash)
+);
+const FaEdit = dynamic(() =>
+  import("react-icons/fa").then((mod) => mod.FaEdit)
+);
+const FaChevronLeft = dynamic(() =>
+  import("react-icons/fa").then((mod) => mod.FaChevronLeft)
+);
+const FaChevronRight = dynamic(() =>
+  import("react-icons/fa").then((mod) => mod.FaChevronRight)
+);
+const FaSortUp = dynamic(() =>
+  import("react-icons/fa").then((mod) => mod.FaSortUp)
+);
+const FaSortDown = dynamic(() =>
+  import("react-icons/fa").then((mod) => mod.FaSortDown)
+);
 
 type TableProps<T extends Record<string, any>> = {
   data: T[];
@@ -73,9 +41,7 @@ type TableProps<T extends Record<string, any>> = {
   onEditClick: (item: T) => void;
 };
 
-export default function Table<
-  T extends { id?: number; price?: number; state?: boolean }
->({
+export default function Table<T extends { id?: number }>({
   data,
   headers,
   totalEntries,
@@ -91,24 +57,29 @@ export default function Table<
   canDelete,
   onEditClick,
 }: TableProps<T>) {
-  const [sortColumn, setSortColumn] = useState<keyof T | null>(null);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(
-    null
-  );
+  const [sortState, setSortState] = useState<{
+    column: keyof T | null;
+    direction: "asc" | "desc" | null;
+  }>({
+    column: null,
+    direction: null,
+  });
 
   const handleSort = (columnKey: keyof T) => {
-    setSortColumn(columnKey);
-    setSortDirection((prevDirection) =>
-      prevDirection === "asc" ? "desc" : "asc"
-    );
+    setSortState((prev) => ({
+      column: columnKey,
+      direction:
+        prev.column === columnKey && prev.direction === "asc" ? "desc" : "asc",
+    }));
   };
 
-  const sortedData = sortColumn
-    ? mergeSort(data, sortColumn, sortDirection || "asc")
-    : data;
+  const sortedData = useMemo(() => {
+    if (!sortState.column || !sortState.direction) return data;
+    return mergeSort(data, sortState.column, sortState.direction);
+  }, [data, sortState]);
 
   return (
-    <>
+    <div className="px-4 lg:px-8 py-5 bg-premium-backgroundLight dark:bg-premium-secondaryLight rounded-3xl lg:mx-4 shadow-lg">
       <div className="flex flex-col sm:flex-row sm:justify-between gap-3 sm:gap-0 sm:items-center mb-4 md:px-3 text-xs sm:text-sm">
         <div className="flex items-center space-x-2 px-2 sm:px-0">
           <span className="text-premium-textPrimary dark:text-premium-textPrimary">
@@ -155,14 +126,16 @@ export default function Table<
                     <div className="ml-2 flex flex-col gap-0">
                       <FaSortUp
                         className={`hover:text-premium-primary dark:hover:text-premium-primaryDark ${
-                          sortColumn === key && sortDirection === "asc"
+                          sortState.column === key &&
+                          sortState.direction === "asc"
                             ? "text-premium-primary dark:text-premium-primary"
                             : "text-premium-textPlaceholder dark:text-premium-textSecondary"
                         }`}
                       />
                       <FaSortDown
                         className={`hover:text-premium-primary dark:hover:text-premium-primaryDark ${
-                          sortColumn === key && sortDirection === "desc"
+                          sortState.column === key &&
+                          sortState.direction === "desc"
                             ? "text-premium-primary dark:text-premium-primary"
                             : "text-premium-textPlaceholder dark:text-premium-textSecondary"
                         }`}
@@ -208,7 +181,11 @@ export default function Table<
                       }
 
                       if (columnType === "number") {
-                        return item[key]?.toLocaleString();
+                        return String(formatNumber(item[key] as number));
+                      }
+
+                      if (columnType === "string") {
+                        return String(item[key]);
                       }
 
                       if (columnType === "date") {
@@ -310,6 +287,6 @@ export default function Table<
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

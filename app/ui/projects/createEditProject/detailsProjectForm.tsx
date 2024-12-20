@@ -14,6 +14,7 @@ import {
   AiOutlineInfoCircle,
 } from "react-icons/ai";
 import DatePicker from "react-datepicker";
+import { formatNumber } from "@/utils/formatters";
 import "react-datepicker/dist/react-datepicker.css";
 
 type DetailsProjectFormProps = {
@@ -76,13 +77,6 @@ export default function DetailsProjectForm({
       }));
     }
   };
-
-  const formatPrice = (price: number) =>
-    new Intl.NumberFormat("es-CO", {
-      style: "currency",
-      currency: "COP",
-      minimumFractionDigits: 0,
-    }).format(price);
 
   const handleDateChange = (date: Date | null) => {
     if (date) {
@@ -191,7 +185,7 @@ export default function DetailsProjectForm({
             <input
               type="text"
               name="price"
-              value={formData.price ? formatPrice(formData.price) : ""}
+              value={formData.price ? formatNumber(formData.price) : ""}
               onChange={handlePriceChange}
               className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary ${
                 errors.priceError

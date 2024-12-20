@@ -13,7 +13,7 @@ export default function Home() {
 
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
         <Image
-          src="/images/logo.png"
+          src="/images/logo.webp"
           alt="Logotipo de EdifiK"
           width={400}
           height={150}

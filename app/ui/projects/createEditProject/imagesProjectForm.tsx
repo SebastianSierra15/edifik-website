@@ -4,7 +4,7 @@ import { useState, ChangeEvent, useEffect } from "react";
 import { ProjectData, ImageType, Media } from "@/lib/definitios";
 import ImageUploadSection from "./ImageUploadSection";
 import StepNavigationButtons from "../../stepNavigationButtons";
-import ModalAlert from "../../modalAlert";
+import ModalAlert from "../../modals/modalAlert";
 
 type UploadImagesFormProps = {
   formData: ProjectData;

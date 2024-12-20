@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { inter } from "@/app/ui/fonts";
+import { poppins } from "@/app/ui/fonts";
 import { Providers } from "../providers";
 import "../globals.css";
 
@@ -16,7 +16,7 @@ export default function AdminLayout({
   return (
     <html lang="es">
       <body
-        className={`${inter.className} antialiased min-h-screen flex flex-col`}
+        className={`${poppins.className} antialiased min-h-screen flex flex-col`}
       >
         <Providers>
           <main className="flex-grow">{children}</main>

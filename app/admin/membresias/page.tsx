@@ -1,24 +1,30 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { useCallback } from "react";
+import dynamic from "next/dynamic";
 import Table from "@/app/ui/table";
-import MembershipModal from "@/app/ui/memberships/membershipModal";
-import ModalConfirmation from "@/app/ui/modalConfirmation";
-import ModalAlert from "@/app/ui/modalAlert";
 import TableSkeleton from "@/app/ui/tableSkeleton";
 import { Membership, Header } from "@/lib/definitios";
-import { AiOutlineCheckCircle } from "react-icons/ai";
+import { useMemberships } from "@/app/hooks/memberships/useMemberships";
+import { useMembershipValidation } from "@/app/hooks/memberships/useMembershipValidation";
+
+const MembershipModal = dynamic(
+  () => import("@/app/ui/memberships/membershipModal"),
+  { ssr: false }
+);
+const ModalConfirmation = dynamic(() => import("@/app/ui/modals/modalConfirmation"), {
+  ssr: false,
+});
+const ModalAlert = dynamic(() => import("@/app/ui/modals/modalAlert"), { ssr: false });
 
 export default function MembershipsPage() {
-  const [memberships, setMemberships] = useState<Membership[]>([]);
-  const [totalEntries, setTotalEntries] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState<"edit" | null>(
     null
@@ -26,7 +32,14 @@ export default function MembershipsPage() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
-  const [updateMembership, setUpdateMembership] = useState({
+  const { memberships, totalEntries, isLoading } = useMemberships(
+    currentPage,
+    entriesPerPage,
+    searchTerm,
+    refreshTrigger
+  );
+
+  const [updateMembership, setUpdateMembership] = useState<Membership>({
     id: 0,
     name: "",
     benefits: "",
@@ -38,93 +51,37 @@ export default function MembershipsPage() {
     discountTwelveMonths: 0,
   });
 
-  const [errors, setErrors] = useState({
-    nameError: "",
-    benefitsError: "",
-    discountThreeMonthsError: "",
-    discountSixMonthsError: "",
-    discountTwelveMonthsError: "",
-    maxProjectsError: "",
-  });
+  const validateFields = useMembershipValidation(updateMembership);
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
     setSearchTerm(term);
     setCurrentPage(1);
-  }, 300);
+  }, 500);
 
-  const fetchMemberships = async () => {
-    try {
-      const response = await axios.get(
-        `/api/memberships?page=${currentPage}&pageSize=${entriesPerPage}&searchTerm=${searchTerm}`
-      );
-      setMemberships(response.data.memberships);
-      setTotalEntries(response.data.totalEntries);
-    } catch (error) {
-      console.error("Error al recuperar las membresias:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const filteredMemberships = useMemo(() => {
+    return memberships.filter((membership) => membership.id !== 1004);
+  }, [memberships]);
 
-  useEffect(() => {
-    fetchMemberships();
-  }, [currentPage, entriesPerPage, searchTerm]);
-
-  const validateFields = () => {
-    const newErrors = { ...errors };
-
-    if (!updateMembership.name.trim()) {
-      newErrors.nameError = "El nombre es obligatorio.";
-    }
-
-    if (!updateMembership.benefits.trim()) {
-      newErrors.benefitsError =
-        "La descripción de los beneficios es obligatoria.";
-    }
-
-    if (updateMembership.discountThreeMonths <= 0) {
-      newErrors.discountThreeMonthsError =
-        "El porcentaje de descuento debe ser mayor a 0.";
-    }
-
-    if (updateMembership.discountSixMonths <= 0) {
-      newErrors.discountSixMonthsError =
-        "El porcentaje de descuento debe ser mayor a 0.";
-    }
-
-    if (updateMembership.discountTwelveMonths <= 0) {
-      newErrors.discountTwelveMonthsError =
-        "El porcentaje de descuento debe ser mayor a 0.";
-    }
-
-    if (updateMembership.maxProjects <= 0) {
-      newErrors.maxProjectsError = "Debe haber al menos 1 propiedad.";
-    }
-
-    setErrors(newErrors);
-    return Object.values(newErrors).every((error) => error === "");
-  };
-
-  const resetErrors = () => {
-    setErrors({
-      nameError: "",
-      benefitsError: "",
-      discountThreeMonthsError: "",
-      discountSixMonthsError: "",
-      discountTwelveMonthsError: "",
-      maxProjectsError: "",
-    });
-  };
-
-  const handleEditClick = (membership: Membership) => {
+  const handleEditClick = useCallback((membership: Membership) => {
     setUpdateMembership(membership);
     setModalOpen(true);
-  };
+  }, []);
+
+  const goToNextPage = useCallback(() => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  }, []);
 
   const handleConfirmUpdate = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateFields()) return;
+    const errors = validateFields();
+    const hasErrors = Object.values(errors).some((error) => error !== "");
+
+    if (hasErrors) {
+      setAlertMessage("Por favor, corrige los errores antes de continuar.");
+      setShowAlert(true);
+      return;
+    }
 
     setConfirmationAction("edit");
     setIsConfirmationModalOpen(true);
@@ -133,11 +90,18 @@ export default function MembershipsPage() {
   const handleConfirmedAction = async () => {
     try {
       if (confirmationAction === "edit") {
-        await axios.put("/api/memberships", updateMembership);
+        await fetch("/api/memberships", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateMembership),
+        });
+
+        setRefreshTrigger((prev) => prev + 1);
       }
       setModalOpen(false);
       setIsConfirmationModalOpen(false);
-      fetchMemberships();
     } catch (error) {
       setModalOpen(false);
       setIsConfirmationModalOpen(false);
@@ -158,22 +122,10 @@ export default function MembershipsPage() {
   ) => {
     const { name, value } = e.target;
 
-    if (name === "price") {
-      const formattedPrice = value.replace(/[^0-9]/g, "");
-      setUpdateMembership({
-        ...updateMembership,
-        price: formattedPrice ? parseInt(formattedPrice, 10) : 0,
-      });
-    } else {
-      setUpdateMembership({
-        ...updateMembership,
-        [name]: value,
-      });
-    }
-  };
-
-  const goToNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
+    setUpdateMembership({
+      ...updateMembership,
+      [name]: name === "price" ? Number(value) || 0 : value,
+    });
   };
 
   const goToPreviousPage = () => {
@@ -220,68 +172,58 @@ export default function MembershipsPage() {
         Gestión de Membresías
       </h1>
 
-      <div className="px-4 lg:px-8 py-5 bg-premium-backgroundLight dark:bg-premium-secondaryLight rounded-3xl lg:mx-4 shadow-lg">
-        {isLoading ? (
-          <TableSkeleton rows={3} columns={headers.length + 1} />
-        ) : (
-          <Table
-            data={memberships.filter((membership) => membership.id !== 1004)}
-            headers={headers}
-            totalEntries={totalEntries}
-            entry="membresías"
-            currentPage={currentPage}
-            totalPages={Math.ceil(totalEntries / entriesPerPage)}
-            goToPage={goToPage}
-            goToNextPage={goToNextPage}
-            goToPreviousPage={goToPreviousPage}
-            entriesPerPage={entriesPerPage}
-            handleEntriesPerPageChange={handleEntriesPerPageChange}
-            handleSearchChange={(e) => debouncedSearch(e.target.value)}
-            canDelete={false}
-            onEditClick={handleEditClick}
-          />
-        )}
-      </div>
+      {isLoading ? (
+        <TableSkeleton rows={3} columns={headers.length + 1} />
+      ) : (
+        <Table
+          data={filteredMemberships}
+          headers={headers}
+          totalEntries={totalEntries}
+          entry="membresías"
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalEntries / entriesPerPage)}
+          goToPage={goToPage}
+          goToNextPage={goToNextPage}
+          goToPreviousPage={goToPreviousPage}
+          entriesPerPage={entriesPerPage}
+          handleEntriesPerPageChange={handleEntriesPerPageChange}
+          handleSearchChange={(e) => debouncedSearch(e.target.value)}
+          canDelete={false}
+          onEditClick={handleEditClick}
+        />
+      )}
 
-      <MembershipModal
-        show={modalOpen}
-        onClose={() => {
-          setModalOpen(false);
-          resetErrors();
-        }}
-        onSubmit={handleConfirmUpdate}
-        handleChange={handleChange}
-        membership={updateMembership}
-        errors={errors}
-      />
+      {modalOpen && (
+        <MembershipModal
+          show={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSubmit={handleConfirmUpdate}
+          handleChange={handleChange}
+          membership={updateMembership}
+          errors={validateFields()}
+        />
+      )}
 
-      <ModalConfirmation
-        isOpen={isConfirmationModalOpen}
-        onClose={handleCloseConfirmationModal}
-        onConfirm={handleConfirmedAction}
-        icon={
-          <AiOutlineCheckCircle className="w-10 h-10 text-premium-primary" />
-        }
-        title="Confirmar Acción"
-        message="¿Estás seguro de que quieres actualizar esta membresía?"
-        confirmLabel="Confirmar"
-        cancelLabel="Cancelar"
-      />
+      {isConfirmationModalOpen && (
+        <ModalConfirmation
+          isOpen={isConfirmationModalOpen}
+          onClose={handleCloseConfirmationModal}
+          onConfirm={handleConfirmedAction}
+          title="Confirmar Acción"
+          message="¿Estás seguro de que quieres actualizar esta membresía?"
+          confirmLabel="Confirmar"
+          cancelLabel="Cancelar"
+        />
+      )}
 
-      <ModalAlert
-        title="Advertencia"
-        message={alertMessage}
-        isOpen={showAlert}
-        onClose={() => setShowAlert(false)}
-      />
-
-      {/*
-      <button
-        onClick={() => router.push("/admin/proyectos")}
-        className="px-4 py-2 mt-4 bg-premium-primary text-white rounded-lg hover:bg-premium-primaryDark transition-colors dark:bg-premium-primary dark:hover:bg-premium-primaryDark dark:text-premium-backgroundLight mx-auto block"
-      >
-        Volver
-      </button>*/}
+      {showAlert && (
+        <ModalAlert
+          title="Advertencia"
+          message={alertMessage}
+          isOpen={showAlert}
+          onClose={() => setShowAlert(false)}
+        />
+      )}
     </div>
   );
 }

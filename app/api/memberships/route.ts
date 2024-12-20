@@ -18,20 +18,9 @@ export async function GET(request: Request) {
     ]);
 
     const rows = (result as RowDataPacket[][])[0];
-    const totalEntriesRow = (result as RowDataPacket[][])[1][0];
-    const totalEntries = totalEntriesRow.totalEntries - 1;
+    const totalEntries = (result as RowDataPacket[][])[1][0].totalEntries - 1;
 
-    const memberships: Membership[] = rows.map((row: any) => ({
-      id: row.id,
-      name: row.name,
-      benefits: row.benefits,
-      price: row.price,
-      discountThreeMonths: row.discountThreeMonths,
-      discountSixMonths: row.discountSixMonths,
-      discountTwelveMonths: row.discountTwelveMonths,
-      maxProjects: row.maxProjects,
-      projectsFeatured: row.projectsFeatured,
-    }));
+    const memberships = rows as Membership[];
 
     return NextResponse.json({ memberships, totalEntries });
   } catch (error) {
@@ -61,9 +50,6 @@ export async function PUT(request: Request) {
       name === undefined ||
       benefits === undefined ||
       price === undefined ||
-      discountThreeMonths === undefined ||
-      discountSixMonths === undefined ||
-      discountTwelveMonths === undefined ||
       maxProjects === undefined
     ) {
       return NextResponse.json(
@@ -72,20 +58,17 @@ export async function PUT(request: Request) {
       );
     }
 
-    const [result] = await db.query(
-      "CALL update_membership(?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        id,
-        name,
-        benefits,
-        price,
-        discountThreeMonths,
-        discountSixMonths,
-        discountTwelveMonths,
-        maxProjects,
-        projectsFeatured,
-      ]
-    );
+    await db.query("CALL update_membership(?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+      id,
+      name,
+      benefits,
+      price,
+      discountThreeMonths,
+      discountSixMonths,
+      discountTwelveMonths,
+      maxProjects,
+      projectsFeatured,
+    ]);
 
     return NextResponse.json({
       message: "Membresía actualizada correctamente",

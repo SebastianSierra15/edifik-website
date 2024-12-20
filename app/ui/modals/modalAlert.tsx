@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AiOutlineInfoCircle } from "react-icons/ai";
+import dynamic from "next/dynamic";
+
+const AiOutlineInfoCircle = dynamic(() =>
+  import("react-icons/ai").then((mod) => mod.AiOutlineInfoCircle)
+);
 
 interface ModalAlertProps {
   title: string;

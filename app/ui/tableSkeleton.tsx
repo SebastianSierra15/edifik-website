@@ -5,7 +5,7 @@ type TableSkeletonProps = {
 
 export default function TableSkeleton({ rows, columns }: TableSkeletonProps) {
   return (
-    <div className="animate-pulse">
+    <div className="animate-pulse px-4 lg:px-8 py-5 bg-premium-backgroundLight dark:bg-premium-secondaryLight rounded-3xl lg:mx-4 shadow-lg">
       <div className="flex flex-col sm:flex-row sm:justify-between gap-3 sm:gap-0 sm:items-center mb-4 md:px-3 text-xs sm:text-sm">
         <div className="flex items-center space-x-2 px-2 sm:px-0">
           <div className="w-16 h-6 bg-gray-300 dark:bg-gray-700 rounded" />

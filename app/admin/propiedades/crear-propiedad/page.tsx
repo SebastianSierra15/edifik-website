@@ -15,7 +15,7 @@ import FeaturesProjectForm from "@/app/ui/projects/createEditProject/featuresPro
 import DetailsProjectForm from "@/app/ui/projects/createEditProject/detailsProjectForm";
 import ImagesProjectForm from "@/app/ui/projects/createEditProject/imagesProjectForm";
 import Loader from "@/app/ui/loader";
-import ModalConfirmation from "@/app/ui/modalConfirmation";
+import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
 import CreateProjectSkeleton from "@/app/ui/projects/createEditProject/skeleton/createProjectSkeleton";
 import { ProjectData, Media } from "@/lib/definitios";
 import { AiOutlineCheckCircle } from "react-icons/ai";
@@ -202,9 +202,6 @@ export default function CreatePropertyPage() {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onConfirm={handleConfirmSubmit}
-        icon={
-          <AiOutlineCheckCircle className="w-10 h-10 text-premium-primary" />
-        }
         title="Confirmar Acción"
         message={"¿Estás seguro de que quieres subir esta propiedad?"}
         confirmLabel="Confirmar"

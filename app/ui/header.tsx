@@ -18,12 +18,12 @@ export default function Header() {
           aria-label="Inicio"
         >
           <Image
-            src="/images/logo.png"
+            src="/images/logo.webp"
             alt="Logo de EdifiK"
             width={100}
             height={40}
             priority
-            style={{ width: 'auto', height: 'auto' }}
+            style={{ width: "auto", height: "auto" }}
           />
         </Link>
 

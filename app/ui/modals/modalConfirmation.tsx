@@ -1,11 +1,17 @@
 import { useEffect } from "react";
-import { AiOutlineClose } from "react-icons/ai";
+import dynamic from "next/dynamic";
+
+const AiOutlineClose = dynamic(() =>
+  import("react-icons/ai").then((mod) => mod.AiOutlineClose)
+);
+const AiOutlineCheckCircle = dynamic(() =>
+  import("react-icons/ai").then((mod) => mod.AiOutlineCheckCircle)
+);
 
 type ModalConfirmationProps = {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  icon: React.ReactNode;
   title: string;
   message: string;
   confirmLabel?: string;
@@ -16,7 +22,6 @@ export default function ModalConfirmation({
   isOpen,
   onClose,
   onConfirm,
-  icon,
   title,
   message,
   confirmLabel = "Confirmar",
@@ -47,7 +52,7 @@ export default function ModalConfirmation({
         </button>
 
         <div className="flex justify-center mb-4 text-premium-primary dark:text-premium-primaryLight">
-          {icon}
+          <AiOutlineCheckCircle className="w-10 h-10 text-premium-primary" />
         </div>
 
         <h3 className="text-lg font-semibold text-premium-textPrimary dark:text-premium-textSecondary text-center mb-2">

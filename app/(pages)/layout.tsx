@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { inter } from "@/app/ui/fonts";
+import { poppins } from "@/app/ui/fonts";
 import Header from "../ui/header";
 import Footer from "../ui/footer";
 import { Providers } from "../providers";
@@ -18,7 +18,7 @@ export default function AdminLayout({
   return (
     <html lang="es">
       <body
-        className={`${inter.className} antialiased bg-premium-background dark:bg-premium-background min-h-screen flex flex-col`}
+        className={`${poppins.className} antialiased bg-premium-background dark:bg-premium-background min-h-screen flex flex-col`}
       >
         <Providers>
           <Header />

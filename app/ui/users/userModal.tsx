@@ -1,6 +1,7 @@
-import { useEffect } from "react";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { useBodyOverflow } from "@/app/hooks/useBodyOverflow ";
 import { UserData, Role, Gender, MembershipSummary } from "@/lib/definitios";
+import ModalHeader from "../modals/modalHeader";
+import ModalFooter from "../modals/modalFooter";
 
 interface UserModalProps {
   show: boolean;
@@ -21,6 +22,8 @@ interface UserModalProps {
     emailError: string;
     phoneNumberError: string;
     genderError: string;
+    roleError: string;
+    membershipError: string;
   };
 }
 
@@ -35,16 +38,7 @@ export default function UserModal({
   memberships,
   errors,
 }: UserModalProps) {
-  useEffect(() => {
-    if (show) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [show]);
+  useBodyOverflow(show);
 
   if (!show) return null;
 
@@ -52,18 +46,10 @@ export default function UserModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-premium-background dark:bg-premium-backgroundLight rounded-lg shadow-xl w-full max-w-2xl mx-4 overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-premium-borderColor dark:border-premium-borderColorHover py-3 px-6">
-          <h5 className="text-xl font-semibold text-premium-primary dark:text-premium-primaryLight">
-            {user.id ? "Editar Usuario" : "Registrar Usuario"}
-          </h5>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-premium-secondary dark:text-premium-textPrimary hover:text-premium-primary text-3xl"
-          >
-            &times;
-          </button>
-        </div>
+        <ModalHeader
+          title={user.id ? "Editar Usuario" : "Registrar Usuario"}
+          onClose={onClose}
+        />
 
         {/* Body */}
         <form
@@ -155,8 +141,18 @@ export default function UserModal({
                 value={user.phoneNumber}
                 onChange={handleChange}
                 placeholder="Número de teléfono"
-                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                  errors.phoneNumberError
+                    ? "border-red-500 bg-red-50"
+                    : "border-premium-borderColor dark:border-premium-borderColorHover"
+                }`}
               />
+              {errors.phoneNumberError && (
+                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
+                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                  {errors.phoneNumberError}
+                </div>
+              )}
             </div>
 
             <div>
@@ -167,7 +163,11 @@ export default function UserModal({
                 name="gender"
                 value={user.gender}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                  errors.genderError
+                    ? "border-red-500 bg-red-50"
+                    : "border-premium-borderColor dark:border-premium-borderColorHover"
+                }`}
               >
                 <option value="">Seleccione género</option>
                 {genders.map((gender) => (
@@ -176,6 +176,12 @@ export default function UserModal({
                   </option>
                 ))}
               </select>
+              {errors.genderError && (
+                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
+                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                  {errors.genderError}
+                </div>
+              )}
             </div>
           </div>
 
@@ -188,7 +194,11 @@ export default function UserModal({
                 name="roleName"
                 value={user.roleName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                  errors.roleError
+                    ? "border-red-500 bg-red-50"
+                    : "border-premium-borderColor dark:border-premium-borderColorHover"
+                }`}
               >
                 <option value="">Seleccione rol</option>
                 {roles.map((role) => (
@@ -197,6 +207,12 @@ export default function UserModal({
                   </option>
                 ))}
               </select>
+              {errors.roleError && (
+                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
+                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                  {errors.roleError}
+                </div>
+              )}
             </div>
 
             <div>
@@ -207,7 +223,11 @@ export default function UserModal({
                 name="membershipName"
                 value={user.membershipName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                  errors.membershipError
+                    ? "border-red-500 bg-red-50"
+                    : "border-premium-borderColor dark:border-premium-borderColorHover"
+                }`}
               >
                 <option value="">Seleccione membresía</option>
                 {memberships.map((membership) => (
@@ -216,6 +236,12 @@ export default function UserModal({
                   </option>
                 ))}
               </select>
+              {errors.membershipError && (
+                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
+                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                  {errors.membershipError}
+                </div>
+              )}
             </div>
           </div>
 
@@ -234,23 +260,7 @@ export default function UserModal({
         </form>
 
         {/* Footer */}
-        <div className="flex justify-end p-4 border-t border-premium-borderColor dark:border-premium-borderColorHover">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 bg-premium-textPlaceholder hover:bg-premium-borderColor dark:bg-premium-secondary dark:hover:bg-premium-secondaryLight text-white rounded-lg mr-2 hover:scale-105 transition transform duration-300"
-          >
-            Cancelar
-          </button>
-
-          <button
-            type="submit"
-            form="userForm"
-            className="px-4 py-2 bg-premium-primary hover:bg-premium-primaryDark dark:bg-premium-primaryLight dark:hover:bg-premium-primaryDark text-white rounded-lg hover:scale-105 transition transform duration-300"
-          >
-            Confirmar
-          </button>
-        </div>
+        <ModalFooter onClose={onClose} formId="userForm" />
       </div>
     </div>
   );

@@ -1,34 +1,30 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import axios from "axios";
-import {
-  User,
-  UserData,
-  Role,
-  Gender,
-  MembershipSummary,
-  Header,
-} from "@/lib/definitios";
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import { User, UserData, Header } from "@/lib/definitios";
 import { useDebouncedCallback } from "use-debounce";
 import Table from "@/app/ui/table";
-import UserModal from "@/app/ui/users/userModal";
-import ModalConfirmation from "@/app/ui/modalConfirmation";
 import TableSkeleton from "@/app/ui/tableSkeleton";
-import { FaPlus } from "react-icons/fa";
-import { AiOutlineCheckCircle } from "react-icons/ai";
+import { useUsers } from "@/app/hooks/users/useUsers";
+import { useUserValidation } from "@/app/hooks/users/useUserValidation";
+
+const UserModal = dynamic(() => import("@/app/ui/users/userModal"), {
+  ssr: false,
+});
+const ModalConfirmation = dynamic(
+  () => import("@/app/ui/modals/modalConfirmation"),
+  { ssr: false }
+);
+const FaPlus = dynamic(() =>
+  import("react-icons/fa").then((mod) => mod.FaPlus)
+);
 
 export default function UsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [roles, setRoles] = useState<Role[]>([]);
-  const [genders, setGenders] = useState<Gender[]>([]);
-  const [memberships, setMemberships] = useState<MembershipSummary[]>([]);
-  const [totalEntries, setTotalEntries] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [loading, setIsLoading] = useState(true);
   const [editUser, setEditUser] = useState<UserData | null>(null);
   const [registerUser, setRegisterUser] = useState<UserData>({});
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -36,60 +32,37 @@ export default function UsersPage() {
     "register" | "edit" | null
   >(null);
 
+  const { users, roles, genders, memberships, totalEntries, isLoading } =
+    useUsers(currentPage, entriesPerPage, searchTerm);
+
   const [errors, setErrors] = useState({
     namesError: "",
+    lastnamesError: "",
+    emailError: "",
+    phoneNumberError: "",
+    genderError: "",
     roleError: "",
+    membershipError: "",
   });
-
-  const debouncedSearch = useDebouncedCallback((term: string) => {
-    setSearchTerm(term);
-    setCurrentPage(1);
-  }, 300);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get(
-        `/api/users?page=${currentPage}&pageSize=${entriesPerPage}&searchTerm=${searchTerm}`
-      );
-      setUsers(response.data.users);
-      setTotalEntries(response.data.totalEntries);
-      setRoles(response.data.roles);
-      setGenders(response.data.genders);
-      setMemberships(response.data.memberships);
-    } catch (error) {
-      console.error("Error al recuperar los usuarios:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, [currentPage, entriesPerPage, searchTerm]);
-
-  const validateFields = () => {
-    const newErrors = { ...errors };
-
-    const userToValidate = editUser || registerUser;
-
-    if (!userToValidate.names) {
-      newErrors.namesError = "El nombre es obligatorio.";
-    }
-
-    if (!userToValidate.roleName) {
-      newErrors.roleError = "El rol es obligatorio.";
-    }
-
-    setErrors(newErrors);
-    return Object.values(newErrors).every((error) => error === "");
-  };
 
   const resetErrors = () => {
     setErrors({
       namesError: "",
+      lastnamesError: "",
+      emailError: "",
+      phoneNumberError: "",
+      genderError: "",
       roleError: "",
+      membershipError: "",
     });
   };
+
+  const debouncedSearch = useDebouncedCallback((term: string) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  }, 500);
+
+  const validateUser = useUserValidation(editUser || registerUser);
 
   const handleEditClick = (user: User) => {
     setEditUser(user);
@@ -104,14 +77,24 @@ export default function UsersPage() {
 
   const handleConfirmedAction = async () => {
     try {
-      if (confirmationAction === "edit" && editUser) {
-        await axios.put("/api/users", editUser);
-      } else if (confirmationAction === "register") {
-        await axios.post("/api/users", registerUser);
+      const endpoint = "/api/users";
+      const method = confirmationAction === "edit" ? "PUT" : "POST";
+      const body = confirmationAction === "edit" ? editUser : registerUser;
+
+      const response = await fetch(endpoint, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error en la acción: ${response.statusText}`);
       }
+
       setModalOpen(false);
       setIsConfirmationModalOpen(false);
-      fetchUsers();
     } catch (error) {
       console.error("Error al procesar la acción:", error);
     }
@@ -120,7 +103,15 @@ export default function UsersPage() {
   const handleConfirmSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateFields()) return;
+    const validationErrors = validateUser();
+    const hasErrors = Object.values(validationErrors).some(
+      (error) => error !== ""
+    );
+
+    if (hasErrors) {
+      setErrors(validationErrors);
+      return;
+    }
 
     setConfirmationAction(editUser ? "edit" : "register");
     setIsConfirmationModalOpen(true);
@@ -203,64 +194,57 @@ export default function UsersPage() {
         </button>
       </div>
 
-      <div className="px-4 lg:px-8 py-5 bg-premium-backgroundLight dark:bg-premium-secondaryLight rounded-3xl lg:mx-4 shadow-lg">
-        {loading ? (
-          <TableSkeleton rows={3} columns={headers.length + 1} />
-        ) : (
-          <Table
-            data={users}
-            headers={headers}
-            totalEntries={totalEntries}
-            entry="usuarios"
-            currentPage={currentPage}
-            totalPages={Math.ceil(totalEntries / entriesPerPage)}
-            goToPage={goToPage}
-            goToNextPage={goToNextPage}
-            goToPreviousPage={goToPreviousPage}
-            entriesPerPage={entriesPerPage}
-            handleEntriesPerPageChange={handleEntriesPerPageChange}
-            handleSearchChange={(e) => debouncedSearch(e.target.value)}
-            canDelete={true}
-            onEditClick={handleEditClick}
-          />
-        )}
-      </div>
+      {isLoading ? (
+        <TableSkeleton rows={3} columns={headers.length + 1} />
+      ) : (
+        <Table
+          data={users}
+          headers={headers}
+          totalEntries={totalEntries}
+          entry="usuarios"
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalEntries / entriesPerPage)}
+          goToPage={goToPage}
+          goToNextPage={goToNextPage}
+          goToPreviousPage={goToPreviousPage}
+          entriesPerPage={entriesPerPage}
+          handleEntriesPerPageChange={handleEntriesPerPageChange}
+          handleSearchChange={(e) => debouncedSearch(e.target.value)}
+          canDelete={true}
+          onEditClick={handleEditClick}
+        />
+      )}
 
-      <UserModal
-        show={modalOpen}
-        onClose={() => {
-          setModalOpen(false);
-          resetErrors();
-        }}
-        onSubmit={handleConfirmSubmit}
-        handleChange={handleChange}
-        user={editUser || registerUser}
-        roles={roles}
-        genders={genders}
-        memberships={memberships}
-        errors={{
-          namesError: errors.namesError,
-          lastnamesError: "",
-          emailError: "",
-          phoneNumberError: "",
-          genderError: "",
-        }}
-      />
+      {modalOpen && (
+        <UserModal
+          show={modalOpen}
+          onClose={() => {
+            setModalOpen(false);
+            resetErrors();
+          }}
+          onSubmit={handleConfirmSubmit}
+          handleChange={handleChange}
+          user={editUser || registerUser}
+          roles={roles}
+          genders={genders}
+          memberships={memberships}
+          errors={errors}
+        />
+      )}
 
-      <ModalConfirmation
-        isOpen={isConfirmationModalOpen}
-        onClose={handleCloseConfirmationModal}
-        onConfirm={handleConfirmedAction}
-        icon={
-          <AiOutlineCheckCircle className="w-10 h-10 text-premium-primary" />
-        }
-        title="Confirmar Acción"
-        message={`¿Estás seguro de que quieres ${
-          confirmationAction === "edit" ? "editar" : "registrar"
-        } este usuario?`}
-        confirmLabel="Confirmar"
-        cancelLabel="Cancelar"
-      />
+      {isConfirmationModalOpen && (
+        <ModalConfirmation
+          isOpen={isConfirmationModalOpen}
+          onClose={handleCloseConfirmationModal}
+          onConfirm={handleConfirmedAction}
+          title="Confirmar Acción"
+          message={`¿Estás seguro de que quieres ${
+            confirmationAction === "edit" ? "editar" : "registrar"
+          } este usuario?`}
+          confirmLabel="Confirmar"
+          cancelLabel="Cancelar"
+        />
+      )}
     </div>
   );
 }
