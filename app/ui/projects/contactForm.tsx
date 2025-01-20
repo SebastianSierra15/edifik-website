@@ -16,7 +16,6 @@ export default function ContactForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Datos enviados:", { name, email, phone });
   };
 
   useEffect(() => {
@@ -109,54 +108,54 @@ export default function ContactForm() {
     isLargeScreen && formState === "bottom" && formOffset !== null
       ? { top: `${formOffset}px` }
       : isLargeScreen && formState === "fixed"
-      ? { top: "8rem", right: "2.75rem" }
-      : {};
+        ? { top: "8rem", right: "2.75rem" }
+        : {};
 
   return (
     <div
       ref={formRef}
       className={`${
         isLargeScreen ? formStyles[formState] : formStyles.smallScreen
-      } bg-[#F4F1ED] text-[#5D4037] max-h-[80vh] overflow-y-auto border border-[#DAA520] p-6 rounded-lg`}
+      } max-h-[80vh] overflow-y-auto rounded-lg border border-[#DAA520] bg-[#F4F1ED] p-6 text-[#5D4037]`}
       style={dynamicStyle}
     >
-      <h2 className="text-2xl font-bold mb-2 text-center text-[#8B4513]">
+      <h2 className="mb-2 text-center text-2xl font-bold text-[#8B4513]">
         Te llamamos
       </h2>
-      <p className="text-sm text-center mb-4">
+      <p className="mb-4 text-center text-sm">
         Déjanos tus datos y pronto estaremos en contacto.
       </p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col">
-          <label className="font-medium mb-1">Nombre *</label>
+          <label className="mb-1 font-medium">Nombre *</label>
           <input
             type="text"
             placeholder="Nombre completo"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 rounded-md bg-white border border-[#DAA520] text-[#5D4037] outline-none"
+            className="w-full rounded-md border border-[#DAA520] bg-white px-3 py-2 text-[#5D4037] outline-none"
             required
           />
         </div>
         <div className="flex flex-col">
-          <label className="font-medium mb-1">Correo electrónico *</label>
+          <label className="mb-1 font-medium">Correo electrónico *</label>
           <input
             type="email"
             placeholder="Correo electrónico"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 rounded-md bg-white border border-[#DAA520] text-[#5D4037] outline-none"
+            className="w-full rounded-md border border-[#DAA520] bg-white px-3 py-2 text-[#5D4037] outline-none"
             required
           />
         </div>
         <div className="flex flex-col">
-          <label className="font-medium mb-1">Celular o Teléfono *</label>
+          <label className="mb-1 font-medium">Celular o Teléfono *</label>
           <input
             type="tel"
             placeholder="Número de contacto"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="w-full px-3 py-2 rounded-md bg-white border border-[#DAA520] text-[#5D4037] outline-none"
+            className="w-full rounded-md border border-[#DAA520] bg-white px-3 py-2 text-[#5D4037] outline-none"
             required
           />
         </div>
@@ -178,7 +177,7 @@ export default function ContactForm() {
         </div>
         <button
           type="submit"
-          className="w-full py-2 rounded-md font-semibold bg-[#DAA520] text-[#8B4513] border border-[#DAA520]"
+          className="w-full rounded-md border border-[#DAA520] bg-[#DAA520] py-2 font-semibold text-[#8B4513]"
         >
           Contáctame
         </button>

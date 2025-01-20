@@ -56,7 +56,7 @@ export default function ImageModal({
     setIsTransitioning(true);
     setTimeout(() => {
       setCurrentIndex(
-        (prevIndex) => (prevIndex - 1 + media.length) % media.length
+        (prevIndex) => (prevIndex - 1 + media.length) % media.length,
       );
       setIsTransitioning(false);
     }, 300);
@@ -68,20 +68,20 @@ export default function ImageModal({
       onClick={onClose}
     >
       <div
-        className="relative max-w-full w-full md:w-[80%] lg:w-[70%] aspect-video p-4 flex justify-center items-center"
+        className="relative flex aspect-video w-full max-w-full items-center justify-center p-4 md:w-[80%] lg:w-[70%]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 z-50 bg-yellow-500 rounded-full w-10 h-10 flex items-center justify-center text-black text-2xl hover:bg-yellow-600"
+          className="absolute right-6 top-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-500 text-2xl text-black hover:bg-yellow-600"
           aria-label="Close Modal"
         >
           <AiOutlineClose size={20} />
         </button>
 
         {/* Image */}
-        <div className="relative w-full h-full bg-black bg-opacity-50 flex items-center justify-center rounded-lg overflow-hidden">
+        <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg bg-black bg-opacity-50">
           <div
             className={`absolute inset-0 transition-opacity duration-500 ${
               isTransitioning ? "opacity-0" : "opacity-100"
@@ -99,25 +99,25 @@ export default function ImageModal({
 
         {/* Tag */}
         {media[currentIndex]?.tag && (
-          <div className="absolute top-8 left-8 bg-black bg-opacity-70 text-white text-lg px-3 py-1 rounded">
+          <div className="absolute left-8 top-8 rounded bg-black bg-opacity-70 px-3 py-1 text-lg text-white">
             {media[currentIndex].tag}
           </div>
         )}
 
         {/* Counter */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white text-lg px-3 py-1 rounded">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 transform rounded bg-black bg-opacity-70 px-3 py-1 text-lg text-white">
           {currentIndex + 1}/{media.length}
         </div>
 
         {/* Navigation Buttons */}
-        <div className="absolute inset-0 flex justify-between items-center px-4">
+        <div className="absolute inset-0 flex items-center justify-between px-4">
           <button
             onClick={(e) => {
               e.stopPropagation();
               prevImage();
             }}
             disabled={media.length === 1}
-            className={`rounded-full w-10 h-10 flex items-center justify-center text-black ${
+            className={`flex h-10 w-10 items-center justify-center rounded-full text-black ${
               media.length === 1
                 ? "bg-gray-400"
                 : "bg-yellow-500 hover:bg-yellow-600"
@@ -133,7 +133,7 @@ export default function ImageModal({
               nextImage();
             }}
             disabled={media.length === 1}
-            className={`rounded-full w-10 h-10 flex items-center justify-center text-black ${
+            className={`flex h-10 w-10 items-center justify-center rounded-full text-black ${
               media.length === 1
                 ? "bg-gray-400"
                 : "bg-yellow-500 hover:bg-yellow-600"

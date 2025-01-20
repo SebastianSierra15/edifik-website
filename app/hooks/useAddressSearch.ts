@@ -19,7 +19,7 @@ export function useAddressSearch() {
 
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${query}`
+        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${query}`,
       );
       if (!response.ok) {
         throw new Error("Error en la búsqueda de dirección");

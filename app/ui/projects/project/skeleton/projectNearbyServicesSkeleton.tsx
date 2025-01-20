@@ -2,26 +2,26 @@ export function ProjectNearbyServicesSkeleton() {
   return (
     <div className="my-8">
       {/* Skeleton Title */}
-      <div className="h-8 w-64 bg-gray-300 rounded mb-6 animate-pulse"></div>
+      <div className="mb-6 h-8 w-64 animate-pulse rounded bg-gray-300"></div>
 
       {/* Skeleton Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {Array(4)
           .fill(0)
           .map((_, index) => (
             <div
               key={index}
-              className="p-4 border rounded-lg bg-gray-100 animate-pulse flex items-center space-x-4"
+              className="flex animate-pulse items-center space-x-4 rounded-lg border bg-gray-100 p-4"
               style={{
                 borderColor: "#EDEDED",
               }}
             >
               {/* Icon Skeleton */}
-              <div className="h-10 w-10 bg-gray-300 rounded-full"></div>
+              <div className="h-10 w-10 rounded-full bg-gray-300"></div>
               {/* Text Skeleton */}
-              <div className="flex flex-col flex-1">
-                <div className="h-4 w-3/4 bg-gray-300 rounded mb-2"></div>
-                <div className="h-6 w-1/2 bg-gray-300 rounded"></div>
+              <div className="flex flex-1 flex-col">
+                <div className="mb-2 h-4 w-3/4 rounded bg-gray-300"></div>
+                <div className="h-6 w-1/2 rounded bg-gray-300"></div>
               </div>
             </div>
           ))}

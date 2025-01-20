@@ -46,7 +46,7 @@ export function useUploadImages() {
                 }
               },
               "image/webp",
-              0.75
+              0.75,
             );
           }
         };
@@ -62,7 +62,7 @@ export function useUploadImages() {
   const uploadImages = async (
     projectId: number,
     media: Media[],
-    propertyTypeName: string
+    propertyTypeName: string,
   ): Promise<ProjectMedia[]> => {
     try {
       setUploadStatus("Processing and uploading images...");
@@ -75,7 +75,7 @@ export function useUploadImages() {
           formData.append("file", processedFile);
           formData.append(
             "path",
-            `projects/images/${propertyTypeName}/${projectId}/${item.type}/`
+            `projects/images/${propertyTypeName}/${projectId}/${item.type}/`,
           );
 
           const response = await fetch("/api/s3/projects/images/upload", {
@@ -98,7 +98,7 @@ export function useUploadImages() {
               item.category === "commonArea" ? item.idType : undefined,
             imageType: item.category === "imageType" ? item.idType : undefined,
           } as ProjectMedia;
-        })
+        }),
       );
 
       setUploadStatus("Images uploaded successfully");

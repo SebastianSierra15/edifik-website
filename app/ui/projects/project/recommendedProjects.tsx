@@ -20,25 +20,25 @@ export default function RecommendedProjects({
 }: RecommendedProjectsProps) {
   return (
     <div className="my-12 px-8">
-      <h2 className="text-3xl font-semibold mb-6" style={{ color: "#5D4037" }}>
+      <h2 className="mb-6 text-3xl font-semibold" style={{ color: "#5D4037" }}>
         Otras propiedades que podrían interesarte
       </h2>
-      <div className="flex overflow-x-auto space-x-6">
+      <div className="flex space-x-6 overflow-x-auto">
         {projects.map((project) => (
           <div
             key={project.id}
-            className="relative bg-white rounded-lg shadow-md min-w-[250px] max-w-[300px] flex-shrink-0 overflow-hidden"
+            className="relative min-w-[250px] max-w-[300px] flex-shrink-0 overflow-hidden rounded-lg bg-white shadow-md"
             style={{
               border: "2px solid #DAA520",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
             }}
           >
             {/* Etiquetas de entrega y habitaciones */}
-            <div className="absolute top-2 left-2 flex flex-col space-y-1">
-              <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full">
+            <div className="absolute left-2 top-2 flex flex-col space-y-1">
+              <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
                 {project.deliveryTime}
               </span>
-              <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full">
+              <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
                 {project.rooms}
               </span>
             </div>
@@ -47,21 +47,21 @@ export default function RecommendedProjects({
             <img
               src={project.images[0]}
               alt={project.name}
-              className="w-full h-40 object-cover rounded-t-lg"
+              className="h-40 w-full rounded-t-lg object-cover"
             />
 
             {/* Detalles de la propiedad */}
             <div className="p-4">
               <h3
-                className="text-lg font-semibold text-gray-800 line-clamp-1"
+                className="line-clamp-1 text-lg font-semibold text-gray-800"
                 style={{ color: "#5D4037" }}
               >
                 {project.name}
               </h3>
-              <p className="text-sm text-gray-600 line-clamp-1">
+              <p className="line-clamp-1 text-sm text-gray-600">
                 {project.location}
               </p>
-              <p className="text-sm font-semibold text-gray-800 mt-2">
+              <p className="mt-2 text-sm font-semibold text-gray-800">
                 Precio desde
               </p>
               <p className="text-base font-bold" style={{ color: "#8B4513" }}>

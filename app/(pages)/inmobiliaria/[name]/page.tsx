@@ -2,7 +2,7 @@
 
 import Head from "next/head";
 import { motion } from "framer-motion";
-import { useProjectByName } from "@/app/hooks/useProjectByName";
+import { useProjectByName } from "@/app/hooks/projects/useProjectByName";
 import ProjectHeader from "@/app/ui/projects/project/projectHeader";
 import ProjectCarousel from "@/app/ui/projects/project/projectCarousel";
 import ProjectPlans from "@/app/ui/projects/project/projectPlans";
@@ -30,7 +30,7 @@ export default function PropertyPage({ params }: { params: { name: string } }) {
 
   return (
     <div
-      className="w-full min-h-screen"
+      className="min-h-screen w-full"
       style={{ backgroundColor: "#EDEDED", color: "#5D4037" }}
     >
       <Head>
@@ -60,7 +60,7 @@ export default function PropertyPage({ params }: { params: { name: string } }) {
 
           <ProjectCarouselSkeleton />
 
-          <div className="flex justify-center mt-4">
+          <div className="mt-4 flex justify-center">
             <hr
               className="w-3/4"
               style={{
@@ -69,8 +69,8 @@ export default function PropertyPage({ params }: { params: { name: string } }) {
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-8">
-            <div className="lg:col-span-2 px-16 lg:pr-10 space-y-8">
+          <div className="grid grid-cols-1 gap-4 pt-8 lg:grid-cols-3">
+            <div className="space-y-8 px-16 lg:col-span-2 lg:pr-10">
               <ProjectPlansSkeleton />
 
               <ProjectShortDescriptionSkeleton />
@@ -83,14 +83,14 @@ export default function PropertyPage({ params }: { params: { name: string } }) {
 
               <ProjectCommonAreasSkeleton />
 
-              <div className="h-80 w-full bg-gray-300 rounded animate-pulse"></div>
+              <div className="h-80 w-full animate-pulse rounded bg-gray-300"></div>
             </div>
 
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="transition-all pt-8 duration-300 pr-16"
+              className="pr-16 pt-8 transition-all duration-300"
             >
               <ContactForm />
             </motion.div>
@@ -107,7 +107,7 @@ export default function PropertyPage({ params }: { params: { name: string } }) {
               )}
             />
 
-            <div className="flex justify-center mt-4">
+            <div className="mt-4 flex justify-center">
               <hr
                 className="w-3/4"
                 style={{
@@ -116,8 +116,8 @@ export default function PropertyPage({ params }: { params: { name: string } }) {
               />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-8">
-              <div className="lg:col-span-2 px-4 sm:px-6 lg:px-12 lg:pr-10">
+            <div className="grid grid-cols-1 gap-4 pt-8 lg:grid-cols-3">
+              <div className="px-4 sm:px-6 lg:col-span-2 lg:px-12 lg:pr-10">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -137,7 +137,7 @@ export default function PropertyPage({ params }: { params: { name: string } }) {
                   viewport={{ once: true }}
                   transition={{ duration: 0.8 }}
                 >
-                  <p className="text-lg my-8" style={{ color: "#000000" }}>
+                  <p className="my-8 text-lg" style={{ color: "#000000" }}>
                     {project.shortDescription}
                   </p>
                 </motion.div>
@@ -157,14 +157,14 @@ export default function PropertyPage({ params }: { params: { name: string } }) {
                   viewport={{ once: true }}
                   transition={{ duration: 0.8 }}
                 >
-                  <div className="text-base my-8">
+                  <div className="my-8 text-base">
                     <h2
-                      className="text-2xl font-semibold mb-2"
+                      className="mb-2 text-2xl font-semibold"
                       style={{ color: "#8B4513" }}
                     >
                       Descripción General
                     </h2>
-                    <p className="text-black whitespace-pre-line">
+                    <p className="whitespace-pre-line text-black">
                       {project.detailedDescription}
                     </p>
                   </div>
@@ -209,13 +209,13 @@ export default function PropertyPage({ params }: { params: { name: string } }) {
                 </motion.div>
               </div>
 
-              <div className="pt-8 pr-16">
+              <div className="pr-16 pt-8">
                 {/*
                 <ContactForm />*/}
               </div>
             </div>
 
-            <div className="mt-20 mx-32">
+            <div className="mx-32 mt-20">
               <CarouselRecommendedProjects projects={projectRecommended} />
             </div>
           </>

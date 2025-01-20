@@ -4,9 +4,9 @@ import { v4 as uuidv4 } from "uuid";
 import sharp from "sharp";
 import { s3 } from "@/lib/s3";
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const data = await request.formData();
+    const data = await req.formData();
     const file = data.get("file") as File;
     let folderPath = data.get("path") as string;
 
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       console.error("Faltan el archivo o la ruta de la carpeta.");
       return NextResponse.json(
         { error: "File or folder path is missing" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     console.error("Error uploading and converting image:", error);
     return NextResponse.json(
       { error: "Error uploading and converting image." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -26,7 +26,7 @@ export default function useColombianLocations() {
     const fetchLocations = async () => {
       try {
         const response = await fetch(
-          "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json"
+          "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json",
         );
         const data = await response.json();
 
@@ -34,7 +34,7 @@ export default function useColombianLocations() {
           (dept: any, index: number) => ({
             id: index + 1,
             name: dept.departamento,
-          })
+          }),
         );
 
         const cities = data.reduce(
@@ -44,11 +44,11 @@ export default function useColombianLocations() {
                 id: cityIndex + 1,
                 name: cityName,
                 departamentId: index + 1,
-              })
+              }),
             );
             return acc;
           },
-          {}
+          {},
         );
 
         setLocations({ departaments, cities });

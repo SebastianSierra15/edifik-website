@@ -1,4 +1,3 @@
-// components/ProjectMap.tsx
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -28,10 +27,10 @@ export default function ProjectMap({
   return (
     <div className="my-10">
       {/* Título del Mapa */}
-      <h2 className="text-2xl font-semibold mb-4" style={{ color: "#8B4513" }}>
+      <h2 className="mb-4 text-2xl font-semibold" style={{ color: "#8B4513" }}>
         Ubicación del Proyecto
       </h2>
-      <p className="text-lg mb-6" style={{ color: "#5D4037" }}>
+      <p className="mb-6 text-lg" style={{ color: "#5D4037" }}>
         Explora la ubicación exacta de tu próximo hogar en el mapa interactivo a
         continuación.
       </p>
@@ -40,7 +39,7 @@ export default function ProjectMap({
       <MapContainer
         center={[latitude, longitude]}
         zoom={15}
-        className="w-full h-[300px] z-10 rounded-lg overflow-hidden"
+        className="z-10 h-[300px] w-full overflow-hidden rounded-lg"
         style={{
           borderColor: "#DAA520",
           border: "1px solid #5D4037",

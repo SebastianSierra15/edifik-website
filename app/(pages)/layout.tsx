@@ -18,7 +18,7 @@ export default function AdminLayout({
   return (
     <html lang="es">
       <body
-        className={`${poppins.className} antialiased bg-premium-background dark:bg-premium-background min-h-screen flex flex-col`}
+        className={`${poppins.className} flex min-h-screen flex-col bg-premium-background antialiased dark:bg-premium-background`}
       >
         <Providers>
           <Header />

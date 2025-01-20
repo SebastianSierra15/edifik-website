@@ -1,7 +1,7 @@
 export function ProjectCarouselSkeleton() {
   return (
-    <div className="relative w-full mx-auto sm:my-5 px-8">
-      <div className="relative flex justify-center items-center overflow-hidden h-80">
+    <div className="relative mx-auto w-full px-8 sm:my-5">
+      <div className="relative flex h-80 items-center justify-center overflow-hidden">
         {[...Array(5)].map((_, index) => {
           const positions = [
             {
@@ -44,7 +44,7 @@ export function ProjectCarouselSkeleton() {
           return (
             <div
               key={index}
-              className={`absolute bg-gray-300 rounded-lg animate-pulse ${positions[index].scale} ${positions[index].zIndex}`}
+              className={`absolute animate-pulse rounded-lg bg-gray-300 ${positions[index].scale} ${positions[index].zIndex}`}
               style={{
                 width: positions[index].width,
                 height: positions[index].height,
@@ -56,16 +56,16 @@ export function ProjectCarouselSkeleton() {
         })}
       </div>
 
-      <button className="absolute top-1/2 left-2 sm:left-3 lg:left-4 transform -translate-y-1/2 bg-gray-300 rounded-full w-8 h-8 animate-pulse"></button>
-      <button className="absolute top-1/2 right-2 sm:right-3 lg:right-4 transform -translate-y-1/2 bg-gray-300 rounded-full w-8 h-8 animate-pulse"></button>
+      <button className="absolute left-2 top-1/2 h-8 w-8 -translate-y-1/2 transform animate-pulse rounded-full bg-gray-300 sm:left-3 lg:left-4"></button>
+      <button className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 transform animate-pulse rounded-full bg-gray-300 sm:right-3 lg:right-4"></button>
 
-      <div className="flex justify-center mt-4 space-x-2">
+      <div className="mt-4 flex justify-center space-x-2">
         {[...Array(5)].map((_, index) => (
           <div
             key={index}
-            className={`w-2 h-2 ${
-              index === 2 ? "bg-gray-400 scale-125" : "bg-gray-300"
-            } rounded-full animate-pulse`}
+            className={`h-2 w-2 ${
+              index === 2 ? "scale-125 bg-gray-400" : "bg-gray-300"
+            } animate-pulse rounded-full`}
           ></div>
         ))}
       </div>

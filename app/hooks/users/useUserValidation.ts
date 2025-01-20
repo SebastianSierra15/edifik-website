@@ -1,6 +1,7 @@
 export const useUserValidation = (
-  user: any
+  user: any,
 ): (() => {
+  usernameError: string;
   namesError: string;
   lastnamesError: string;
   emailError: string;
@@ -11,6 +12,9 @@ export const useUserValidation = (
 }) => {
   const validateFields = () => {
     return {
+      usernameError: !user.username?.trim()
+        ? "El nombre de usuario es obligatorio."
+        : "",
       namesError: !user.names?.trim() ? "El nombre es obligatorio." : "",
       lastnamesError: !user.lastnames?.trim()
         ? "El apellido es obligatorio."
@@ -18,17 +22,15 @@ export const useUserValidation = (
       emailError: !user.email?.trim()
         ? "El correo electrónico es obligatorio."
         : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)
-        ? "El correo electrónico no es válido."
-        : "",
+          ? "El correo electrónico no es válido."
+          : "",
       phoneNumberError:
         user.phoneNumber && !/^\d{10}$/.test(user.phoneNumber)
           ? "El número de teléfono debe tener 10 dígitos."
           : "",
-      genderError: !user.gender?.trim() ? "El género es obligatorio." : "",
-      roleError: !user.roleName?.trim() ? "El rol es obligatorio." : "",
-      membershipError: !user.MembershipName?.trim()
-        ? "La membresía es obligatoria."
-        : "",
+      genderError: !user.gender ? "El género es obligatorio." : "",
+      roleError: !user.role ? "El rol es obligatorio." : "",
+      membershipError: !user.membership ? "La membresía es obligatoria." : "",
     };
   };
 

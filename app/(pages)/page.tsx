@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="relative w-full h-[500px] m-0 p-0 bg-cover bg-center">
+    <div className="relative m-0 h-[500px] w-full bg-cover bg-center p-0">
       <Image
         src="/images/image1.png"
         alt="Vista aérea del edificio de EdifiK"
@@ -21,7 +21,7 @@ export default function Home() {
           style={{ width: "auto", height: "auto" }}
         />
 
-        <h1 className="text-white text-center text-xl mt-4">
+        <h1 className="mt-4 text-center text-xl text-white">
           Diseñamos Sueños, Construimos Realidades
         </h1>
       </div>

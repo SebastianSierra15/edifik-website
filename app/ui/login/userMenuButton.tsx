@@ -1,16 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import dynamic from "next/dynamic";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-
-const FaUserCircle = dynamic(() =>
-  import("react-icons/fa").then((mod) => mod.FaUserCircle)
-);
-const HiMenuAlt2 = dynamic(() =>
-  import("react-icons/hi").then((mod) => mod.HiMenuAlt2)
-);
+import { CircleUser, Menu } from "lucide-react";
 
 export default function UserMenuButton() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -39,18 +32,18 @@ export default function UserMenuButton() {
     <div ref={dropdownRef} className="relative inline-block text-left">
       <button
         onClick={toggleDropdown}
-        className="flex items-center border border-premium-borderColor dark:border-premium-borderColorHover rounded-full px-4 py-2 hover:shadow-lg transition-shadow focus:outline-none bg-premium-background dark:bg-premium-secondaryLight text-premium-secondary dark:text-premium-textPrimary"
+        className="flex items-center rounded-full border border-premium-borderColor bg-premium-background px-4 py-2 text-premium-secondary transition-shadow hover:shadow-lg focus:outline-none dark:border-premium-borderColorHover dark:bg-premium-secondaryLight dark:text-premium-textPrimary"
         type="button"
         aria-expanded={isDropdownOpen}
         aria-haspopup="menu"
       >
-        <HiMenuAlt2 className="w-5 h-5 mr-2" />
-        <FaUserCircle className="w-6 h-6" />
+        <Menu className="mr-2 h-5 w-5" />
+        <CircleUser className="h-6 w-6" />
       </button>
 
       {isDropdownOpen && (
         <div
-          className="absolute right-0 mt-2 w-48 bg-premium-background dark:bg-premium-secondary border border-premium-borderColor dark:border-darkBorderColor rounded-md shadow-lg z-20"
+          className="dark:border-darkBorderColor absolute right-0 z-20 mt-2 w-48 rounded-md border border-premium-borderColor bg-premium-background shadow-lg dark:bg-premium-secondary"
           role="menu"
         >
           <ul className="py-1">
@@ -60,7 +53,7 @@ export default function UserMenuButton() {
                   <Link
                     href="/login"
                     onClick={() => setIsDropdownOpen(false)}
-                    className="block px-4 py-2 hover:bg-premium-backgroundLight dark:hover:bg-premium-secondaryLight cursor-pointer"
+                    className="block cursor-pointer px-4 py-2 hover:bg-premium-backgroundLight dark:hover:bg-premium-secondaryLight"
                   >
                     Iniciar Sesión
                   </Link>
@@ -69,7 +62,7 @@ export default function UserMenuButton() {
                   <Link
                     href="/login/register"
                     onClick={() => setIsDropdownOpen(false)}
-                    className="block px-4 py-2 hover:bg-premium-backgroundLight dark:hover:bg-premium-secondaryLight cursor-pointer"
+                    className="block cursor-pointer px-4 py-2 hover:bg-premium-backgroundLight dark:hover:bg-premium-secondaryLight"
                   >
                     Regístrate
                   </Link>
@@ -82,7 +75,7 @@ export default function UserMenuButton() {
                     setIsDropdownOpen(false);
                     signOut({ callbackUrl: "/" });
                   }}
-                  className="block w-full px-4 py-2 text-left hover:bg-premium-backgroundLight dark:hover:bg-premium-secondaryLight cursor-pointer"
+                  className="block w-full cursor-pointer px-4 py-2 text-left hover:bg-premium-backgroundLight dark:hover:bg-premium-secondaryLight"
                 >
                   Cerrar Sesión
                 </button>

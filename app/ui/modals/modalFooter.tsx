@@ -12,18 +12,18 @@ export default function ModalFooter({
   formId,
 }: ModalFooterProps) {
   return (
-    <div className="flex justify-end p-4 border-t border-premium-borderColor dark:border-premium-borderColorHover">
+    <div className="flex justify-end border-t border-premium-borderColor p-4 dark:border-premium-borderColorHover">
       <button
         type="button"
         onClick={onClose}
-        className="px-4 py-2 bg-premium-textPlaceholder hover:bg-premium-borderColor dark:bg-premium-secondary dark:hover:bg-premium-secondaryLight text-white rounded-lg mr-2 hover:scale-105 transition transform duration-300"
+        className="mr-2 transform rounded-lg bg-premium-textPlaceholder px-4 py-2 text-white transition duration-300 hover:scale-105 hover:bg-premium-borderColor dark:bg-premium-secondary dark:hover:bg-premium-secondaryLight"
       >
         {cancelLabel}
       </button>
       <button
         type="submit"
         form={formId}
-        className="px-4 py-2 bg-premium-primary hover:bg-premium-primaryDark dark:bg-premium-primaryLight dark:hover:bg-premium-primaryDark text-white rounded-lg hover:scale-105 transition transform duration-300"
+        className="transform rounded-lg bg-premium-primary px-4 py-2 text-white transition duration-300 hover:scale-105 hover:bg-premium-primaryDark dark:bg-premium-primaryLight dark:hover:bg-premium-primaryDark"
       >
         {confirmLabel}
       </button>

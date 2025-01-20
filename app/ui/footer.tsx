@@ -1,20 +1,12 @@
 import Link from "next/link";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaTwitter,
-  FaTiktok,
-  FaYoutube,
-  FaWhatsapp,
-} from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="pt-5 pb-1 bg-gray-800 text-gray-300">
-      <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-7">
+    <footer className="bg-gray-800 pb-1 pt-5 text-gray-300">
+      <div className="container mx-auto grid grid-cols-1 gap-8 px-7 sm:grid-cols-2 md:grid-cols-4">
         {/* Ubicación */}
         <div className="text-center md:text-left">
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">Ubícanos</h3>
+          <h3 className="mb-4 text-lg font-semibold text-blue-500">Ubícanos</h3>
           <address>
             <p>Fusagasugá - Cundinamarca, Calle 14 #3-59</p>
             <p>Conjunto Parque la colina</p>
@@ -31,7 +23,7 @@ export default function Footer() {
 
         {/* Sobre Nosotros */}
         <div className="text-center md:text-left">
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">
+          <h3 className="mb-4 text-lg font-semibold text-blue-500">
             Sobre Nosotros
           </h3>
           <ul>
@@ -42,14 +34,14 @@ export default function Footer() {
                     {text}
                   </Link>
                 </li>
-              )
+              ),
             )}
           </ul>
         </div>
 
         {/* Enlaces útiles */}
         <div className="text-center md:text-left">
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">
+          <h3 className="mb-4 text-lg font-semibold text-blue-500">
             Enlaces útiles
           </h3>
           <ul>
@@ -63,15 +55,15 @@ export default function Footer() {
 
         {/* Contacto */}
         <div className="text-center md:text-left">
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">Contacto</h3>
+          <h3 className="mb-4 text-lg font-semibold text-blue-500">Contacto</h3>
           <p>+57 123 456 7890</p>
         </div>
       </div>
 
-      <div className="container mx-auto mt-10 border-t border-gray-600 px-7 pt-4 mb-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
+      <div className="container mx-auto mb-4 mt-10 border-t border-gray-600 px-7 pt-4">
+        <div className="flex flex-col items-center justify-between md:flex-row">
           {/* Términos y Política */}
-          <div className="text-sm text-center md:text-left md:mb-0">
+          <div className="text-center text-sm md:mb-0 md:text-left">
             {[
               "Términos y condiciones",
               "Cookies",
@@ -87,7 +79,8 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* Redes Sociales */}
+          {/* Redes Sociales 
+          
           <div className="flex space-x-4">
             {[
               {
@@ -129,6 +122,7 @@ export default function Footer() {
               </Link>
             ))}
           </div>
+          */}
         </div>
       </div>
     </footer>

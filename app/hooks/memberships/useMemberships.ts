@@ -5,7 +5,7 @@ export const useMemberships = (
   currentPage: number,
   entriesPerPage: number,
   searchTerm: string,
-  refreshTrigger: number
+  refreshTrigger: number,
 ) => {
   const [memberships, setMemberships] = useState<Membership[]>([]);
   const [totalEntries, setTotalEntries] = useState(0);
@@ -17,8 +17,8 @@ export const useMemberships = (
       try {
         const response = await fetch(
           `/api/memberships?page=${currentPage}&pageSize=${entriesPerPage}&searchTerm=${encodeURIComponent(
-            searchTerm
-          )}`
+            searchTerm,
+          )}`,
         );
         if (!response.ok) {
           throw new Error("Failed to fetch memberships");

@@ -19,10 +19,10 @@ export default function ProjectNearbyServices({
 }: ProjectNearbyServicesProps) {
   return (
     <div className="my-8">
-      <h2 className="text-2xl font-semibold mb-6 text-[#8B4513]">
+      <h2 className="mb-6 text-2xl font-semibold text-[#8B4513]">
         Servicios Cercanos
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {services.map((service, index) => (
           <motion.div
             key={service.id}

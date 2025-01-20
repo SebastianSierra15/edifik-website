@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import StepNavigationButtons from "../../stepNavigationButtons";
+import StepNavigationButtons from "../../admin/stepNavigationButtons";
 import {
   CommonArea,
   NearbyService,
@@ -87,7 +87,7 @@ export default function DetailsProjectForm({
 
   const handleSelectChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
-    type: "commonAreas" | "nearbyServices" | "housingType"
+    type: "commonAreas" | "nearbyServices" | "housingType",
   ) => {
     const id = parseInt(e.target.value);
 
@@ -114,7 +114,7 @@ export default function DetailsProjectForm({
 
   const handleRemoveTag = (
     id: number,
-    type: "commonAreas" | "nearbyServices"
+    type: "commonAreas" | "nearbyServices",
   ) => {
     const updatedItems = formData[type]?.filter((item) => item.id !== id) || [];
     onChange({ [type]: updatedItems });
@@ -151,8 +151,8 @@ export default function DetailsProjectForm({
   };
 
   return (
-    <div className="container mx-auto max-w-2xl p-6 bg-premium-backgroundLight dark:bg-premium-backgroundDark rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-premium-primary dark:text-premium-primaryLight text-center mb-6">
+    <div className="container mx-auto max-w-2xl rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
+      <h2 className="mb-6 text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight">
         {formData.projectType?.id === 1
           ? "Detalles del Proyecto"
           : "Detalles de la Propiedad"}
@@ -161,18 +161,18 @@ export default function DetailsProjectForm({
       <form onSubmit={handleNext} className="space-y-6">
         <div
           className={`grid grid-cols-1 gap-4 ${
-            formData.projectType?.id === 1 ? "sm:grid-cols-2 " : ""
+            formData.projectType?.id === 1 ? "sm:grid-cols-2" : ""
           }`}
         >
           <div className="w-full">
-            <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+            <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
               Precio
               <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                 *
               </span>
               <span className="group relative">
-                <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                   <p className="text-xs">
                     {formData.projectType?.id === 2 ||
                     formData.projectType?.id === 3
@@ -187,7 +187,7 @@ export default function DetailsProjectForm({
               name="price"
               value={formData.price ? formatNumber(formData.price) : ""}
               onChange={handlePriceChange}
-              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary ${
+              className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight ${
                 errors.priceError
                   ? "border-red-500"
                   : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -196,8 +196,8 @@ export default function DetailsProjectForm({
               required
             />
             {errors.priceError && (
-              <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-4 h-4" />
+              <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                <AiOutlineExclamationCircle className="h-4 w-4" />
                 {errors.priceError}
               </div>
             )}
@@ -205,14 +205,14 @@ export default function DetailsProjectForm({
 
           {formData.projectType?.id === 1 && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 Unidades Disponibles
                 <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                   *
                 </span>
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       Especifique el número de unidades disponibles para este
                       proyecto.
@@ -226,7 +226,7 @@ export default function DetailsProjectForm({
                 min={0}
                 value={formData.availableUnits || ""}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary ${
+                className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight ${
                   errors.availableUnitsError
                     ? "border-red-500"
                     : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -234,8 +234,8 @@ export default function DetailsProjectForm({
                 placeholder="Número de unidades disponibles"
               />
               {errors.availableUnitsError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-4 h-4" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                  <AiOutlineExclamationCircle className="h-4 w-4" />
                   {errors.availableUnitsError}
                 </div>
               )}
@@ -254,14 +254,14 @@ export default function DetailsProjectForm({
           {(formData.propertyType?.id === 1001 ||
             formData.propertyType?.id === 1002) && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 Tipo de Vivienda
                 <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                   *
                 </span>
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">Seleccione el tipo de vivienda.</p>
                   </div>
                 </span>
@@ -269,7 +269,7 @@ export default function DetailsProjectForm({
               <select
                 name="housingType"
                 value={formData.housingType?.id || ""}
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                   errors.housingTypeError
                     ? "border-red-500"
                     : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -285,8 +285,8 @@ export default function DetailsProjectForm({
                 ))}
               </select>
               {errors.housingTypeError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-4 h-4" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                  <AiOutlineExclamationCircle className="h-4 w-4" />
                   {errors.housingTypeError}
                 </div>
               )}
@@ -294,11 +294,11 @@ export default function DetailsProjectForm({
           )}
 
           <div className="w-full">
-            <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+            <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
               Fecha Estimada de Entrega
               <span className="group relative">
-                <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                   <p className="text-xs">
                     Seleccione la fecha estimada para la entrega del proyecto
                     (mes/año).
@@ -313,7 +313,7 @@ export default function DetailsProjectForm({
               minDate={new Date()}
               dateFormat="MM/yyyy"
               placeholderText="mm/yyyy"
-              className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+              className="w-full rounded-md border border-premium-borderColor bg-premium-background px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-backgroundLight"
               wrapperClassName="w-full"
             />
           </div>
@@ -323,11 +323,11 @@ export default function DetailsProjectForm({
           (formData.projectType?.id === 2 ||
             formData.projectType?.id === 3) && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-2">
+              <label className="mb-2 flex items-center gap-2 text-premium-textPrimary dark:text-premium-textPrimary">
                 Nombre del conjunto
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       Nombre del conjunto residencial (si aplica).
                     </p>
@@ -340,18 +340,18 @@ export default function DetailsProjectForm({
                 value={formData.complexName || ""}
                 onChange={handleChangeText}
                 maxLength={100}
-                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+                className="w-full rounded-md border border-premium-borderColor bg-premium-background px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-backgroundLight dark:text-premium-textPrimary"
                 placeholder="Ingrese el nombre del proyecto"
               />
             </div>
           )}
 
         <div>
-          <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+          <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
             Áreas Comunes
             <span className="group relative">
-              <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-              <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+              <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+              <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                 <p className="text-xs">
                   {formData.projectType?.id === 2 ||
                   formData.projectType?.id === 3
@@ -363,7 +363,7 @@ export default function DetailsProjectForm({
           </label>
           <select
             onChange={(e) => handleSelectChange(e, "commonAreas")}
-            className="w-full px-3 py-2 border rounded-md bg-premium-background border-premium-borderColor dark:border-premium-borderColorHover dark:bg-premium-backgroundLight text-premium-textPrimary"
+            className="w-full rounded-md border border-premium-borderColor bg-premium-background px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-backgroundLight"
           >
             <option value="">Seleccione un área común</option>
             {commonAreas.map((area) => (
@@ -372,18 +372,18 @@ export default function DetailsProjectForm({
               </option>
             ))}
           </select>
-          <div className="flex flex-wrap mt-2">
+          <div className="mt-2 flex flex-wrap">
             {formData.commonAreas?.map((area) => (
               <div
                 key={area.id}
-                className="bg-premium-primary dark:bg-premium-primaryLight text-white px-3 py-1 m-1 rounded-full flex items-center"
+                className="m-1 flex items-center rounded-full bg-premium-primary px-3 py-1 text-white dark:bg-premium-primaryLight"
               >
                 {area.name}
                 <button
                   className="ml-2 text-white hover:text-premium-textPrimary"
                   onClick={() => handleRemoveTag(area.id, "commonAreas")}
                 >
-                  <AiOutlineClose className="w-4 h-4" />
+                  <AiOutlineClose className="h-4 w-4" />
                 </button>
               </div>
             ))}
@@ -391,11 +391,11 @@ export default function DetailsProjectForm({
         </div>
 
         <div>
-          <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+          <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
             Servicios Cercanos
             <span className="group relative">
-              <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-              <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+              <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+              <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                 <p className="text-xs">
                   {formData.projectType?.id === 2 ||
                   formData.projectType?.id === 3
@@ -407,7 +407,7 @@ export default function DetailsProjectForm({
           </label>
           <select
             onChange={(e) => handleSelectChange(e, "nearbyServices")}
-            className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+            className="w-full rounded-md border border-premium-borderColor bg-premium-background px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-backgroundLight"
           >
             <option value="">Seleccione un servicio cercano</option>
             {nearbyServices.map((service) => (
@@ -416,18 +416,18 @@ export default function DetailsProjectForm({
               </option>
             ))}
           </select>
-          <div className="flex flex-wrap mt-2">
+          <div className="mt-2 flex flex-wrap">
             {formData.nearbyServices?.map((service) => (
               <div
                 key={service.id}
-                className="bg-premium-primary dark:bg-premium-primaryLight text-white px-3 py-1 m-1 rounded-full flex items-center"
+                className="m-1 flex items-center rounded-full bg-premium-primary px-3 py-1 text-white dark:bg-premium-primaryLight"
               >
                 {service.name}
                 <button
                   className="ml-2 text-white hover:text-premium-textPrimary"
                   onClick={() => handleRemoveTag(service.id, "nearbyServices")}
                 >
-                  <AiOutlineClose className="w-4 h-4" />
+                  <AiOutlineClose className="h-4 w-4" />
                 </button>
               </div>
             ))}

@@ -1,12 +1,12 @@
 export function ProjectDetailedDescriptionSkeleton() {
   return (
-    <div className="animate-pulse my-8">
-      <div className="h-6 bg-gray-400 rounded w-1/4 mb-4"></div>
+    <div className="my-8 animate-pulse">
+      <div className="mb-4 h-6 w-1/4 rounded bg-gray-400"></div>
       <div className="space-y-2">
-        <div className="h-4 bg-gray-300 rounded w-full"></div>
-        <div className="h-4 bg-gray-300 rounded w-5/6"></div>
-        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-        <div className="h-4 bg-gray-300 rounded w-4/5"></div>
+        <div className="h-4 w-full rounded bg-gray-300"></div>
+        <div className="h-4 w-5/6 rounded bg-gray-300"></div>
+        <div className="h-4 w-3/4 rounded bg-gray-300"></div>
+        <div className="h-4 w-4/5 rounded bg-gray-300"></div>
       </div>
     </div>
   );

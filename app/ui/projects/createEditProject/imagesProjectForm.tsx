@@ -3,7 +3,7 @@
 import { useState, ChangeEvent, useEffect } from "react";
 import { ProjectData, ImageType, Media } from "@/lib/definitios";
 import ImageUploadSection from "./ImageUploadSection";
-import StepNavigationButtons from "../../stepNavigationButtons";
+import StepNavigationButtons from "../../admin/stepNavigationButtons";
 import ModalAlert from "../../modals/modalAlert";
 
 type UploadImagesFormProps = {
@@ -56,7 +56,7 @@ export default function ImagesProjectForm({
   const handleImageChange = (
     category: string,
     event: ChangeEvent<HTMLInputElement>,
-    maxImages: number
+    maxImages: number,
   ) => {
     const maxFileSize = 3 * 1024 * 1024;
     const selectedFiles = Array.from(event.target.files || []);
@@ -73,7 +73,7 @@ export default function ImagesProjectForm({
 
     if (invalidFiles.length > 0) {
       setAlertMessage(
-        "Algunas imágenes superan el límite de tamaño de 3MB y no se cargarán."
+        "Algunas imágenes superan el límite de tamaño de 3MB y no se cargarán.",
       );
       setShowAlert(true);
     }
@@ -129,7 +129,7 @@ export default function ImagesProjectForm({
   const handleDescriptionChange = (
     category: string,
     index: number,
-    description: string
+    description: string,
   ) => {
     setImageDescriptions((prev) => {
       const updatedDescriptions = [...(prev[category] || [])];
@@ -161,17 +161,15 @@ export default function ImagesProjectForm({
       .filter((type) => type.isRequired)
       .forEach((item) => {
         if (!images[item.name] || images[item.name].length === 0) {
-          newErrors[
-            item.name
-          ] = `Debe subir al menos una imagen para ${item.name}.`;
+          newErrors[item.name] =
+            `Debe subir al menos una imagen para ${item.name}.`;
         }
       });
 
     formData.commonAreas?.forEach((area) => {
       if (!images[area.name] || images[area.name].length === 0) {
-        newErrors[
-          area.name
-        ] = `Debe subir al menos una imagen para ${area.name}.`;
+        newErrors[area.name] =
+          `Debe subir al menos una imagen para ${area.name}.`;
       }
     });
 
@@ -206,7 +204,7 @@ export default function ImagesProjectForm({
     Object.entries(images).forEach(([type, files]) => {
       const imageType = imagesTypes.find((imgType) => imgType.name === type);
       const commonArea = formData.commonAreas?.find(
-        (area) => area.name === type
+        (area) => area.name === type,
       );
 
       files.forEach((file, index) => {
@@ -243,8 +241,8 @@ export default function ImagesProjectForm({
   };
 
   return (
-    <div className="container mx-auto max-w-2xl p-6 bg-premium-backgroundLight dark:bg-premium-backgroundDark rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-premium-primary dark:text-premium-primaryLight text-center mb-6">
+    <div className="container mx-auto max-w-2xl rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
+      <h2 className="mb-6 text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight">
         {formData.projectType?.id === 1
           ? "Subir Imágenes del Proyecto"
           : "Subir Imágenes de la Propiedad"}
@@ -266,10 +264,13 @@ export default function ImagesProjectForm({
             error={errors[type.name] || null}
             errors={Object.keys(errors)
               .filter((key) => key.startsWith(`${type.name}-`))
-              .reduce((acc, key) => {
-                acc[key] = errors[key];
-                return acc;
-              }, {} as Record<string, string>)}
+              .reduce(
+                (acc, key) => {
+                  acc[key] = errors[key];
+                  return acc;
+                },
+                {} as Record<string, string>,
+              )}
             onToggleExpand={() => toggleSection(type.name)}
             onImageChange={(e) =>
               handleImageChange(type.name, e, type.maxImagesAllowed)
@@ -285,7 +286,7 @@ export default function ImagesProjectForm({
         ))}
 
         {formData.commonAreas && (
-          <h3 className="text-xl font-bold text-premium-primary text-center dark:text-premium-primaryLight mb-6">
+          <h3 className="mb-6 text-center text-xl font-bold text-premium-primary dark:text-premium-primaryLight">
             Subir imágenes de las áreas comunes
           </h3>
         )}
@@ -306,10 +307,13 @@ export default function ImagesProjectForm({
             error={errors[area.name] || null}
             errors={Object.keys(errors)
               .filter((key) => key.startsWith(`${area.name}-`))
-              .reduce((acc, key) => {
-                acc[key] = errors[key];
-                return acc;
-              }, {} as Record<string, string>)}
+              .reduce(
+                (acc, key) => {
+                  acc[key] = errors[key];
+                  return acc;
+                },
+                {} as Record<string, string>,
+              )}
             onToggleExpand={() => toggleSection(area.name)}
             onImageChange={(e) => handleImageChange(area.name, e, 5)}
             onRemoveImage={(index) => handleRemoveImage(area.name, index)}

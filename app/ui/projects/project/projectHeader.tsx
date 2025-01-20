@@ -1,4 +1,3 @@
-import React from "react";
 import { Project } from "@/lib/definitios";
 import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 import ShareButton from "@/app/ui/projects/shareButton";
@@ -15,7 +14,7 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
   }).format(project.price);
 
   return (
-    <div className="w-full pt-28 lg:pt-24 px-4 sm:px-6 lg:px-12">
+    <div className="w-full px-4 pt-28 sm:px-6 lg:px-12 lg:pt-24">
       <div className="flex flex-col gap-2">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center space-x-4">
@@ -26,7 +25,7 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
           </div>
           <div className="flex flex-col lg:items-end lg:justify-start">
             <p
-              className="text-3xl font-semibold mt-2 sm:mt-0"
+              className="mt-2 text-3xl font-semibold sm:mt-0"
               style={{ color: "#5D4037" }}
             >
               {formattedPrice}
@@ -35,23 +34,23 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
         </div>
 
         <div
-          className="lg:grid lg:grid-cols-2 lg:gap-2 lg:items-start lg:mt-2"
+          className="lg:mt-2 lg:grid lg:grid-cols-2 lg:items-start lg:gap-2"
           style={{ color: "#5D4037" }}
         >
-          <div className="text-lg flex flex-col lg:flex-row lg:items-center lg:space-x-2">
+          <div className="flex flex-col text-lg lg:flex-row lg:items-center lg:space-x-2">
             <div className="flex items-center">
               <FaMapMarkerAlt className="mr-1" style={{ color: "#DAA520" }} />
               <span>{project.address}</span>
             </div>
             <span className="hidden lg:inline">|</span>
-            <span className="font-semibold lg:pl-0 pl-4">
+            <span className="pl-4 font-semibold lg:pl-0">
               {project.city.name}, {project.city.departament.name}
             </span>
           </div>
 
           {project.availableDate && (
             <div
-              className="hidden lg:flex items-center text-sm lg:mt-0 lg:ml-auto"
+              className="hidden items-center text-sm lg:ml-auto lg:mt-0 lg:flex"
               style={{ color: "#5D4037" }}
             >
               <FaCalendarAlt className="mr-2" style={{ color: "#DAA520" }} />

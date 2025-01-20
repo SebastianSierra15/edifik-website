@@ -5,7 +5,7 @@ import {
   AiOutlineExclamationCircle,
   AiOutlineInfoCircle,
 } from "react-icons/ai";
-import StepNavigationButtons from "../../stepNavigationButtons";
+import StepNavigationButtons from "../../admin/stepNavigationButtons";
 import { ProjectData } from "@/lib/definitios";
 
 type FeaturesProjectFormProps = {
@@ -186,22 +186,24 @@ export default function FeaturesProjectForm({
   };
 
   return (
-    <div className="container mx-auto max-w-2xl p-6 bg-premium-backgroundLight dark:bg-premium-backgroundDark rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-premium-primary dark:text-premium-primaryLight text-center mb-6">
+    <div className="container mx-auto max-w-2xl rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
+      <h2 className="mb-6 text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight">
         {formData.projectType?.id === 1
           ? "Características del Proyecto"
           : "Características de la Propiedad"}
       </h2>
 
       <form onSubmit={handleNext} className="space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+            <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
               Área Total (m²){" "}
-              <span className="text-premium-textPrimary dark:text-premium-textPrimary">*</span>
+              <span className="text-premium-textPrimary dark:text-premium-textPrimary">
+                *
+              </span>
               <span className="group relative">
-                <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                   <p className="text-xs">
                     {formData.projectType?.id === 2 ||
                     formData.projectType?.id === 3
@@ -217,7 +219,7 @@ export default function FeaturesProjectForm({
               min={0}
               value={formData.totalArea || ""}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+              className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                 errors.totalAreaError
                   ? "border-red-500"
                   : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -226,20 +228,22 @@ export default function FeaturesProjectForm({
               required
             />
             {errors.totalAreaError && (
-              <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-5 h-5" />
+              <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                <AiOutlineExclamationCircle className="h-5 w-5" />
                 {errors.totalAreaError}
               </div>
             )}
           </div>
 
           <div>
-            <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+            <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
               Área Construida (m²){" "}
-              <span className="text-premium-textPrimary dark:text-premium-textPrimary">*</span>
+              <span className="text-premium-textPrimary dark:text-premium-textPrimary">
+                *
+              </span>
               <span className="group relative">
-                <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                   <p className="text-xs">
                     {formData.projectType?.id === 2 ||
                     formData.projectType?.id === 3
@@ -255,7 +259,7 @@ export default function FeaturesProjectForm({
               min={0}
               value={formData.builtArea || ""}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+              className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                 errors.builtAreaError
                   ? "border-red-500"
                   : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -264,8 +268,8 @@ export default function FeaturesProjectForm({
               required
             />
             {errors.builtAreaError && (
-              <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-5 h-5" />
+              <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                <AiOutlineExclamationCircle className="h-5 w-5" />
                 {errors.builtAreaError}
               </div>
             )}
@@ -275,14 +279,14 @@ export default function FeaturesProjectForm({
             (formData.projectType?.id === 2 ||
               formData.projectType?.id === 3) && (
               <div>
-                <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+                <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                   Nivel Socioeconómico{" "}
                   <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                     *
                   </span>
                   <span className="group relative">
-                    <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                    <div className="absolute hidden group-hover:block bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                    <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                    <div className="absolute z-10 mt-2 hidden w-64 rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:block dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                       <p className="text-xs">
                         Seleccione el nivel socioeconómico asignado a la
                         propiedad según la clasificación oficial del sector.
@@ -294,7 +298,7 @@ export default function FeaturesProjectForm({
                   name="socioeconomicLevel"
                   value={formData.socioeconomicLevel || ""}
                   onChange={handleSelectChange}
-                  className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                  className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                     errors.socioeconomicLevelError
                       ? "border-red-500"
                       : "border-premium-borderColor"
@@ -310,8 +314,8 @@ export default function FeaturesProjectForm({
                   ))}
                 </select>
                 {errors.socioeconomicLevelError && (
-                  <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                    <AiOutlineExclamationCircle className="w-5 h-5" />
+                  <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                    <AiOutlineExclamationCircle className="h-5 w-5" />
                     {errors.socioeconomicLevelError}
                   </div>
                 )}
@@ -322,14 +326,14 @@ export default function FeaturesProjectForm({
             (formData.projectType?.id === 2 ||
               formData.projectType?.id === 3) && (
               <div>
-                <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+                <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                   Año de Contrucción{" "}
                   <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                     *
                   </span>
                   <span className="group relative">
-                    <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                    <div className="absolute hidden group-hover:block bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                    <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                    <div className="absolute z-10 mt-2 hidden w-64 rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:block dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                       <p className="text-xs">
                         Seleccione el año en que la propiedad fue construida o
                         su estructura original terminada.
@@ -341,7 +345,7 @@ export default function FeaturesProjectForm({
                   name="yearBuilt"
                   value={formData.yearBuilt || ""}
                   onChange={handleSelectChange}
-                  className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                  className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                     errors.yearBuiltError
                       ? "border-red-500"
                       : "border-premium-borderColor"
@@ -352,7 +356,7 @@ export default function FeaturesProjectForm({
                   </option>
                   {Array.from(
                     { length: new Date().getFullYear() - 1950 + 1 },
-                    (_, i) => 1950 + i
+                    (_, i) => 1950 + i,
                   ).map((year) => (
                     <option key={year} value={year}>
                       {year}
@@ -360,8 +364,8 @@ export default function FeaturesProjectForm({
                   ))}
                 </select>
                 {errors.yearBuiltError && (
-                  <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                    <AiOutlineExclamationCircle className="w-5 h-5" />
+                  <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                    <AiOutlineExclamationCircle className="h-5 w-5" />
                     {errors.yearBuiltError}
                   </div>
                 )}
@@ -370,14 +374,14 @@ export default function FeaturesProjectForm({
 
           {shouldShowField("bedrooms") && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 Número de Habitaciones{" "}
                 <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                   *
                 </span>
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       {formData.projectType?.id === 2 ||
                       formData.projectType?.id === 3
@@ -394,7 +398,7 @@ export default function FeaturesProjectForm({
                 value={formData.bedrooms || ""}
                 onChange={handleChange}
                 placeholder="Número de habitaciones"
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                   errors.bedroomsError
                     ? "border-red-500"
                     : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -402,8 +406,8 @@ export default function FeaturesProjectForm({
                 required
               />
               {errors.bedroomsError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                  <AiOutlineExclamationCircle className="h-5 w-5" />
                   {errors.bedroomsError}
                 </div>
               )}
@@ -412,14 +416,14 @@ export default function FeaturesProjectForm({
 
           {shouldShowField("bathrooms") && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 Número de Baños{" "}
                 <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                   *
                 </span>
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       {formData.projectType?.id === 2 ||
                       formData.projectType?.id === 3
@@ -436,7 +440,7 @@ export default function FeaturesProjectForm({
                 value={formData.bathrooms || ""}
                 onChange={handleChange}
                 placeholder="Número de baños"
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                   errors.bathroomsError
                     ? "border-red-500"
                     : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -444,8 +448,8 @@ export default function FeaturesProjectForm({
                 required
               />
               {errors.bathroomsError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                  <AiOutlineExclamationCircle className="h-5 w-5" />
                   {errors.bathroomsError}
                 </div>
               )}
@@ -454,14 +458,14 @@ export default function FeaturesProjectForm({
 
           {shouldShowField("lobbies") && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 Número de Salas de Estar{" "}
                 <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                   *
                 </span>
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       {formData.projectType?.id === 2 ||
                       formData.projectType?.id === 3
@@ -478,7 +482,7 @@ export default function FeaturesProjectForm({
                 value={formData.lobbies || ""}
                 onChange={handleChange}
                 placeholder="Número de salas de estar"
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                   errors.lobbiesError
                     ? "border-red-500"
                     : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -486,8 +490,8 @@ export default function FeaturesProjectForm({
                 required
               />
               {errors.lobbiesError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                  <AiOutlineExclamationCircle className="h-5 w-5" />
                   {errors.lobbiesError}
                 </div>
               )}
@@ -496,14 +500,14 @@ export default function FeaturesProjectForm({
 
           {shouldShowField("freeHeight") && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 Altura Libre (m){" "}
                 <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                   *
                 </span>
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       Especifique la altura libre del proyecto en metros,
                       considerando el espacio disponible entre el suelo y el
@@ -519,7 +523,7 @@ export default function FeaturesProjectForm({
                 value={formData.freeHeight || ""}
                 onChange={handleChange}
                 placeholder="Altura libre"
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                   errors.freeHeightError
                     ? "border-red-500"
                     : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -527,8 +531,8 @@ export default function FeaturesProjectForm({
                 required
               />
               {errors.freeHeightError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                  <AiOutlineExclamationCircle className="h-5 w-5" />
                   {errors.freeHeightError}
                 </div>
               )}
@@ -537,14 +541,14 @@ export default function FeaturesProjectForm({
 
           {shouldShowField("width") && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 Frente (m){" "}
                 <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                   *
                 </span>
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       Indique el frente total del proyecto en metros. Este valor
                       corresponde a la dimensión horizontal.
@@ -559,7 +563,7 @@ export default function FeaturesProjectForm({
                 value={formData.width || ""}
                 onChange={handleChange}
                 placeholder="Medida del frente"
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                   errors.widthError
                     ? "border-red-500"
                     : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -567,8 +571,8 @@ export default function FeaturesProjectForm({
                 required
               />
               {errors.widthError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                  <AiOutlineExclamationCircle className="h-5 w-5" />
                   {errors.widthError}
                 </div>
               )}
@@ -577,14 +581,14 @@ export default function FeaturesProjectForm({
 
           {shouldShowField("length") && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 Fondo (m){" "}
                 <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                   *
                 </span>
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       Especifique el fondo total del proyecto en metros. Este
                       valor corresponde a la dimensión vertical.
@@ -599,7 +603,7 @@ export default function FeaturesProjectForm({
                 value={formData.length || ""}
                 onChange={handleChange}
                 placeholder="Medida del fondo"
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                   errors.lengthError
                     ? "border-red-500"
                     : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -607,8 +611,8 @@ export default function FeaturesProjectForm({
                 required
               />
               {errors.lengthError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                  <AiOutlineExclamationCircle className="h-5 w-5" />
                   {errors.lengthError}
                 </div>
               )}
@@ -617,13 +621,13 @@ export default function FeaturesProjectForm({
 
           {shouldShowField("heavyParking") && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 {formData.propertyType?.id === 1005
                   ? "Espacios de Parqueo Privado"
                   : "Espacios de Parqueo Pesado"}
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       Indique cuántos espacios de parqueo estarán disponibles
                       para vehículos pesados.
@@ -638,21 +642,21 @@ export default function FeaturesProjectForm({
                 value={formData.heavyParking || ""}
                 onChange={handleChange}
                 placeholder="Número de parqueos para vehículos pesados"
-                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+                className="w-full rounded-md border border-premium-borderColor bg-premium-background px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-backgroundLight dark:text-premium-textPrimary"
               />
             </div>
           )}
 
           {shouldShowField("towers") && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 {formData.projectType?.id === 2 ||
                 formData.projectType?.id === 3
                   ? "Número de Torre"
                   : "Número de Torres *"}
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       {formData.projectType?.id === 2 ||
                       formData.projectType?.id === 3
@@ -673,7 +677,7 @@ export default function FeaturesProjectForm({
                     ? "Número de torres"
                     : "Número de torre"
                 }
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                   errors.towersError && formData.projectType?.id === 1
                     ? "border-red-500"
                     : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -681,8 +685,8 @@ export default function FeaturesProjectForm({
                 required={formData.projectType?.id === 1}
               />
               {errors.towersError && formData.projectType?.id === 1 && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                  <AiOutlineExclamationCircle className="h-5 w-5" />
                   {errors.towersError}
                 </div>
               )}
@@ -693,11 +697,11 @@ export default function FeaturesProjectForm({
             (formData.projectType?.id === 2 ||
               formData.projectType?.id === 3) && (
               <div>
-                <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+                <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                   Número de Piso
                   <span className="group relative">
-                    <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                    <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                    <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                    <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                       <p className="text-xs">
                         Ingrese el número de piso donde se encuentra el
                         apartamento. Por ejemplo, '3' para el tercer piso.
@@ -712,18 +716,18 @@ export default function FeaturesProjectForm({
                   value={formData.floorNumber || ""}
                   onChange={handleChange}
                   placeholder="Número de piso"
-                  className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+                  className="w-full rounded-md border border-premium-borderColor bg-premium-background px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-backgroundLight dark:text-premium-textPrimary"
                 />
               </div>
             )}
 
           {shouldShowField("storageUnits") && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 Depositos
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       {formData.projectType?.id === 2 ||
                       formData.projectType?.id === 3
@@ -740,18 +744,18 @@ export default function FeaturesProjectForm({
                 value={formData.storageUnits || ""}
                 onChange={handleChange}
                 placeholder="Número de depositos"
-                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+                className="w-full rounded-md border border-premium-borderColor bg-premium-background px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-backgroundLight dark:text-premium-textPrimary"
               />
             </div>
           )}
 
           {shouldShowField("elevators") && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+              <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 Número de Elevadores
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                     <p className="text-xs">
                       {formData.projectType?.id === 2 ||
                       formData.projectType?.id === 3
@@ -768,19 +772,19 @@ export default function FeaturesProjectForm({
                 value={formData.elevators || ""}
                 onChange={handleChange}
                 placeholder="Número de elevadores"
-                className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+                className="w-full rounded-md border border-premium-borderColor bg-premium-background px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-backgroundLight dark:text-premium-textPrimary"
               />
             </div>
           )}
 
           <div>
-            <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+            <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
               {formData.propertyType?.id === 1005
                 ? "Espacios de Parqueo Sociales"
                 : "Espacios de Parqueo"}
               <span className="group relative">
-                <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                   <p className="text-xs">
                     Especifique el número total de espacios de parqueo que
                     estarán disponibles.
@@ -795,7 +799,7 @@ export default function FeaturesProjectForm({
               value={formData.parkingSpots || ""}
               onChange={handleChange}
               placeholder="Número de espacios de parqueo"
-              className="w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover"
+              className="w-full rounded-md border border-premium-borderColor bg-premium-background px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-backgroundLight dark:text-premium-textPrimary"
             />
           </div>
         </div>
@@ -803,12 +807,12 @@ export default function FeaturesProjectForm({
         {(formData.propertyType?.id === 1001 ||
           formData.propertyType?.id === 1002) && (
           <div>
-            <h3 className="text-lg font-semibold text-center text-premium-primary dark:text-premium-primaryLight mb-4">
+            <h3 className="mb-4 text-center text-lg font-semibold text-premium-primary dark:text-premium-primaryLight">
               Características Adicionales
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {shouldShowField("terrace") && (
-                <div className="flex items-center justify-between px-3 py-2 border rounded-md bg-premium-secondaryLight dark:bg-premium-secondaryDark text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover">
+                <div className="flex items-center justify-between rounded-md border border-premium-borderColor bg-premium-secondaryLight px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-secondaryDark dark:text-premium-textPrimary">
                   <span className="text-premium-textPrimary dark:text-premium-textSecondary">
                     Terraza
                   </span>
@@ -817,13 +821,13 @@ export default function FeaturesProjectForm({
                     name="terrace"
                     checked={formData.terrace || false}
                     onChange={(e) => onChange({ terrace: e.target.checked })}
-                    className="appearance-none h-6 w-12 bg-premium-textPlaceholder dark:bg-premium-backgroundLight rounded-full relative cursor-pointer transition duration-300 checked:bg-premium-primary after:content-[''] after:h-4 after:w-4 after:bg-white after:rounded-full after:absolute after:top-1 after:left-1 after:transition-transform checked:after:translate-x-6"
+                    className="relative h-6 w-12 cursor-pointer appearance-none rounded-full bg-premium-textPlaceholder transition duration-300 after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform after:content-[''] checked:bg-premium-primary checked:after:translate-x-6 dark:bg-premium-backgroundLight"
                   />
                 </div>
               )}
 
               {shouldShowField("balcony") && (
-                <div className="flex items-center justify-between px-3 py-2 border rounded-md bg-secondary-light dark:bg-secondary-dark text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover">
+                <div className="bg-secondary-light dark:bg-secondary-dark flex items-center justify-between rounded-md border border-premium-borderColor px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:text-premium-textPrimary">
                   <span className="text-premium-textPrimary dark:text-premium-textSecondary">
                     Balcón
                   </span>
@@ -832,13 +836,13 @@ export default function FeaturesProjectForm({
                     name="balcony"
                     checked={formData.balcony || false}
                     onChange={(e) => onChange({ balcony: e.target.checked })}
-                    className="appearance-none h-6 w-12 bg-premium-textPlaceholder dark:bg-premium-backgroundLight rounded-full relative cursor-pointer transition duration-300 checked:bg-premium-primary after:content-[''] after:h-4 after:w-4 after:bg-white after:rounded-full after:absolute after:top-1 after:left-1 after:transition-transform checked:after:translate-x-6"
+                    className="relative h-6 w-12 cursor-pointer appearance-none rounded-full bg-premium-textPlaceholder transition duration-300 after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform after:content-[''] checked:bg-premium-primary checked:after:translate-x-6 dark:bg-premium-backgroundLight"
                   />
                 </div>
               )}
 
               {shouldShowField("garden") && (
-                <div className="flex items-center justify-between px-3 py-2 border rounded-md bg-secondary-light dark:bg-secondary-dark text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover">
+                <div className="bg-secondary-light dark:bg-secondary-dark flex items-center justify-between rounded-md border border-premium-borderColor px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:text-premium-textPrimary">
                   <span className="text-premium-textPrimary dark:text-premium-textSecondary">
                     Jardín
                   </span>
@@ -847,13 +851,13 @@ export default function FeaturesProjectForm({
                     name="garden"
                     checked={formData.garden || false}
                     onChange={(e) => onChange({ garden: e.target.checked })}
-                    className="appearance-none h-6 w-12 bg-premium-textPlaceholder dark:bg-premium-backgroundLight rounded-full relative cursor-pointer transition duration-300 checked:bg-premium-primary after:content-[''] after:h-4 after:w-4 after:bg-white after:rounded-full after:absolute after:top-1 after:left-1 after:transition-transform checked:after:translate-x-6"
+                    className="relative h-6 w-12 cursor-pointer appearance-none rounded-full bg-premium-textPlaceholder transition duration-300 after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform after:content-[''] checked:bg-premium-primary checked:after:translate-x-6 dark:bg-premium-backgroundLight"
                   />
                 </div>
               )}
 
               {shouldShowField("laundryArea") && (
-                <div className="flex items-center justify-between px-3 py-2 border rounded-md bg-secondary-light dark:bg-secondary-dark text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover">
+                <div className="bg-secondary-light dark:bg-secondary-dark flex items-center justify-between rounded-md border border-premium-borderColor px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:text-premium-textPrimary">
                   <span className="text-premium-textPrimary dark:text-premium-textSecondary">
                     Área de Lavado
                   </span>
@@ -864,7 +868,7 @@ export default function FeaturesProjectForm({
                     onChange={(e) =>
                       onChange({ laundryArea: e.target.checked })
                     }
-                    className="appearance-none h-6 w-12 bg-premium-textPlaceholder dark:bg-premium-backgroundLight rounded-full relative cursor-pointer transition duration-300 checked:bg-premium-primary after:content-[''] after:h-4 after:w-4 after:bg-white after:rounded-full after:absolute after:top-1 after:left-1 after:transition-transform checked:after:translate-x-6"
+                    className="relative h-6 w-12 cursor-pointer appearance-none rounded-full bg-premium-textPlaceholder transition duration-300 after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform after:content-[''] checked:bg-premium-primary checked:after:translate-x-6 dark:bg-premium-backgroundLight"
                   />
                 </div>
               )}
@@ -872,7 +876,7 @@ export default function FeaturesProjectForm({
               {shouldShowField("customizationOptions") &&
                 (formData.projectType?.id === 2 ||
                   formData.projectType?.id === 3) && (
-                  <div className="flex items-center justify-between px-3 py-2 border rounded-md bg-secondary-light dark:bg-secondary-dark text-premium-textPrimary dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover">
+                  <div className="bg-secondary-light dark:bg-secondary-dark flex items-center justify-between rounded-md border border-premium-borderColor px-3 py-2 text-premium-textPrimary dark:border-premium-borderColorHover dark:text-premium-textPrimary">
                     <span className="text-premium-textPrimary dark:text-premium-textSecondary">
                       Opciones de Personalización
                     </span>
@@ -883,7 +887,7 @@ export default function FeaturesProjectForm({
                       onChange={(e) =>
                         onChange({ customizationOptions: e.target.checked })
                       }
-                      className="appearance-none h-6 w-12 bg-premium-textPlaceholder dark:bg-premium-backgroundLight rounded-full relative cursor-pointer transition duration-300 checked:bg-premium-primary after:content-[''] after:h-4 after:w-4 after:bg-white after:rounded-full after:absolute after:top-1 after:left-1 after:transition-transform checked:after:translate-x-6"
+                      className="relative h-6 w-12 cursor-pointer appearance-none rounded-full bg-premium-textPlaceholder transition duration-300 after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform after:content-[''] checked:bg-premium-primary checked:after:translate-x-6 dark:bg-premium-backgroundLight"
                     />
                   </div>
                 )}

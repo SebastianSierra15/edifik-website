@@ -1,7 +1,9 @@
+import { getNestedValue } from "./getNestedValue";
+
 export const mergeSort = <T>(
   array: T[],
-  key: keyof T,
-  direction: "asc" | "desc"
+  key: keyof T | string,
+  direction: "asc" | "desc",
 ): T[] => {
   if (array.length <= 1) return array;
 
@@ -15,16 +17,16 @@ export const mergeSort = <T>(
 const merge = <T>(
   left: T[],
   right: T[],
-  key: keyof T,
-  direction: "asc" | "desc"
+  key: keyof T | string,
+  direction: "asc" | "desc",
 ): T[] => {
   const result: T[] = [];
   let indexLeft = 0;
   let indexRight = 0;
 
   while (indexLeft < left.length && indexRight < right.length) {
-    const leftValue = left[indexLeft][key];
-    const rightValue = right[indexRight][key];
+    const leftValue = getNestedValue(left[indexLeft], key as string);
+    const rightValue = getNestedValue(right[indexRight], key as string);
 
     const comparison =
       typeof leftValue === "string"

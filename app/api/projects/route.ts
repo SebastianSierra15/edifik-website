@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { RowDataPacket } from "mysql2";
 import { ProjectSummary } from "@/lib/definitios";
+import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
+import { RowDataPacket } from "mysql2";
 
 const formatDateForMySQL = (date: any) => {
   if (!date) return null;
@@ -16,76 +17,83 @@ const formatDateForMySQL = (date: any) => {
   return `${year}-${month}-${day}`;
 };
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
   try {
-    const url = new URL(request.url);
+    const url = new URL(req.url);
+    const searchParams = url.searchParams;
 
-    const getQueryParam = (paramName: string): string | null => {
-      const value = url.searchParams.get(paramName);
-      return value !== null && value.trim() !== "" ? value : null;
-    };
-
-    const parseCommaSeparatedToJson = (param: string | null): string | null => {
-      if (!param) return null;
-      const array = param.split(",").map((id) => parseInt(id.trim(), 10));
-      return JSON.stringify(array);
-    };
-
-    const page = parseInt(getQueryParam("page") || "1", 10);
-    const pageSize = parseInt(getQueryParam("pageSize") || "16", 10);
-    const price = getQueryParam("price");
-    const area = getQueryParam("area");
-    const bedrooms = getQueryParam("bedrooms");
-    const bathrooms = getQueryParam("bathrooms");
-    const lobbies = getQueryParam("lobbies");
-    const projectTypeId = getQueryParam("projectTypeId");
-    const searchTerm = getQueryParam("searchTerm");
-
-    const cities = parseCommaSeparatedToJson(getQueryParam("cities"));
-    const propertyTypes = parseCommaSeparatedToJson(
-      getQueryParam("propertyTypes")
-    );
-    const housingTypes = parseCommaSeparatedToJson(
-      getQueryParam("housingTypes")
-    );
-    const memberships = parseCommaSeparatedToJson(getQueryParam("memberships"));
-    const commonAreas = parseCommaSeparatedToJson(getQueryParam("commonAreas"));
-    const nearbyServices = parseCommaSeparatedToJson(
-      getQueryParam("nearbyServices")
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
+    const searchTerm = escapeSearchTerm(searchParams.get("searchTerm") || "");
+    const price = parseInt(searchParams.get("price") || "", 10) || null;
+    const area = searchParams.get("area");
+    const bedrooms = searchParams.get("bedrooms");
+    const bathrooms = searchParams.get("bathrooms");
+    const lobbies = searchParams.get("lobbies");
+    const projectTypeId = parseInt(
+      searchParams.get("projectTypeId") || "1",
+      10
     );
 
-    const validatedPage = !isNaN(page) && page > 0 ? page : 1;
-    const validatedPageSize = !isNaN(pageSize) && pageSize > 0 ? pageSize : 16;
+    const minLat = searchParams.has("minLat")
+      ? parseFloat(searchParams.get("minLat")!)
+      : null;
+    const maxLat = searchParams.has("maxLat")
+      ? parseFloat(searchParams.get("maxLat")!)
+      : null;
+    const minLng = searchParams.has("minLng")
+      ? parseFloat(searchParams.get("minLng")!)
+      : null;
+    const maxLng = searchParams.has("maxLng")
+      ? parseFloat(searchParams.get("maxLng")!)
+      : null;
 
-    const [result] = await db.query(
-      "CALL get_projects(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    const parseCommaSeparated = (param: string | null): string | null =>
+      param ? JSON.stringify(param.split(",").map(Number)) : null;
+
+    const cities = parseCommaSeparated(searchParams.get("cities"));
+    const propertyTypes = parseCommaSeparated(
+      searchParams.get("propertyTypes")
+    );
+    const housingTypes = parseCommaSeparated(searchParams.get("housingTypes"));
+    const memberships = parseCommaSeparated(searchParams.get("memberships"));
+    const commonAreas = parseCommaSeparated(searchParams.get("commonAreas"));
+    const nearbyServices = parseCommaSeparated(
+      searchParams.get("nearbyServices")
+    );
+
+    const validatedPage = page > 0 ? page : 1;
+    const validatedPageSize = pageSize > 0 ? pageSize : 16;
+
+    const [result] = await db.query<RowDataPacket[][]>(
+      "CALL get_projects(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         validatedPage,
         validatedPageSize,
-        cities,
-        propertyTypes,
-        housingTypes,
-        memberships,
-        price,
-        area,
-        bedrooms,
-        bathrooms,
-        lobbies,
+        cities || null,
+        propertyTypes || null,
+        housingTypes || null,
+        memberships || null,
+        price || null,
+        area || null,
+        bedrooms || null,
+        bathrooms || null,
+        lobbies || null,
         projectTypeId || 1,
-        commonAreas,
-        nearbyServices,
+        commonAreas || null,
+        nearbyServices || null,
         searchTerm,
+        minLat || null,
+        maxLat || null,
+        minLng || null,
+        maxLng || null,
       ]
     );
 
-    const rows = (result as RowDataPacket[][])[0];
-    const projectMediaRows = (result as RowDataPacket[][])[1];
-    const totalEntriesRow = (result as RowDataPacket[][])[2][0];
-    const totalEntries = totalEntriesRow.totalEntries;
+    const [projectsRows = [], projectMediaRows = [], [totalEntriesRow] = []] =
+      result;
 
-    if (rows.length === 0) {
-      return NextResponse.json({ projects: [], totalEntries: 0 });
-    }
+    const totalEntries = totalEntriesRow.totalEntries || 0;
 
     const projectMediaMap: Record<
       number,
@@ -102,13 +110,13 @@ export async function GET(request: Request) {
       });
     });
 
-    const projects: ProjectSummary[] = rows.map((row: any) => ({
+    const projects: ProjectSummary[] = projectsRows.map((row: any) => ({
       id: row.id,
       name: row.name,
       price: row.price,
       totalArea: row.area,
-      longitude: row.longitude,
-      latitude: row.latitude,
+      longitude: row.longitude as number,
+      latitude: row.latitude as number,
       address: row.address,
       city: {
         id: row.cityId,
@@ -131,9 +139,9 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const projectData = await request.json();
+    const projectData = await req.json();
 
     const {
       name,
@@ -218,8 +226,8 @@ export async function POST(request: Request) {
       state !== undefined && state !== null
         ? state
         : userId === 1
-        ? true
-        : false,
+          ? true
+          : false,
       price,
       builtArea,
       totalArea,

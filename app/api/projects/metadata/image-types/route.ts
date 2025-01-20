@@ -21,7 +21,7 @@ export async function GET() {
     console.error("Error en la búsqueda de tipos de imagenes: ", error);
     return NextResponse.json(
       { error: "Error al recuperar los tipos de imagenes" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

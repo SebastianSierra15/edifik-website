@@ -20,17 +20,17 @@ export default function VisionMisionSection({
       className={`col-span-3 mx-auto flex w-full overflow-hidden md:col-span-1`}
     >
       <div
-        className={`flex flex-col justify-between px-6 py-8 text-center border rounded-lg shadow ${bgColor} border-blue-700`}
+        className={`flex flex-col justify-between rounded-lg border px-6 py-8 text-center shadow ${bgColor} border-blue-700`}
       >
         <h3
           className={`mb-5 text-xl font-semibold uppercase tracking-wider ${textColor}`}
         >
           {title}
         </h3>
-        <p className="text-sm font-light text-gray-700 text-justify">
+        <p className="text-justify text-sm font-light text-gray-700">
           {description}
         </p>
-        <div className="justify-center text-center mt-5">
+        <div className="mt-5 justify-center text-center">
           <Image
             className="self-center object-cover"
             src={imageSrc}

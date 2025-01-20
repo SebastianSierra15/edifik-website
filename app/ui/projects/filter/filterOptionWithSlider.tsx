@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { FaChevronDown } from "react-icons/fa";
+import dynamic from "next/dynamic";
+import clsx from "clsx";
+
+const ChevronDown = dynamic(() =>
+  import("lucide-react").then((mod) => mod.ChevronDown)
+);
 
 type FilterOptionWithSliderProps = {
   label: string;
@@ -70,27 +75,31 @@ export default function FilterOptionWithSlider({
   return (
     <>
       <div
-        className="flex items-center justify-between cursor-pointer mb-4 transition-transform duration-200 transform hover:scale-105 hover:font-semibold text-premium-textPrimary dark:text-premium-textPrimary"
+        className="mb-4 flex transform cursor-pointer items-center justify-between text-premium-textPrimary transition-transform duration-200 hover:scale-105 hover:font-semibold dark:text-premium-textPrimary"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div
-          className={`flex items-center space-x-2 text-lg font-medium ${
+          className={clsx(
+            "flex items-center space-x-2 text-lg font-medium",
             sliderValue > 1
               ? "text-premium-primary dark:text-premium-primaryLight"
               : "text-premium-textPrimary dark:text-premium-textPrimary"
-          }`}
+          )}
         >
           {icon}
           <span>{label}</span>
         </div>
-        <FaChevronDown
-          className={`transition-transform duration-300 transform ${
-            isOpen ? "rotate-180" : ""
-          } text-premium-textPrimary dark:text-premium-textPrimary`}
+        <ChevronDown
+          className={clsx(
+            "transform transition-transform duration-300",
+            isOpen && "rotate-180",
+            "text-premium-textPrimary dark:text-premium-textPrimary"
+          )}
         />
       </div>
+
       {isOpen && (
-        <div className="flex flex-col items-center space-y-2 mb-6 px-4">
+        <div className="mb-6 flex flex-col items-center space-y-2 px-4">
           <input
             type="range"
             min={min}
@@ -100,7 +109,7 @@ export default function FilterOptionWithSlider({
             onChange={handleSliderChange}
             onMouseUp={handleSliderComplete}
             onTouchEnd={handleSliderComplete}
-            className="w-full h-1 bg-premium-primary rounded-full appearance-none cursor-pointer dark:bg-premium-primaryLight"
+            className="h-1 w-full cursor-pointer appearance-none rounded-full bg-premium-primary dark:bg-premium-primaryLight"
           />
           <style jsx>{`
             input[type="range"]::-webkit-slider-thumb {
@@ -134,7 +143,7 @@ export default function FilterOptionWithSlider({
           {sliderValue > 1 && (
             <div className="text-center text-base text-premium-textPrimary dark:text-premium-textPrimary">
               <span>{prefixText} </span>
-              <span className="font-bold text-2xl">
+              <span className="text-2xl font-bold">
                 {category === "price" ? "$" : "+"}
                 {formatDisplayValue(sliderValue)}
               </span>

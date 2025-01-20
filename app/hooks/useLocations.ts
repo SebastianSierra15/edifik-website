@@ -19,7 +19,7 @@ export default function useLocations() {
         setLocations(response.data);
       } catch (err: any) {
         setErrorLocations(
-          err.response?.data?.message || err.message || "Unknown error"
+          err.response?.data?.message || err.message || "Unknown error",
         );
       } finally {
         setLoadingLocations(false);

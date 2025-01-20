@@ -7,7 +7,7 @@ import {
   AiOutlineClose,
   AiOutlineInfoCircle,
 } from "react-icons/ai";
-import StepNavigationButtons from "../../stepNavigationButtons";
+import StepNavigationButtons from "../../admin/stepNavigationButtons";
 import LocationMap from "../locationMap";
 import { useAddressSearch } from "@/app/hooks/useAddressSearch";
 import { ProjectData, City, Departament } from "@/lib/definitios";
@@ -58,7 +58,7 @@ export default function LocationProjectForm({
   const handleDepartamentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const departamentId = parseInt(e.target.value);
     const selectedDepartament = departaments.find(
-      (dep) => dep.id === departamentId
+      (dep) => dep.id === departamentId,
     );
 
     if (selectedDepartament) {
@@ -90,7 +90,7 @@ export default function LocationProjectForm({
   const handleAddressSelect = (
     lat: string,
     lon: string,
-    displayName: string
+    displayName: string,
   ) => {
     onChange({
       address: displayName,
@@ -137,24 +137,24 @@ export default function LocationProjectForm({
   }, []);
 
   return (
-    <div className="container mx-auto max-w-2xl p-6 bg-premium-backgroundLight dark:bg-premium-backgroundDark rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-premium-primary dark:text-premium-primaryLight text-center mb-6">
+    <div className="container mx-auto max-w-2xl rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
+      <h2 className="mb-6 text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight">
         {formData.projectType?.id
           ? "Ubicación del Proyecto"
           : "Ubicación de la Propiedad"}
       </h2>
 
       <form className="space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+            <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
               Departamento
               <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                 *
               </span>
               <span className="group relative">
-                <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute hidden group-hover:block bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                <div className="absolute z-10 mt-2 hidden w-64 rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:block dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                   <p className="text-xs">
                     {formData.projectType?.id === 2 ||
                     formData.projectType?.id === 3
@@ -168,7 +168,7 @@ export default function LocationProjectForm({
               name="departament"
               value={formData.city?.departament?.id || ""}
               onChange={handleDepartamentChange}
-              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+              className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                 errors.departamentError
                   ? "border-red-500"
                   : "border-premium-borderColor"
@@ -182,22 +182,22 @@ export default function LocationProjectForm({
               ))}
             </select>
             {errors.departamentError && (
-              <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-5 h-5" />
+              <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                <AiOutlineExclamationCircle className="h-5 w-5" />
                 {errors.departamentError}
               </div>
             )}
           </div>
 
           <div>
-            <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+            <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
               Ciudad
               <span className="text-premium-textPrimary dark:text-premium-textPrimary">
                 *
               </span>
               <span className="group relative">
-                <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute hidden group-hover:block bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                <div className="absolute z-10 mt-2 hidden w-64 rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:block dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                   <p className="text-xs">
                     {formData.projectType?.id === 2 ||
                     formData.projectType?.id === 3
@@ -211,7 +211,7 @@ export default function LocationProjectForm({
               name="city"
               value={formData.city?.id || ""}
               onChange={handleCityChange}
-              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+              className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                 errors.cityError ? "border-red-500" : "border-borderColor"
               }`}
             >
@@ -219,7 +219,7 @@ export default function LocationProjectForm({
               {cities
                 .filter(
                   (city) =>
-                    city.departament.id === formData.city?.departament?.id
+                    city.departament.id === formData.city?.departament?.id,
                 )
                 .map((city) => (
                   <option key={city.id} value={city.id}>
@@ -228,8 +228,8 @@ export default function LocationProjectForm({
                 ))}
             </select>
             {errors.cityError && (
-              <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-5 h-5" />
+              <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                <AiOutlineExclamationCircle className="h-5 w-5" />
                 {errors.cityError}
               </div>
             )}
@@ -237,14 +237,14 @@ export default function LocationProjectForm({
         </div>
 
         <div className="relative">
-          <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-1">
+          <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
             Dirección
             <span className="text-premium-textPrimary dark:text-premium-textPrimary">
               *
             </span>
             <span className="group relative">
-              <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-              <div className="absolute hidden group-hover:block bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+              <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+              <div className="absolute z-10 mt-2 hidden w-64 rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:block dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                 <p className="text-xs">
                   {formData.projectType?.id === 2 ||
                   formData.projectType?.id === 3
@@ -262,7 +262,7 @@ export default function LocationProjectForm({
               value={formData.address || ""}
               onChange={handleAddressInput}
               disabled={!formData.city || !formData.city.id}
-              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+              className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                 errors.addressError
                   ? "border-red-500"
                   : "border-premium-borderColor"
@@ -275,14 +275,14 @@ export default function LocationProjectForm({
                 className="absolute right-3 text-gray-500 hover:text-gray-700"
                 onClick={() => onChange({ address: "" })}
               >
-                <AiOutlineClose className="w-5 h-5" />
+                <AiOutlineClose className="h-5 w-5" />
               </button>
             )}
           </div>
 
           {errors.addressError && (
-            <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-              <AiOutlineExclamationCircle className="w-5 h-5" />
+            <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+              <AiOutlineExclamationCircle className="h-5 w-5" />
               {errors.addressError}
             </div>
           )}

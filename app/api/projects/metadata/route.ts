@@ -10,14 +10,6 @@ import {
 } from "@/lib/definitios";
 import { RowDataPacket } from "mysql2";
 
-function mapResults<T>(
-  result: RowDataPacket[] | undefined,
-  mapper: (row: any) => T
-): T[] {
-  if (!result) return [];
-  return result.map(mapper);
-}
-
 export async function GET() {
   try {
     const [result] = await db.query<RowDataPacket[][]>("CALL get_metadata()");
@@ -27,15 +19,15 @@ export async function GET() {
     }
 
     const [
-      citiesResult,
-      commonAreasResult,
-      housingTypesResult,
-      nearbyServicesResult,
-      propertyTypesResult,
-      membershipsResult,
+      citiesRows = [],
+      commonAreasRows = [],
+      housingTypesRows = [],
+      nearbyServicesRows = [],
+      propertyTypesRows = [],
+      membershipsRows = [],
     ] = result;
 
-    const cities: City[] = mapResults(citiesResult, (row) => ({
+    const cities: City[] = citiesRows.map((row: any) => ({
       id: row.cityId,
       name: row.cityName,
       departament: {
@@ -44,38 +36,30 @@ export async function GET() {
       },
     }));
 
-    const commonAreas: CommonArea[] = mapResults(commonAreasResult, (row) => ({
+    const commonAreas: CommonArea[] = commonAreasRows.map((row: any) => ({
       id: row.id,
       name: row.name,
     }));
 
-    const housingTypes: HousingType[] = mapResults(
-      housingTypesResult,
-      (row) => ({
+    const housingTypes: HousingType[] = housingTypesRows.map((row: any) => ({
+      id: row.id,
+      name: row.name,
+    }));
+
+    const nearbyServices: NearbyService[] = nearbyServicesRows.map(
+      (row: any) => ({
         id: row.id,
         name: row.name,
       })
     );
 
-    const nearbyServices: NearbyService[] = mapResults(
-      nearbyServicesResult,
-      (row) => ({
-        id: row.id,
-        name: row.name,
-      })
-    );
+    const propertyTypes: propertyType[] = propertyTypesRows.map((row: any) => ({
+      id: row.id,
+      name: row.name,
+    }));
 
-    const propertyTypes: propertyType[] = mapResults(
-      propertyTypesResult,
-      (row) => ({
-        id: row.id,
-        name: row.name,
-      })
-    );
-
-    const memberships: MembershipSummary[] = mapResults(
-      membershipsResult,
-      (row) => ({
+    const memberships: MembershipSummary[] = membershipsRows.map(
+      (row: any) => ({
         id: row.membershipId,
         name: row.membershipName,
       })

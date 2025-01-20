@@ -12,7 +12,7 @@ export default function ThemeSelector({
     const savedTheme =
       (localStorage.getItem("theme") as "light" | "dark" | "auto") || "auto";
     const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+      "(prefers-color-scheme: dark)",
     ).matches;
     const initialTheme =
       savedTheme === "auto" ? (prefersDark ? "dark" : "light") : savedTheme;
@@ -24,7 +24,7 @@ export default function ThemeSelector({
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
     const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+      "(prefers-color-scheme: dark)",
     ).matches;
     const appliedTheme =
       newTheme === "auto" ? (prefersDark ? "dark" : "light") : newTheme;
@@ -36,9 +36,9 @@ export default function ThemeSelector({
     <div className="flex flex-col">
       <button
         onClick={() => handleThemeChange("light")}
-        className={`flex items-center px-4 py-2 hover:bg-backgroundLight dark:hover:bg-darkBackgroundLight rounded ${
+        className={`hover:bg-backgroundLight dark:hover:bg-darkBackgroundLight flex items-center rounded px-4 py-2 ${
           theme === "light"
-            ? "font-bold text-primary"
+            ? "text-primary font-bold"
             : "text-textPrimary dark:text-textSecondary"
         }`}
       >
@@ -48,21 +48,21 @@ export default function ThemeSelector({
 
       <button
         onClick={() => handleThemeChange("dark")}
-        className={`flex items-center px-4 py-2 hover:bg-backgroundLight dark:hover:bg-darkBackgroundLight rounded ${
+        className={`hover:bg-backgroundLight dark:hover:bg-darkBackgroundLight flex items-center rounded px-4 py-2 ${
           theme === "dark"
-            ? "font-bold text-primary"
+            ? "text-primary font-bold"
             : "text-textPrimary dark:text-textSecondary"
         }`}
       >
-        <FaMoon className="mr-2 dark:text-textPrimary" />
+        <FaMoon className="dark:text-textPrimary mr-2" />
         Modo Oscuro
       </button>
 
       <button
         onClick={() => handleThemeChange("auto")}
-        className={`flex items-center px-4 py-2 hover:bg-backgroundLight dark:hover:bg-darkBackgroundLight rounded ${
+        className={`hover:bg-backgroundLight dark:hover:bg-darkBackgroundLight flex items-center rounded px-4 py-2 ${
           theme === "auto"
-            ? "font-bold text-primary"
+            ? "text-primary font-bold"
             : "text-textPrimary dark:text-textSecondary"
         }`}
       >

@@ -1,13 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useGetProjects } from "@/app/hooks/useGetProjects";
-import { ProjectSummary } from "@/lib/definitios";
+import { useState, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
+import clsx from "clsx";
+import Link from "next/link";
+import { Plus, Search } from "lucide-react";
+import { useGetProjects } from "@/app/hooks/projects/useGetProjects";
 import ProjectsContainer from "@/app/ui/projects/projectsContainer";
 import FilterMapControls from "@/app/ui/projects/filter/filterMapControls";
-import ProjectsMap from "@/app/ui/projects/projectsMap";
-import { FaSearch, FaPlus } from "react-icons/fa";
-import Link from "next/link";
+
+const MapToggleButton = dynamic(
+  () => import("../../ui/projects/filter/mapToggleButton"),
+  {
+    ssr: false,
+  }
+);
 
 export default function ProjectsPage() {
   const [selectedButtons, setSelectedButtons] = useState<
@@ -26,20 +33,13 @@ export default function ProjectsPage() {
     area: [1],
   });
 
-  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
-    min: 0,
-    max: 0,
-  });
-  const [areaRange, setAreaRange] = useState<{ min: number; max: number }>({
-    min: 0,
-    max: 0,
-  });
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
+  const [areaRange, setAreaRange] = useState({ min: 0, max: 0 });
 
-  const [entriesPerPage, setEntriesPerPage] = useState(16);
+  const [entriesPerPage] = useState(16);
   const [filterOpen, setFilterOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
-  const [currentProjects, setCurrentProjects] = useState<ProjectSummary[]>([]);
-  const projectTypeId = 1;
+  const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
 
   const {
     projects,
@@ -50,14 +50,24 @@ export default function ProjectsPage() {
   } = useGetProjects({
     entriesPerPage,
     selectedButtons,
-    currentProjects,
-    projectTypeId,
+    currentProjects: [],
+    projectTypeId: 1,
+    bounds: showMap ? bounds : null,
   });
 
+  const memoizedProjects = useMemo(() => projects, [projects]);
+
   useEffect(() => {
-    setCurrentProjects(projects);
-    console.log(projects);
-  }, [projects]);
+    if (!showMap) {
+      setBounds(null);
+    } else if (showMap && bounds === null) {
+      setTimeout(() => {
+        if (bounds === null) {
+          setBounds(bounds);
+        }
+      }, 1000);
+    }
+  }, [showMap]);
 
   useEffect(() => {
     setPriceRange({ min: 0, max: 2500000000 });
@@ -67,48 +77,38 @@ export default function ProjectsPage() {
 
   return (
     <div className="relative">
-      {!showMap && (
-        <div className="bg-premium-backgroundDark dark:bg-premium-backgroundLight px-6 pt-6 pb-2">
-          <h1 className="mt-24 text-3xl text-center font-semibold mb-16 text-premium-primary dark:text-premium-primaryLight">
-            Gestión de Proyectos
-          </h1>
-
-          <div
-            className={`flex flex-col md:flex-row md:justify-between items-center gap-8 mb-10 sm:px-6 ${
-              showMap ? "hidden" : "block"
-            }`}
-          >
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Buscar proyectos..."
-                onChange={(e) => debouncedSearch(e.target.value)}
-                className="p-2 pl-10 border border-premium-borderColor dark:border-premium-borderColorHover rounded-md w-full bg-premium-backgroundLight dark:bg-premium-background text-premium-textPrimary dark:text-premium-textPrimary"
-              />
-              <FaSearch className="absolute left-3 top-3 text-premium-textPlaceholder dark:text-premium-textSecondary" />
-            </div>
-
-            <Link
-              href="/admin/proyectos/crear-proyecto"
-              className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-green-600 dark:bg-green-700 text-white hover:bg-green-700 dark:hover:bg-green-800 transition-colors whitespace-nowrap"
-            >
-              <FaPlus />
-              <span>Nuevo Proyecto</span>
-            </Link>
+      <div className="bg-premium-backgroundDark px-6 pb-2 pt-6 dark:bg-premium-backgroundLight">
+        <h1 className="mb-16 mt-24 text-center text-3xl font-semibold text-premium-primary dark:text-premium-primaryLight">
+          Gestión de Proyectos
+        </h1>
+        <div className="mb-10 flex flex-col items-center gap-8 sm:px-6 md:flex-row md:justify-between">
+          <div className="relative w-full">
+            <input
+              type="text"
+              placeholder="Buscar proyectos..."
+              onChange={(e) => debouncedSearch(e.target.value)}
+              className="w-full rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 pl-10 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-background dark:text-premium-textPrimary"
+            />
+            <Search className="absolute left-3 top-3 text-premium-textPlaceholder dark:text-premium-textSecondary" />
           </div>
-        </div>
-      )}
 
-      <hr
-        className={`border-premium-borderColor dark:border-premium-borderColorHover w-full ${
-          showMap ? "hidden" : "block"
-        }`}
-      />
+          <Link
+            href="/admin/proyectos/crear-proyecto"
+            className="flex items-center space-x-2 whitespace-nowrap rounded-lg bg-green-600 px-6 py-2 text-white shadow-md transition-colors hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800"
+          >
+            <Plus />
+            <span>Nuevo Proyecto</span>
+          </Link>
+        </div>
+      </div>
+
+      <hr className="w-full border-premium-borderColor dark:border-premium-borderColorHover" />
 
       <div
-        className={`bg-premium-backgroundDark dark:bg-premium-backgroundLight px-6 pt-2 ${
-          showMap ? "pb-2" : "pb-14"
-        }`}
+        className={clsx(
+          "bg-premium-backgroundDark px-6 pt-2 dark:bg-premium-backgroundLight pb-14",
+          showMap && "pb-7"
+        )}
       >
         <FilterMapControls
           filterOpen={filterOpen}
@@ -118,26 +118,23 @@ export default function ProjectsPage() {
         />
       </div>
 
-      {showMap ? (
-        <div className="relative top-32 z-0 border-t border-t-premium-borderColorHover h-screen">
-          <ProjectsMap projects={projects} />
-        </div>
-      ) : (
-        <ProjectsContainer
-          projects={projects}
-          totalEntries={totalEntries}
-          isLoading={isLoading}
-          fetchMoreProjects={fetchMoreProjects}
-          filterOpen={filterOpen}
-          showMap={showMap}
-          setFilterOpen={setFilterOpen}
-          priceRange={priceRange}
-          areaRange={areaRange}
-          selectedButtons={selectedButtons}
-          setSelectedButtons={setSelectedButtons}
-          isProperty={false}
-        />
-      )}
+      <ProjectsContainer
+        projects={memoizedProjects}
+        totalEntries={totalEntries}
+        isLoading={isLoading}
+        fetchMoreProjects={fetchMoreProjects}
+        filterOpen={filterOpen}
+        showMap={showMap}
+        setFilterOpen={setFilterOpen}
+        priceRange={priceRange}
+        areaRange={areaRange}
+        selectedButtons={selectedButtons}
+        setSelectedButtons={setSelectedButtons}
+        isProperty={false}
+        setBounds={setBounds}
+      />
+
+      <MapToggleButton showMap={showMap} setShowMap={setShowMap} />
     </div>
   );
 }

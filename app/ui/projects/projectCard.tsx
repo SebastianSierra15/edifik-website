@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
-import { FaTimes, FaEdit, FaTrash } from "react-icons/fa";
+import dynamic from "next/dynamic";
+import clsx from "clsx";
+import { X } from "lucide-react";
 import { ProjectMedia } from "@/lib/definitios";
 import Link from "next/link";
 import Image from "next/image";
+
+const Edit = dynamic(() => import("lucide-react").then((mod) => mod.Edit));
+const Trash2 = dynamic(() => import("lucide-react").then((mod) => mod.Trash2));
 
 type ProjectCardProps = {
   images: ProjectMedia[];
@@ -33,62 +38,47 @@ export default function ProjectCard({
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
     if (isHovered) {
-      interval = setInterval(
+      const interval = setInterval(
         () => setCurrentImage((prev) => (prev + 1) % images.length),
         1000
       );
+      return () => clearInterval(interval);
     }
-    return () => clearInterval(interval);
   }, [isHovered, images.length]);
 
   return (
-    <div className="bg-transparent dark:bg-transparent rounded-lg transform transition-transform hover:scale-105 duration-300">
+    <div className="transform rounded-lg bg-transparent transition-transform duration-300 hover:scale-105 dark:bg-transparent">
       <Link href={url} target="_blank" rel="noopener noreferrer">
         <div
-          className={`relative max-w-xs shadow-premium-secondary dark:shadow-white rounded-lg overflow-hidden bg-premium-secondary dark:bg-premium-secondaryDark cursor-pointer shadow-md dark:shadow-md ${
-            isFromMap
-              ? "z-50 hover:scale-105 transition-transform duration-300"
-              : "h-[370px] z-0"
-          }`}
+          className={clsx(
+            "relative max-w-xs cursor-pointer overflow-hidden rounded-lg bg-premium-secondary shadow-md shadow-premium-secondary dark:bg-premium-secondaryDark dark:shadow-md dark:shadow-white",
+            isFromMap ? "z-20" : "z-0 h-[370px]"
+          )}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => {
             setIsHovered(false);
             setCurrentImage(0);
           }}
         >
-          {showActions && (
-            <div className="absolute top-2 right-2 flex space-x-2 z-50">
-              <Link
-                href={urlEdit}
-                className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors"
-              >
-                <FaEdit />
-              </Link>
-              <button className="p-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors">
-                <FaTrash />
-              </button>
-            </div>
-          )}
-
-          <div className="bg-premium-background dark:bg-premium-secondaryDark rounded-lg h-full flex flex-col relative">
+          <div className="relative flex h-full flex-col rounded-lg bg-premium-background dark:bg-premium-secondaryDark">
             {onClose && (
               <button
                 onClick={(e) => {
                   e.preventDefault();
                   onClose();
                 }}
-                className="absolute top-2 right-2 z-20 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all"
+                className="absolute right-2 top-2 z-20 rounded-full bg-black bg-opacity-50 p-2 text-white transition-all hover:bg-opacity-75"
               >
-                <FaTimes />
+                <X className="w-4 h-4" />
               </button>
             )}
 
             <div
-              className={`relative w-full z-0 overflow-hidden ${
-                !isFromMap ? "flex-shrink-0 h-full" : "h-72"
-              }`}
+              className={clsx(
+                "relative z-0 w-full overflow-hidden",
+                !isFromMap ? "h-full flex-shrink-0" : "h-72"
+              )}
             >
               {images.map((img, index) => (
                 <Image
@@ -96,19 +86,21 @@ export default function ProjectCard({
                   src={img.url}
                   alt={img.tag}
                   fill
-                  className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-1000 ease-in-out ${
+                  loading="lazy"
+                  className={clsx(
+                    "absolute left-0 top-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out",
                     index === currentImage ? "opacity-100" : "opacity-0"
-                  }`}
+                  )}
                 />
               ))}
             </div>
 
-            <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-sm px-2 py-1 rounded-full z-50">
+            <div className="absolute left-2 top-2 z-50 rounded-full bg-black bg-opacity-75 px-2 py-1 text-sm text-white">
               ${price.toLocaleString()}
             </div>
 
-            <div className="px-2 pt-16 pb-2 z-20 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-premium-secondaryDark dark:from-black via-premium-secondaryDark dark:via-gray-800 to-transparent">
-              <h3 className="text-lg font-semibold text-white leading-tight break-words line-clamp-1">
+            <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-premium-secondaryDark via-premium-secondaryDark to-transparent px-2 pb-2 pt-16 dark:from-black dark:via-gray-800">
+              <h3 className="line-clamp-1 break-words text-lg font-semibold leading-tight text-white">
                 {name}
               </h3>
               <p className="text-sm text-gray-300">{location}</p>
@@ -119,6 +111,23 @@ export default function ProjectCard({
           </div>
         </div>
       </Link>
+
+      {showActions && (
+        <div className="absolute right-2 top-2 z-50 flex space-x-1">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              window.open(urlEdit, "_blank", "noopener noreferrer");
+            }}
+            className="rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600"
+          >
+            <Edit className="h-4 w-4" />
+          </button>
+          <button className="rounded-full bg-red-500 p-2 text-white transition-colors hover:bg-red-600">
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

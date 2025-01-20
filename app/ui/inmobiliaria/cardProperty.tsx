@@ -46,8 +46,8 @@ export default function ProjectCard({
   return (
     <Link href={url} target="_blank" rel="noopener noreferrer">
       <div
-        className={`relative shadow-slate-400 rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 z-50 bg-white dark:bg-secondary dark:shadow-black cursor-pointer p-1 bg-gradient-to-r from-primaryLight to-primaryDark hover:from-primaryLight hover:to-primary duration-300 animate-borderFlow border-transparent bg-clip-border ${
-          isFromMap ? "max-w-xs" : "max-w-sm min-h-52"
+        className={`dark:bg-secondary from-primaryLight to-primaryDark hover:from-primaryLight hover:to-primary animate-borderFlow relative z-50 transform cursor-pointer overflow-hidden rounded-lg border-transparent bg-white bg-gradient-to-r bg-clip-border p-1 shadow-lg shadow-slate-400 transition-transform duration-300 hover:scale-105 dark:shadow-black ${
+          isFromMap ? "max-w-xs" : "min-h-52 max-w-sm"
         }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => {
@@ -55,7 +55,7 @@ export default function ProjectCard({
           setCurrentImage(0);
         }}
       >
-        <div className="relative bg-background dark:bg-secondary rounded-lg">
+        <div className="bg-background dark:bg-secondary relative rounded-lg">
           {/* Botón de cierre solo si onClose no es null */}
           {onClose && (
             <button
@@ -63,7 +63,7 @@ export default function ProjectCard({
                 e.preventDefault();
                 onClose();
               }}
-              className="absolute top-2 right-2 z-50 bg-black dark:bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 dark:hover:bg-opacity-75 transition-all"
+              className="absolute right-2 top-2 z-50 rounded-full bg-black bg-opacity-50 p-2 text-white transition-all hover:bg-opacity-75 dark:bg-black dark:hover:bg-opacity-75"
             >
               <FaTimes />
             </button>
@@ -76,7 +76,7 @@ export default function ProjectCard({
                 key={index}
                 src={img}
                 alt="Project"
-                className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-1000 ease-in-out ${
+                className={`absolute left-0 top-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out ${
                   index === currentImage ? "opacity-100" : "opacity-0"
                 }`}
               />
@@ -84,13 +84,13 @@ export default function ProjectCard({
 
             {/* Degradado en la parte inferior de la imagen solo si isFromMap es false */}
             {!isFromMap && (
-              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-900 dark:from-darkBackground via-gray-800 dark:via-darkBackgroundLight to-transparent"></div>
+              <div className="dark:from-darkBackground dark:via-darkBackgroundLight absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-900 via-gray-800 to-transparent"></div>
             )}
           </div>
 
           {/* Espacio adicional debajo de la imagen solo si isFromMap es false */}
           {!isFromMap && (
-            <div className="p-4 bg-background dark:bg-secondary">
+            <div className="bg-background dark:bg-secondary p-4">
               {/* Información de la propiedad */}
               <h3 className="text-lg font-bold text-white">{name}</h3>
               <p className="text-base text-gray-300">{location}</p>

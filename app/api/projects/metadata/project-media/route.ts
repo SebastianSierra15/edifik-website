@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const { projectMedia } = await request.json();
+    const { projectMedia } = await req.json();
 
     if (!projectMedia || !Array.isArray(projectMedia)) {
       return NextResponse.json(
         { error: "El cuerpo de la solicitud no contiene datos válidos." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       if (!url || !tag || !projectId) {
         return NextResponse.json(
           { error: "Faltan campos obligatorios en el objeto media." },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     console.error("Error al insertar los medios:", error);
     return NextResponse.json(
       { error: "Error al insertar los medios." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

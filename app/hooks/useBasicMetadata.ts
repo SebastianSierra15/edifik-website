@@ -25,12 +25,12 @@ export default function useBasicMetadata() {
     const fetchMetadata = async () => {
       try {
         const response = await axios.get<BasicMetadata>(
-          "/api/projects/metadata/basic-metadata"
+          "/api/projects/metadata/basic-metadata",
         );
         setMetadata(response.data);
       } catch (err: any) {
         setErrorMetadata(
-          err.response?.data?.message || err.message || "Error desconocido"
+          err.response?.data?.message || err.message || "Error desconocido",
         );
       } finally {
         setLoadingMetadata(false);

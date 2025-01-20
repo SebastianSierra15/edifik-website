@@ -2,21 +2,34 @@ import { useBodyOverflow } from "@/app/hooks/useBodyOverflow ";
 import { UserData, Role, Gender, MembershipSummary } from "@/lib/definitios";
 import ModalHeader from "../modals/modalHeader";
 import ModalFooter from "../modals/modalFooter";
+import dynamic from "next/dynamic";
+
+const FormInput = dynamic(() => import("@/app/ui/modals/formInput"), {
+  ssr: false,
+});
+const FormSelect = dynamic(() => import("@/app/ui/modals/formSelect"), {
+  ssr: false,
+});
+const FormCheckbox = dynamic(() => import("@/app/ui/modals/formCheckbox"), {
+  ssr: false,
+});
 
 interface UserModalProps {
   show: boolean;
+  flag: boolean;
   onClose: () => void;
   onSubmit: (e: React.FormEvent) => void;
   handleChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => void;
   user: UserData;
   roles: Role[];
   genders: Gender[];
   memberships: MembershipSummary[];
   errors: {
+    usernameError: string;
     namesError: string;
     lastnamesError: string;
     emailError: string;
@@ -29,6 +42,7 @@ interface UserModalProps {
 
 export default function UserModal({
   show,
+  flag,
   onClose,
   onSubmit,
   handleChange,
@@ -44,7 +58,7 @@ export default function UserModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-premium-background dark:bg-premium-backgroundLight rounded-lg shadow-xl w-full max-w-2xl mx-4 overflow-hidden">
+      <div className="mx-4 w-full max-w-2xl overflow-hidden rounded-lg bg-premium-background shadow-xl dark:bg-premium-backgroundLight">
         {/* Header */}
         <ModalHeader
           title={user.id ? "Editar Usuario" : "Registrar Usuario"}
@@ -56,207 +70,104 @@ export default function UserModal({
           id="userForm"
           onSubmit={onSubmit}
           noValidate
-          className="h-[60vh] overflow-y-auto px-6 py-4 space-y-4"
+          className="h-[60vh] space-y-4 overflow-y-auto px-6 py-4"
         >
-          <div>
-            <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
-              Nombres
-            </label>
-            <input
-              type="text"
-              name="names"
-              value={user.names}
-              onChange={handleChange}
-              placeholder="Nombres del usuario"
-              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
-                errors.namesError
-                  ? "border-red-500 bg-red-50"
-                  : "border-premium-borderColor dark:border-premium-borderColorHover"
-              }`}
-            />
-            {errors.namesError && (
-              <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-5 h-5" />
-                {errors.namesError}
-              </div>
-            )}
-          </div>
+          <FormInput
+            label="Nombre de usuario"
+            type="text"
+            name="username"
+            value={user.username || ""}
+            placeholder="Nombre de usuario"
+            onChange={handleChange}
+            error={errors.usernameError}
+            flag={flag}
+          />
 
-          <div>
-            <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
-              Apellidos
-            </label>
-            <input
-              type="text"
-              name="lastnames"
-              value={user.lastnames}
-              onChange={handleChange}
-              placeholder="Apellidos del usuario"
-              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
-                errors.lastnamesError
-                  ? "border-red-500 bg-red-50"
-                  : "border-premium-borderColor dark:border-premium-borderColorHover"
-              }`}
-            />
-            {errors.lastnamesError && (
-              <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-5 h-5" />
-                {errors.lastnamesError}
-              </div>
-            )}
-          </div>
+          <FormInput
+            label="Nombres"
+            type="text"
+            name="names"
+            value={user.names || ""}
+            placeholder="Nombres del usuario"
+            onChange={handleChange}
+            error={errors.namesError}
+            flag={flag}
+          />
 
-          <div>
-            <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={user.email}
+          <FormInput
+            label="Apellidos"
+            type="text"
+            name="lastnames"
+            value={user.lastnames || ""}
+            placeholder="Apellidos del usuario"
+            onChange={handleChange}
+            error={errors.lastnamesError}
+            flag={flag}
+          />
+
+          <FormInput
+            label="Email"
+            type="email"
+            name="email"
+            value={user.email || ""}
+            placeholder="Correo electrónico"
+            onChange={handleChange}
+            error={errors.emailError}
+            flag={flag}
+          />
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormInput
+              label="Teléfono"
+              type="text"
+              name="phoneNumber"
+              value={user.phoneNumber || ""}
+              placeholder="Número de teléfono"
               onChange={handleChange}
-              placeholder="Correo electrónico"
-              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
-                errors.emailError
-                  ? "border-red-500 bg-red-50"
-                  : "border-premium-borderColor dark:border-premium-borderColorHover"
-              }`}
+              error={errors.phoneNumberError}
+              flag={flag}
             />
-            {errors.emailError && (
-              <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-5 h-5" />
-                {errors.emailError}
-              </div>
-            )}
+
+            <FormSelect
+              label="Género"
+              name="gender.id"
+              value={user.gender?.id || ""}
+              options={genders}
+              onChange={handleChange}
+              error={errors.genderError}
+              flag={flag}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
-                Teléfono
-              </label>
-              <input
-                type="text"
-                name="phoneNumber"
-                value={user.phoneNumber}
-                onChange={handleChange}
-                placeholder="Número de teléfono"
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
-                  errors.phoneNumberError
-                    ? "border-red-500 bg-red-50"
-                    : "border-premium-borderColor dark:border-premium-borderColorHover"
-                }`}
-              />
-              {errors.phoneNumberError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
-                  {errors.phoneNumberError}
-                </div>
-              )}
-            </div>
+            <FormSelect
+              label="Rol"
+              name="role.id"
+              value={user.role?.id || ""}
+              options={roles}
+              onChange={handleChange}
+              error={errors.roleError}
+              flag={flag}
+            />
 
-            <div>
-              <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
-                Género
-              </label>
-              <select
-                name="gender"
-                value={user.gender}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
-                  errors.genderError
-                    ? "border-red-500 bg-red-50"
-                    : "border-premium-borderColor dark:border-premium-borderColorHover"
-                }`}
-              >
-                <option value="">Seleccione género</option>
-                {genders.map((gender) => (
-                  <option key={gender.id} value={gender.name}>
-                    {gender.name}
-                  </option>
-                ))}
-              </select>
-              {errors.genderError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
-                  {errors.genderError}
-                </div>
-              )}
-            </div>
+            <FormSelect
+              label="Membresía"
+              name="membership.id"
+              value={user.membership?.id || ""}
+              options={memberships}
+              onChange={handleChange}
+              error={errors.membershipError}
+              flag={flag}
+            />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
-                Rol
-              </label>
-              <select
-                name="roleName"
-                value={user.roleName}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
-                  errors.roleError
-                    ? "border-red-500 bg-red-50"
-                    : "border-premium-borderColor dark:border-premium-borderColorHover"
-                }`}
-              >
-                <option value="">Seleccione rol</option>
-                {roles.map((role) => (
-                  <option key={role.id} value={role.name}>
-                    {role.name}
-                  </option>
-                ))}
-              </select>
-              {errors.roleError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
-                  {errors.roleError}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-2 text-premium-textPrimary dark:text-premium-textPrimary">
-                Membresía
-              </label>
-              <select
-                name="membershipName"
-                value={user.membershipName}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
-                  errors.membershipError
-                    ? "border-red-500 bg-red-50"
-                    : "border-premium-borderColor dark:border-premium-borderColorHover"
-                }`}
-              >
-                <option value="">Seleccione membresía</option>
-                {memberships.map((membership) => (
-                  <option key={membership.id} value={membership.name}>
-                    {membership.name}
-                  </option>
-                ))}
-              </select>
-              {errors.membershipError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-5 h-5" />
-                  {errors.membershipError}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-premium-textPrimary dark:text-premium-textPrimary">
-              <input
-                type="checkbox"
-                name="state"
-                checked={user.state}
-                onChange={handleChange}
-                className="rounded"
-              />
-              Activo
-            </label>
-          </div>
+          <FormCheckbox
+            label="Activo"
+            name="state"
+            checked={user.state || false}
+            onChange={handleChange}
+            className="rounded"
+          />
         </form>
 
         {/* Footer */}

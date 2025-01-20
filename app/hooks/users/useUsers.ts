@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { User, Role, Gender, MembershipSummary } from "@/lib/definitios";
+import { User } from "@/lib/definitios";
 
 export const useUsers = (
   currentPage: number,
@@ -7,15 +7,12 @@ export const useUsers = (
   searchTerm: string
 ) => {
   const [users, setUsers] = useState<User[]>([]);
-  const [roles, setRoles] = useState<Role[]>([]);
-  const [genders, setGenders] = useState<Gender[]>([]);
-  const [memberships, setMemberships] = useState<MembershipSummary[]>([]);
   const [totalEntries, setTotalEntries] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingUsers, setIsLoadingUsers] = useState(true);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      setIsLoading(true);
+      setIsLoadingUsers(true);
       try {
         const response = await fetch(
           `/api/users?page=${currentPage}&pageSize=${entriesPerPage}&searchTerm=${encodeURIComponent(
@@ -28,18 +25,15 @@ export const useUsers = (
         const data = await response.json();
         setUsers(data.users);
         setTotalEntries(data.totalEntries);
-        setRoles(data.roles);
-        setGenders(data.genders);
-        setMemberships(data.memberships);
       } catch (error) {
         console.error("Error fetching users:", error);
       } finally {
-        setIsLoading(false);
+        setIsLoadingUsers(false);
       }
     };
 
     fetchUsers();
   }, [currentPage, entriesPerPage, searchTerm]);
 
-  return { users, roles, genders, memberships, totalEntries, isLoading };
+  return { users, totalEntries, isLoadingUsers };
 };

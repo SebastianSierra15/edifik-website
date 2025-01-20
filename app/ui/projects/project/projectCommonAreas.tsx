@@ -21,11 +21,8 @@ export default function ProjectCommonAreas({
   const [modalImageIndex, setModalImageIndex] = useState(0);
 
   const toggleAccordion = (index: number) => {
-    setOpenAccordions(
-      (prev) =>
-        prev.includes(index)
-          ? prev.filter((i) => i !== index)
-          : [...prev, index]
+    setOpenAccordions((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
     );
   };
 
@@ -36,12 +33,12 @@ export default function ProjectCommonAreas({
 
   return (
     <div className="my-8 w-full lg:w-2/3">
-      <h2 style={{ color: "#8B4513" }} className="text-2xl font-semibold mb-4">
+      <h2 style={{ color: "#8B4513" }} className="mb-4 text-2xl font-semibold">
         Áreas Comunes
       </h2>
       {areas.map((area, index) => {
         const areaImages = projectMedia.filter(
-          (media) => media.commonArea === area.id
+          (media) => media.commonArea === area.id,
         );
 
         const isOpen = openAccordions.includes(index);
@@ -49,7 +46,7 @@ export default function ProjectCommonAreas({
         return (
           <div
             key={area.id}
-            className="mb-4 p-4 rounded-lg shadow"
+            className="mb-4 rounded-lg p-4 shadow"
             style={{
               backgroundColor: "#ffffff",
               boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
@@ -57,7 +54,7 @@ export default function ProjectCommonAreas({
           >
             <button
               onClick={() => toggleAccordion(index)}
-              className="w-full flex justify-between items-center font-semibold text-lg"
+              className="flex w-full items-center justify-between text-lg font-semibold"
               style={{ color: "#5D4037" }}
             >
               <span>{area.name}</span>
@@ -75,10 +72,10 @@ export default function ProjectCommonAreas({
                 height: isOpen ? "auto" : 0,
               }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden mt-2"
+              className="mt-2 overflow-hidden"
             >
               {isOpen && areaImages.length > 0 && (
-                <div className="flex overflow-x-auto space-x-2">
+                <div className="flex space-x-2 overflow-x-auto">
                   {areaImages.map((media, imgIndex) => (
                     <div
                       key={imgIndex}

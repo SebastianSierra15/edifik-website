@@ -57,11 +57,11 @@ export default function LocationMap({
   onLocationSelect: (coordinates: LatLngTuple) => void;
 }) {
   return (
-    <div className="w-full h-64">
+    <div className="h-64 w-full">
       <MapContainer
         center={coordinates}
         zoom={13}
-        className="w-full h-full z-10"
+        className="z-10 h-full w-full"
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

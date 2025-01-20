@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useGetProjects } from "@/app/hooks/useGetProjects";
+import { useGetProjects } from "@/app/hooks/projects/useGetProjects";
 import { ProjectSummary } from "@/lib/definitios";
 import ProjectsContainer from "@/app/ui/projects/projectsContainer";
 import FilterMapControls from "@/app/ui/projects/filter/filterMapControls";
@@ -56,7 +56,6 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     setCurrentProjects(projects);
-    console.log(projects);
   }, [projects]);
 
   useEffect(() => {
@@ -68,12 +67,12 @@ export default function ProjectsPage() {
   return (
     <div className="relative">
       {!showMap && (
-        <div className="bg-premium-backgroundDark dark:bg-premium-backgroundLight px-6 pt-6 pb-2">
-          <h1 className="mt-24 text-3xl text-center font-semibold text-premium-primary dark:text-premium-primaryLight">
+        <div className="bg-premium-backgroundDark px-6 pb-2 pt-6 dark:bg-premium-backgroundLight">
+          <h1 className="mt-24 text-center text-3xl font-semibold text-premium-primary dark:text-premium-primaryLight">
             Gestión de Propiedades
           </h1>
 
-          <div className="flex justify-center items-center gap-4 mt-6 mb-6">
+          <div className="mb-6 mt-6 flex items-center justify-center gap-4">
             {[
               { id: 2, label: "Venta", icon: <FaShoppingCart /> },
               { id: 3, label: "Arriendo", icon: <FaKey /> },
@@ -81,10 +80,10 @@ export default function ProjectsPage() {
               <button
                 key={id}
                 onClick={() => setProjectTypeId(id)}
-                className={`flex items-center gap-2 px-6 py-2 rounded-lg shadow-md transition-colors ${
+                className={`flex items-center gap-2 rounded-lg px-6 py-2 shadow-md transition-colors ${
                   projectTypeId === id
-                    ? "bg-premium-primary dark:bg-premium-primaryLight hover:bg-premium-primaryDark text-white"
-                    : "bg-premium-backgroundLight dark:bg-premium-background hover:bg-premium-backgroundDark dark:hover:bg-premium-backgroundLight text-premium-primary dark:text-premium-primaryLight"
+                    ? "bg-premium-primary text-white hover:bg-premium-primaryDark dark:bg-premium-primaryLight"
+                    : "bg-premium-backgroundLight text-premium-primary hover:bg-premium-backgroundDark dark:bg-premium-background dark:text-premium-primaryLight dark:hover:bg-premium-backgroundLight"
                 }`}
               >
                 {icon}
@@ -94,7 +93,7 @@ export default function ProjectsPage() {
           </div>
 
           <div
-            className={`flex flex-col md:flex-row md:justify-between items-center gap-8 mb-10 sm:px-6 ${
+            className={`mb-10 flex flex-col items-center gap-8 sm:px-6 md:flex-row md:justify-between ${
               showMap ? "hidden" : "block"
             }`}
           >
@@ -103,15 +102,15 @@ export default function ProjectsPage() {
                 type="text"
                 placeholder="Buscar propiedades..."
                 onChange={(e) => debouncedSearch(e.target.value)}
-                className="p-2 pl-10 border border-premium-borderColor dark:border-premium-borderColorHover rounded-md w-full bg-premium-backgroundLight dark:bg-premium-background text-premium-textPrimary dark:text-premium-textPrimary"
+                className="w-full rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 pl-10 text-premium-textPrimary dark:border-premium-borderColorHover dark:bg-premium-background dark:text-premium-textPrimary"
               />
               <FaSearch className="absolute left-3 top-3 text-premium-textPlaceholder dark:text-premium-textSecondary" />
             </div>
 
-            <div className="flex flex-col gap-4 sm:flex-row items-center">
+            <div className="flex flex-col items-center gap-4 sm:flex-row">
               <Link
                 href="/admin/propiedades/crear-propiedad"
-                className="flex items-center space-x-2 px-6 py-2 rounded-lg shadow-md bg-green-600 dark:bg-green-700 text-white hover:bg-green-700 dark:hover:bg-green-800 transition-colors whitespace-nowrap"
+                className="flex items-center space-x-2 whitespace-nowrap rounded-lg bg-green-600 px-6 py-2 text-white shadow-md transition-colors hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800"
               >
                 <FaPlus />
                 <span>Nueva Propiedad</span>
@@ -122,13 +121,13 @@ export default function ProjectsPage() {
       )}
 
       <hr
-        className={`border-premium-borderColor dark:border-premium-borderColorHover w-full ${
+        className={`w-full border-premium-borderColor dark:border-premium-borderColorHover ${
           showMap ? "hidden" : "block"
         }`}
       />
 
       <div
-        className={`bg-premium-backgroundDark dark:bg-premium-backgroundLight px-6 pt-2 ${
+        className={`bg-premium-backgroundDark px-6 pt-2 dark:bg-premium-backgroundLight ${
           showMap ? "pb-2" : "pb-14"
         }`}
       >
@@ -141,7 +140,7 @@ export default function ProjectsPage() {
       </div>
 
       {showMap ? (
-        <div className="relative top-32 z-0 border-t border-t-premium-borderColorHover h-screen">
+        <div className="relative top-32 z-0 h-screen border-t border-t-premium-borderColorHover">
           <ProjectsMap projects={projects} />
         </div>
       ) : (

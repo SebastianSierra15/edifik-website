@@ -18,7 +18,7 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
   if (projectMedia.length === 0) {
     return (
       <div
-        className="p-6 rounded-lg"
+        className="rounded-lg p-6"
         style={{
           backgroundColor: "#EDEDED",
           color: "#5D4037",
@@ -32,14 +32,14 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
 
   return (
     <div
-      className="p-3 rounded-lg mt-4"
+      className="mt-4 rounded-lg p-3"
       style={{
         backgroundColor: "transparent",
         border: "1px solid #5D4037",
       }}
     >
       <div
-        className="flex space-x-4 border-b-2 mb-4"
+        className="mb-4 flex space-x-4 border-b-2"
         style={{
           borderColor: "#5D4037",
         }}
@@ -48,10 +48,10 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
           <button
             key={index}
             onClick={() => setActiveTab(index)}
-            className={`px-4 py-2 text-xl font-semibold transition duration-300 transform ${
+            className={`transform px-4 py-2 text-xl font-semibold transition duration-300 ${
               activeTab === index
                 ? "text-[#8B4513] hover:scale-105"
-                : "text-[#5D4037] hover:text-[#8b45137a] hover:scale-105"
+                : "text-[#5D4037] hover:scale-105 hover:text-[#8b45137a]"
             }`}
           >
             {plan.tag}
@@ -59,10 +59,10 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
         ))}
       </div>
 
-      <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-4">
+      <div className="flex flex-col items-center space-y-4 lg:flex-row lg:items-start lg:space-x-4 lg:space-y-0">
         <div className="w-full lg:w-2/3">
           <div
-            className="relative w-full h-96"
+            className="relative h-96 w-full"
             style={{
               border: "1px solid #8B4513",
             }}
@@ -72,7 +72,7 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
               alt={projectMedia[activeTab].tag}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 500px"
-              className="rounded-lg object-cover cursor-pointer"
+              className="cursor-pointer rounded-lg object-cover"
               onClick={() => {
                 setIsModalOpen(true);
                 setCurrentImage(activeTab);
@@ -83,7 +83,7 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
 
         <div className="w-full lg:w-1/3">
           <h3
-            className="text-xl font-bold mb-2"
+            className="mb-2 text-xl font-bold"
             style={{
               color: "#5D4037",
             }}

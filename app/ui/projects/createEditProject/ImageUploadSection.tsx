@@ -33,12 +33,12 @@ export default function ImageUploadSection({
 }: ImageUploadSectionProps) {
   return (
     <div
-      className={`pb-1 rounded-md bg-premium-backgroundAlt dark:bg-premium-backgroundDarkAlt hover:bg-premium-backgroundLight hover:dark:bg-premium-backgroundLight ${
+      className={`dark:bg-premium-backgroundDarkAlt rounded-md bg-premium-backgroundAlt pb-1 hover:bg-premium-backgroundLight hover:dark:bg-premium-backgroundLight ${
         error ? "border border-red-500" : "border-none"
       }`}
     >
       <div
-        className="flex justify-between items-center cursor-pointer p-4"
+        className="flex cursor-pointer items-center justify-between p-4"
         onClick={onToggleExpand}
       >
         <h4 className="text-lg font-semibold text-premium-textPrimary">
@@ -47,12 +47,12 @@ export default function ImageUploadSection({
         <AiOutlineDown
           className={`${
             expanded ? "rotate-180" : ""
-          } transition-transform duration-300 text-premium-textPrimary dark:text-premium-textSecondary`}
+          } text-premium-textPrimary transition-transform duration-300 dark:text-premium-textSecondary`}
         />
       </div>
 
       {imageType.description && (
-        <p className="text-sm text-gray-600 dark:text-gray-400 -mt-3 mb-4 px-4 cursor-pointer">
+        <p className="-mt-3 mb-4 cursor-pointer px-4 text-sm text-gray-600 dark:text-gray-400">
           {imageType.description}
         </p>
       )}
@@ -64,22 +64,22 @@ export default function ImageUploadSection({
             accept="image/*"
             multiple
             onChange={onImageChange}
-            className={`w-full px-3 py-2 rounded-lg bg-premium-backgroundDark dark:bg-premium-background text-premium-textPrimary mt-2 ${
+            className={`mt-2 w-full rounded-lg bg-premium-backgroundDark px-3 py-2 text-premium-textPrimary dark:bg-premium-background ${
               error ? "border-red-500" : "border-none"
             }`}
           />
-          <p className="mt-1 ml-2 text-sm text-gray-600 dark:text-gray-400">
+          <p className="ml-2 mt-1 text-sm text-gray-600 dark:text-gray-400">
             {images.length} archivo(s) subido(s)
           </p>
 
           {error && (
-            <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-              <AiOutlineExclamationCircle className="w-5 h-5" />
+            <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+              <AiOutlineExclamationCircle className="h-5 w-5" />
               {error}
             </div>
           )}
 
-          <div className="flex flex-wrap mt-2">
+          <div className="mt-2 flex flex-wrap">
             {images.map((file, index) => (
               <ImageWithTag
                 key={index}

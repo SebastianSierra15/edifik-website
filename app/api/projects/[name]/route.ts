@@ -5,7 +5,7 @@ import { Project, ProjectSummary } from "@/lib/definitios";
 
 export async function GET(
   request: Request,
-  { params }: { params: { name: string } }
+  { params }: { params: { name: string } },
 ) {
   try {
     const name = params.name.replace(/-/g, " ");
@@ -16,7 +16,7 @@ export async function GET(
     if (rows.length === 0) {
       return NextResponse.json(
         { error: "Proyecto no encontrado" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -107,7 +107,7 @@ export async function GET(
 
     const [recommendedResult] = await db.query(
       "CALL get_recommended_projects(1000, ?, 10, 5, 3, 2)",
-      [project.propertyType.id]
+      [project.propertyType.id],
     );
 
     const recommendedRows = (recommendedResult as RowDataPacket[][])[0] || [];
@@ -156,7 +156,7 @@ export async function GET(
   } catch (error) {
     return NextResponse.json(
       { error: "Error al buscar el proyecto" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -11,7 +11,7 @@ interface Stat {
 
 const StatCard = ({ label, value, bgColor, textColor }: Stat) => (
   <div
-    className={`w-full md:w-1/2 lg:w-1/4 p-4 ${bgColor} ${textColor} text-center`}
+    className={`w-full p-4 md:w-1/2 lg:w-1/4 ${bgColor} ${textColor} text-center`}
   >
     <h3 className="text-4xl font-bold" data-target={value}>
       0
@@ -54,7 +54,7 @@ export default function StatsSection() {
     function animateNumbers() {
       const counters =
         sectionRef.current?.querySelectorAll<HTMLHeadingElement>(
-          "h3[data-target]"
+          "h3[data-target]",
         );
       if (!counters) return;
 
@@ -92,11 +92,11 @@ export default function StatsSection() {
   }, []);
 
   return (
-    <div className="relative flex justify-center items-center bg-transparent">
+    <div className="relative flex items-center justify-center bg-transparent">
       <section
         id="animated-section"
         ref={sectionRef}
-        className="absolute z-10 flex flex-wrap justify-center w-full lg:w-4/5"
+        className="absolute z-10 flex w-full flex-wrap justify-center lg:w-4/5"
       >
         {stats.map((stat, index) => (
           <StatCard

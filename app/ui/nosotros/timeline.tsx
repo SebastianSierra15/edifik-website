@@ -95,7 +95,7 @@ export default function Timeline() {
       function stopImageRotation() {
         clearInterval(interval);
         images.forEach((img, index) =>
-          img.classList.toggle("hidden", index !== 0)
+          img.classList.toggle("hidden", index !== 0),
         );
         currentIndex = 0;
       }
@@ -112,28 +112,28 @@ export default function Timeline() {
   }, []);
 
   return (
-    <section className="p-10 lg:p-20 bg-gray-200">
-      <div className="mx-auto xl:w-3/4 bg-transparent">
-        <h2 className="text-2xl lg:text-4xl font-semibold text-center text-blue-600">
+    <section className="bg-gray-200 p-10 lg:p-20">
+      <div className="mx-auto bg-transparent xl:w-3/4">
+        <h2 className="text-center text-2xl font-semibold text-blue-600 lg:text-4xl">
           Nuestra Historia
         </h2>
         <div className="w-full text-center">
-          <div className="border-t border-blue-400 my-2 w-1/3 mx-auto"></div>
+          <div className="mx-auto my-2 w-1/3 border-t border-blue-400"></div>
         </div>
 
-        <div className="relative flex w-full h-auto mt-10 lg:mt-15">
+        <div className="lg:mt-15 relative mt-10 flex h-auto w-full">
           <button
             ref={prevButtonRef}
-            className="absolute self-center -left-10 w-10 h-10 z-10 rounded-full bg-transparent border-blue-500 border-2 text-blue-500 hover:bg-gray-300 transition duration-300"
+            className="absolute -left-10 z-10 h-10 w-10 self-center rounded-full border-2 border-blue-500 bg-transparent text-blue-500 transition duration-300 hover:bg-gray-300"
           >
             &#10094;
           </button>
 
-          <div className="flex overflow-hidden w-full">
+          <div className="flex w-full overflow-hidden">
             <div
               ref={timeLineRef}
               id="timeLine"
-              className="flex transition-transform duration-500 whitespace-nowrap"
+              className="flex whitespace-nowrap transition-transform duration-500"
             >
               <TimelineElement
                 ImageSrc1="/images/image2.jpg"
@@ -205,12 +205,12 @@ export default function Timeline() {
 
           <button
             ref={nextButtonRef}
-            className="absolute self-center -right-10 w-10 h-10 z-10 rounded-full bg-transparent border-blue-500 border-2 text-blue-500 hover:bg-gray-300 transition duration-300"
+            className="absolute -right-10 z-10 h-10 w-10 self-center rounded-full border-2 border-blue-500 bg-transparent text-blue-500 transition duration-300 hover:bg-gray-300"
           >
             &#10095;
           </button>
 
-          <div className="absolute right-0 top-0 h-full w-32 pointer-events-none bg-gradient-to-l from-gray-200 to-transparent"></div>
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-gray-200 to-transparent"></div>
         </div>
       </div>
     </section>

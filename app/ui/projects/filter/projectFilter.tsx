@@ -1,32 +1,34 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import { memo, useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import FilterOption from "./filterOption";
 import FilterNumericCounter from "./filterNumericCounter";
 import FilterOptionWithSlider from "./filterOptionWithSlider";
-import {
-  FaCity,
-  FaBuilding,
-  FaHome,
-  FaDollarSign,
-  FaBed,
-  FaToilet,
-  FaCouch,
-  FaWarehouse,
-  FaConciergeBell,
-  FaTimes,
-  FaCrown,
-  FaRulerHorizontal,
-} from "react-icons/fa";
-import {
-  City,
-  HousingType,
-  propertyType,
-  NearbyService,
-  CommonArea,
-  MembershipSummary,
-} from "@/lib/definitios";
+import FilterSkeleton from "./skeleton/filterSkeleton";
+
+const Building2 = dynamic(() =>
+  import("lucide-react").then((mod) => mod.Building2)
+);
+const Building = dynamic(() =>
+  import("lucide-react").then((mod) => mod.Building)
+);
+const House = dynamic(() => import("lucide-react").then((mod) => mod.House));
+const DollarSign = dynamic(() =>
+  import("lucide-react").then((mod) => mod.DollarSign)
+);
+const Bed = dynamic(() => import("lucide-react").then((mod) => mod.Bed));
+const Toilet = dynamic(() => import("lucide-react").then((mod) => mod.Toilet));
+const Sofa = dynamic(() => import("lucide-react").then((mod) => mod.Sofa));
+const Warehouse = dynamic(() =>
+  import("lucide-react").then((mod) => mod.Warehouse)
+);
+const ConciergeBell = dynamic(() =>
+  import("lucide-react").then((mod) => mod.ConciergeBell)
+);
+const X = dynamic(() => import("lucide-react").then((mod) => mod.X));
+const Crown = dynamic(() => import("lucide-react").then((mod) => mod.Crown));
+const Ruler = dynamic(() => import("lucide-react").then((mod) => mod.Ruler));
 
 type Category =
   | "cities"
@@ -49,24 +51,19 @@ type ProjectFilterProps = {
   setFilterOpen: (open: boolean) => void;
   priceRange: { min: number; max: number };
   areaRange: { min: number; max: number };
+  metadata: any;
+  isLoading: boolean;
 };
 
-export default function ProjectFilter({
+const ProjectFilter = ({
   selectedButtons,
   setSelectedButtons,
   setFilterOpen,
   priceRange,
   areaRange,
-}: ProjectFilterProps) {
-  const [metadata, setMetadata] = useState({
-    cities: [] as City[],
-    commonAreas: [] as CommonArea[],
-    housingTypes: [] as HousingType[],
-    nearbyServices: [] as NearbyService[],
-    propertyTypes: [] as propertyType[],
-    memberships: [] as MembershipSummary[],
-  });
-
+  metadata,
+  isLoading,
+}: ProjectFilterProps) => {
   const [isOpen, setIsOpen] = useState<Record<Category, boolean>>({
     cities: false,
     propertyTypes: false,
@@ -83,18 +80,6 @@ export default function ProjectFilter({
 
   const [isFixed, setIsFixed] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/api/projects/metadata");
-        setMetadata(response.data);
-      } catch (error) {
-        console.error("Error fetching metadata:", error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const toggleOpen = (category: Category) => {
     setIsOpen((prevState) => ({
@@ -188,67 +173,69 @@ export default function ProjectFilter({
     });
   };
 
+  if (isLoading) return <FilterSkeleton />;
+
   return (
     <div
       ref={filterRef}
-      className={`w-full sm:w-72 md:w-80 bg-premium-background dark:bg-premium-backgroundDark shadow-md rounded-lg py-4 transition-all duration-300 ease-in-out ${
-        isFixed ? "sticky top-32 lg:top-20 z-10" : ""
+      className={`w-full rounded-lg bg-premium-background py-4 shadow-md transition-all duration-300 ease-in-out sm:w-72 md:w-80 dark:bg-premium-backgroundDark ${
+        isFixed ? "sticky top-32 z-10 lg:top-20" : ""
       }`}
     >
       <div className="mt-1 space-y-6">
         <div className="flex items-center justify-between rounded-md pl-2 pr-6">
           <button
             onClick={resetFilters}
-            className="font-medium text-lg py-1 px-4 text-premium-textPrimary dark:text-premium-textPrimary transition-transform duration-200 transform hover:scale-110 hover:font-semibold"
+            className="transform px-4 py-1 text-lg font-medium text-premium-textPrimary transition-transform duration-200 hover:scale-110 hover:font-semibold dark:text-premium-textPrimary"
           >
             Borrar filtros
           </button>
           <div
-            className="flex items-center cursor-pointer text-premium-textPrimary dark:text-premium-textPrimary"
+            className="flex cursor-pointer items-center text-premium-textPrimary dark:text-premium-textPrimary"
             onClick={() => setFilterOpen(false)}
           >
-            <FaTimes className="transition-transform duration-200 transform hover:scale-125" />
+            <X className="transform transition-transform duration-200 hover:scale-125" />
           </div>
         </div>
 
         <hr className="border-premium-borderColor dark:border-premium-borderColorHover" />
 
-        <div className="space-y-4 px-3 py-1 sm:max-h-[65vh] sm:overflow-y-auto overflow-x-hidden">
-          {/* Filtros principales */}
+        <div className="space-y-4 overflow-x-hidden px-3 py-1 sm:max-h-[65vh] sm:overflow-y-auto">
+          {/* Main filters */}
           {[
             {
               label: "Ciudades",
-              icon: <FaCity />,
+              icon: <Building2 />,
               items: metadata.cities,
               category: "cities" as Category,
             },
             {
               label: "Tipos de Inmueble",
-              icon: <FaBuilding />,
+              icon: <Building />,
               items: metadata.propertyTypes,
               category: "propertyTypes" as Category,
             },
             {
               label: "Tipos de Vivienda",
-              icon: <FaHome />,
+              icon: <House />,
               items: metadata.housingTypes,
               category: "housingTypes" as Category,
             },
             {
               label: "Áreas Comunes",
-              icon: <FaWarehouse />,
+              icon: <Warehouse />,
               items: metadata.commonAreas,
               category: "commonAreas" as Category,
             },
             {
               label: "Servicios Cercanos",
-              icon: <FaConciergeBell />,
+              icon: <ConciergeBell />,
               items: metadata.nearbyServices,
               category: "nearbyServices" as Category,
             },
             {
               label: "Membresía",
-              icon: <FaCrown />,
+              icon: <Crown />,
               items: metadata.memberships,
               category: "memberships" as Category,
             },
@@ -265,11 +252,11 @@ export default function ProjectFilter({
             />
           ))}
 
-          {/* Filtros con sliders */}
+          {/* Filters with sliders */}
           {[
             {
               label: "Precio",
-              icon: <FaDollarSign />,
+              icon: <DollarSign />,
               value: selectedButtons.price[0] || 0,
               min: priceRange.min || 0,
               max: priceRange.max || 0,
@@ -280,7 +267,7 @@ export default function ProjectFilter({
             },
             {
               label: "Área",
-              icon: <FaRulerHorizontal />,
+              icon: <Ruler />,
               value: selectedButtons.area[0] || 0,
               min: areaRange.min || 0,
               max: areaRange.max || 0,
@@ -319,21 +306,21 @@ export default function ProjectFilter({
             )
           )}
 
-          {/* Contadores */}
+          {/* Filters with counters */}
           {[
             {
               label: "Nº de habitaciones",
-              icon: <FaBed />,
+              icon: <Bed />,
               category: "bedrooms" as "bedrooms" | "bathrooms" | "lobbies",
             },
             {
               label: "Nº de baños",
-              icon: <FaToilet />,
+              icon: <Toilet />,
               category: "bathrooms" as "bedrooms" | "bathrooms" | "lobbies",
             },
             {
               label: "Nº de salas de estar",
-              icon: <FaCouch />,
+              icon: <Sofa />,
               category: "lobbies" as "bedrooms" | "bathrooms" | "lobbies",
             },
           ].map(({ label, icon, category }) => (
@@ -352,4 +339,6 @@ export default function ProjectFilter({
       </div>
     </div>
   );
-}
+};
+
+export default memo(ProjectFilter);

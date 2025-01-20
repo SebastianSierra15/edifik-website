@@ -16,7 +16,7 @@ export default function AdminLayout({
   return (
     <html lang="es">
       <body
-        className={`${poppins.className} antialiased min-h-screen flex flex-col`}
+        className={`${poppins.className} flex min-h-screen flex-col antialiased`}
       >
         <Providers>
           <main className="flex-grow">{children}</main>

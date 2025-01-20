@@ -5,7 +5,7 @@ import { RowDataPacket } from "mysql2";
 
 function mapResults<T>(
   result: RowDataPacket[] | undefined,
-  mapper: (row: any) => T
+  mapper: (row: any) => T,
 ): T[] {
   if (!result) return [];
   return result.map(mapper);
@@ -14,7 +14,7 @@ function mapResults<T>(
 export async function GET() {
   try {
     const [result] = await db.query<RowDataPacket[][]>(
-      "CALL get_cities_departaments()"
+      "CALL get_cities_departaments()",
     );
 
     const [departamentsResult, citiesResult] = result;
@@ -24,7 +24,7 @@ export async function GET() {
       (row) => ({
         id: row.departamentId,
         name: row.departamentName,
-      })
+      }),
     );
 
     const cities: City[] = mapResults(citiesResult, (row) => ({
@@ -41,7 +41,7 @@ export async function GET() {
     console.error("Error en la búsqueda de los datos: ", error);
     return NextResponse.json(
       { error: "Error al recuperar los datos" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

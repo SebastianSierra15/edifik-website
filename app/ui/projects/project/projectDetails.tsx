@@ -229,25 +229,25 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
   ];
 
   const [openGroups, setOpenGroups] = useState<boolean[]>(
-    new Array(details.length).fill(true)
+    new Array(details.length).fill(true),
   );
 
   const toggleGroup = (index: number) => {
     setOpenGroups((prev) =>
-      prev.map((isOpen, i) => (i === index ? !isOpen : isOpen))
+      prev.map((isOpen, i) => (i === index ? !isOpen : isOpen)),
     );
   };
 
   return (
     <div className="my-8">
-      <h2 className="text-2xl font-semibold mb-6 text-[#8B4513]">
+      <h2 className="mb-6 text-2xl font-semibold text-[#8B4513]">
         Detalles del Proyecto
       </h2>
       <div className="space-y-6">
         {details.map((group, index) => (
           <div key={index} className="mb-4">
             <div
-              className="p-4 rounded-lg shadow flex justify-between items-center cursor-pointer"
+              className="flex cursor-pointer items-center justify-between rounded-lg p-4 shadow"
               style={{
                 backgroundColor: "#ffffff",
                 boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
@@ -277,7 +277,7 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
                 transition={{ duration: 0.3 }}
                 className="mt-2"
               >
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                   {group.items.map(
                     (item, index) =>
                       item.value && (
@@ -294,7 +294,7 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
                           label={item.label}
                           value={item.value}
                         />
-                      )
+                      ),
                   )}
                 </div>
               </motion.div>

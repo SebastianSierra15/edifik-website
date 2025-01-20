@@ -6,7 +6,7 @@ import {
   AiOutlineExclamationCircle,
   AiOutlineInfoCircle,
 } from "react-icons/ai";
-import StepNavigationButtons from "../../stepNavigationButtons";
+import StepNavigationButtons from "../../admin/stepNavigationButtons";
 
 type BasicProjectFormProps = {
   formData: ProjectData;
@@ -39,7 +39,7 @@ export default function BasicProjectForm({
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     onChange({ [e.target.name]: e.target.value });
     setErrors({ ...errors, [`${e.target.name}Error`]: "" });
@@ -55,7 +55,7 @@ export default function BasicProjectForm({
 
     if (name === "propertyType") {
       const selectedPropertyType = propertyTypes.find(
-        (type) => type.id === selectedId
+        (type) => type.id === selectedId,
       );
 
       if (selectedPropertyType) {
@@ -114,20 +114,20 @@ export default function BasicProjectForm({
   };
 
   return (
-    <div className="container mx-auto max-w-2xl p-6 bg-premium-backgroundLight dark:bg-premium-backgroundDark rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-premium-primary dark:text-premium-primaryLight text-center mb-6">
+    <div className="container mx-auto max-w-2xl rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
+      <h2 className="mb-6 text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight">
         Datos Básicos
       </h2>
       <form onSubmit={handleNext} className="space-y-6">
         <div>
-          <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-2">
+          <label className="mb-2 flex items-center gap-2 text-premium-textPrimary dark:text-premium-textPrimary">
             {isProperty ? "Nombre de la propiedad" : "Nombre del proyecto"}
-            <span className="text-premium-textPrimary dark:text-premium-textPrimary -ml-1">
+            <span className="-ml-1 text-premium-textPrimary dark:text-premium-textPrimary">
               *
             </span>
             <span className="group relative">
-              <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-              <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+              <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+              <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                 <p className="text-xs">
                   {isProperty
                     ? "Nombre de la propiedad que se mostrará al público."
@@ -142,7 +142,7 @@ export default function BasicProjectForm({
             value={formData.name || ""}
             onChange={handleChange}
             maxLength={100}
-            className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+            className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
               errors.nameError
                 ? "border-red-500"
                 : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -155,8 +155,8 @@ export default function BasicProjectForm({
             required
           />
           {errors.nameError && (
-            <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-              <AiOutlineExclamationCircle className="w-4 h-4" />
+            <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+              <AiOutlineExclamationCircle className="h-4 w-4" />
               {errors.nameError}
             </div>
           )}
@@ -164,18 +164,18 @@ export default function BasicProjectForm({
 
         <div
           className={`grid grid-cols-1 gap-4 ${
-            isProperty ? "sm:grid-cols-2 " : ""
+            isProperty ? "sm:grid-cols-2" : ""
           }`}
         >
           <div>
-            <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-2">
+            <label className="mb-2 flex items-center gap-2 text-premium-textPrimary dark:text-premium-textPrimary">
               Tipo de propiedad{" "}
-              <span className="text-premium-textPrimary dark:text-premium-textPrimary -ml-1">
+              <span className="-ml-1 text-premium-textPrimary dark:text-premium-textPrimary">
                 *
               </span>
               <span className="group relative">
-                <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                   <p className="text-xs">
                     {isProperty
                       ? "Seleccione el tipo de propiedad que más se ajuste."
@@ -188,7 +188,7 @@ export default function BasicProjectForm({
               name="propertyType"
               value={formData.propertyType?.id || ""}
               onChange={handleSelectChange}
-              className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+              className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                 errors.propertyTypeError
                   ? "border-red-500"
                   : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -203,8 +203,8 @@ export default function BasicProjectForm({
               ))}
             </select>
             {errors.propertyTypeError && (
-              <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-4 h-4" />
+              <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                <AiOutlineExclamationCircle className="h-4 w-4" />
                 {errors.propertyTypeError}
               </div>
             )}
@@ -212,14 +212,14 @@ export default function BasicProjectForm({
 
           {isProperty && (
             <div>
-              <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-2">
+              <label className="mb-2 flex items-center gap-2 text-premium-textPrimary dark:text-premium-textPrimary">
                 Finalidad de la propiedad{" "}
-                <span className="text-premium-textPrimary dark:text-premium-textPrimary -ml-1">
+                <span className="-ml-1 text-premium-textPrimary dark:text-premium-textPrimary">
                   *
                 </span>
                 <span className="group relative">
-                  <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                  <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+                  <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+                  <div className="dark:bg-backgroundDark absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:text-premium-textPrimary">
                     <p className="text-xs">
                       Seleccione si la propiedad va estar en venta o en
                       arriendo.
@@ -231,7 +231,7 @@ export default function BasicProjectForm({
                 name="projectType"
                 value={formData.projectType?.id || ""}
                 onChange={handleSelectChange}
-                className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+                className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
                   errors.projectTypeError
                     ? "border-red-500"
                     : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -249,8 +249,8 @@ export default function BasicProjectForm({
                 ))}
               </select>
               {errors.projectTypeError && (
-                <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-                  <AiOutlineExclamationCircle className="w-4 h-4" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+                  <AiOutlineExclamationCircle className="h-4 w-4" />
                   {errors.projectTypeError}
                 </div>
               )}
@@ -259,14 +259,14 @@ export default function BasicProjectForm({
         </div>
 
         <div>
-          <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-2">
+          <label className="mb-2 flex items-center gap-2 text-premium-textPrimary dark:text-premium-textPrimary">
             Resumen breve{" "}
-            <span className="text-premium-textPrimary dark:text-premium-textPrimary -ml-1">
+            <span className="-ml-1 text-premium-textPrimary dark:text-premium-textPrimary">
               *
             </span>
             <span className="group relative">
-              <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-              <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+              <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+              <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                 <p className="text-xs">
                   {isProperty
                     ? "Escriba un resumen breve que describa las principales características de la propiedad."
@@ -280,7 +280,7 @@ export default function BasicProjectForm({
             value={formData.shortDescription || ""}
             onChange={handleChange}
             maxLength={150}
-            className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+            className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
               errors.shortDescriptionError
                 ? "border-red-500"
                 : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -290,22 +290,22 @@ export default function BasicProjectForm({
             required
           />
           {errors.shortDescriptionError && (
-            <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-              <AiOutlineExclamationCircle className="w-4 h-4" />
+            <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+              <AiOutlineExclamationCircle className="h-4 w-4" />
               {errors.shortDescriptionError}
             </div>
           )}
         </div>
 
         <div>
-          <label className="text-premium-textPrimary dark:text-premium-textPrimary mb-2 flex items-center gap-2">
+          <label className="mb-2 flex items-center gap-2 text-premium-textPrimary dark:text-premium-textPrimary">
             Descripción completa{" "}
-            <span className="text-premium-textPrimary dark:text-premium-textPrimary -ml-1">
+            <span className="-ml-1 text-premium-textPrimary dark:text-premium-textPrimary">
               *
             </span>
             <span className="group relative">
-              <AiOutlineInfoCircle className="w-4 h-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-              <div className="absolute hidden group-hover:flex flex-col items-center bg-premium-backgroundLight dark:bg-premium-backgroundDark text-premium-textPrimary dark:text-premium-textPrimary border border-premium-borderColor dark:border-premium-borderColorHover rounded-md shadow-md p-2 w-64 mt-2 z-10">
+              <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
+              <div className="absolute z-10 mt-2 hidden w-64 flex-col items-center rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:flex dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
                 <p className="text-xs">
                   {isProperty
                     ? "Incluya una descripción detallada que explique las características principales de la propiedad."
@@ -319,7 +319,7 @@ export default function BasicProjectForm({
             value={formData.detailedDescription || ""}
             onChange={handleChange}
             maxLength={1500}
-            className={`w-full px-3 py-2 border rounded-md bg-premium-background dark:bg-premium-backgroundLight text-premium-textPrimary dark:text-premium-textPrimary ${
+            className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
               errors.detailedDescriptionError
                 ? "border-red-500"
                 : "border-premium-borderColor dark:border-premium-borderColorHover"
@@ -329,8 +329,8 @@ export default function BasicProjectForm({
             required
           />
           {errors.detailedDescriptionError && (
-            <div className="text-red-500 text-xs flex items-center gap-2 mt-1">
-              <AiOutlineExclamationCircle className="w-4 h-4" />
+            <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
+              <AiOutlineExclamationCircle className="h-4 w-4" />
               {errors.detailedDescriptionError}
             </div>
           )}
@@ -342,11 +342,11 @@ export default function BasicProjectForm({
             id="membershipCheckbox"
             checked={formData.membership === 1004}
             onChange={handleCheckboxChange}
-            className="w-4 h-4 text-premium-primary border-gray-300 rounded focus:ring-premium-primary"
+            className="h-4 w-4 rounded border-gray-300 text-premium-primary focus:ring-premium-primary"
           />
           <label
             htmlFor="membershipCheckbox"
-            className="text-premium-textPrimary dark:text-premium-textPrimary text-sm"
+            className="text-sm text-premium-textPrimary dark:text-premium-textPrimary"
           >
             Propio de la empresa
           </label>

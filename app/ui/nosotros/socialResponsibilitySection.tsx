@@ -24,15 +24,15 @@ export default function SocialResponsibilitySection({
   const isImageLeft = imagePosition === "left";
 
   return (
-    <section className="p-5 bg-transparent">
+    <section className="bg-transparent p-5">
       <div
-        className={`grid grid-cols-1 md:grid-cols-2 gap-2 lg:gap-10 mx-auto mb-10 p-5 lg:p-10`}
+        className={`mx-auto mb-10 grid grid-cols-1 gap-2 p-5 md:grid-cols-2 lg:gap-10 lg:p-10`}
       >
         {/* Condicional para mostrar la imagen a la izquierda o derecha */}
         {isImageLeft && (
-          <div className="grid grid-cols-1 gap-5 pt-5 px-0 lg:px-10 mx-auto w-3/4 lg:w-full">
+          <div className="mx-auto grid w-3/4 grid-cols-1 gap-5 px-0 pt-5 lg:w-full lg:px-10">
             <Image
-              className="self-center xl:self-start w-full h-auto object-cover"
+              className="h-auto w-full self-center object-cover xl:self-start"
               src={imageSrc}
               alt={title}
               width={768}
@@ -44,29 +44,29 @@ export default function SocialResponsibilitySection({
 
         <div className="mx-8 py-5 text-left">
           <div className="mb-10">
-            <h2 className="mb-10 text-2xl md:text-4xl font-semibold text-blue-600">
+            <h2 className="mb-10 text-2xl font-semibold text-blue-600 md:text-4xl">
               {title}
             </h2>
-            <p className="text-gray-700 text-sm md:text-base text-justify lg:text-left">
+            <p className="text-justify text-sm text-gray-700 md:text-base lg:text-left">
               {description}
             </p>
           </div>
 
           <div className="mx-auto grid gap-8 gap-y-4">
             {points.map((point, index) => (
-              <div key={index} className="flex flex-row max-w-none">
+              <div key={index} className="flex max-w-none flex-row">
                 <div className="flex justify-center pt-1">
                   <FaCheck
-                    className="bg-green-600 dark:bg-green-700 text-gray-50 h-7 w-7 rounded-full p-1"
+                    className="h-7 w-7 rounded-full bg-green-600 p-1 text-gray-50 dark:bg-green-700"
                     aria-hidden="true"
                   />
                 </div>
 
                 <div>
-                  <h3 className="leading-6 ml-2 text-xl md:text-3xl rtl:ml-0 rtl:mr-2 text-blue-600">
+                  <h3 className="ml-2 text-xl leading-6 text-blue-600 md:text-3xl rtl:ml-0 rtl:mr-2">
                     {point.title}
                   </h3>
-                  <p className="mt-3 ml-2 rtl:ml-0 rtl:mr-2 text-gray-700">
+                  <p className="ml-2 mt-3 text-gray-700 rtl:ml-0 rtl:mr-2">
                     {point.description}
                   </p>
                 </div>
@@ -76,9 +76,9 @@ export default function SocialResponsibilitySection({
         </div>
 
         {!isImageLeft && (
-          <div className="grid grid-cols-1 gap-5 pt-5 px-0 lg:px-10 mx-auto w-3/4 lg:w-full">
+          <div className="mx-auto grid w-3/4 grid-cols-1 gap-5 px-0 pt-5 lg:w-full lg:px-10">
             <Image
-              className="self-center xl:self-start w-full h-auto object-cover"
+              className="h-auto w-full self-center object-cover xl:self-start"
               src={imageSrc}
               alt={title}
               width={768}

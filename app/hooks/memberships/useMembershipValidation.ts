@@ -1,5 +1,5 @@
 export const useMembershipValidation = (
-  updateMembership: any
+  updateMembership: any,
 ): (() => {
   nameError: string;
   benefitsError: string;

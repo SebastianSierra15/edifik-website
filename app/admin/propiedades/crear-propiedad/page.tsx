@@ -6,7 +6,7 @@ import useLocations from "@/app/hooks/useLocations";
 import useBasicMetadata from "@/app/hooks/useBasicMetadata";
 import useImageTypes from "@/app/hooks/useImageTypes";
 import { useUploadImages } from "@/app/hooks/useUploadImages";
-import { useCreateProject } from "@/app/hooks/useCreateProject";
+import { useCreateProject } from "@/app/hooks/projects/useCreateProject";
 import { useInsertProjectMedia } from "@/app/hooks/useInsertProjectMedia";
 import ProgressBar from "@/app/ui/projects/createEditProject/progressBar";
 import BasicProjectForm from "@/app/ui/projects/createEditProject/basicProjectForm";
@@ -110,11 +110,11 @@ export default function CreatePropertyPage() {
   return (
     <div className="container mx-auto p-6">
       {loading && <Loader message="Subiendo propiedad, por favor espera..." />}
-      <h1 className="mt-24 lg:mt-20 text-3xl text-center font-semibold mb-10 text-premium-primary dark:text-premium-primaryLight">
+      <h1 className="mb-10 mt-24 text-center text-3xl font-semibold text-premium-primary lg:mt-20 dark:text-premium-primaryLight">
         Agregar Propiedad
       </h1>
 
-      <div className="mb-10 text-center mx-auto">
+      <div className="mx-auto mb-10 text-center">
         <ProgressBar currentStep={currentStep} />
       </div>
 
@@ -208,9 +208,9 @@ export default function CreatePropertyPage() {
         cancelLabel="Cancelar"
       />
 
-      <div className="text-center mt-4">
+      <div className="mt-4 text-center">
         <button
-          className="bg-premium-secondary text-white px-4 py-2 rounded-md hover:bg-premium-secondaryLight transition-colors dark:bg-premium-secondaryDark dark:hover:bg-premium-secondaryLight"
+          className="rounded-md bg-premium-secondary px-4 py-2 text-white transition-colors hover:bg-premium-secondaryLight dark:bg-premium-secondaryDark dark:hover:bg-premium-secondaryLight"
           onClick={() => router.push("/admin/propiedades")}
         >
           Volver

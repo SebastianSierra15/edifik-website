@@ -4,20 +4,24 @@ import { useState, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { useCallback } from "react";
 import dynamic from "next/dynamic";
-import Table from "@/app/ui/table";
-import TableSkeleton from "@/app/ui/tableSkeleton";
+import Table from "@/app/ui/admin/table";
+import TableSkeleton from "@/app/ui/admin/skeletons/tableSkeleton";
+import Alert from "@/app/ui/alert";
 import { Membership, Header } from "@/lib/definitios";
 import { useMemberships } from "@/app/hooks/memberships/useMemberships";
 import { useMembershipValidation } from "@/app/hooks/memberships/useMembershipValidation";
+import { useMembershipUpdate } from "@/app/hooks/memberships/useMembershipUpdate";
 
 const MembershipModal = dynamic(
   () => import("@/app/ui/memberships/membershipModal"),
   { ssr: false }
 );
-const ModalConfirmation = dynamic(() => import("@/app/ui/modals/modalConfirmation"), {
-  ssr: false,
-});
-const ModalAlert = dynamic(() => import("@/app/ui/modals/modalAlert"), { ssr: false });
+const ModalConfirmation = dynamic(
+  () => import("@/app/ui/modals/modalConfirmation"),
+  {
+    ssr: false,
+  }
+);
 
 export default function MembershipsPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,11 +30,11 @@ export default function MembershipsPage() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [confirmationAction, setConfirmationAction] = useState<"edit" | null>(
-    null
-  );
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alert, setAlert] = useState({
+    type: "" as "success" | "error" | null,
+    message: "",
+    show: false,
+  });
 
   const { memberships, totalEntries, isLoading } = useMemberships(
     currentPage,
@@ -39,7 +43,13 @@ export default function MembershipsPage() {
     refreshTrigger
   );
 
-  const [updateMembership, setUpdateMembership] = useState<Membership>({
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  const showSkeleton = !hasLoadedOnce && isLoading;
+  if (!isLoading && !hasLoadedOnce) {
+    setHasLoadedOnce(true);
+  }
+
+  const [membership, setMembership] = useState<Membership>({
     id: 0,
     name: "",
     benefits: "",
@@ -51,7 +61,8 @@ export default function MembershipsPage() {
     discountTwelveMonths: 0,
   });
 
-  const validateFields = useMembershipValidation(updateMembership);
+  const validateFields = useMembershipValidation(membership);
+  const { updateMembership } = useMembershipUpdate();
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
     setSearchTerm(term);
@@ -63,7 +74,7 @@ export default function MembershipsPage() {
   }, [memberships]);
 
   const handleEditClick = useCallback((membership: Membership) => {
-    setUpdateMembership(membership);
+    setMembership(membership);
     setModalOpen(true);
   }, []);
 
@@ -73,43 +84,34 @@ export default function MembershipsPage() {
 
   const handleConfirmUpdate = (e: React.FormEvent) => {
     e.preventDefault();
-
     const errors = validateFields();
     const hasErrors = Object.values(errors).some((error) => error !== "");
 
     if (hasErrors) {
-      setAlertMessage("Por favor, corrige los errores antes de continuar.");
-      setShowAlert(true);
       return;
     }
 
-    setConfirmationAction("edit");
     setIsConfirmationModalOpen(true);
   };
 
   const handleConfirmedAction = async () => {
-    try {
-      if (confirmationAction === "edit") {
-        await fetch("/api/memberships", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updateMembership),
-        });
+    const success = await updateMembership(membership);
+    if (success) {
+      setRefreshTrigger((prev) => prev + 1);
+      setModalOpen(false);
+      setIsConfirmationModalOpen(false);
 
-        setRefreshTrigger((prev) => prev + 1);
-      }
-      setModalOpen(false);
-      setIsConfirmationModalOpen(false);
-    } catch (error) {
-      setModalOpen(false);
-      setIsConfirmationModalOpen(false);
-      console.error("Error al procesar la acción:", error);
-      setAlertMessage(
-        "Hubo un error al actualizar la membresía. Por favor, inténtalo de nuevo."
-      );
-      setShowAlert(true);
+      setAlert({
+        type: "success",
+        message: "Membresía editada correctamente.",
+        show: true,
+      });
+    } else {
+      setAlert({
+        type: "error",
+        message: "Lo sentimos, algo salió mal, intentalo más tarde.",
+        show: true,
+      });
     }
   };
 
@@ -122,8 +124,8 @@ export default function MembershipsPage() {
   ) => {
     const { name, value } = e.target;
 
-    setUpdateMembership({
-      ...updateMembership,
+    setMembership({
+      ...membership,
       [name]: name === "price" ? Number(value) || 0 : value,
     });
   };
@@ -147,8 +149,12 @@ export default function MembershipsPage() {
     { label: "Membresía", key: "name", type: "string" },
     { label: "Beneficios", key: "benefits", type: "string" },
     { label: "Precio", key: "price", type: "number" },
-    { label: "Proyectos Destacados", key: "projectsFeatured", type: "number" },
-    { label: "Max. Proyectos", key: "maxProjects", type: "number" },
+    {
+      label: "Propiedades Destacadas",
+      key: "projectsFeatured",
+      type: "number",
+    },
+    { label: "Max. Propiedades", key: "maxProjects", type: "number" },
     {
       label: "Descuento por 3 Meses",
       key: "discountThreeMonths",
@@ -168,11 +174,11 @@ export default function MembershipsPage() {
 
   return (
     <div className="container mx-auto mt-24 pb-10">
-      <h1 className="text-3xl font-bold mb-6 text-center text-premium-primary dark:text-premium-primaryLight pb-5">
+      <h1 className="mb-6 pb-5 text-center text-3xl font-bold text-premium-primary dark:text-premium-primaryLight">
         Gestión de Membresías
       </h1>
 
-      {isLoading ? (
+      {showSkeleton ? (
         <TableSkeleton rows={3} columns={headers.length + 1} />
       ) : (
         <Table
@@ -181,7 +187,6 @@ export default function MembershipsPage() {
           totalEntries={totalEntries}
           entry="membresías"
           currentPage={currentPage}
-          totalPages={Math.ceil(totalEntries / entriesPerPage)}
           goToPage={goToPage}
           goToNextPage={goToNextPage}
           goToPreviousPage={goToPreviousPage}
@@ -199,7 +204,7 @@ export default function MembershipsPage() {
           onClose={() => setModalOpen(false)}
           onSubmit={handleConfirmUpdate}
           handleChange={handleChange}
-          membership={updateMembership}
+          membership={membership}
           errors={validateFields()}
         />
       )}
@@ -216,12 +221,11 @@ export default function MembershipsPage() {
         />
       )}
 
-      {showAlert && (
-        <ModalAlert
-          title="Advertencia"
-          message={alertMessage}
-          isOpen={showAlert}
-          onClose={() => setShowAlert(false)}
+      {alert.show && (
+        <Alert
+          type={alert.type!}
+          message={alert.message}
+          onClose={() => setAlert({ type: null, message: "", show: false })}
         />
       )}
     </div>

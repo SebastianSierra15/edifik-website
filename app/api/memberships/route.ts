@@ -2,13 +2,16 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { Membership } from "@/lib/definitios";
 import { RowDataPacket } from "mysql2";
+import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
 
   const page = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
-  const searchTerm = searchParams.get("searchTerm") || null;
+  const searchTerm = escapeSearchTerm(searchParams.get("searchTerm") || null);
 
   try {
     const [result] = await db.query("CALL get_memberships(?, ?, ?)", [
@@ -31,8 +34,16 @@ export async function GET(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(req: Request) {
   try {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    const userId = session.user.id;
+
     const {
       id,
       name,
@@ -43,7 +54,7 @@ export async function PUT(request: Request) {
       discountTwelveMonths,
       maxProjects,
       projectsFeatured,
-    } = await request.json();
+    } = await req.json();
 
     if (
       id === undefined ||
@@ -58,7 +69,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    await db.query("CALL update_membership(?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+    await db.query("CALL update_membership(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
       id,
       name,
       benefits,
@@ -68,13 +79,13 @@ export async function PUT(request: Request) {
       discountTwelveMonths,
       maxProjects,
       projectsFeatured,
+      userId,
     ]);
 
     return NextResponse.json({
       message: "Membresía actualizada correctamente",
     });
   } catch (error) {
-    console.error("Error al actualizar la membresía: ", error);
     return NextResponse.json(
       { error: "Error al actualizar la membresía" },
       { status: 500 }

@@ -10,7 +10,7 @@ export default function AboutUsPage() {
   return (
     <main>
       {/* Banner Section */}
-      <div className="relative w-full h-[500px] bg-cover bg-center">
+      <div className="relative h-[500px] w-full bg-cover bg-center">
         <Image
           src="/images/image1.png"
           alt="Imagen de nosotros"
@@ -19,23 +19,23 @@ export default function AboutUsPage() {
           priority
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-          <h1 className="text-white text-5xl lg:text-7xl text-center">
+          <h1 className="text-center text-5xl text-white lg:text-7xl">
             Nosotros
           </h1>
         </div>
       </div>
 
       {/* About Section */}
-      <div className="p-5 lg:p-20 bg-white">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mx-auto">
+      <div className="bg-white p-5 lg:p-20">
+        <div className="mx-auto grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div className="mx-8 py-5 text-center lg:text-left">
-            <h1 className="text-blue-600 text-3xl lg:text-5xl font-bold mb-10">
+            <h1 className="mb-10 text-3xl font-bold text-blue-600 lg:text-5xl">
               Te damos la bienvenida a EdifiK
             </h1>
-            <h2 className="text-blue-600 text-2xl lg:text-4xl font-semibold mb-10">
+            <h2 className="mb-10 text-2xl font-semibold text-blue-600 lg:text-4xl">
               ¿Quiénes Somos?
             </h2>
-            <p className="text-gray-700 text-sm lg:text-base text-justify">
+            <p className="text-justify text-sm text-gray-700 lg:text-base">
               Somos EdifiK, tu socio ideal en diseño y desarrollo de proyectos
               arquitectónicos. Especializados en metodología BIM, nos dedicamos
               a crear y planificar cada etapa de tu proyecto con precisión y
@@ -46,7 +46,7 @@ export default function AboutUsPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 text-center justify-center mx-auto">
+          <div className="mx-auto grid grid-cols-1 justify-center gap-5 text-center">
             <Image
               className="self-center object-cover"
               src="/images/services-11.jpg"
@@ -65,17 +65,17 @@ export default function AboutUsPage() {
       <StatsSection />
 
       {/* Vision and Mission Section */}
-      <div className="bg-gray-200 px-0 pt-44 sm:px-10 md:pt-16 lg:pt-8 lg:px-32">
+      <div className="bg-gray-200 px-0 pt-44 sm:px-10 md:pt-16 lg:px-32 lg:pt-8">
         <section className="relative p-5">
           <div className="relative mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16 lg:py-20">
-            <div className="text-center md:mx-auto max-w-3xl">
-              <h2 className="text-2xl md:text-4xl font-semibold text-blue-600">
+            <div className="max-w-3xl text-center md:mx-auto">
+              <h2 className="text-2xl font-semibold text-blue-600 md:text-4xl">
                 Nuestra Visión y Misión
               </h2>
-              <hr className="border-t my-2 w-1/4 mx-auto border-gray-400" />
+              <hr className="mx-auto my-2 w-1/4 border-t border-gray-400" />
             </div>
 
-            <div className="mt-14 flex justify-center items-stretch md:mt-20">
+            <div className="mt-14 flex items-stretch justify-center md:mt-20">
               <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
                 <VisionMisionSection
                   title="Visión"
@@ -123,7 +123,7 @@ export default function AboutUsPage() {
           imagePosition="right"
         />
 
-        <hr className="border-t bg-transparent border-gray-400 my-2 mx-auto w-5/6"></hr>
+        <hr className="mx-auto my-2 w-5/6 border-t border-gray-400 bg-transparent"></hr>
 
         <SocialResponsibilitySection
           title="Responsabilidad Social"
@@ -151,18 +151,18 @@ export default function AboutUsPage() {
       </div>
 
       {/* Certifications Section */}
-      <div className="px-10 md:px-20 bg-gray-200">
+      <div className="bg-gray-200 px-10 md:px-20">
         <section className="relative px-5">
-          <div className="mx-auto max-w-7xl relative px-4 md:px-6 py-8 md:py-12 lg:py-16">
-            <div className="md:mx-auto text-center max-w-3xl">
-              <h2 className="text-2xl md:text-4xl font-semibold text-center text-blue-600">
+          <div className="relative mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12 lg:py-16">
+            <div className="max-w-3xl text-center md:mx-auto">
+              <h2 className="text-center text-2xl font-semibold text-blue-600 md:text-4xl">
                 Estamos Certificados
               </h2>
-              <hr className="border-t my-2 w-1/4 mx-auto border-gray-400"></hr>
+              <hr className="mx-auto my-2 w-1/4 border-t border-gray-400"></hr>
             </div>
 
-            <div className="mt-14 md:mt-20 flex justify-center items-stretch">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="mt-14 flex items-stretch justify-center md:mt-20">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <CertificationCard
                   title="BIM"
                   description="Certificación en metodología BIM, garantizando calidad y precisión."

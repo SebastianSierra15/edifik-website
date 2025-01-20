@@ -1,12 +1,5 @@
 import { useEffect } from "react";
-import dynamic from "next/dynamic";
-
-const AiOutlineClose = dynamic(() =>
-  import("react-icons/ai").then((mod) => mod.AiOutlineClose)
-);
-const AiOutlineCheckCircle = dynamic(() =>
-  import("react-icons/ai").then((mod) => mod.AiOutlineCheckCircle)
-);
+import { CircleCheck, X } from "lucide-react";
 
 type ModalConfirmationProps = {
   isOpen: boolean;
@@ -42,37 +35,37 @@ export default function ModalConfirmation({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="relative bg-premium-backgroundAlt dark:bg-premium-backgroundDarkAlt rounded-lg shadow-lg p-6 max-w-sm w-full">
+      <div className="dark:bg-premium-backgroundDarkAlt relative w-full max-w-sm rounded-lg bg-premium-backgroundAlt p-6 shadow-lg">
         <button
-          className="absolute top-3 right-3 text-premium-textPrimary dark:text-premium-textSecondary hover:text-premium-primary dark:hover:text-premium-primaryLight"
+          className="absolute right-3 top-3 text-premium-textPrimary hover:text-premium-primary dark:text-premium-textSecondary dark:hover:text-premium-primaryLight"
           onClick={onClose}
           aria-label="Close modal"
         >
-          <AiOutlineClose className="w-5 h-5" />
+          <X className="h-5 w-5" />
         </button>
 
-        <div className="flex justify-center mb-4 text-premium-primary dark:text-premium-primaryLight">
-          <AiOutlineCheckCircle className="w-10 h-10 text-premium-primary" />
+        <div className="mb-4 flex justify-center text-premium-primary dark:text-premium-primaryLight">
+          <CircleCheck className="h-10 w-10 text-premium-primary" />
         </div>
 
-        <h3 className="text-lg font-semibold text-premium-textPrimary dark:text-premium-textSecondary text-center mb-2">
+        <h3 className="mb-2 text-center text-lg font-semibold text-premium-textPrimary dark:text-premium-textSecondary">
           {title}
         </h3>
 
-        <p className="text-sm text-premium-textSecondary dark:text-gray-400 text-center mb-6">
+        <p className="mb-6 text-center text-sm text-premium-textSecondary dark:text-gray-400">
           {message}
         </p>
 
         <div className="flex justify-center gap-4">
           <button
-            className="px-4 py-2 rounded-md bg-premium-secondary dark:bg-premium-secondaryDark text-white hover:bg-premium-secondaryLight dark:hover:bg-premium-secondary hover:opacity-90 transition"
+            className="rounded-md bg-premium-secondary px-4 py-2 text-white transition hover:bg-premium-secondaryLight hover:opacity-90 dark:bg-premium-secondaryDark dark:hover:bg-premium-secondary"
             onClick={onClose}
           >
             {cancelLabel}
           </button>
 
           <button
-            className="px-4 py-2 rounded-md bg-premium-primary dark:bg-premium-primary text-white hover:bg-premium-primaryDark dark:hover:bg-premium-primaryDark transition"
+            className="rounded-md bg-premium-primary px-4 py-2 text-white transition hover:bg-premium-primaryDark dark:bg-premium-primary dark:hover:bg-premium-primaryDark"
             onClick={onConfirm}
           >
             {confirmLabel}

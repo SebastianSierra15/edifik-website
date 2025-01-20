@@ -3,15 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa";
 import UserMenuButton from "./login/userMenuButton";
 
 export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="fixed top-0 left-0 z-50 w-full bg-gray-100 bg-opacity-70 backdrop-blur-md shadow-md text-black">
-      <div className="container mx-auto flex items-center justify-between py-4 px-4">
+    <header className="fixed left-0 top-0 z-50 w-full bg-gray-100 bg-opacity-70 text-black shadow-md backdrop-blur-md">
+      <div className="container mx-auto flex items-center justify-between px-4 py-4">
         <Link
           href="/"
           className="flex items-center space-x-2"
@@ -28,7 +27,7 @@ export default function Header() {
         </Link>
 
         <nav
-          className="hidden md:flex space-x-6"
+          className="hidden space-x-6 md:flex"
           aria-label="Navegación principal"
         >
           {[
@@ -53,7 +52,7 @@ export default function Header() {
                 href={path}
                 className={
                   pathname === path
-                    ? "text-blue-600 font-semibold"
+                    ? "font-semibold text-blue-600"
                     : "hover:text-blue-700"
                 }
                 aria-current={pathname === path ? "page" : undefined}
@@ -65,6 +64,7 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center space-x-4 text-black">
+          {/*
           {[
             {
               href: "https://www.facebook.com",
@@ -93,6 +93,7 @@ export default function Header() {
               <Icon size={24} />
             </Link>
           ))}
+          */}
 
           <UserMenuButton />
         </div>

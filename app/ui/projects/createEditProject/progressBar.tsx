@@ -20,7 +20,7 @@ const steps = [
 
 export default function ProgressBar({ currentStep }: ProgressBarProps) {
   return (
-    <div className="flex justify-center items-center w-full max-w-xl mx-auto">
+    <div className="mx-auto flex w-full max-w-xl items-center justify-center">
       {steps.map((step, index) => {
         const Icon = step.icon;
         const isLastStep = index === steps.length - 1;
@@ -32,7 +32,7 @@ export default function ProgressBar({ currentStep }: ProgressBarProps) {
             className={`flex items-center ${isLastStep ? "" : "flex-1"}`}
           >
             <div
-              className={`w-12 h-12 z-10 rounded-full flex items-center justify-center transition-colors duration-300 ${
+              className={`z-10 flex h-12 w-12 items-center justify-center rounded-full transition-colors duration-300 ${
                 isActive
                   ? "bg-premium-primary text-white dark:bg-premium-primaryLight"
                   : "bg-premium-backgroundDark text-premium-textSecondary dark:bg-premium-backgroundLight dark:text-premium-textPlaceholder"

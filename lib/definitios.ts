@@ -1,11 +1,12 @@
 import { DateTime } from "next-auth/providers/kakao";
 
-export type ColumnType = "string" | "number" | "boolean" | "date";
+export type ColumnType = "string" | "number" | "boolean" | "date" | "array";
 
 export interface Header<T> {
   label: string;
-  key: keyof T;
+  key: keyof T | string;
   type: ColumnType;
+  subKey?: string;
 }
 
 export interface User {
@@ -17,15 +18,13 @@ export interface User {
   birthdate?: Date;
   email: string;
   phoneNumber?: string;
-  gender?: string;
+  gender?: Gender;
   password?: string;
   state?: boolean;
   registrationDate?: DateTime;
   lastLogin?: DateTime;
-  roleId: number;
-  roleName: string;
-  membershipId: number;
-  membershipName?: string;
+  role: Role;
+  membership: MembershipSummary;
   provider: string;
 }
 
@@ -37,6 +36,7 @@ export interface Gender {
 export interface Role {
   id: number;
   name: string;
+  permissions?: Permission[];
 }
 
 export interface Category {

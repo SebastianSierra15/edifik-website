@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { FaFilter, FaChevronDown } from "react-icons/fa";
-import { MdMap } from "react-icons/md";
-import { BiSolidBuildingHouse } from "react-icons/bi";
+import { useCallback } from "react";
+import { ChevronDown, SlidersHorizontal, House, Map } from "lucide-react";
+import clsx from "clsx";
 
 type FilterMapControlsProps = {
   filterOpen: boolean;
@@ -18,116 +17,54 @@ export default function FilterMapControls({
   showMap,
   setShowMap,
 }: FilterMapControlsProps) {
-  const [showMapButton, setShowMapButton] = useState(false);
-  const [isFilterVisible, setIsFilterVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      let scrollThreshold = 550;
-
-      if (window.matchMedia("(min-width: 640px)").matches) {
-        scrollThreshold = 400;
-      }
-      if (window.matchMedia("(min-width: 768px)").matches) {
-        scrollThreshold = 300;
-      }
-
-      if (showMap) {
-        setShowMapButton(true);
-        setFilterOpen(false);
-      } else {
-        if (window.scrollY > scrollThreshold) {
-          setShowMapButton(true);
-        } else {
-          setShowMapButton(false);
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [showMap]);
-
-  const handleToggleMap = () => {
-    setShowMap((prev) => !prev);
-    setIsFilterVisible(false);
-  };
-
-  const toggleFilterVisibility = () => {
-    setIsFilterVisible((prev) => !prev);
+  const toggleFilterVisibility = useCallback(() => {
     setFilterOpen((prev) => !prev);
-  };
+  }, [setFilterOpen]);
+
+  const handleToggleMap = useCallback(() => {
+    setShowMap((prev) => !prev);
+    setFilterOpen(false);
+  }, [setShowMap]);
 
   return (
     <>
-      <div
-        className={`flex items-center px-4 sm:px-20 gap-4 ${
-          showMap ? "justify-end my-4 hidden" : "justify-between mt-4"
-        }`}
-      >
+      <div className="flex items-center gap-4 px-4 sm:px-20 mt-4 justify-between">
         <button
           onClick={toggleFilterVisibility}
-          className={`flex items-center space-x-2 px-6 py-2 bg-transparent border border-premium-borderColor dark:border-premium-borderColorHover rounded-full hover:bg-premium-backgroundLight dark:hover:bg-premium-backgroundDark transition-colors whitespace-nowrap ${
-            showMap ? "hidden" : "block"
-          }`}
+          className="flex items-center space-x-2 whitespace-nowrap rounded-full border border-premium-borderColor bg-transparent px-6 py-2 transition-colors hover:bg-premium-backgroundLight dark:border-premium-borderColorHover dark:hover:bg-premium-backgroundDark"
         >
           <span className="text-premium-textPrimary dark:text-premium-textPrimary">
             Filtro
           </span>
-          <FaFilter className="text-premium-textPrimary dark:text-premium-textPrimary" />
-          <FaChevronDown
-            className={`${
-              isFilterVisible ? "rotate-180" : ""
-            } transition-transform duration-300 text-premium-textPrimary dark:text-premium-textPrimary`}
+          <SlidersHorizontal className="w-4 h-4 text-premium-textPrimary dark:text-premium-textPrimary" />
+          <ChevronDown
+            className={clsx(
+              "text-premium-textPrimary transition-transform duration-300 dark:text-premium-textPrimary",
+              filterOpen && "rotate-180"
+            )}
           />
         </button>
 
         <button
-          className="flex items-center space-x-2 px-6 py-2 rounded-full bg-transparent border border-premium-borderColor dark:border-premium-borderColorHover hover:bg-premium-backgroundLight dark:hover:bg-premium-backgroundDark transition-colors whitespace-nowrap"
           onClick={handleToggleMap}
+          className="flex items-center space-x-2 whitespace-nowrap rounded-full border border-premium-borderColor bg-transparent px-6 py-2 transition-colors hover:bg-premium-backgroundLight dark:border-premium-borderColorHover dark:hover:bg-premium-backgroundDark"
         >
           <span className="text-premium-textPrimary dark:text-premium-textPrimary">
             {showMap ? "Propiedades" : "Mapa"}
           </span>
           {showMap ? (
-            <BiSolidBuildingHouse
+            <House
               size={18}
               className="text-premium-textPrimary dark:text-premium-textPrimary"
             />
           ) : (
-            <MdMap
+            <Map
               size={18}
               className="text-premium-textPrimary dark:text-premium-textPrimary"
             />
           )}
         </button>
       </div>
-
-      {showMapButton && (
-        <button
-          className={`fixed px-4 right-6 z-50 py-3 mt-24 text-sm rounded-full bg-premium-background dark:bg-premium-backgroundDark shadow-lg hover:bg-premium-backgroundLight dark:hover:bg-premium-backgroundDark transition-colors border border-premium-borderColor dark:border-premium-borderColorHover flex items-center space-x-2 ${
-            showMap ? "bottom-4 lg:top-0 lg:bottom-auto" : "top-6"
-          }`}
-          onClick={handleToggleMap}
-        >
-          <span className="text-premium-textPrimary dark:text-premium-textPrimary">
-            {showMap ? "Propiedades" : "Mapa"}
-          </span>
-          {showMap ? (
-            <BiSolidBuildingHouse
-              size={18}
-              className="text-premium-textPrimary dark:text-premium-textPrimary"
-            />
-          ) : (
-            <MdMap
-              size={18}
-              className="text-premium-textPrimary dark:text-premium-textPrimary"
-            />
-          )}
-        </button>
-      )}
     </>
   );
 }

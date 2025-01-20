@@ -1,17 +1,17 @@
 export default function ProjectCardSkeleton() {
   return (
-    <div className="bg-transparent dark:bg-transparent rounded-lg transform transition-transform hover:scale-105 duration-300">
+    <div className="transform rounded-lg bg-transparent transition-transform duration-300 hover:scale-105 dark:bg-transparent">
       <div
-        className={`relative max-w-xs shadow-premium-secondary dark:shadow-white rounded-lg overflow-hidden bg-premium-secondary dark:bg-premium-secondaryDark cursor-pointer shadow-md dark:shadow-md h-[370px]`}
+        className={`relative h-[370px] max-w-xs cursor-pointer overflow-hidden rounded-lg bg-gray-300 shadow-md dark:bg-gray-700`}
       >
-        <div className="relative w-full h-[80%] bg-premium-backgroundLight dark:bg-premium-backgroundDark animate-pulse"></div>
+        <div className="relative h-[80%] w-full animate-pulse bg-gray-200 dark:bg-gray-600"></div>
 
-        <div className="absolute top-2 left-2 bg-premium-borderColor dark:bg-premium-borderColorHover text-white text-sm px-2 py-1 rounded-full w-20 h-6 animate-pulse"></div>
+        <div className="absolute left-2 top-2 h-6 w-20 animate-pulse rounded-full bg-gray-300 dark:bg-gray-700"></div>
 
-        <div className="px-2 pt-16 pb-2 z-20 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-premium-secondaryDark dark:from-black via-premium-secondaryDark dark:via-gray-800 to-transparent">
-          <div className="w-3/4 h-4 bg-premium-backgroundLight dark:bg-premium-backgroundDark rounded animate-pulse mb-2"></div>
-          <div className="w-1/2 h-3 bg-premium-backgroundLight dark:bg-premium-backgroundDark rounded animate-pulse mb-1"></div>
-          <div className="w-1/4 h-3 bg-premium-backgroundLight dark:bg-premium-backgroundDark rounded animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-gray-800 via-gray-700 to-transparent px-2 pb-2 pt-16">
+          <div className="mb-2 h-4 w-3/4 animate-pulse rounded bg-gray-200 dark:bg-gray-600"></div>
+          <div className="mb-1 h-3 w-1/2 animate-pulse rounded bg-gray-200 dark:bg-gray-600"></div>
+          <div className="h-3 w-1/4 animate-pulse rounded bg-gray-200 dark:bg-gray-600"></div>
         </div>
       </div>
     </div>

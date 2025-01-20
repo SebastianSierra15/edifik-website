@@ -29,7 +29,7 @@ export default function useDarkMode() {
 
   const applyTheme = (newTheme: Theme) => {
     const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+      "(prefers-color-scheme: dark)",
     ).matches;
     const themeToApply =
       newTheme === "auto" ? (prefersDark ? "dark" : "light") : newTheme;

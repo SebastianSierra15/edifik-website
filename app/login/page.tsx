@@ -1,12 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FaGoogle, FaFacebook, FaApple } from "react-icons/fa";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
+import GoogleIcon from "../ui/icons/googleIcon";
+import FacebookIcon from "../ui/icons/facebookIcon";
+import AppleIcon from "../ui/icons/appleIcon";
+import { Eye } from "lucide-react";
+
+const EyeOff = dynamic(() => import("lucide-react").then((mod) => mod.EyeOff));
+const Info = dynamic(() => import("lucide-react").then((mod) => mod.Info));
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,24 +57,24 @@ export default function Page() {
   };
 
   return (
-    <div className="flex justify-center items-center mt-10 md:mt-0 h-screen w-full bg-[radial-gradient(rgba(12,12,12,0.171)_2px,transparent_0)] bg-[length:30px_30px] bg-[position:-5px_-5px] bg-white">
+    <div className="mt-10 flex h-screen w-full items-center justify-center bg-white bg-[radial-gradient(rgba(12,12,12,0.171)_2px,transparent_0)] bg-[length:30px_30px] bg-[position:-5px_-5px] md:mt-0">
       <section
         id="back-div"
-        className="rounded-2xl border border-gray-200 shadow-lg bg-gray-50 p-8"
+        className="rounded-2xl border border-gray-200 bg-gray-50 p-8 shadow-lg"
       >
-        <h1 className="text-2xl mb-2 font-bold text-center cursor-default text-gray-900">
+        <h1 className="mb-2 cursor-default text-center text-2xl font-bold text-gray-900">
           Bienvenido a EdifiK
         </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-8">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div>
-            <label htmlFor="email" className="block mb-2 text-base">
+            <label htmlFor="email" className="mb-2 block text-base">
               Correo electrónico
             </label>
 
             <input
               id="email"
-              className={`border p-3 shadow-md rounded-lg w-full focus:ring-2 focus:ring-gray-800 transition transform hover:scale-105 duration-300 ${
+              className={`w-full transform rounded-lg border p-3 shadow-md transition duration-300 hover:scale-105 focus:ring-2 focus:ring-gray-800 ${
                 emailError || emptyFieldError
                   ? "border-red-500 bg-red-50"
                   : "border-gray-500"
@@ -81,22 +86,22 @@ export default function Page() {
             />
 
             {emailError && (
-              <div className="text-red-500 text-sm flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-5 h-5" />
+              <div className="mt-1 flex items-center gap-2 text-sm text-red-500">
+                <Info className="h-5 w-5" />
                 {emailError}
               </div>
             )}
           </div>
 
-          <div className="transition transform hover:scale-105 duration-300">
-            <label htmlFor="password" className="block mb-2 text-base">
+          <div className="transform transition duration-300 hover:scale-105">
+            <label htmlFor="password" className="mb-2 block text-base">
               Contraseña
             </label>
 
             <div className="relative">
               <input
                 id="password"
-                className={`border p-3 shadow-md rounded-lg w-full focus:ring-2 focus:ring-gray-800 ${
+                className={`w-full rounded-lg border p-3 shadow-md focus:ring-2 focus:ring-gray-800 ${
                   passwordError || emptyFieldError
                     ? "border-red-500 bg-red-50"
                     : "border-gray-500"
@@ -109,47 +114,47 @@ export default function Page() {
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute inset-y-0 right-0 flex items-center text-gray-600 hover:bg-gray-300 hover:border-r-gray-500 hover:border-r hover:rounded-r-lg hover:border-t hover:border-t-gray-500 hover:border-b hover:border-b-gray-500"
+                className="absolute inset-y-0 right-0 flex items-center text-gray-600 hover:rounded-r-lg hover:border-b hover:border-r hover:border-t hover:border-b-gray-500 hover:border-r-gray-500 hover:border-t-gray-500 hover:bg-gray-300"
               >
                 {showPassword ? (
-                  <AiFillEyeInvisible className="w-5 h-5 mr-2 ml-2" />
+                  <EyeOff className="ml-2 mr-2 h-5 w-5" />
                 ) : (
-                  <AiFillEye className="w-5 h-5 mr-2 ml-2" />
+                  <Eye className="ml-2 mr-2 h-5 w-5" />
                 )}
               </button>
             </div>
 
             {passwordError && (
-              <div className="text-red-500 text-sm flex items-center gap-2 mt-1">
-                <AiOutlineExclamationCircle className="w-5 h-5" />
+              <div className="mt-1 flex items-center gap-2 text-sm text-red-500">
+                <Info className="h-5 w-5" />
                 {passwordError}
               </div>
             )}
           </div>
 
           {emptyFieldError && (
-            <div className="text-red-500 text-sm flex items-center gap-2 mt-1">
-              <AiOutlineExclamationCircle className="w-5 h-5" />
+            <div className="mt-1 flex items-center gap-2 text-sm text-red-500">
+              <Info className="h-5 w-5" />
               {emptyFieldError}
             </div>
           )}
 
           <Link
             href="/login/forgot-password"
-            className="text-blue-500 text-sm transition hover:underline"
+            className="text-sm text-blue-500 transition hover:underline"
           >
             ¿Olvidaste tu contraseña?
           </Link>
 
           <button
-            className="w-full p-3 mt-4 text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:scale-105 transition transform duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-4 w-full transform rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 p-3 text-white shadow-lg transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500"
             type="submit"
           >
             Continuar
           </button>
         </form>
 
-        <div className="flex flex-col mt-4 text-sm text-center">
+        <div className="mt-4 flex flex-col text-center text-sm">
           <p>
             ¿No tienes cuenta?{" "}
             <Link
@@ -161,22 +166,22 @@ export default function Page() {
           </p>
         </div>
 
-        <div id="third-party-auth" className="flex justify-center gap-4 mt-5">
+        <div id="third-party-auth" className="mt-5 flex justify-center gap-4">
           <button
-            className="p-2 rounded-lg hover:scale-125 transition transform duration-300 shadow-lg"
+            className="transform rounded-lg p-2 shadow-lg transition duration-300 hover:scale-125"
             onClick={async () => {
               await signIn("google", { callbackUrl: "/admin" });
             }}
           >
-            <FaGoogle className="w-6 h-6 text-red-500" />
+            <GoogleIcon className="h-6 w-6" />
           </button>
 
-          <button className="p-2 rounded-lg hover:scale-125 transition transform duration-300 shadow-lg">
-            <FaFacebook className="w-6 h-6 text-blue-600" />
+          <button className="transform rounded-lg p-2 shadow-lg transition duration-300 hover:scale-125">
+            <FacebookIcon className="h-6 w-6" />
           </button>
 
-          <button className="p-2 rounded-lg hover:scale-125 transition transform duration-300 shadow-lg">
-            <FaApple className="w-6 h-6 text-black" />
+          <button className="transform rounded-lg p-2 shadow-lg transition duration-300 hover:scale-125">
+            <AppleIcon className="h-6 w-6" />
           </button>
         </div>
 

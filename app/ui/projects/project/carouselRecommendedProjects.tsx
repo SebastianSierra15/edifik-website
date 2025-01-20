@@ -16,7 +16,7 @@ export default function CarouselRecommendedProjects({
   const visibleCardsMap = { base: 2, sm: 3, lg: 4, xl: 5 };
 
   const [visibleCards, setVisibleCards] = useState(
-    visibleCardsMap.xl // Default to xl screen
+    visibleCardsMap.xl, // Default to xl screen
   );
 
   // Determina cuántas tarjetas mostrar según el ancho de la pantalla
@@ -54,10 +54,10 @@ export default function CarouselRecommendedProjects({
       <div className="relative flex items-center overflow-hidden">
         {/* Botón Prev */}
         <button
-          className={`absolute left-2 md:left-4 z-10 p-3 rounded-full shadow-md transition ${
+          className={`absolute left-2 z-10 rounded-full p-3 shadow-md transition md:left-4 ${
             currentIndex === 0
               ? "bg-gray-300 text-gray-500"
-              : "bg-primary text-white hover:bg-primary-dark"
+              : "bg-primary hover:bg-primary-dark text-white"
           }`}
           onClick={handlePrev}
           aria-label="Previous"
@@ -69,7 +69,7 @@ export default function CarouselRecommendedProjects({
         {/* Carrusel */}
         <div className="w-full overflow-hidden">
           <div
-            className="flex transition-transform duration-500 ease-in-out py-4"
+            className="flex py-4 transition-transform duration-500 ease-in-out"
             style={{
               transform: `translateX(-${(currentIndex * 100) / visibleCards}%)`, // Calcula la posición
               width: `${(projects.length * 100) / visibleCards}%`, // Calcula el ancho total del carrusel
@@ -103,10 +103,10 @@ export default function CarouselRecommendedProjects({
 
         {/* Botón Next */}
         <button
-          className={`absolute right-2 md:right-4 z-10 p-3 rounded-full shadow-md transition ${
+          className={`absolute right-2 z-10 rounded-full p-3 shadow-md transition md:right-4 ${
             currentIndex + visibleCards >= totalProjects
               ? "bg-gray-300 text-gray-500"
-              : "bg-primary text-white hover:bg-primary-dark"
+              : "bg-primary hover:bg-primary-dark text-white"
           }`}
           onClick={handleNext}
           aria-label="Next"
