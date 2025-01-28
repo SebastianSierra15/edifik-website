@@ -13,8 +13,8 @@ export async function POST(req: Request) {
     if (!file || !folderPath) {
       console.error("Faltan el archivo o la ruta de la carpeta.");
       return NextResponse.json(
-        { error: "File or folder path is missing" },
-        { status: 400 },
+        { error: "Falta la ruta del archivo o carpeta" },
+        { status: 400 }
       );
     }
 
@@ -42,14 +42,14 @@ export async function POST(req: Request) {
     const cloudFrontUrl = `https://${process.env.CLOUDFRONT_DOMAIN}/${fileKey}`;
 
     return NextResponse.json({
-      message: "Image successfully uploaded and converted to .webp",
+      message: "Imagen cargada con éxito y convertida a .webp",
       url: cloudFrontUrl,
     });
   } catch (error) {
-    console.error("Error uploading and converting image:", error);
+    console.error("Error al cargar y convertir la imagen:", error);
     return NextResponse.json(
-      { error: "Error uploading and converting image." },
-      { status: 500 },
+      { error: "Error al cargar y convertir la imagen." },
+      { status: 500 }
     );
   }
 }

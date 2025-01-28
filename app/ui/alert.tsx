@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CircleCheck, TriangleAlert, CircleX, Info, X } from "lucide-react";
 
 interface AlertProps {

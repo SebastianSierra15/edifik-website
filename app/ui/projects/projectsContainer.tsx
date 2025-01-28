@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { ProjectSummary } from "@/lib/definitios";
-import { useProjectsMetadata } from "@/app/hooks/projects/useProjectsMetadata";
+import { useProjectsMetadata } from "@/app/hooks/projects/Metadata/useProjectsMetadata";
 import ProjectFilter from "@/app/ui/projects/filter/projectFilter";
 import ProjectCard from "@/app/ui/projects/projectCard";
 import ProjectCardSkeleton from "./skeleton/projectCardSkeleton";
@@ -24,6 +24,8 @@ interface ProjectsContainerProps {
   >;
   isProperty: boolean;
   setBounds: (bounds: google.maps.LatLngBounds | null) => void;
+  onDelete: (id: number, name: string) => void;
+  permission?: boolean;
 }
 
 export default function ProjectsContainer({
@@ -40,6 +42,8 @@ export default function ProjectsContainer({
   setSelectedButtons,
   isProperty,
   setBounds,
+  onDelete,
+  permission,
 }: ProjectsContainerProps) {
   const skeletonCount = 8;
 
@@ -60,6 +64,7 @@ export default function ProjectsContainer({
           )}
         >
           <ProjectFilter
+            isProperty={isProperty}
             selectedButtons={selectedButtons}
             setSelectedButtons={setSelectedButtons}
             setFilterOpen={setFilterOpen}
@@ -73,7 +78,12 @@ export default function ProjectsContainer({
 
       {showMap ? (
         <div className="relative h-screen w-full transition-transform duration-300">
-          <ProjectsMap projects={projects} setBounds={setBounds} />
+          <ProjectsMap
+            projects={projects}
+            setBounds={setBounds}
+            showMap={showMap}
+            onDelete={onDelete}
+          />
         </div>
       ) : (
         <div
@@ -111,11 +121,13 @@ export default function ProjectsContainer({
                     <div className="w-full max-w-xs">
                       <ProjectCard
                         key={project.id}
+                        id={project.id}
                         images={project.projectMedia}
                         name={project.name}
                         location={`${project.city.name}, ${project.city.departament.name}`}
-                        price={project.price}
+                        price={project.price || 0}
                         area={project.totalArea}
+                        username={project.username}
                         isFromMap={false}
                         showActions={true}
                         onClose={null}
@@ -137,6 +149,8 @@ export default function ProjectsContainer({
                                 .toLowerCase()
                                 .replace(/\s+/g, "-")}`
                         }
+                        onDelete={onDelete}
+                        permission={permission}
                       />
                     </div>
                   </div>

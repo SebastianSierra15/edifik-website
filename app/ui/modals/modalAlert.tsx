@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import clsx from "clsx";
 import { Info } from "lucide-react";
 
 interface ModalAlertProps {
@@ -40,9 +41,10 @@ export default function ModalAlert({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div
-        className={`transform transition-transform duration-300 ${
+        className={clsx(
+          "transform transition-transform duration-300 w-96 rounded-lg bg-premium-backgroundAlt p-6 shadow-lg dark:bg-premium-backgroundDark",
           isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
-        } w-96 rounded-lg bg-premium-backgroundAlt p-6 shadow-lg dark:bg-premium-backgroundDark`}
+        )}
       >
         <div className="flex flex-col items-center text-center">
           <Info className="h-10 w-10 text-premium-primary dark:text-premium-primaryLight" />

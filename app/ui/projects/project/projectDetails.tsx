@@ -144,8 +144,8 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
         {
           label: "Ascensores",
           value:
-            project.elevators && project.elevators > 0
-              ? project.elevators.toString()
+            project.elevator && project.elevator > 0
+              ? project.elevator.toString()
               : null,
           icon: <PiElevatorFill />,
         },
@@ -229,12 +229,12 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
   ];
 
   const [openGroups, setOpenGroups] = useState<boolean[]>(
-    new Array(details.length).fill(true),
+    new Array(details.length).fill(true)
   );
 
   const toggleGroup = (index: number) => {
     setOpenGroups((prev) =>
-      prev.map((isOpen, i) => (i === index ? !isOpen : isOpen)),
+      prev.map((isOpen, i) => (i === index ? !isOpen : isOpen))
     );
   };
 
@@ -294,7 +294,7 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
                           label={item.label}
                           value={item.value}
                         />
-                      ),
+                      )
                   )}
                 </div>
               </motion.div>

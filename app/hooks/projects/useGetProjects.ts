@@ -10,6 +10,7 @@ interface UseProjectsOptions {
   currentProjects: ProjectSummary[];
   projectTypeId: number | null;
   bounds?: google.maps.LatLngBounds | null;
+  showMap: boolean;
 }
 
 export function useGetProjects({
@@ -18,12 +19,14 @@ export function useGetProjects({
   currentProjects,
   projectTypeId,
   bounds = null,
+  showMap,
 }: UseProjectsOptions) {
   const [projects, setProjects] = useState<ProjectSummary[]>(currentProjects);
   const [totalEntries, setTotalEntries] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorProjects, setErrorProjects] = useState<string | null>(null);
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
     setSearchTerm(term);
@@ -36,9 +39,11 @@ export function useGetProjects({
   }, []);
 
   const fetchProjects = useCallback(
-    async (isLoadMore = false, page = 1) => {
+    async (isLoadMore = false, page = 1, bounds?: google.maps.LatLngBounds) => {
       if (isLoading) return;
       setIsLoading(true);
+      const controller = new AbortController();
+      const signal = controller.signal;
 
       try {
         const params = new URLSearchParams({
@@ -61,7 +66,10 @@ export function useGetProjects({
           params.append("maxLng", bounds.getNorthEast().lng().toString());
         }
 
-        const response = await fetch(`/api/projects?${params.toString()}`);
+        const response = await fetch(`/api/projects?${params.toString()}`, {
+          signal,
+        });
+
         if (!response.ok) {
           throw new Error(`Error fetching projects: ${response.statusText}`);
         }
@@ -81,24 +89,38 @@ export function useGetProjects({
         );
 
         setTotalEntries(data.totalEntries);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
+      } catch (error: any) {
+        if (error.name !== "AbortError") {
+          setErrorProjects(error.message || "Error desconocido");
+        }
       } finally {
         setIsLoading(false);
       }
+
+      return () => controller.abort();
     },
     [entriesPerPage, isLoading, searchTerm, selectedButtons, projectTypeId]
   );
 
   useEffect(() => {
-    fetchProjects();
-  }, [searchTerm, selectedButtons, projectTypeId, bounds]);
+    fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
+  }, [searchTerm, selectedButtons, projectTypeId, showMap, bounds]);
 
   const fetchMoreProjects = useCallback(() => {
     const nextPage = currentPage + 1;
     setCurrentPage(nextPage);
-    fetchProjects(true, nextPage);
+    fetchProjects(
+      true,
+      nextPage,
+      showMap && bounds !== null ? bounds : undefined
+    );
   }, [currentPage, fetchProjects]);
+
+  const refreshProjects = useCallback(() => {
+    setProjects([]);
+    setCurrentPage(1);
+    fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
+  }, [fetchProjects, showMap, bounds]);
 
   return {
     projects,
@@ -106,6 +128,8 @@ export function useGetProjects({
     fetchMoreProjects,
     debouncedSearch,
     resetProjects,
+    refreshProjects,
     isLoading,
+    errorProjects,
   };
 }

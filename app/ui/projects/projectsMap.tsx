@@ -1,10 +1,13 @@
 "use client";
 
-import { GoogleMap, useLoadScript } from "@react-google-maps/api";
 import { memo, useMemo, useState, useEffect, useRef } from "react";
+import { GoogleMap, useLoadScript } from "@react-google-maps/api";
 import { Plus, Minus, LocateFixed } from "lucide-react";
 import { ProjectSummary } from "@/lib/definitios";
 import ProjectCard from "./projectCard";
+import Loader from "../loader";
+
+const GOOGLE_MAPS_LIBRARIES: ("places" | "marker")[] = ["places", "marker"];
 
 const containerStyle = {
   width: "100%",
@@ -16,9 +19,13 @@ const DEFAULT_CENTER = { lat: 4.5709, lng: -74.2973 };
 const ProjectsMap = ({
   projects,
   setBounds,
+  showMap,
+  onDelete,
 }: {
   projects: ProjectSummary[];
   setBounds: (bounds: google.maps.LatLngBounds | null) => void;
+  showMap: boolean;
+  onDelete: (id: number, name: string) => void;
 }) => {
   const [selectedProject, setSelectedProject] = useState<ProjectSummary | null>(
     null
@@ -36,14 +43,18 @@ const ProjectsMap = ({
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    libraries: ["marker", "places"],
+    libraries: GOOGLE_MAPS_LIBRARIES,
   });
 
   const handleBoundsChanged = () => {
+    if (!showMap) {
+      return;
+    }
+
     if (mapRef.current) {
-      const bounds = mapRef.current.getBounds();
-      if (bounds) {
-        setBounds(bounds);
+      const newBounds = mapRef.current.getBounds();
+      if (newBounds) {
+        setBounds(newBounds);
       }
     }
   };
@@ -83,7 +94,6 @@ const ProjectsMap = ({
       clearMarkers();
       addMarkers(mapRef.current);
     }
-    console.log(projects);
   }, [validProjects, userLocation, isLoaded, isMapLoaded]);
 
   const clearMarkers = () => {
@@ -102,7 +112,7 @@ const ProjectsMap = ({
       const contentDiv = document.createElement("div");
       contentDiv.innerHTML = `
       <div class="bg-premium-primary hover:bg-premium-primaryDark hover:scale-105 focus:scale-105 focus:bg-premium-primaryDark text-white font-semibold py-1 px-3 rounded-full text-sm transition-all duration-300 ease-in-out">
-        $${project.price.toLocaleString()}
+        $${project.price?.toLocaleString()}
       </div>
     `;
 
@@ -170,8 +180,8 @@ const ProjectsMap = ({
 
   if (!isLoaded) {
     return (
-      <div className="flex justify-center items-center w-full h-full bg-gray-100">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      <div className="flex justify-center items-center w-full h-full">
+        <Loader size={48} />
       </div>
     );
   }
@@ -221,16 +231,18 @@ const ProjectsMap = ({
       {selectedProject && (
         <div className="absolute left-1/2 top-1/3 sm:top-4 z-20 w-72 -translate-x-1/2 transform rounded-lg bg-premium-backgroundLight shadow-lg sm:left-auto sm:right-4 sm:translate-x-0 dark:bg-premium-backgroundDark">
           <ProjectCard
+            id={selectedProject.id}
             images={selectedProject.projectMedia}
             name={selectedProject.name}
             location={`${selectedProject.city.name}, ${selectedProject.city.departament.name}`}
-            price={selectedProject.price}
+            price={selectedProject.price || undefined}
             area={selectedProject.totalArea || 0}
             isFromMap={true}
             showActions={false}
             onClose={handleCloseCard}
-            url={`/admin/proyectos/${selectedProject.id}`}
-            urlEdit=""
+            url={`/inmobiliaria/${selectedProject.id}`}
+            urlEdit={`/admin/propiedades/${selectedProject.id}`}
+            onDelete={onDelete}
           />
         </div>
       )}

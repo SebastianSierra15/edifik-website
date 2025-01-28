@@ -63,6 +63,7 @@ export default function RoleModal({
             name="name"
             value={role.name || ""}
             placeholder="Nombre del rol"
+            maxLength={50}
             onChange={handleChange}
             error={errors.nameError}
             flag={flag}
@@ -88,15 +89,17 @@ export default function RoleModal({
           </div>
 
           <FormSelect
-            label="Asignar perimso"
+            label="Asignar permiso"
             name="addPermission"
             value={""}
-            options={permissions.filter(
-              (perm) =>
-                !role.permissions?.some(
-                  (assignedPerm) => assignedPerm.id === perm.id
-                )
-            )}
+            options={permissions
+              .filter(
+                (perm) =>
+                  !role.permissions?.some(
+                    (assignedPerm) => assignedPerm.id === perm.id
+                  )
+              )
+              .map((perm) => ({ id: perm.id, name: perm.name }))}
             onChange={handleChange}
             error={errors.permissionsError}
             flag={flag}

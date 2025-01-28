@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import useLocations from "@/app/hooks/useLocations";
-import useBasicMetadata from "@/app/hooks/useBasicMetadata";
-import useImageTypes from "@/app/hooks/useImageTypes";
-import { useUploadImages } from "@/app/hooks/useUploadImages";
-import { useCreateProject } from "@/app/hooks/projects/useCreateProject";
-import { useInsertProjectMedia } from "@/app/hooks/useInsertProjectMedia";
+import useLocations from "@/app/hooks/projects/Metadata/location/useLocations";
+import useBasicMetadata from "@/app/hooks/projects/Metadata/useBasicMetadata";
+import useImageTypes from "@/app/hooks/projects/Metadata/imageTypes/useImageTypes";
+import { useUploadImages } from "@/app/hooks/s3/useUploadImagesS3";
+import { useCreateProject } from "@/app/hooks/projects/useProjectApi";
+import { useInsertProjectMedia } from "@/app/hooks/projects/Metadata/projectMedia/useInsertProjectMedia";
 import ProgressBar from "@/app/ui/projects/createEditProject/progressBar";
 import BasicProjectForm from "@/app/ui/projects/createEditProject/basicProjectForm";
 import LocationProjectForm from "@/app/ui/projects/createEditProject/locationProjectForm";

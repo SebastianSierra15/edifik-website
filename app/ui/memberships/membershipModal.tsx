@@ -7,13 +7,16 @@ import ModalFooter from "../modals/modalFooter";
 const FormInput = dynamic(() => import("@/app/ui/modals/formInput"), {
   ssr: false,
 });
+const FormTextArea = dynamic(() => import("@/app/ui/modals/formTextArea"), {
+  ssr: false,
+});
 
 interface MembershipModalProps {
   show: boolean;
   onClose: () => void;
   onSubmit: (e: React.FormEvent) => void;
   handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   membership: Membership;
   errors: {
@@ -57,18 +60,20 @@ export default function MembershipModal({
             name="name"
             value={membership.name || ""}
             placeholder="Nombre de la membresía"
+            maxLength={50}
             onChange={handleChange}
             error={errors.nameError}
           />
 
-          <FormInput
+          <FormTextArea
             label="Descripción"
-            type="text"
             name="benefits"
             value={membership.benefits || ""}
             placeholder="Descripción de la membresía"
             onChange={handleChange}
             error={errors.benefitsError}
+            rows={3}
+            maxLength={950}
           />
 
           <div className="grid grid-cols-2 gap-4">
@@ -79,6 +84,7 @@ export default function MembershipModal({
               value={membership.price || ""}
               placeholder="Precio"
               onChange={handleChange}
+              min={0}
             />
 
             <FormInput
@@ -88,44 +94,52 @@ export default function MembershipModal({
               value={membership.projectsFeatured || ""}
               placeholder="Cantidad de propiedades destacadas"
               onChange={handleChange}
+              min={0}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <FormInput
               label="Cantidad máxima de propiedades"
-              type="nmber"
+              type="number"
               name="maxProjects"
               value={membership.maxProjects || ""}
               placeholder="Máximo de propiedades permitidas"
               onChange={handleChange}
+              min={0}
             />
 
             <FormInput
               label="Descuento 3 meses (%)"
-              type="nmber"
+              type="number"
               name="discountThreeMonths"
               value={membership.discountThreeMonths || ""}
               placeholder="Descuento en %"
               onChange={handleChange}
+              min={0}
+              max={100}
             />
 
             <FormInput
               label="Descuento 6 meses (%)"
-              type="nmber"
+              type="number"
               name="discountSixMonths"
               value={membership.discountSixMonths || ""}
               placeholder="Descuento en %"
               onChange={handleChange}
+              min={0}
+              max={100}
             />
 
             <FormInput
               label="Descuento 12 meses (%)"
-              type="nmber"
+              type="number"
               name="discountTwelveMonths"
               value={membership.discountTwelveMonths || ""}
               placeholder="Descuento en %"
               onChange={handleChange}
+              min={0}
+              max={100}
             />
           </div>
         </form>

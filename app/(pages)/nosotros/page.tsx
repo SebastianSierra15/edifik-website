@@ -1,10 +1,10 @@
 import Image from "next/image";
-import Timeline from "../../ui/nosotros/timeline";
-import TeamSection from "../../ui/nosotros/teamSection";
-import StatsSection from "../../ui/nosotros/statsSection";
-import VisionMisionSection from "../../ui/nosotros/visionMisionSection";
-import SocialResponsibilitySection from "../../ui/nosotros/socialResponsibilitySection";
-import CertificationCard from "../../ui/nosotros/certificationCard";
+import Timeline from "../../ui/about/timeline";
+import TeamSection from "../../ui/about/teamSection";
+import StatsSection from "../../ui/about/statsSection";
+import VisionMisionSection from "../../ui/about/visionMisionSection";
+import SocialResponsibilitySection from "../../ui/about/socialResponsibilitySection";
+import CertificationCard from "../../ui/about/certificationCard";
 
 export default function AboutUsPage() {
   return (

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { AiOutlineExclamationCircle } from "react-icons/ai"; // Icono de advertencia
+import clsx from "clsx";
 import Link from "next/link";
+import FormErrorMessage from "@/app/ui/modals/formErrorMessage";
 
 export default function Page() {
   const router = useRouter();
@@ -53,28 +54,21 @@ export default function Page() {
 
                 <input
                   id="email"
-                  className={`w-full transform rounded-lg border p-3 shadow-md transition duration-300 hover:scale-105 focus:ring-2 focus:ring-gray-800 ${
+                  className={clsx(
+                    "w-full transform rounded-lg border p-3 shadow-md transition duration-300 hover:scale-105 focus:ring-2 focus:ring-gray-800",
                     emailError || emptyFieldError
                       ? "border-red-500 bg-red-50"
                       : "border-gray-500"
-                  }`}
+                  )}
                   type="text"
                   placeholder="tu-email@ejemplo.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
 
-                {emailError && (
-                  <div className="mt-1 flex items-center gap-2 text-sm text-red-500">
-                    <AiOutlineExclamationCircle className="h-5 w-5" />
-                    {emailError}
-                  </div>
-                )}
+                {emailError && <FormErrorMessage error={emailError} />}
                 {emptyFieldError && (
-                  <div className="mt-1 flex items-center gap-2 text-sm text-red-500">
-                    <AiOutlineExclamationCircle className="h-5 w-5" />
-                    {emptyFieldError}
-                  </div>
+                  <FormErrorMessage error={emptyFieldError} />
                 )}
               </div>
 

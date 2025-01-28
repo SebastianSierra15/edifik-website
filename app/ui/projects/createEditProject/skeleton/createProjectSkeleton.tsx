@@ -1,6 +1,6 @@
 export default function CreateProjectSkeleton() {
   return (
-    <div className="container mx-auto max-w-2xl animate-pulse rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
+    <div className="container mx-auto max-w-3xl w-full animate-pulse rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
       <div className="mb-10 text-center">
         <div className="mx-auto h-8 w-48 rounded bg-gray-300 dark:bg-gray-700"></div>
       </div>
@@ -23,11 +23,6 @@ export default function CreateProjectSkeleton() {
       <div className="mb-6">
         <div className="mb-4 h-6 w-48 rounded bg-gray-300 dark:bg-gray-700"></div>
         <div className="h-32 w-full rounded bg-gray-300 dark:bg-gray-700"></div>
-      </div>
-
-      <div className="mt-4 flex items-center">
-        <div className="mr-2 h-5 w-5 rounded-full bg-gray-300 dark:bg-gray-700"></div>
-        <div className="h-6 w-48 rounded bg-gray-300 dark:bg-gray-700"></div>
       </div>
 
       <div className="mt-6 flex justify-end">

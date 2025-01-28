@@ -1,11 +1,15 @@
-import { AiOutlineDown, AiOutlineExclamationCircle } from "react-icons/ai";
-import ImageWithTag from "./ImageWithTag";
+import { useMemo, useCallback } from "react";
+import clsx from "clsx";
+import { ChevronDown } from "lucide-react";
 import { ImageType } from "@/lib/definitios";
+import ImageWithTag from "./ImageWithTag";
+import FormErrorMessage from "../../modals/formErrorMessage";
 
-type ImageUploadSectionProps = {
+interface ImageUploadSectionProps {
   imageType: ImageType;
+  category: string;
   expanded: boolean;
-  images: File[];
+  images: (File | string)[];
   tags: string[];
   descriptions: string[];
   error: string | null;
@@ -15,10 +19,11 @@ type ImageUploadSectionProps = {
   onRemoveImage: (index: number) => void;
   onTagChange: (index: number, tag: string) => void;
   onDescriptionChange: (index: number, description: string) => void;
-};
+}
 
 export default function ImageUploadSection({
   imageType,
+  category,
   expanded,
   images,
   tags,
@@ -31,31 +36,83 @@ export default function ImageUploadSection({
   onTagChange,
   onDescriptionChange,
 }: ImageUploadSectionProps) {
+  const handleRemoveImage = useCallback(
+    (index: number) => onRemoveImage(index),
+    [onRemoveImage]
+  );
+
+  const handleTagChange = useCallback(
+    (index: number, newTag: string) => {
+      onTagChange(index, newTag);
+    },
+    [onTagChange]
+  );
+
+  const handleDescriptionChange = useCallback(
+    (index: number, newDescription: string) => {
+      onDescriptionChange(index, newDescription);
+    },
+    [onDescriptionChange]
+  );
+
+  const imageList = useMemo(() => {
+    return images.map((file, index) => (
+      <ImageWithTag
+        key={`${imageType.name}-${index}`}
+        id={`${imageType.name}-${index}`}
+        file={typeof file === "string" ? file : URL.createObjectURL(file)}
+        tag={tags[index] || ""}
+        description={descriptions[index] || ""}
+        imageTypeId={imageType.id}
+        category={category}
+        onRemove={() => handleRemoveImage(index)}
+        onTagChange={(newTag) => handleTagChange(index, newTag)}
+        onDescriptionChange={(newDescription) =>
+          handleDescriptionChange(index, newDescription)
+        }
+        error={errors[`${imageType.name}-tag-${index}`]}
+        descriptionError={errors[`${imageType.name}-description-${index}`]}
+      />
+    ));
+  }, [
+    images,
+    tags,
+    descriptions,
+    errors,
+    handleRemoveImage,
+    handleTagChange,
+    handleDescriptionChange,
+  ]);
+
   return (
     <div
-      className={`dark:bg-premium-backgroundDarkAlt rounded-md bg-premium-backgroundAlt pb-1 hover:bg-premium-backgroundLight hover:dark:bg-premium-backgroundLight ${
+      className={clsx(
+        "rounded-md pb-1 transition bg-premium-backgroundDark hover:bg-premium-background dark:bg-premium-background dark:hover:bg-premium-backgroundLight",
         error ? "border border-red-500" : "border-none"
-      }`}
+      )}
     >
       <div
-        className="flex cursor-pointer items-center justify-between p-4"
+        className="flex flex-col cursor-pointer p-4 space-y-3"
         onClick={onToggleExpand}
       >
-        <h4 className="text-lg font-semibold text-premium-textPrimary">
-          {imageType.name}
-        </h4>
-        <AiOutlineDown
-          className={`${
-            expanded ? "rotate-180" : ""
-          } text-premium-textPrimary transition-transform duration-300 dark:text-premium-textSecondary`}
-        />
-      </div>
+        <div className="flex items-center justify-between">
+          <h4 className="text-lg font-semibold text-premium-textPrimary">
+            {imageType.name}
+          </h4>
+          <ChevronDown
+            className={clsx(
+              "transition-transform duration-300 text-premium-textPrimary dark:text-premium-textSecondary",
+              expanded && "rotate-180"
+            )}
+          />
+        </div>
 
-      {imageType.description && (
-        <p className="-mt-3 mb-4 cursor-pointer px-4 text-sm text-gray-600 dark:text-gray-400">
-          {imageType.description}
-        </p>
-      )}
+        {imageType.description && (
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            {imageType.description}
+          </p>
+        )}
+      </div>
 
       {expanded && (
         <div className="px-4 pb-4">
@@ -64,40 +121,19 @@ export default function ImageUploadSection({
             accept="image/*"
             multiple
             onChange={onImageChange}
-            className={`mt-2 w-full rounded-lg bg-premium-backgroundDark px-3 py-2 text-premium-textPrimary dark:bg-premium-background ${
+            className={clsx(
+              "mt-2 w-full rounded-lg px-3 py-2 text-premium-textPrimary",
               error ? "border-red-500" : "border-none"
-            }`}
+            )}
           />
           <p className="ml-2 mt-1 text-sm text-gray-600 dark:text-gray-400">
             {images.length} archivo(s) subido(s)
           </p>
 
-          {error && (
-            <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
-              <AiOutlineExclamationCircle className="h-5 w-5" />
-              {error}
-            </div>
-          )}
+          {error && <FormErrorMessage error={error} />}
 
-          <div className="mt-2 flex flex-wrap">
-            {images.map((file, index) => (
-              <ImageWithTag
-                key={index}
-                file={file}
-                tag={tags[index] || ""}
-                description={descriptions[index] || ""}
-                imageTypeId={imageType.id}
-                onRemove={() => onRemoveImage(index)}
-                onTagChange={(newTag) => onTagChange(index, newTag)}
-                onDescriptionChange={(newDescription) =>
-                  onDescriptionChange(index, newDescription)
-                }
-                error={errors[`${imageType.name}-tag-${index}`]}
-                descriptionError={
-                  errors[`${imageType.name}-description-${index}`]
-                }
-              />
-            ))}
+          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+            {imageList}
           </div>
         </div>
       )}

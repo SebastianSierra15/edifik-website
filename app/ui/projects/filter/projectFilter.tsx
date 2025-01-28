@@ -43,7 +43,8 @@ type Category =
   | "price"
   | "area";
 
-type ProjectFilterProps = {
+interface ProjectFilterProps {
+  isProperty: boolean;
   selectedButtons: Record<Category, number[]>;
   setSelectedButtons: React.Dispatch<
     React.SetStateAction<Record<Category, number[]>>
@@ -53,9 +54,10 @@ type ProjectFilterProps = {
   areaRange: { min: number; max: number };
   metadata: any;
   isLoading: boolean;
-};
+}
 
 const ProjectFilter = ({
+  isProperty,
   selectedButtons,
   setSelectedButtons,
   setFilterOpen,
@@ -254,17 +256,21 @@ const ProjectFilter = ({
 
           {/* Filters with sliders */}
           {[
-            {
-              label: "Precio",
-              icon: <DollarSign />,
-              value: selectedButtons.price[0] || 0,
-              min: priceRange.min || 0,
-              max: priceRange.max || 0,
-              step: 100000,
-              category: "price" as Category,
-              prefixText: "Desde",
-              suffixText: "COP",
-            },
+            ...(isProperty
+              ? [
+                  {
+                    label: "Precio",
+                    icon: <DollarSign />,
+                    value: selectedButtons.price[0] || 0,
+                    min: priceRange.min || 0,
+                    max: priceRange.max || 0,
+                    step: 100000,
+                    category: "price" as Category,
+                    prefixText: "Desde",
+                    suffixText: "COP",
+                  },
+                ]
+              : []),
             {
               label: "Área",
               icon: <Ruler />,

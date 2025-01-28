@@ -80,14 +80,14 @@ export interface Project {
   id: number;
   name: string;
   state: boolean;
-  price: number;
+  price?: number;
   totalArea: number;
   builtArea: number;
   freeHeight?: number;
   width?: number;
   length?: number;
   parkingSpots?: number;
-  elevators?: number;
+  elevator?: boolean;
   heavyParking?: number;
   availableUnits: number;
   bathrooms?: number;
@@ -118,8 +118,12 @@ export interface Project {
   membership: number;
   commonAreas: CommonArea[];
   user?: User;
+  username?: string;
+  residentialProjectId?: number;
+  warehouseProjectId?: number;
   nearbyServices: NearbyService[];
   projectMedia: ProjectMedia[];
+  media?: Media[];
 }
 
 export interface projectType {
@@ -187,11 +191,13 @@ export interface ProjectMedia {
   projectId: number;
   commonArea?: number;
   imageType?: number;
+  type?: string;
 }
 
 export interface Media {
+  id?: string;
   tag: string;
-  file: File;
+  file: File | string;
   description?: string;
   idType: number;
   type: string;
@@ -212,6 +218,7 @@ export type ProjectSummary = Pick<
   | "latitude"
   | "city"
   | "projectMedia"
+  | "username"
 >;
 
 export type MembershipSummary = Pick<Membership, "id" | "name">;

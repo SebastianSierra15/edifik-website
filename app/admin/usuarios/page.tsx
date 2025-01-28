@@ -3,24 +3,21 @@
 import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { useCallback } from "react";
-import { User, UserData, Header } from "@/lib/definitios";
 import { useDebouncedCallback } from "use-debounce";
 import { Plus } from "lucide-react";
-import Table from "@/app/ui/admin/table";
-import TableSkeleton from "@/app/ui/admin/skeletons/tableSkeleton";
-import Alert from "@/app/ui/alert";
+import { User, UserData, Header } from "@/lib/definitios";
 import { useUsers } from "@/app/hooks/users/useUsers";
 import { useUserValidation } from "@/app/hooks/users/useUserValidation";
 import { useUserApi } from "@/app/hooks/users/useUserApi";
 import { useUsersMetadata } from "@/app/hooks/users/useUsersMetadata";
+import Table from "@/app/ui/admin/table";
+import TableSkeleton from "@/app/ui/admin/skeletons/tableSkeleton";
+import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
+import Alert from "@/app/ui/alert";
 
 const UserModal = dynamic(() => import("@/app/ui/users/userModal"), {
   ssr: false,
 });
-const ModalConfirmation = dynamic(
-  () => import("@/app/ui/modals/modalConfirmation"),
-  { ssr: false }
-);
 
 export default function UsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +26,7 @@ export default function UsersPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editUser, setEditUser] = useState<UserData | null>(null);
   const [registerUser, setRegisterUser] = useState<UserData>({});
+  const [tempUser, setTempUser] = useState<UserData | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState<
     "register" | "edit" | null
@@ -40,7 +38,7 @@ export default function UsersPage() {
     show: false,
   });
 
-  const { users, totalEntries, isLoadingUsers } = useUsers(
+  const { users, totalEntries, isLoadingUsers, refetchUsers } = useUsers(
     currentPage,
     entriesPerPage,
     searchTerm
@@ -53,7 +51,11 @@ export default function UsersPage() {
     setHasLoadedOnce(true);
   }
 
-  const validateFields = useUserValidation(editUser || registerUser);
+  const { errors, validateFields } = useUserValidation(
+    tempUser || {},
+    !!editUser
+  );
+
   const { submitUser } = useUserApi();
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
@@ -65,27 +67,35 @@ export default function UsersPage() {
     return memberships.filter((membership) => membership.id !== 1004);
   }, [memberships]);
 
-  const handleEditClick = useCallback((user: User) => {
+  const handleEditClick = (user: User) => {
     setEditUser(user);
+    setTempUser({ ...user });
     setModalOpen(true);
-  }, []);
+  };
 
-  const handleRegisterClick = useCallback(() => {
+  const handleRegisterClick = () => {
     setEditUser(null);
-    setRegisterUser({});
+    setTempUser({});
     setModalOpen(true);
-  }, []);
+  };
 
   const handleConfirmedAction = async () => {
-    const userData = confirmationAction === "edit" ? editUser : registerUser;
-    if (!userData) return;
+    if (!tempUser) {
+      return;
+    }
 
-    const success = await submitUser(userData, confirmationAction!);
+    const success = await submitUser(tempUser, confirmationAction!);
 
     if (success) {
       setModalOpen(false);
       setIsConfirmationModalOpen(false);
       setFlag(true);
+
+      if (confirmationAction === "edit") {
+        setEditUser(tempUser);
+      }
+
+      await refetchUsers();
 
       setAlert({
         type: "success",
@@ -98,20 +108,19 @@ export default function UsersPage() {
       setIsConfirmationModalOpen(false);
       setAlert({
         type: "error",
-        message: "Lo sentimos, algo salió mal, intentalo más tarde.",
+        message: "Lo sentimos, algo salió mal, inténtalo más tarde.",
         show: true,
       });
     }
   };
 
-  const handleConfirmSubmit = (e: React.FormEvent) => {
+  const handleConfirmSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFlag(false);
 
-    const errors = validateFields();
-    const hasErrors = Object.values(errors).some((error) => error !== "");
+    const isValid = await validateFields();
 
-    if (hasErrors) {
+    if (!isValid) {
       return;
     }
 
@@ -124,48 +133,35 @@ export default function UsersPage() {
     setFlag(true);
   };
 
-  const updateNestedValue = (obj: any, path: string, value: any) => {
-    const keys = path.split(".");
-    let current = obj;
-
-    keys.forEach((key, index) => {
-      if (index === keys.length - 1) {
-        current[key] = value;
-      } else {
-        current[key] = current[key] || {};
-        current = current[key];
-      }
-    });
-
-    return { ...obj };
-  };
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
     const { name, value, type } = e.target;
+    const newValue =
+      type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
 
-    if (editUser) {
-      setEditUser((prev) => {
-        const updatedUser = updateNestedValue(
-          prev!,
-          name,
-          type === "checkbox" ? (e.target as HTMLInputElement).checked : value
-        );
-        return updatedUser;
+    const updateNestedValue = (obj: any, path: string, value: any) => {
+      const keys = path.split(".");
+      let current = obj;
+
+      keys.forEach((key, index) => {
+        if (index === keys.length - 1) {
+          current[key] = value;
+        } else {
+          if (!current[key]) current[key] = {};
+          current = current[key];
+        }
       });
-    } else {
-      setRegisterUser((prev) => {
-        const updatedUser = updateNestedValue(
-          prev,
-          name,
-          type === "checkbox" ? (e.target as HTMLInputElement).checked : value
-        );
-        return updatedUser;
-      });
-    }
+
+      return { ...obj };
+    };
+
+    setTempUser((prev) => {
+      const updatedUser = updateNestedValue(prev || {}, name, newValue);
+      return updatedUser;
+    });
   };
 
   const goToNextPage = useCallback(() => {
@@ -208,7 +204,6 @@ export default function UsersPage() {
       <h1 className="mb-6 pb-5 text-center text-3xl font-bold text-premium-primary dark:text-premium-primaryLight">
         Gestión de Usuarios
       </h1>
-
       <div className="mb-4 flex justify-center px-4 md:justify-end">
         <button
           onClick={handleRegisterClick}
@@ -248,11 +243,11 @@ export default function UsersPage() {
           }}
           onSubmit={handleConfirmSubmit}
           handleChange={handleChange}
-          user={editUser || registerUser}
+          user={tempUser || {}}
           roles={roles}
           genders={genders}
           memberships={filteredMemberships}
-          errors={validateFields()}
+          errors={errors || {}}
           flag={flag}
         />
       )}
@@ -270,7 +265,6 @@ export default function UsersPage() {
           cancelLabel="Cancelar"
         />
       )}
-
       {alert.show && (
         <Alert
           type={alert.type!}

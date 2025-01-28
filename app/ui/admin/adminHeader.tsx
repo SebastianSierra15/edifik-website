@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import clsx from "clsx";
+import Image from "next/image";
+import Link from "next/link";
 import UserMenuButton from "../login/userMenuButton";
 
 export default function AdminHeader() {
@@ -53,9 +54,10 @@ export default function AdminHeader() {
     <header className="fixed left-0 top-0 z-30 min-h-16 w-full bg-premium-background bg-opacity-90 text-premium-textPrimary shadow-md dark:bg-premium-secondaryDark dark:text-premium-textPrimary flex items-center justify-between py-1 px-4">
       <Link
         href="/admin"
-        className={`flex flex-col items-center text-center transition-colors duration-300 ${getLinkClasses(
-          "/admin"
-        )}`}
+        className={clsx(
+          "flex flex-col items-center text-center transition-colors duration-300",
+          getLinkClasses("/admin")
+        )}
       >
         <div className="flex items-center justify-start w-[100px] h-[40px]">
           <Image
@@ -63,11 +65,11 @@ export default function AdminHeader() {
             alt="Logo de EdifiK"
             width={100}
             height={40}
-            style={{ width: "100%", height: "auto" }}
-            priority
+            loading="lazy"
+            className="w-auto h-auto max-w-[100px] max-h-[40px]"
           />
         </div>
-        <span className="mt-1">Admin Panel</span>
+        <span>Admin Panel</span>
       </Link>
 
       <nav
@@ -79,17 +81,19 @@ export default function AdminHeader() {
             <Link
               key={path}
               href={path}
-              className={`group relative transition-colors duration-300 ${getLinkClasses(
-                path
-              )}`}
+              className={clsx(
+                "group relative transition-colors duration-300",
+                getLinkClasses(path)
+              )}
             >
               {label}
               <span
-                className={`absolute bottom-0 left-0 h-[2px] bg-premium-primary transition-all duration-300 dark:bg-premium-primaryLight ${
+                className={clsx(
+                  "absolute bottom-0 left-0 h-[2px] bg-premium-primary transition-all duration-300 dark:bg-premium-primaryLight",
                   pathname.startsWith(path)
                     ? "w-full"
                     : "w-0 group-hover:w-full"
-                }`}
+                )}
               ></span>
             </Link>
           ))

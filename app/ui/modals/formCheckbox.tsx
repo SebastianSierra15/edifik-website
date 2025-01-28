@@ -15,8 +15,12 @@ export default function FormCheckbox({
 }: FormCheckboxProps) {
   return (
     <div>
-      <label className="flex items-center gap-2 text-sm font-medium text-premium-textPrimary dark:text-premium-textPrimary">
+      <label
+        htmlFor={name}
+        className="flex items-center gap-2 text-sm font-medium text-premium-textPrimary dark:text-premium-textPrimary"
+      >
         <input
+          id={name}
           type="checkbox"
           name={name}
           checked={checked}

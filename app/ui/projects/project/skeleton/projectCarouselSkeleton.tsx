@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 export function ProjectCarouselSkeleton() {
   return (
     <div className="relative mx-auto w-full px-8 sm:my-5">
@@ -44,7 +46,11 @@ export function ProjectCarouselSkeleton() {
           return (
             <div
               key={index}
-              className={`absolute animate-pulse rounded-lg bg-gray-300 ${positions[index].scale} ${positions[index].zIndex}`}
+              className={clsx(
+                "absolute animate-pulse rounded-lg bg-gray-300",
+                positions[index].scale,
+                positions[index].zIndex
+              )}
               style={{
                 width: positions[index].width,
                 height: positions[index].height,
@@ -63,9 +69,10 @@ export function ProjectCarouselSkeleton() {
         {[...Array(5)].map((_, index) => (
           <div
             key={index}
-            className={`h-2 w-2 ${
+            className={clsx(
+              "h-2 w-2 animate-pulse rounded-full",
               index === 2 ? "scale-125 bg-gray-400" : "bg-gray-300"
-            } animate-pulse rounded-full`}
+            )}
           ></div>
         ))}
       </div>

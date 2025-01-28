@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { Project, ProjectSummary } from "@/lib/definitios";
 
-type ProjectData = {
+interface ProjectData {
   project: Project;
   projectRecommended: ProjectSummary[];
-};
+}
 
 export function useProjectByName(name: string) {
   const [project, setProject] = useState<Project | null>(null);

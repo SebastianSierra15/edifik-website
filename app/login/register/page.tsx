@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaGoogle, FaFacebook, FaApple } from "react-icons/fa";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
+import clsx from "clsx";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
+import GoogleIcon from "@/app/ui/icons/googleIcon";
+import FacebookIcon from "@/app/ui/icons/facebookIcon";
+import AppleIcon from "@/app/ui/icons/appleIcon";
+import FormErrorMessage from "@/app/ui/modals/formErrorMessage";
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
@@ -79,28 +82,21 @@ export default function Page() {
 
                   <input
                     id="email"
-                    className={`w-full transform rounded-lg border p-3 shadow-md transition duration-300 hover:scale-105 focus:ring-2 focus:ring-gray-800 ${
+                    className={clsx(
+                      "w-full transform rounded-lg border p-3 shadow-md transition duration-300 hover:scale-105 focus:ring-2 focus:ring-gray-800",
                       emailError || emptyFieldError
                         ? "border-red-500 bg-red-50"
                         : "border-gray-500"
-                    }`}
+                    )}
                     type="text"
                     placeholder="tu-email@ejemplo.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
 
-                  {emailError && (
-                    <div className="mt-1 flex items-center gap-2 text-sm text-red-500">
-                      <AiOutlineExclamationCircle className="h-5 w-5" />
-                      {emailError}
-                    </div>
-                  )}
+                  {emailError && <FormErrorMessage error={emailError} />}
                   {emptyFieldError && (
-                    <div className="mt-1 flex items-center gap-2 text-sm text-red-500">
-                      <AiOutlineExclamationCircle className="h-5 w-5" />
-                      {emptyFieldError}
-                    </div>
+                    <FormErrorMessage error={emptyFieldError} />
                   )}
                 </div>
 
@@ -121,11 +117,12 @@ export default function Page() {
                   <div className="relative">
                     <input
                       id="password"
-                      className={`w-full rounded-lg border p-3 shadow-md focus:ring-2 focus:ring-gray-800 ${
+                      className={clsx(
+                        "w-full rounded-lg border p-3 shadow-md focus:ring-2 focus:ring-gray-800",
                         passwordError
                           ? "border-red-500 bg-red-50"
                           : "border-gray-500"
-                      }`}
+                      )}
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
                       value={password}
@@ -137,19 +134,14 @@ export default function Page() {
                       className="absolute inset-y-0 right-0 flex items-center text-gray-600 hover:rounded-r-lg hover:border-b hover:border-r hover:border-t hover:border-b-gray-500 hover:border-r-gray-500 hover:border-t-gray-500 hover:bg-gray-300"
                     >
                       {showPassword ? (
-                        <AiFillEyeInvisible className="ml-2 mr-2 h-5 w-5" />
+                        <EyeOff className="ml-2 mr-2 h-5 w-5" />
                       ) : (
-                        <AiFillEye className="ml-2 mr-2 h-5 w-5" />
+                        <Eye className="ml-2 mr-2 h-5 w-5" />
                       )}
                     </button>
                   </div>
 
-                  {passwordError && (
-                    <div className="mt-1 flex items-center gap-2 text-sm text-red-500">
-                      <AiOutlineExclamationCircle className="h-5 w-5" />
-                      {passwordError}
-                    </div>
-                  )}
+                  {passwordError && <FormErrorMessage error={passwordError} />}
                 </div>
 
                 <button
@@ -187,13 +179,13 @@ export default function Page() {
               className="mt-5 flex justify-center gap-4"
             >
               <button className="transform rounded-lg p-2 shadow-lg transition duration-300 hover:scale-125">
-                <FaGoogle className="h-6 w-6 text-red-500" />
+                <GoogleIcon className="h-6 w-6 text-red-500" />
               </button>
               <button className="transform rounded-lg p-2 shadow-lg transition duration-300 hover:scale-125">
-                <FaFacebook className="h-6 w-6 text-blue-600" />
+                <FacebookIcon className="h-6 w-6 text-blue-600" />
               </button>
               <button className="transform rounded-lg p-2 shadow-lg transition duration-300 hover:scale-125">
-                <FaApple className="h-6 w-6 text-black" />
+                <AppleIcon className="h-6 w-6 text-black" />
               </button>
             </div>
 

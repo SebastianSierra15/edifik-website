@@ -1,7 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import clsx from "clsx";
 import { House, Map } from "lucide-react";
 
 type MapToggleButtonProps = {

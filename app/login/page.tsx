@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import dynamic from "next/dynamic";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import clsx from "clsx";
 import Link from "next/link";
+import { Eye } from "lucide-react";
 import GoogleIcon from "../ui/icons/googleIcon";
 import FacebookIcon from "../ui/icons/facebookIcon";
 import AppleIcon from "../ui/icons/appleIcon";
-import { Eye } from "lucide-react";
 
 const EyeOff = dynamic(() => import("lucide-react").then((mod) => mod.EyeOff));
 const Info = dynamic(() => import("lucide-react").then((mod) => mod.Info));
@@ -74,11 +75,12 @@ export default function Page() {
 
             <input
               id="email"
-              className={`w-full transform rounded-lg border p-3 shadow-md transition duration-300 hover:scale-105 focus:ring-2 focus:ring-gray-800 ${
+              className={clsx(
+                "w-full transform rounded-lg border p-3 shadow-md transition duration-300 hover:scale-105 focus:ring-2 focus:ring-gray-800",
                 emailError || emptyFieldError
                   ? "border-red-500 bg-red-50"
                   : "border-gray-500"
-              }`}
+              )}
               type="text"
               placeholder="tu-email@ejemplo.com"
               value={email}
@@ -101,11 +103,12 @@ export default function Page() {
             <div className="relative">
               <input
                 id="password"
-                className={`w-full rounded-lg border p-3 shadow-md focus:ring-2 focus:ring-gray-800 ${
+                className={clsx(
+                  "w-full rounded-lg border p-3 shadow-md focus:ring-2 focus:ring-gray-800",
                   passwordError || emptyFieldError
                     ? "border-red-500 bg-red-50"
                     : "border-gray-500"
-                }`}
+                )}
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 value={password}

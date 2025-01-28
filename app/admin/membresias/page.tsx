@@ -1,26 +1,21 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { useDebouncedCallback } from "use-debounce";
 import { useCallback } from "react";
-import dynamic from "next/dynamic";
-import Table from "@/app/ui/admin/table";
-import TableSkeleton from "@/app/ui/admin/skeletons/tableSkeleton";
-import Alert from "@/app/ui/alert";
 import { Membership, Header } from "@/lib/definitios";
 import { useMemberships } from "@/app/hooks/memberships/useMemberships";
 import { useMembershipValidation } from "@/app/hooks/memberships/useMembershipValidation";
 import { useMembershipUpdate } from "@/app/hooks/memberships/useMembershipUpdate";
+import Alert from "@/app/ui/alert";
+import Table from "@/app/ui/admin/table";
+import TableSkeleton from "@/app/ui/admin/skeletons/tableSkeleton";
+import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
 
 const MembershipModal = dynamic(
   () => import("@/app/ui/memberships/membershipModal"),
   { ssr: false }
-);
-const ModalConfirmation = dynamic(
-  () => import("@/app/ui/modals/modalConfirmation"),
-  {
-    ssr: false,
-  }
 );
 
 export default function MembershipsPage() {
@@ -61,7 +56,8 @@ export default function MembershipsPage() {
     discountTwelveMonths: 0,
   });
 
-  const validateFields = useMembershipValidation(membership);
+  const { errors, validateFields } = useMembershipValidation(membership, true);
+
   const { updateMembership } = useMembershipUpdate();
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
@@ -82,12 +78,11 @@ export default function MembershipsPage() {
     setCurrentPage((prevPage) => prevPage + 1);
   }, []);
 
-  const handleConfirmUpdate = (e: React.FormEvent) => {
+  const handleConfirmUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const errors = validateFields();
-    const hasErrors = Object.values(errors).some((error) => error !== "");
+    const isValid = await validateFields();
 
-    if (hasErrors) {
+    if (!isValid) {
       return;
     }
 
@@ -205,7 +200,7 @@ export default function MembershipsPage() {
           onSubmit={handleConfirmUpdate}
           handleChange={handleChange}
           membership={membership}
-          errors={validateFields()}
+          errors={errors}
         />
       )}
 

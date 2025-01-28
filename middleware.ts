@@ -23,10 +23,15 @@ export async function middleware(req: NextRequest) {
     "/admin/peticiones": ["Gestionar peticiones"],
   };
 
-  const requiredPermissions = protectedRoutes[pathname];
-  if (!requiredPermissions) {
+  const matchedRoute = Object.keys(protectedRoutes)
+    .sort((a, b) => b.length - a.length)
+    .find((route) => pathname.startsWith(route));
+
+  if (!matchedRoute) {
     return NextResponse.next();
   }
+
+  const requiredPermissions = protectedRoutes[matchedRoute];
 
   const token = await getToken({
     req: req,

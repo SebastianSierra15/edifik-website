@@ -4,22 +4,19 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Role, Header } from "@/lib/definitios";
 import { useDebouncedCallback } from "use-debounce";
-import Table from "@/app/ui/admin/table";
-import TableSkeleton from "@/app/ui/admin/skeletons/tableSkeleton";
-import Alert from "@/app/ui/alert";
 import { Plus } from "lucide-react";
 import { useRoles } from "@/app/hooks/roles/useRoles";
 import { useRoleValidation } from "@/app/hooks/roles/useRoleValidation";
 import { useRoleApi } from "@/app/hooks/roles/useRoleApi";
 import { usePermissions } from "@/app/hooks/roles/usePermissions";
+import Table from "@/app/ui/admin/table";
+import TableSkeleton from "@/app/ui/admin/skeletons/tableSkeleton";
+import Alert from "@/app/ui/alert";
+import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
 
 const RoleModal = dynamic(() => import("@/app/ui/roles/roleModal"), {
   ssr: false,
 });
-const ModalConfirmation = dynamic(
-  () => import("@/app/ui/modals/modalConfirmation"),
-  { ssr: false }
-);
 
 export default function RolesPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +29,7 @@ export default function RolesPage() {
     name: "",
     permissions: [],
   });
+  const [tempEditRole, setTempEditRole] = useState<Role | null>(null);
   const [deleteRole, setDeleteRole] = useState<Role | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState<
@@ -57,7 +55,11 @@ export default function RolesPage() {
     setHasLoadedOnce(true);
   }
 
-  const validateFields = useRoleValidation(editRole || registerRole);
+  const { errors, validateFields, validateField } = useRoleValidation(
+    editRole || registerRole,
+    !!editRole
+  );
+
   const { submitRole } = useRoleApi();
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
@@ -67,6 +69,7 @@ export default function RolesPage() {
 
   const handleEditClick = (role: Role) => {
     setEditRole(role);
+    setTempEditRole({ ...role });
     setModalOpen(true);
   };
 
@@ -83,12 +86,23 @@ export default function RolesPage() {
   };
 
   const handleConfirmedAction = async () => {
-    const roleData =
-      confirmationAction === "delete"
-        ? deleteRole
-        : confirmationAction === "edit"
-          ? editRole
-          : registerRole;
+    let roleData: Role | null = null;
+
+    if (confirmationAction === "delete") {
+      if (!deleteRole || !deleteRole.id) {
+        console.error("Error: No se puede eliminar un rol sin ID.");
+        setAlert({
+          type: "error",
+          message: "Error: No se puede eliminar un rol sin ID.",
+          show: true,
+        });
+        return;
+      }
+      roleData = deleteRole;
+    } else {
+      roleData = confirmationAction === "edit" ? tempEditRole : registerRole;
+    }
+
     if (!roleData) return;
 
     const success = await submitRole(roleData, confirmationAction!);
@@ -98,11 +112,21 @@ export default function RolesPage() {
       setIsConfirmationModalOpen(false);
       setFlag(true);
 
+      if (confirmationAction === "edit") {
+        setEditRole(tempEditRole);
+      }
+
       await refetchRoles();
 
       setAlert({
         type: "success",
-        message: `Rol ${confirmationAction === "delete" ? "eliminado" : confirmationAction === "edit" ? "editado" : "registrado"} correctamente.`,
+        message: `Rol ${
+          confirmationAction === "edit"
+            ? "editado"
+            : confirmationAction === "delete"
+              ? "eliminado"
+              : "registrado"
+        } correctamente.`,
         show: true,
       });
     } else {
@@ -115,14 +139,12 @@ export default function RolesPage() {
     }
   };
 
-  const handleConfirmSubmit = (e: React.FormEvent) => {
+  const handleConfirmSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFlag(false);
 
-    const errors = validateFields();
-    const hasErrors = Object.values(errors).some((error) => error !== "");
-
-    if (hasErrors) {
+    const isValid = await validateFields();
+    if (!isValid) {
       return;
     }
 
@@ -146,8 +168,8 @@ export default function RolesPage() {
       );
       if (!selectedPermission) return;
 
-      if (editRole) {
-        setEditRole((prev) => ({
+      if (tempEditRole) {
+        setTempEditRole((prev) => ({
           ...prev!,
           permissions: [...(prev!.permissions || []), selectedPermission],
         }));
@@ -158,8 +180,8 @@ export default function RolesPage() {
         }));
       }
     } else if (name === "deletePermission") {
-      if (editRole) {
-        setEditRole((prev) => ({
+      if (tempEditRole) {
+        setTempEditRole((prev) => ({
           ...prev!,
           permissions: prev!.permissions?.filter(
             (perm) => perm.id !== Number(value)
@@ -174,8 +196,8 @@ export default function RolesPage() {
         }));
       }
     } else {
-      if (editRole) {
-        setEditRole((prev) => ({
+      if (tempEditRole) {
+        setTempEditRole((prev) => ({
           ...prev!,
           [name]: value,
         }));
@@ -259,9 +281,9 @@ export default function RolesPage() {
           }}
           onSubmit={handleConfirmSubmit}
           handleChange={handleChange}
-          role={editRole || registerRole}
+          role={tempEditRole || registerRole}
           permissions={permissions}
-          errors={validateFields()}
+          errors={errors}
           flag={flag}
         />
       )}

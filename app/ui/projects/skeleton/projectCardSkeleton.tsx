@@ -1,9 +1,7 @@
 export default function ProjectCardSkeleton() {
   return (
     <div className="transform rounded-lg bg-transparent transition-transform duration-300 hover:scale-105 dark:bg-transparent">
-      <div
-        className={`relative h-[370px] max-w-xs cursor-pointer overflow-hidden rounded-lg bg-gray-300 shadow-md dark:bg-gray-700`}
-      >
+      <div className="relative h-[370px] max-w-xs cursor-pointer overflow-hidden rounded-lg bg-gray-300 shadow-md dark:bg-gray-700">
         <div className="relative h-[80%] w-full animate-pulse bg-gray-200 dark:bg-gray-600"></div>
 
         <div className="absolute left-2 top-2 h-6 w-20 animate-pulse rounded-full bg-gray-300 dark:bg-gray-700"></div>

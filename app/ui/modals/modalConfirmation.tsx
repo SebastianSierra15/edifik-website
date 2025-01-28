@@ -1,7 +1,8 @@
 import { useEffect } from "react";
+import clsx from "clsx";
 import { CircleCheck, X } from "lucide-react";
 
-type ModalConfirmationProps = {
+interface ModalConfirmationProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -9,7 +10,8 @@ type ModalConfirmationProps = {
   message: string;
   confirmLabel?: string;
   cancelLabel?: string;
-};
+  confirmClassName?: string;
+}
 
 export default function ModalConfirmation({
   isOpen,
@@ -19,6 +21,7 @@ export default function ModalConfirmation({
   message,
   confirmLabel = "Confirmar",
   cancelLabel = "Cancelar",
+  confirmClassName,
 }: ModalConfirmationProps) {
   useEffect(() => {
     if (isOpen) {
@@ -65,7 +68,11 @@ export default function ModalConfirmation({
           </button>
 
           <button
-            className="rounded-md bg-premium-primary px-4 py-2 text-white transition hover:bg-premium-primaryDark dark:bg-premium-primary dark:hover:bg-premium-primaryDark"
+            className={clsx(
+              "rounded-md px-4 py-2 text-white transition",
+              confirmClassName ||
+                "bg-premium-primary hover:bg-premium-primaryDark dark:bg-premium-primary dark:hover:bg-premium-primaryDark"
+            )}
             onClick={onConfirm}
           >
             {confirmLabel}

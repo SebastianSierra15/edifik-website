@@ -3,12 +3,18 @@ import { db } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
 import { Project, ProjectSummary } from "@/lib/definitios";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { name: string } },
-) {
+export async function GET(request: Request, context: any) {
   try {
-    const name = params.name.replace(/-/g, " ");
+    const params = await context.params;
+
+    if (!params?.name) {
+      return NextResponse.json(
+        { error: "Nombre del proyecto no proporcionado" },
+        { status: 400 }
+      );
+    }
+
+    const name = decodeURIComponent(params.name).replace(/-/g, " ");
 
     const [result] = await db.query("CALL get_project_by_name(?)", [name]);
     const rows = (result as any[][])[0];
@@ -16,7 +22,7 @@ export async function GET(
     if (rows.length === 0) {
       return NextResponse.json(
         { error: "Proyecto no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -31,7 +37,7 @@ export async function GET(
       width: rows[0].width,
       length: rows[0].length,
       parkingSpots: rows[0].parkingSpots,
-      elevators: rows[0].elevators,
+      elevator: rows[0].elevator,
       heavyParking: rows[0].heavyParking,
       availableUnits: rows[0].availableUnits,
       bathrooms: rows[0].bathrooms,
@@ -51,14 +57,18 @@ export async function GET(
       shortDescription: rows[0].shortDescription,
       detailedDescription: rows[0].detailedDescription,
       address: rows[0].address,
-      latitude: rows[0].latitude,
-      longitude: rows[0].longitude,
+      latitude: Number(rows[0].latitude),
+      longitude: Number(rows[0].longitude),
       availableDate: rows[0].availableDate
         ? new Date(rows[0].availableDate)
         : undefined,
       propertyType: {
         id: rows[0].propertyTypeId,
         name: rows[0].propertyTypeName,
+      },
+      projectType: {
+        id: rows[0].projectTypeId,
+        name: rows[0].projectTypeName,
       },
       housingType: {
         id: rows[0].housingTypeId,
@@ -77,6 +87,8 @@ export async function GET(
         id: rows[0].statusProjectId,
         name: rows[0].statusProjectName,
       },
+      residentialProjectId: rows[0].residentialProjectId,
+      warehouseProjectId: rows[0].warehouseProjectId,
       commonAreas: [],
       nearbyServices: [],
       projectMedia: [],
@@ -101,13 +113,14 @@ export async function GET(
       tag: row.tag,
       description: row.description,
       projectId: row.project,
-      commonArea: row.commonArea,
-      imageType: row.imageType,
+      commonArea: row.commonAreaId,
+      imageType: row.imageTypeId,
+      type: row.commonAreaName ?? row.imageTypeName ?? "Sin categoría",
     }));
 
     const [recommendedResult] = await db.query(
       "CALL get_recommended_projects(1000, ?, 10, 5, 3, 2)",
-      [project.propertyType.id],
+      [project.propertyType.id]
     );
 
     const recommendedRows = (recommendedResult as RowDataPacket[][])[0] || [];
@@ -156,7 +169,7 @@ export async function GET(
   } catch (error) {
     return NextResponse.json(
       { error: "Error al buscar el proyecto" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

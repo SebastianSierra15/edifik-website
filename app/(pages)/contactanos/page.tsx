@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
-import ContactSection from "../../ui/contactanos/contactSection";
+import ContactSection from "../../ui/contact/contactSection";
 
 interface ContactInfoProps {
   icon: JSX.Element;

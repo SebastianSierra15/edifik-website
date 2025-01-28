@@ -1,16 +1,13 @@
-"use client";
-
-import { useState, useRef, useEffect } from "react";
-import { LatLngTuple } from "leaflet";
-import {
-  AiOutlineExclamationCircle,
-  AiOutlineClose,
-  AiOutlineInfoCircle,
-} from "react-icons/ai";
+import { useCallback, useMemo } from "react";
+import { useLoadScript } from "@react-google-maps/api";
+import { ProjectData, City, Departament } from "@/lib/definitios";
+import { useLocationProjectValidation } from "@/app/hooks/projects/createEditProject/useLocationProjectValidation";
+import FormSearchAddress from "../../modals/formSearchAddress";
 import StepNavigationButtons from "../../admin/stepNavigationButtons";
 import LocationMap from "../locationMap";
-import { useAddressSearch } from "@/app/hooks/useAddressSearch";
-import { ProjectData, City, Departament } from "@/lib/definitios";
+import FormSelect from "../../modals/formSelect";
+
+const GOOGLE_MAPS_LIBRARIES: "places"[] = ["places"];
 
 interface LocationProjectFormProps {
   formData: ProjectData;
@@ -34,110 +31,179 @@ export default function LocationProjectForm({
   departaments,
   cities,
 }: LocationProjectFormProps) {
-  const [errors, setErrors] = useState({
-    departamentError: "",
-    cityError: "",
-    addressError: "",
+  const { errors, validateFields, validateField } =
+    useLocationProjectValidation(formData);
+
+  const propertyOptions = useMemo(
+    () => departaments.map((dep) => ({ id: dep.id, name: dep.name })),
+    [departaments]
+  );
+
+  const cityOptions = useMemo(
+    () =>
+      cities
+        .filter(
+          (city) => city.departament.id === formData.city?.departament?.id
+        )
+        .map((city) => ({ id: city.id, name: city.name })),
+    [cities, formData.city?.departament?.id]
+  );
+
+  const mapsApiKey = useMemo(
+    () => process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    []
+  );
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: mapsApiKey,
+    libraries: GOOGLE_MAPS_LIBRARIES,
   });
 
-  const { results, loading, error, searchAddress } = useAddressSearch();
-  const [isListVisible, setIsListVisible] = useState(false);
-  const listRef = useRef<HTMLUListElement>(null);
+  const handleDepartamentChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const departamentId = parseInt(e.target.value);
+      const selectedDepartament = departaments.find(
+        (dep) => dep.id === departamentId
+      );
 
-  const handleAddressInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    onChange({ address: value });
+      if (
+        selectedDepartament &&
+        selectedDepartament.id !== formData.city?.departament?.id
+      ) {
+        onChange({
+          city: { id: 0, name: "", departament: selectedDepartament },
+          address: "",
+          latitude: undefined,
+          longitude: undefined,
+        });
+        validateField("departamentError", departamentId);
+      }
+    },
+    [onChange, validateField, formData.city?.departament?.id, departaments]
+  );
 
-    if (value.trim()) {
-      searchAddress(value);
-      setErrors((prevErrors) => ({ ...prevErrors, addressError: "" }));
-      setIsListVisible(true);
-    }
-  };
+  const handleCityChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const cityId = parseInt(e.target.value);
+      const selectedCity = cities.find((city) => city.id === cityId);
 
-  const handleDepartamentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const departamentId = parseInt(e.target.value);
-    const selectedDepartament = departaments.find(
-      (dep) => dep.id === departamentId,
-    );
+      if (selectedCity && selectedCity.id !== formData.city?.id) {
+        onChange({
+          city: selectedCity,
+          address: "",
+          latitude: undefined,
+          longitude: undefined,
+        });
+        validateField("cityError", cityId);
+      }
+    },
+    [onChange, validateField, formData.city?.id, cities]
+  );
 
-    if (selectedDepartament) {
-      onChange({
-        city: {
-          id: 0,
-          name: "",
-          departament: selectedDepartament,
-        },
+  const handleAddressSelect = useCallback(
+    async (placeId: string, description: string) => {
+      const placesService = new google.maps.places.PlacesService(
+        document.createElement("div")
+      );
+
+      placesService.getDetails({ placeId }, (place, status) => {
+        if (
+          status === google.maps.places.PlacesServiceStatus.OK &&
+          place?.geometry?.location
+        ) {
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
+
+          const geocoder = new google.maps.Geocoder();
+          geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+            if (status === google.maps.GeocoderStatus.OK && results?.length) {
+              const formattedAddress = results[0].formatted_address;
+              const foundCity = results.find((result) =>
+                result.types.includes("locality")
+              );
+              const foundDepartment = results.find((result) =>
+                result.types.includes("administrative_area_level_1")
+              );
+
+              const cityName =
+                foundCity?.formatted_address.split(",")[0].trim() || "";
+              const departmentName =
+                foundDepartment?.formatted_address.split(",")[0].trim() || "";
+
+              const selectedCity = cities.find(
+                (c) => c.name.toLowerCase() === cityName.toLowerCase()
+              );
+              const selectedDepartment = departaments.find(
+                (d) => d.name.toLowerCase() === departmentName.toLowerCase()
+              );
+
+              if (
+                selectedCity?.id !== formData.city?.id ||
+                selectedDepartment?.id !== formData.city?.departament?.id
+              ) {
+                onChange({
+                  address: formattedAddress,
+                  latitude: lat,
+                  longitude: lng,
+                  city: selectedCity || {
+                    id: 0,
+                    name: "Ciudad desconocida",
+                    departament: selectedDepartment || {
+                      id: 0,
+                      name: "Departamento desconocido",
+                    },
+                  },
+                });
+              } else {
+                onChange({ address: formattedAddress });
+              }
+
+              validateField("addressError", formattedAddress);
+            }
+          });
+        }
       });
+    },
+    [
+      onChange,
+      validateField,
+      formData.city?.id,
+      formData.city?.departament?.id,
+      cities,
+      departaments,
+    ]
+  );
 
-      setErrors((prevErrors) => ({ ...prevErrors, departamentError: "" }));
-    }
-  };
-
-  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const cityId = parseInt(e.target.value);
-    const selectedCity = cities.find((city) => city.id === cityId);
-
-    if (selectedCity) {
-      onChange({
-        city: selectedCity,
-      });
-
-      setErrors((prevErrors) => ({ ...prevErrors, cityError: "" }));
-    }
-  };
-
-  const handleAddressSelect = (
-    lat: string,
-    lon: string,
-    displayName: string,
-  ) => {
-    onChange({
-      address: displayName,
-      latitude: parseFloat(lat),
-      longitude: parseFloat(lon),
-    });
-
-    setErrors((prevErrors) => ({ ...prevErrors, addressError: "" }));
-  };
-
-  const validateForm = () => {
-    const newErrors = { ...errors };
-
-    if (!formData.city?.departament?.id) {
-      newErrors.departamentError = "El departamento es obligatorio.";
-    }
-    if (!formData.city?.id) {
-      newErrors.cityError = "La ciudad es obligatoria.";
-    }
-    if (!formData.address?.trim()) {
-      newErrors.addressError = "La dirección es obligatoria.";
-    }
-
-    setErrors(newErrors);
-    return Object.values(newErrors).every((error) => error === "");
+  const handleUpdateAddress = (address: string) => {
+    onChange({ address });
   };
 
   const handleNext = (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (validateForm()) {
+    if (validateFields()) {
       onNext();
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (listRef.current && !listRef.current.contains(event.target as Node)) {
-        setIsListVisible(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const tooltipTexts = useMemo(
+    () => ({
+      departament:
+        formData.projectType?.id === 2 || formData.projectType?.id === 3
+          ? "Seleccione el departamento donde se encuentra la propiedad."
+          : "Seleccione el departamento donde se encuentra el proyecto.",
+      city:
+        formData.projectType?.id === 2 || formData.projectType?.id === 3
+          ? "Seleccione la ciudad correspondiente la propiedad."
+          : "Seleccione la ciudad correspondiente al proyecto.",
+      address:
+        formData.projectType?.id === 2 || formData.projectType?.id === 3
+          ? "Ingrese la dirección de la propiedad."
+          : "Ingrese la dirección del proyecto.",
+    }),
+    [formData.projectType?.id]
+  );
 
   return (
-    <div className="container mx-auto max-w-2xl rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
+    <div className="container mx-auto w-full rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
       <h2 className="mb-6 text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight">
         {formData.projectType?.id
           ? "Ubicación del Proyecto"
@@ -146,159 +212,89 @@ export default function LocationProjectForm({
 
       <form className="space-y-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
-              Departamento
-              <span className="text-premium-textPrimary dark:text-premium-textPrimary">
-                *
-              </span>
-              <span className="group relative">
-                <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute z-10 mt-2 hidden w-64 rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:block dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
-                  <p className="text-xs">
-                    {formData.projectType?.id === 2 ||
-                    formData.projectType?.id === 3
-                      ? "Seleccione el departamento donde se encuentra la propiedad."
-                      : "Seleccione el departamento donde se encuentra el proyecto."}
-                  </p>
-                </div>
-              </span>
-            </label>
-            <select
-              name="departament"
-              value={formData.city?.departament?.id || ""}
-              onChange={handleDepartamentChange}
-              className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
-                errors.departamentError
-                  ? "border-red-500"
-                  : "border-premium-borderColor"
-              }`}
-            >
-              <option value="">Seleccione un departamento</option>
-              {departaments.map((dep) => (
-                <option key={dep.id} value={dep.id}>
-                  {dep.name}
-                </option>
-              ))}
-            </select>
-            {errors.departamentError && (
-              <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
-                <AiOutlineExclamationCircle className="h-5 w-5" />
-                {errors.departamentError}
-              </div>
-            )}
-          </div>
+          <FormSelect
+            label="Departamento"
+            name="departament"
+            value={formData.city?.departament?.id || ""}
+            options={propertyOptions}
+            onChange={handleDepartamentChange}
+            error={errors.departamentError}
+            tooltipText={tooltipTexts.departament}
+          />
 
-          <div>
-            <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
-              Ciudad
-              <span className="text-premium-textPrimary dark:text-premium-textPrimary">
-                *
-              </span>
-              <span className="group relative">
-                <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-                <div className="absolute z-10 mt-2 hidden w-64 rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:block dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
-                  <p className="text-xs">
-                    {formData.projectType?.id === 2 ||
-                    formData.projectType?.id === 3
-                      ? "Seleccione la ciudad correspondiente la propiedad."
-                      : "Seleccione la ciudad correspondiente al proyecto."}
-                  </p>
-                </div>
-              </span>
-            </label>
-            <select
-              name="city"
-              value={formData.city?.id || ""}
-              onChange={handleCityChange}
-              className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
-                errors.cityError ? "border-red-500" : "border-borderColor"
-              }`}
-            >
-              <option value="">Seleccione una ciudad</option>
-              {cities
-                .filter(
-                  (city) =>
-                    city.departament.id === formData.city?.departament?.id,
-                )
-                .map((city) => (
-                  <option key={city.id} value={city.id}>
-                    {city.name}
-                  </option>
-                ))}
-            </select>
-            {errors.cityError && (
-              <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
-                <AiOutlineExclamationCircle className="h-5 w-5" />
-                {errors.cityError}
-              </div>
-            )}
-          </div>
+          <FormSelect
+            label="Ciudad"
+            name="city"
+            value={formData.city?.id || ""}
+            options={cityOptions}
+            onChange={handleCityChange}
+            error={errors.cityError}
+            tooltipText={tooltipTexts.city}
+          />
         </div>
 
-        <div className="relative">
-          <label className="mb-2 flex items-center gap-1 text-premium-textPrimary dark:text-premium-textPrimary">
-            Dirección
-            <span className="text-premium-textPrimary dark:text-premium-textPrimary">
-              *
-            </span>
-            <span className="group relative">
-              <AiOutlineInfoCircle className="h-4 w-4 cursor-pointer text-gray-500 dark:text-gray-400" />
-              <div className="absolute z-10 mt-2 hidden w-64 rounded-md border border-premium-borderColor bg-premium-backgroundLight p-2 text-premium-textPrimary shadow-md group-hover:block dark:border-premium-borderColorHover dark:bg-premium-backgroundDark dark:text-premium-textPrimary">
-                <p className="text-xs">
-                  {formData.projectType?.id === 2 ||
-                  formData.projectType?.id === 3
-                    ? "Ingrese la dirección de la propiedad."
-                    : "Ingrese la dirección del proyecto."}
-                </p>
-              </div>
-            </span>
-          </label>
-
-          <div className="flex items-center">
-            <input
-              type="text"
-              name="address"
-              value={formData.address || ""}
-              onChange={handleAddressInput}
-              disabled={!formData.city || !formData.city.id}
-              className={`w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary ${
-                errors.addressError
-                  ? "border-red-500"
-                  : "border-premium-borderColor"
-              }`}
-              placeholder="Ingrese la dirección"
-            />
-            {formData.address && (
-              <button
-                type="button"
-                className="absolute right-3 text-gray-500 hover:text-gray-700"
-                onClick={() => onChange({ address: "" })}
-              >
-                <AiOutlineClose className="h-5 w-5" />
-              </button>
-            )}
-          </div>
-
-          {errors.addressError && (
-            <div className="mt-1 flex items-center gap-2 text-xs text-red-500">
-              <AiOutlineExclamationCircle className="h-5 w-5" />
-              {errors.addressError}
-            </div>
-          )}
+        <div className="relative z-20">
+          <FormSearchAddress
+            label="Dirección"
+            value={formData.address || ""}
+            onChange={(value) => onChange({ address: value })}
+            onSelect={handleAddressSelect}
+            error={errors.addressError}
+            isLoaded={isLoaded}
+            tooltipText={tooltipTexts.departament}
+          />
         </div>
 
-        <LocationMap
-          coordinates={
-            [
-              formData.latitude || 4.5709,
-              formData.longitude || -74.2973,
-            ] as LatLngTuple
-          }
-          onLocationSelect={(coords) =>
-            onChange({ latitude: coords[0], longitude: coords[1] })
-          }
-        />
+        <div className="relative h-64 w-full">
+          <LocationMap
+            isLoaded={isLoaded}
+            coordinates={{
+              lat:
+                typeof formData.latitude === "number"
+                  ? formData.latitude
+                  : 4.5709,
+              lng:
+                typeof formData.longitude === "number"
+                  ? formData.longitude
+                  : -74.2973,
+            }}
+            onLocationSelect={(coords) => {
+              const selectedCity = cities.find((c) => c.name === coords.city);
+              const selectedDepartment = departaments.find(
+                (d) => d.name === coords.department
+              );
+
+              const currentCityId = formData.city?.id || 0;
+              const currentDepartmentId = formData.city?.departament?.id || 0;
+
+              if (
+                selectedCity?.id !== currentCityId ||
+                selectedDepartment?.id !== currentDepartmentId
+              ) {
+                onChange({
+                  latitude: coords.lat,
+                  longitude: coords.lng,
+                  address: coords.address,
+                  city: selectedCity || {
+                    id: 0,
+                    name: "Ciudad desconocida",
+                    departament: selectedDepartment || {
+                      id: 0,
+                      name: "Departamento desconocido",
+                    },
+                  },
+                });
+              } else {
+                onChange({
+                  latitude: coords.lat,
+                  longitude: coords.lng,
+                  address: coords.address,
+                });
+              }
+            }}
+            onUpdateAddress={handleUpdateAddress}
+          />
+        </div>
 
         <StepNavigationButtons
           currentStep={currentStep}

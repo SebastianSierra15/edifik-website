@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import clsx from "clsx";
 import { X } from "lucide-react";
@@ -9,31 +10,40 @@ import Image from "next/image";
 const Edit = dynamic(() => import("lucide-react").then((mod) => mod.Edit));
 const Trash2 = dynamic(() => import("lucide-react").then((mod) => mod.Trash2));
 
-type ProjectCardProps = {
+interface ProjectCardProps {
+  id: number;
   images: ProjectMedia[];
   name: string;
   location: string;
-  price: number;
+  price?: number;
   area: number;
+  username?: string;
   isFromMap: boolean;
   showActions: boolean;
   onClose?: (() => void) | null;
   url: string;
   urlEdit: string;
-};
+  onDelete: (id: number, name: string) => void;
+  permission?: boolean;
+}
 
 export default function ProjectCard({
+  id,
   images,
   name,
   location,
   price,
   area,
+  username,
   isFromMap,
   showActions,
   onClose,
   url,
   urlEdit,
+  onDelete,
+  permission,
 }: ProjectCardProps) {
+  const router = useRouter();
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -86,7 +96,9 @@ export default function ProjectCard({
                   src={img.url}
                   alt={img.tag}
                   fill
-                  loading="lazy"
+                  priority={index === 0}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className={clsx(
                     "absolute left-0 top-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out",
                     index === currentImage ? "opacity-100" : "opacity-0"
@@ -95,9 +107,11 @@ export default function ProjectCard({
               ))}
             </div>
 
-            <div className="absolute left-2 top-2 z-50 rounded-full bg-black bg-opacity-75 px-2 py-1 text-sm text-white">
-              ${price.toLocaleString()}
-            </div>
+            {price && (
+              <div className="absolute left-2 top-2 z-50 rounded-full bg-black bg-opacity-75 px-2 py-1 text-sm text-white">
+                ${price.toLocaleString()}
+              </div>
+            )}
 
             <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-premium-secondaryDark via-premium-secondaryDark to-transparent px-2 pb-2 pt-16 dark:from-black dark:via-gray-800">
               <h3 className="line-clamp-1 break-words text-lg font-semibold leading-tight text-white">
@@ -106,6 +120,12 @@ export default function ProjectCard({
               <p className="text-sm text-gray-300">{location}</p>
               {area > 0 && (
                 <p className="text-xs text-gray-300">Área: {area} m²</p>
+              )}
+              {id && permission && (
+                <p className="text-xs text-gray-300">id: {id}</p>
+              )}
+              {username && permission && (
+                <p className="text-xs text-gray-300">Usuario: {username}</p>
               )}
             </div>
           </div>
@@ -117,13 +137,20 @@ export default function ProjectCard({
           <button
             onClick={(e) => {
               e.preventDefault();
-              window.open(urlEdit, "_blank", "noopener noreferrer");
+              router.push(urlEdit);
             }}
             className="rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600"
           >
             <Edit className="h-4 w-4" />
           </button>
-          <button className="rounded-full bg-red-500 p-2 text-white transition-colors hover:bg-red-600">
+
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onDelete(id, name);
+            }}
+            className="rounded-full bg-red-500 p-2 text-white transition-colors hover:bg-red-600"
+          >
             <Trash2 className="h-4 w-4" />
           </button>
         </div>

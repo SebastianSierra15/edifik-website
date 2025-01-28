@@ -22,7 +22,7 @@ interface UserModalProps {
   handleChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => void;
   user: UserData;
   roles: Role[];
@@ -78,6 +78,7 @@ export default function UserModal({
             name="username"
             value={user.username || ""}
             placeholder="Nombre de usuario"
+            maxLength={150}
             onChange={handleChange}
             error={errors.usernameError}
             flag={flag}
@@ -89,6 +90,7 @@ export default function UserModal({
             name="names"
             value={user.names || ""}
             placeholder="Nombres del usuario"
+            maxLength={150}
             onChange={handleChange}
             error={errors.namesError}
             flag={flag}
@@ -100,6 +102,7 @@ export default function UserModal({
             name="lastnames"
             value={user.lastnames || ""}
             placeholder="Apellidos del usuario"
+            maxLength={150}
             onChange={handleChange}
             error={errors.lastnamesError}
             flag={flag}
@@ -111,6 +114,7 @@ export default function UserModal({
             name="email"
             value={user.email || ""}
             placeholder="Correo electrónico"
+            maxLength={190}
             onChange={handleChange}
             error={errors.emailError}
             flag={flag}
@@ -123,6 +127,7 @@ export default function UserModal({
               name="phoneNumber"
               value={user.phoneNumber || ""}
               placeholder="Número de teléfono"
+              maxLength={45}
               onChange={handleChange}
               error={errors.phoneNumberError}
               flag={flag}
