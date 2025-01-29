@@ -42,10 +42,9 @@ export default function Page() {
       return;
     }
 
-    setShowPasswordInput(true); // Mostrar campo de contraseña si el correo es válido
+    setShowPasswordInput(true);
   };
 
-  // Validar contraseña y redirigir
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setPasswordError("");
@@ -60,7 +59,6 @@ export default function Page() {
       return;
     }
 
-    // Si la contraseña es válida, redirigir a la página de login
     router.push("/login");
   };
 
@@ -155,7 +153,7 @@ export default function Page() {
                 <button
                   className="mt-4 w-full transform rounded-lg bg-gray-200 p-3 text-gray-700 shadow-lg transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500"
                   type="button"
-                  onClick={() => setShowPasswordInput(false)} // Regresar al formulario de correo
+                  onClick={() => setShowPasswordInput(false)}
                 >
                   Volver
                 </button>

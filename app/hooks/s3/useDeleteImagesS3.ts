@@ -15,12 +15,8 @@ export function useDeleteImagesS3() {
       setDeleteStatus("Eliminando imágenes...");
       setDeleteProgress(0);
 
-      console.log("🔴 Iniciando eliminación de imágenes en S3...");
-      console.log("🗑️ Imágenes a eliminar:", imageUrls);
-
       const deleteResults = await Promise.allSettled(
         imageUrls.map(async (url, index) => {
-          console.log(`🔍 Procesando eliminación de ${url}`);
           const s3Key = extractS3KeyFromUrl(url);
           if (!s3Key) {
             console.warn(
@@ -28,8 +24,6 @@ export function useDeleteImagesS3() {
             );
             return null;
           }
-
-          console.log(`🗑️ Eliminando imagen en S3: ${s3Key}`);
 
           const response = await fetch("/api/s3/projects/images/delete", {
             method: "POST",
@@ -45,7 +39,6 @@ export function useDeleteImagesS3() {
 
           setDeleteProgress(Math.round(((index + 1) / imageUrls.length) * 100));
 
-          console.log(`✅ Imagen eliminada: ${s3Key}`);
           return s3Key;
         })
       );
@@ -65,7 +58,6 @@ export function useDeleteImagesS3() {
         );
         setDeleteStatus("Algunas imágenes no se pudieron eliminar.");
       } else {
-        console.log("✅ Todas las imágenes fueron eliminadas correctamente.");
         setDeleteStatus("Imágenes eliminadas satisfactoriamente.");
       }
 

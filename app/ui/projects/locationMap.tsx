@@ -36,31 +36,35 @@ export default function LocationMap({
     lng: number;
   } | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
+  const markerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(
+    null
+  );
+  const userMarkerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(
+    null
+  );
 
   useEffect(() => {
-    if (
-      coordinates.lat !== DEFAULT_CENTER.lat &&
-      coordinates.lng !== DEFAULT_CENTER.lng
-    ) {
-      setMapCenter(coordinates);
-    } else if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userCoords = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setUserLocation(userCoords);
-          setMapCenter(userCoords);
-        },
-        () => {
-          setMapCenter(DEFAULT_CENTER);
+    async function updateMarkers() {
+      if (isLoaded && mapRef.current) {
+        const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+          "marker"
+        )) as any;
+
+        if (markerRef.current) {
+          markerRef.current.map = null;
         }
-      );
-    } else {
-      setMapCenter(DEFAULT_CENTER);
+
+        markerRef.current = new AdvancedMarkerElement({
+          position: coordinates,
+          map: mapRef.current,
+        });
+
+        mapRef.current.panTo(coordinates);
+      }
     }
-  }, [coordinates]);
+
+    updateMarkers();
+  }, [isLoaded, coordinates]);
 
   const handleMapLoad = (map: google.maps.Map) => {
     mapRef.current = map;
@@ -135,7 +139,7 @@ export default function LocationMap({
     const map = mapRef.current;
     if (navigator.geolocation && map) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const userCoords = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -146,6 +150,19 @@ export default function LocationMap({
           map.panTo(userCoords);
           map.setZoom(16);
 
+          const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+            "marker"
+          )) as any;
+
+          if (userMarkerRef.current) {
+            userMarkerRef.current.map = null;
+          }
+
+          userMarkerRef.current = new AdvancedMarkerElement({
+            position: userCoords,
+            map: map,
+          });
+
           const geocoder = new google.maps.Geocoder();
           geocoder.geocode({ location: userCoords }, (results, status) => {
             if (
@@ -154,17 +171,35 @@ export default function LocationMap({
               results.length > 0
             ) {
               const formattedAddress = results[0].formatted_address;
-              const foundCity = results.find((result) =>
-                result.types.includes("locality")
-              );
-              const foundDepartment = results.find((result) =>
-                result.types.includes("administrative_area_level_1")
-              );
+              let cityName = "";
+              let departmentName = "";
 
-              const cityName =
-                foundCity?.formatted_address.split(",")[0].trim() || "";
-              const departmentName =
-                foundDepartment?.formatted_address.split(",")[0].trim() || "";
+              results.forEach((result) => {
+                result.address_components.forEach((component) => {
+                  if (component.types.includes("locality")) {
+                    cityName = component.long_name;
+                  }
+                  if (component.types.includes("administrative_area_level_1")) {
+                    departmentName = component.long_name;
+                  }
+                });
+              });
+
+              if (!cityName) {
+                results.forEach((result) => {
+                  result.address_components.forEach((component) => {
+                    if (component.types.includes("sublocality")) {
+                      cityName = component.long_name;
+                    }
+                    if (
+                      component.types.includes("political") &&
+                      !departmentName
+                    ) {
+                      departmentName = component.long_name;
+                    }
+                  });
+                });
+              }
 
               onLocationSelect({
                 lat: userCoords.lat,
@@ -182,6 +217,11 @@ export default function LocationMap({
         },
         (error) => {
           console.warn("No se pudo obtener la ubicación del usuario.", error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
         }
       );
     }
@@ -208,12 +248,10 @@ export default function LocationMap({
           streetViewControl: false,
           mapTypeControl: false,
           fullscreenControl: false,
+          mapTypeId: "roadmap",
+          mapId: "78a223abe416be2b",
         }}
-      >
-        <Marker position={coordinates} />
-
-        {userLocation && <Marker position={userLocation} />}
-      </GoogleMap>
+      ></GoogleMap>
 
       <div className="absolute top-4 left-4 z-10 flex flex-col bg-white shadow-lg rounded-md">
         <button

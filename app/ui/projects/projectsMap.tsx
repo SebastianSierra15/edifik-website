@@ -130,22 +130,26 @@ const ProjectsMap = ({
     });
 
     if (userLocation) {
-      const userLocationDiv = document.createElement("div");
-      userLocationDiv.innerHTML = `
-      <div class="flex items-center justify-center w-10 h-10 bg-transparent animate-pulse">
-        <span class="flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 4.28 7 12 7 12s7-7.72 7-12c0-3.87-3.13-7-7-7z" fill="none" stroke="#1D4ED8" />
-            <circle cx="12" cy="9" r="3" fill="#1D4ED8" stroke="#1D4ED8" stroke-width="2"/>
-          </svg>
-        </span>
-      </div>
-    `;
+      const { AdvancedMarkerElement } = google.maps.marker;
 
-      const userMarker = new google.maps.marker.AdvancedMarkerElement({
+      markers.forEach((marker) => {
+        const markerLat =
+          typeof marker.position?.lat === "function"
+            ? marker.position.lat()
+            : marker.position?.lat;
+        const markerLng =
+          typeof marker.position?.lng === "function"
+            ? marker.position.lng()
+            : marker.position?.lng;
+
+        if (markerLat === userLocation.lat && markerLng === userLocation.lng) {
+          marker.map = null;
+        }
+      });
+
+      const userMarker = new AdvancedMarkerElement({
         position: userLocation,
         map,
-        content: userLocationDiv,
       });
 
       newMarkers.push(userMarker);
@@ -199,7 +203,10 @@ const ProjectsMap = ({
         }}
         onBoundsChanged={handleBoundsChanged}
         options={{
-          disableDefaultUI: true,
+          zoomControl: false,
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: false,
           mapTypeId: "roadmap",
           mapId: "78a223abe416be2b",
         }}

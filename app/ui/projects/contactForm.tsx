@@ -20,10 +20,9 @@ export default function ContactForm() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsLargeScreen(window.innerWidth >= 1024); // lg breakpoint
+      setIsLargeScreen(window.innerWidth >= 1024);
     };
 
-    // Set initial state
     handleResize();
 
     window.addEventListener("resize", handleResize);
@@ -35,7 +34,6 @@ export default function ContactForm() {
 
   useEffect(() => {
     if (!isLargeScreen) {
-      // Reset form state for small screens
       setFormState("default");
       return;
     }
@@ -52,10 +50,8 @@ export default function ContactForm() {
       const footerRect = footerElement.getBoundingClientRect();
       const pageHeight = document.documentElement.scrollHeight;
 
-      // Calculate stop position
       const stopPosition = pageHeight - (800 + formHeight);
 
-      // Adjust form to bottom if footer is visible
       if (footerRect.top <= windowHeight) {
         if (formState !== "bottom") {
           setFormOffset(stopPosition);
@@ -64,7 +60,6 @@ export default function ContactForm() {
         return;
       }
 
-      // Fix form when scrolling past a point
       if (window.scrollY > 400 && formRect.top <= 32) {
         if (formState !== "fixed") {
           setFormOffset(null);
@@ -73,7 +68,6 @@ export default function ContactForm() {
         return;
       }
 
-      // Reset to default at the top of the page
       if (window.scrollY <= 400) {
         if (formState !== "default") {
           setFormOffset(null);
@@ -82,7 +76,6 @@ export default function ContactForm() {
         return;
       }
 
-      // Ensure fixed state when scrolling up from bottom
       if (formState === "bottom" && window.scrollY > 400 && formRect.top > 32) {
         setFormOffset(null);
         setFormState("fixed");

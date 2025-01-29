@@ -154,6 +154,7 @@ export default function ProjectsPage() {
         <div className="mb-10 flex flex-col items-center gap-8 sm:px-6 md:flex-row md:justify-between">
           <div className="relative w-full">
             <input
+              name="searchProject"
               type="text"
               placeholder="Buscar proyectos..."
               onChange={(e) => debouncedSearch(e.target.value)}

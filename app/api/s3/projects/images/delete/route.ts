@@ -14,16 +14,12 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log(`🔴 Intentando eliminar: ${key}`);
-
     const command = new DeleteObjectCommand({
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: key,
     });
 
     await s3.send(command);
-
-    console.log(`✅ Imagen eliminada: ${key}`);
 
     return NextResponse.json({
       message: "Imagen eliminada correctamente de S3",

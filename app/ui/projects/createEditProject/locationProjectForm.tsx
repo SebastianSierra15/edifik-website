@@ -7,7 +7,7 @@ import StepNavigationButtons from "../../admin/stepNavigationButtons";
 import LocationMap from "../locationMap";
 import FormSelect from "../../modals/formSelect";
 
-const GOOGLE_MAPS_LIBRARIES: "places"[] = ["places"];
+const GOOGLE_MAPS_LIBRARIES: ("places" | "marker")[] = ["places", "marker"];
 
 interface LocationProjectFormProps {
   formData: ProjectData;
