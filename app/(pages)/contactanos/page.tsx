@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+//import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 import ContactSection from "../../ui/contact/contactSection";
 
 interface ContactInfoProps {
@@ -18,7 +18,7 @@ function ContactInfo({ icon, title, info, description, py }: ContactInfoProps) {
           {title}
         </h3>
       </div>
-      <div className="mb-5 ml-4 mt-0 w-1/5 border-t border-gray-400"></div>
+      <div className="mb-5 ml-4 mt-0 w-1/5 border-t border-gray-400" />
       <div className="ml-5 flex flex-row gap-5">
         {icon}
         <div className="flex flex-col">
@@ -99,7 +99,7 @@ export default function ContactPage() {
 
       {/* Map Section */}
       <div className="py-10">
-        <div id="map" className="h-96 w-full"></div>{" "}
+        <div id="map" className="h-96 w-full" />{" "}
         {/* Asegura que el mapa tenga altura definida */}
       </div>
     </main>

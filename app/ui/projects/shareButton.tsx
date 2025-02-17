@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
+/*import {
   FaShareAlt,
   FaWhatsapp,
   FaFacebook,
   FaTwitter,
   FaTelegram,
   FaTimes,
-} from "react-icons/fa";
+} from "react-icons/fa";*/
 
 type ShareButtonProps = {
   message: string;
@@ -34,17 +34,17 @@ export default function ShareButton({ message }: ShareButtonProps) {
         break;
       case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-          url,
+          url
         )}`;
         break;
       case "twitter":
         shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-          url,
+          url
         )}&text=${encodeURIComponent(message)}`;
         break;
       case "telegram":
         shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
-          url,
+          url
         )}&text=${encodedMessage}`;
         break;
       default:
@@ -54,7 +54,7 @@ export default function ShareButton({ message }: ShareButtonProps) {
     window.open(
       shareUrl,
       "_blank",
-      "width=600,height=400,scrollbars=no,toolbar=no,location=no,status=no,menubar=no",
+      "width=600,height=400,scrollbars=no,toolbar=no,location=no,status=no,menubar=no"
     );
   };
 

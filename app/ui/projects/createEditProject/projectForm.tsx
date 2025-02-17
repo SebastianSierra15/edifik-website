@@ -6,9 +6,9 @@ import { ProjectData, Media } from "@/lib/definitios";
 import useLocations from "@/app/hooks/projects/Metadata/location/useLocations";
 import useBasicMetadata from "@/app/hooks/projects/Metadata/useBasicMetadata";
 import useImageTypes from "@/app/hooks/projects/Metadata/imageTypes/useImageTypes";
-import { useProjectByName } from "@/app/hooks/projects/useProjectByName";
-import { useUploadImagesS3 } from "@/app/hooks/s3/useUploadImagesS3";
-import { useDeleteImagesS3 } from "@/app/hooks/s3/useDeleteImagesS3";
+import useDeleteProject from "@/app/hooks/projects/useDeleteProject";
+import { useProjectById } from "@/app/hooks/projects/useProjectById";
+import { useS3ImagesApi } from "@/app/hooks/s3/useS3ImagesApi";
 import { useProjectApi } from "@/app/hooks/projects/useProjectApi";
 import { useProjectMediaApi } from "@/app/hooks/projects/Metadata/projectMedia/useProjectMediaApi";
 import ProgressBar from "@/app/ui/projects/createEditProject/progressBar";
@@ -18,23 +18,26 @@ import FeaturesProjectForm from "@/app/ui/projects/createEditProject/featuresPro
 import DetailsProjectForm from "@/app/ui/projects/createEditProject/detailsProjectForm";
 import ImagesProjectForm from "@/app/ui/projects/createEditProject/imagesProjectForm";
 import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
-import CreateProjectSkeleton from "@/app/ui/projects/createEditProject/skeleton/createProjectSkeleton";
+import CreateProjectSkeleton from "@/app/ui/skeletons/createProjectSkeleton";
 import Loader from "@/app/ui/loader";
 
 interface ProjectFormProps {
   isEdit: boolean;
   isProperty: boolean;
-  projectName?: string;
+  projectId?: number;
+  hasPermission?: boolean;
 }
 
 export default function ProjectForm({
   isEdit,
   isProperty,
-  projectName,
+  projectId,
+  hasPermission,
 }: ProjectFormProps) {
-  const { project, loading: loadingProject } = useProjectByName(
-    projectName || ""
-  );
+  const projectQuery = isEdit
+    ? useProjectById(projectId)
+    : { project: null, loading: false };
+  const { project, loading: loadingProject } = projectQuery;
 
   const [projectData, setProjectData] = useState<Partial<ProjectData>>(
     isEdit ? {} : { projectType: { id: 1, name: "Sobre Planos" }, media: [] }
@@ -48,13 +51,14 @@ export default function ProjectForm({
   const { metadata } = useBasicMetadata();
   const { imagesTypes } = useImageTypes();
   const { submitProject } = useProjectApi();
-  const { uploadImages } = useUploadImagesS3();
-  const { deleteImages } = useDeleteImagesS3();
+  const { deleteProject } = useDeleteProject();
+  const { uploadImages, deleteImages } = useS3ImagesApi();
   const { insertProjectMedia, updateProjectMedia, deleteProjectMedia } =
     useProjectMediaApi();
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mediaToSubmit, setMediaToSubmit] = useState<Media[] | null>(null);
+  const [mapAddress, setMapAddress] = useState(isEdit ? "Ubicación" : "");
 
   useEffect(() => {
     if (isEdit && project && Object.keys(project).length > 0) {
@@ -113,132 +117,16 @@ export default function ProjectForm({
 
       const finalProjectData = { ...projectData, media };
 
-      const result = await submitProject(
-        finalProjectData,
-        isEdit ? "edit" : "create"
-      );
-
-      let projectId: number | null = null;
-
-      if (isEdit) {
-        if (!result) {
-          console.error("❌ Error al editar el proyecto.");
-          sessionStorage.setItem(
-            "projectMessage",
-            JSON.stringify({
-              type: "error",
-              message: "Error al editar el proyecto.",
-            })
-          );
-          return;
-        }
-        projectId = projectData.id ?? null;
-      } else {
-        if (typeof result === "number") {
-          projectId = result;
-        } else {
-          console.error("❌ Error al crear el proyecto.");
-          sessionStorage.setItem(
-            "projectMessage",
-            JSON.stringify({
-              type: "error",
-              message: "Error al crear el proyecto.",
-            })
-          );
-          return;
-        }
-      }
-
+      const projectId = await createOrUpdateProject(finalProjectData);
       if (!projectId) {
-        console.error("❌ ID del proyecto inválido.");
-        sessionStorage.setItem(
-          "projectMessage",
-          JSON.stringify({ type: "error", message: "ID de proyecto inválido." })
-        );
+        console.error("❌ No se pudo obtener un ID de proyecto válido.");
         return;
       }
 
       if (isEdit) {
-        const existingMedia = media.filter((m) => typeof m.file === "string");
-        const newMedia = media.filter((m) => m.file instanceof File);
-        const mediaUrls = existingMedia.map((m) => m.file as string);
-        const previousMediaUrls =
-          projectData.projectMedia?.map((m) => m.url) || [];
-
-        const imagesToDelete = previousMediaUrls.filter(
-          (url) => !mediaUrls.includes(url)
-        );
-        if (imagesToDelete.length > 0) {
-          await deleteImages(imagesToDelete);
-
-          const mediaIdsToDelete =
-            projectData.projectMedia
-              ?.filter((m) => imagesToDelete.includes(m.url))
-              .map((m) => m.id)
-              .filter((id): id is number => id !== undefined) || [];
-
-          if (mediaIdsToDelete.length > 0) {
-            await deleteProjectMedia(mediaIdsToDelete);
-          }
-        }
-
-        if (newMedia.length > 0) {
-          const uploadResult = await uploadImages(
-            projectId,
-            newMedia,
-            projectData.propertyType?.name ?? "default"
-          );
-
-          if (uploadResult) {
-            await insertProjectMedia(uploadResult);
-          } else {
-            throw new Error("Error al subir las imágenes.");
-          }
-        }
-
-        const mediaToUpdate =
-          projectData.projectMedia
-            ?.map((original) => {
-              const updated = media.find(
-                (m) => typeof m.file === "string" && m.file === original.url
-              );
-
-              if (
-                updated &&
-                (updated.tag.trim() !== original.tag.trim() ||
-                  (updated.description?.trim() || "") !==
-                    (original.description?.trim() || ""))
-              ) {
-                return {
-                  id: original.id!,
-                  tag: updated.tag,
-                  description: updated.description ?? "",
-                };
-              }
-              return null;
-            })
-            .filter(
-              (
-                item
-              ): item is { id: number; tag: string; description: string } =>
-                item !== null
-            ) || [];
-
-        if (mediaToUpdate.length > 0) {
-          await updateProjectMedia(mediaToUpdate);
-        }
+        await handleEditMedia(projectId, media);
       } else {
-        const uploadResult = await uploadImages(
-          projectId,
-          media,
-          projectData.propertyType?.name ?? "default"
-        );
-
-        if (uploadResult) {
-          await insertProjectMedia(uploadResult);
-        } else {
-          throw new Error("Error al subir las imágenes.");
-        }
+        await handleNewMedia(projectId, media);
       }
 
       sessionStorage.setItem(
@@ -261,7 +149,141 @@ export default function ProjectForm({
       );
     } finally {
       setLoading(false);
-      router.push("/admin/proyectos");
+      router.push(isProperty ? "/admin/propiedades" : "/admin/proyectos");
+    }
+  };
+
+  const createOrUpdateProject = async (projectData: Partial<ProjectData>) => {
+    const result = await submitProject(projectData, isEdit ? "edit" : "create");
+
+    if (isEdit) {
+      if (!result) {
+        console.error("❌ Error al editar el proyecto.");
+        sessionStorage.setItem(
+          "projectMessage",
+          JSON.stringify({
+            type: "error",
+            message: "Error al editar el proyecto.",
+          })
+        );
+        return null;
+      }
+      return projectData.id ?? null;
+    } else {
+      if (typeof result === "number") return result;
+
+      console.error("❌ Error al crear el proyecto.");
+      sessionStorage.setItem(
+        "projectMessage",
+        JSON.stringify({
+          type: "error",
+          message: "Error al crear el proyecto.",
+        })
+      );
+      return null;
+    }
+  };
+
+  const handleEditMedia = async (projectId: number, media: Media[]) => {
+    const existingMedia = media.filter((m) => typeof m.file === "string");
+    const newMedia = media.filter((m) => m.file instanceof File);
+
+    const mediaUrls = existingMedia.map((m) => m.file as string);
+    const previousMediaUrls = projectData.projectMedia?.map((m) => m.url) || [];
+
+    await deleteUnusedImages(previousMediaUrls, mediaUrls);
+
+    if (newMedia.length > 0) {
+      await uploadAndInsertMedia(projectId, newMedia);
+    }
+
+    await updateExistingMedia(media);
+  };
+
+  const handleNewMedia = async (projectId: number, media: Media[]) => {
+    await uploadAndInsertMedia(projectId, media);
+  };
+
+  const deleteUnusedImages = async (
+    previousUrls: string[],
+    currentUrls: string[]
+  ) => {
+    const imagesToDelete = previousUrls.filter(
+      (url) => !currentUrls.includes(url)
+    );
+
+    if (imagesToDelete.length > 0) {
+      await deleteImages(imagesToDelete);
+
+      const mediaIdsToDelete =
+        projectData.projectMedia
+          ?.filter((m) => imagesToDelete.includes(m.url))
+          .map((m) => m.id)
+          .filter((id): id is number => id !== undefined) || [];
+
+      if (mediaIdsToDelete.length > 0) {
+        await deleteProjectMedia(mediaIdsToDelete);
+      }
+    }
+  };
+
+  const uploadAndInsertMedia = async (projectId: number, media: Media[]) => {
+    const uploadResult = await uploadImages(
+      projectId,
+      media,
+      projectData.propertyType?.name ?? "default"
+    );
+
+    if (!uploadResult || uploadResult.length === 0) {
+      console.error(
+        "❌ No se pudieron subir imágenes. Eliminando el proyecto..."
+      );
+      await deleteProject(projectId);
+      throw new Error("Error al subir las imágenes. Proyecto eliminado.");
+    }
+
+    try {
+      await insertProjectMedia(uploadResult);
+    } catch (error) {
+      console.error(
+        "❌ Error al insertar imágenes en la base de datos. Eliminando el proyecto..."
+      );
+      await deleteProject(projectId);
+      throw new Error(
+        "Error al insertar imágenes en la BD. Proyecto eliminado."
+      );
+    }
+  };
+
+  const updateExistingMedia = async (media: Media[]): Promise<void> => {
+    const mediaToUpdate =
+      projectData.projectMedia
+        ?.map((original) => {
+          const updated = media.find(
+            (m) => typeof m.file === "string" && m.file === original.url
+          );
+
+          if (
+            updated &&
+            (updated.tag.trim() !== original.tag.trim() ||
+              (updated.description?.trim() || "") !==
+                (original.description?.trim() || ""))
+          ) {
+            return {
+              id: original.id!,
+              tag: updated.tag,
+              description: updated.description ?? "",
+            };
+          }
+          return null;
+        })
+        .filter(
+          (item): item is { id: number; tag: string; description: string } =>
+            item !== null
+        ) || [];
+
+    if (mediaToUpdate.length > 0) {
+      await updateProjectMedia(mediaToUpdate);
     }
   };
 
@@ -324,6 +346,7 @@ export default function ProjectForm({
             totalSteps={totalSteps}
             isProperty={isProperty}
             isEdit={isEdit}
+            hasPermission={hasPermission}
           />
         )}
 
@@ -338,6 +361,8 @@ export default function ProjectForm({
             totalSteps={totalSteps}
             departaments={locations.departaments}
             cities={locations.cities}
+            mapAddress={mapAddress}
+            setMapAddress={setMapAddress}
           />
         )}
 
@@ -393,7 +418,8 @@ export default function ProjectForm({
       )}
 
       <h1 className="mb-10 mt-24 text-center text-3xl font-semibold text-premium-primary lg:mt-20 dark:text-premium-primaryLight">
-        {isEdit ? "Editar Proyecto" : "Agregar Proyecto"}
+        {isEdit ? "Editar " : "Agregar "}
+        {isProperty ? "Propiedad" : "Proyecto"}
       </h1>
 
       <div className="mx-auto mb-10 text-center">
@@ -419,7 +445,9 @@ export default function ProjectForm({
       <div className="mt-4 text-center">
         <button
           className="rounded-md bg-premium-secondary px-4 py-2 text-white transition-colors hover:bg-premium-secondaryLight dark:bg-premium-secondaryDark dark:hover:bg-premium-secondaryLight"
-          onClick={() => router.push("/admin/proyectos")}
+          onClick={() =>
+            router.push(isProperty ? "/admin/propiedades" : "/admin/proyectos")
+          }
         >
           Volver
         </button>

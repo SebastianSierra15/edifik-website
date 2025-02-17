@@ -1,5 +1,5 @@
 import { Project } from "@/lib/definitios";
-import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
+//import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 import ShareButton from "@/app/ui/projects/shareButton";
 
 type ProjectHeaderProps = {

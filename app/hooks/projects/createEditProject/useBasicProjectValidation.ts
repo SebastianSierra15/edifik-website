@@ -9,6 +9,7 @@ export const useBasicProjectValidation = (
 ) => {
   const [errors, setErrors] = useState({
     nameError: "",
+    emailError: "",
     shortDescriptionError: "",
     detailedDescriptionError: "",
     propertyTypeError: "",
@@ -19,8 +20,18 @@ export const useBasicProjectValidation = (
 
   const getErrorMessage = (fieldName: keyof typeof errors, value: any) => {
     switch (fieldName) {
-      case "nameError":
-        return !value ? "El nombre es obligatorio." : "";
+      case "emailError":
+        if (isProperty && value) {
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+            return "Ingrese un correo electrónico válido.";
+          }
+          if (!formData.ownerId) {
+            return "El correo ingresado no pertenece a un usuario registrado.";
+          }
+        }
+        return "";
+      case "emailError":
+        return !value ? "El usuario es obligatorio." : "";
       case "shortDescriptionError":
         return !value ? "El resumen breve es obligatorio." : "";
       case "detailedDescriptionError":
@@ -39,7 +50,7 @@ export const useBasicProjectValidation = (
   const validateField = async (fieldName: keyof typeof errors, value: any) => {
     let errorMessage = getErrorMessage(fieldName, value);
 
-    if (fieldName === "nameError" && value) {
+    if (!isProperty && fieldName === "nameError" && value) {
       const total = await checkName(
         "project",
         value,
@@ -59,6 +70,7 @@ export const useBasicProjectValidation = (
   const validateFields = async () => {
     const newErrors: typeof errors = {
       nameError: getErrorMessage("nameError", formData.name),
+      emailError: getErrorMessage("emailError", formData.email),
       shortDescriptionError: getErrorMessage(
         "shortDescriptionError",
         formData.shortDescription
@@ -77,7 +89,15 @@ export const useBasicProjectValidation = (
       ),
     };
 
-    if (formData.name) {
+    if (formData.email && !formData.ownerId) {
+      const foundUser = await checkName("user", formData.email);
+      if (!foundUser) {
+        newErrors.emailError =
+          "El correo ingresado no pertenece a un usuario registrado.";
+      }
+    }
+
+    if (!isProperty && formData.name) {
       const total = await checkName(
         "project",
         formData.name,

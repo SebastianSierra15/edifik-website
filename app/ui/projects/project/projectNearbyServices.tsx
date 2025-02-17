@@ -1,7 +1,7 @@
 import { NearbyService } from "@/lib/definitios";
-import { FaSchool, FaStore, FaHospital, FaChild } from "react-icons/fa";
+//import { FaSchool, FaStore, FaHospital, FaChild } from "react-icons/fa";
 import DetailCard from "./detailCard";
-import { motion } from "framer-motion";
+//import { motion } from "framer-motion";
 
 type ProjectNearbyServicesProps = {
   services: NearbyService[];

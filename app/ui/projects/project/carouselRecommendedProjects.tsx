@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import ProjectCard from "../projectCard";
 import { ProjectSummary } from "@/lib/definitios";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+//import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 type CarouselRecommendedProjectsProps = {
   projects: ProjectSummary[];
@@ -15,11 +15,8 @@ export default function CarouselRecommendedProjects({
   const [currentIndex, setCurrentIndex] = useState(0);
   const visibleCardsMap = { base: 2, sm: 3, lg: 4, xl: 5 };
 
-  const [visibleCards, setVisibleCards] = useState(
-    visibleCardsMap.xl, // Default to xl screen
-  );
+  const [visibleCards, setVisibleCards] = useState(visibleCardsMap.xl);
 
-  // Determina cuántas tarjetas mostrar según el ancho de la pantalla
   useEffect(() => {
     const updateVisibleCards = () => {
       if (window.innerWidth >= 1280) setVisibleCards(visibleCardsMap.xl);
@@ -36,7 +33,6 @@ export default function CarouselRecommendedProjects({
 
   const totalProjects = projects.length;
 
-  // Controles para avanzar y retroceder
   const handleNext = () => {
     if (currentIndex + visibleCards < totalProjects) {
       setCurrentIndex((prev) => prev + 1);
@@ -61,7 +57,7 @@ export default function CarouselRecommendedProjects({
           }`}
           onClick={handlePrev}
           aria-label="Previous"
-          disabled={currentIndex === 0} // Deshabilitar botón si no hay más tarjetas a la izquierda
+          disabled={currentIndex === 0}
         >
           <FaChevronLeft />
         </button>
@@ -71,8 +67,8 @@ export default function CarouselRecommendedProjects({
           <div
             className="flex py-4 transition-transform duration-500 ease-in-out"
             style={{
-              transform: `translateX(-${(currentIndex * 100) / visibleCards}%)`, // Calcula la posición
-              width: `${(projects.length * 100) / visibleCards}%`, // Calcula el ancho total del carrusel
+              transform: `translateX(-${(currentIndex * 100) / visibleCards}%)`,
+              width: `${(projects.length * 100) / visibleCards}%`,
             }}
           >
             {projects.map((project, index) => (
@@ -80,7 +76,7 @@ export default function CarouselRecommendedProjects({
                 key={index}
                 className="flex-shrink-0 px-2"
                 style={{
-                  width: `${100 / visibleCards}%`, // Calcula el ancho dinámico de cada tarjeta
+                  width: `${100 / visibleCards}%`,
                 }}
               >
                 <ProjectCard
@@ -110,7 +106,7 @@ export default function CarouselRecommendedProjects({
           }`}
           onClick={handleNext}
           aria-label="Next"
-          disabled={currentIndex + visibleCards >= totalProjects} // Deshabilitar botón si no hay más tarjetas a la derecha
+          disabled={currentIndex + visibleCards >= totalProjects}
         >
           <FaChevronRight />
         </button>

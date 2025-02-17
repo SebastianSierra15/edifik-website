@@ -46,6 +46,8 @@ export function useGetProjects({
       const signal = controller.signal;
 
       try {
+        const startFetch = performance.now(); // Inicia medición
+
         const params = new URLSearchParams({
           page: page.toString(),
           pageSize: entriesPerPage.toString(),
@@ -74,8 +76,20 @@ export function useGetProjects({
           throw new Error(`Error fetching projects: ${response.statusText}`);
         }
 
+        const serverTiming = response.headers.get("Server-Timing");
+        console.log("⏳ Server Timing Metrics:", serverTiming);
+
         const data = await response.json();
         const newProjects: ProjectSummary[] = data.projects;
+
+        const endFetch = performance.now(); // Finaliza medición
+
+        console.log(
+          `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
+        );
+        console.log(
+          `📦 Tamaño de respuesta: ${JSON.stringify(data).length} bytes`
+        );
 
         setProjects((prev) =>
           isLoadMore
@@ -103,18 +117,26 @@ export function useGetProjects({
   );
 
   useEffect(() => {
-    fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
+    console.log("🔄 Fetching Projects...");
+
+    const timeoutId = setTimeout(() => {
+      fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
+    }, 500); // Espera 500ms antes de llamar la API (reduce llamadas innecesarias)
+
+    return () => clearTimeout(timeoutId); // Cancela llamadas anteriores si hay nuevos cambios
   }, [searchTerm, selectedButtons, projectTypeId, showMap, bounds]);
 
   const fetchMoreProjects = useCallback(() => {
-    const nextPage = currentPage + 1;
-    setCurrentPage(nextPage);
-    fetchProjects(
-      true,
-      nextPage,
-      showMap && bounds !== null ? bounds : undefined
-    );
-  }, [currentPage, fetchProjects]);
+    if (!isLoading) {
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage);
+      fetchProjects(
+        true,
+        nextPage,
+        showMap && bounds !== null ? bounds : undefined
+      );
+    }
+  }, [currentPage, isLoading, fetchProjects]);
 
   const refreshProjects = useCallback(() => {
     setProjects([]);

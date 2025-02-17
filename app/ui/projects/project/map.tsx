@@ -1,6 +1,6 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+//import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+//import "leaflet/dist/leaflet.css";
+//import L from "leaflet";
 
 const customIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",

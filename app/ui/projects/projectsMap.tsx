@@ -195,7 +195,7 @@ const ProjectsMap = ({
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={currentCenter}
-        zoom={10}
+        zoom={12}
         onLoad={(map) => {
           mapRef.current = map;
           setIsMapLoaded(true);
@@ -241,7 +241,7 @@ const ProjectsMap = ({
             id={selectedProject.id}
             images={selectedProject.projectMedia}
             name={selectedProject.name}
-            location={`${selectedProject.city.name}, ${selectedProject.city.departament.name}`}
+            location={selectedProject.city.name}
             price={selectedProject.price || undefined}
             area={selectedProject.totalArea || 0}
             isFromMap={true}

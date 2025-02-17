@@ -127,26 +127,29 @@ export default function DetailsProjectForm({
     }
   };
 
+  const isProject = formData.projectType?.id === 1;
+  const isProperty =
+    formData.projectType?.id === 2 || formData.projectType?.id === 3;
+  const isApartmentOrHouse =
+    formData.propertyType?.id === 1001 || formData.propertyType?.id === 1002;
+
   const tooltipTexts = useMemo(
     () => ({
-      price:
-        formData.projectType?.id === 2 || formData.projectType?.id === 3
-          ? "Indique el precio de la propiedad."
-          : "Indique el precio por unidad del proyecto.",
+      price: isProperty
+        ? "Indique el precio de la propiedad."
+        : "Indique el precio por unidad del proyecto.",
       availableUnits:
         "Especifique el número de unidades disponibles para este proyecto.",
       housingType: "Seleccione el tipo de vivienda.",
       availableDate:
         "Seleccione la fecha estimada para la entrega del proyecto (mes/año).",
       complexName: "Nombre del conjunto residencial (si aplica).",
-      commonAreas:
-        formData.projectType?.id === 2 || formData.projectType?.id === 3
-          ? "Seleccione las áreas comunes disponibles en la propiedad."
-          : "Seleccione las áreas comunes disponibles en el proyecto.",
-      nearbyServices:
-        formData.projectType?.id === 2 || formData.projectType?.id === 3
-          ? "Seleccione los servicios cercanos a la propiedad."
-          : "Seleccione los servicios cercanos al proyecto.",
+      commonAreas: isProperty
+        ? "Seleccione las áreas comunes disponibles en la propiedad."
+        : "Seleccione las áreas comunes disponibles en el proyecto.",
+      nearbyServices: isProperty
+        ? "Seleccione los servicios cercanos a la propiedad."
+        : "Seleccione los servicios cercanos al proyecto.",
     }),
     [formData.projectType?.id]
   );
@@ -154,84 +157,84 @@ export default function DetailsProjectForm({
   return (
     <div className="container mx-auto w-full rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
       <h2 className="mb-6 text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight">
-        {formData.projectType?.id === 1
-          ? "Detalles del Proyecto"
-          : "Detalles de la Propiedad"}
+        {isProject ? "Detalles del Proyecto" : "Detalles de la Propiedad"}
       </h2>
 
       <form onSubmit={handleNext} className="space-y-6">
-        {formData.projectType?.id === 2 ||
-          (formData.projectType?.id === 3 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormInput
-                label="Precio"
-                type="text"
-                name="price"
-                value={formData.price ? formatNumber(formData.price) : ""}
-                onChange={handlePriceChange}
-                placeholder="Ingrese el precio"
-                error={errors.priceError}
-                tooltipText={tooltipTexts.price}
-              />
-
-              <FormInput
-                label="Unidades Disponibles"
-                type="number"
-                name="availableUnits"
-                value={formData.availableUnits || ""}
-                onChange={handleChange}
-                placeholder="Número de unidades disponibles"
-                error={errors.availableUnitsError}
-                min={0}
-                tooltipText={tooltipTexts.availableUnits}
-              />
-            </div>
-          ))}
-
         <div
           className={clsx(
-            "grid grid-cols-1 gap-4",
-            (formData.propertyType?.id === 1001 ||
-              formData.propertyType?.id === 1002) &&
-              "sm:grid-cols-2"
+            "grid gap-4",
+            isProperty ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"
           )}
         >
-          {(formData.propertyType?.id === 1001 ||
-            formData.propertyType?.id === 1002) && (
-            <FormSelect
-              label="Tipo de Vivienda"
-              name="housingType"
-              value={formData.housingType?.id || ""}
-              options={housingTypes}
-              onChange={(e) => handleSelectChange(e, "housingType")}
-              error={errors.housingTypeError}
-              tooltipText={tooltipTexts.housingType}
+          <FormInput
+            label="Precio"
+            type="text"
+            name="price"
+            value={formData.price ? formatNumber(formData.price) : ""}
+            onChange={handlePriceChange}
+            placeholder="Ingrese el precio"
+            error={errors.priceError}
+            tooltipText={tooltipTexts.price}
+          />
+
+          {isProject && (
+            <FormInput
+              label="Unidades Disponibles"
+              type="number"
+              name="availableUnits"
+              value={formData.availableUnits || ""}
+              onChange={handleChange}
+              placeholder="Número de unidades disponibles"
+              min={0}
+              tooltipText={tooltipTexts.availableUnits}
             />
           )}
-
-          <FormDatePicker
-            label="Fecha Estimada de Entrega"
-            name="availableDate"
-            value={formData.availableDate ?? null}
-            onChange={handleDateChange}
-            tooltipText={tooltipTexts.availableDate}
-          />
         </div>
 
-        {formData.propertyType?.id === 1002 &&
-          (formData.projectType?.id === 2 ||
-            formData.projectType?.id === 3) && (
-            <FormInput
-              label="Nombre del conjunto"
-              type="text"
-              name="complexName"
-              value={formData.complexName || ""}
-              onChange={handleChangeText}
-              maxLength={100}
-              placeholder="Ingrese el nombre del proyecto"
-              tooltipText={tooltipTexts.complexName}
-            />
-          )}
+        {(isApartmentOrHouse || isProject) && (
+          <div
+            className={clsx(
+              "grid grid-cols-1 gap-4",
+              isApartmentOrHouse && isProject && "sm:grid-cols-2"
+            )}
+          >
+            {isApartmentOrHouse && (
+              <FormSelect
+                label="Tipo de Vivienda"
+                name="housingType"
+                value={formData.housingType?.id || ""}
+                options={housingTypes}
+                onChange={(e) => handleSelectChange(e, "housingType")}
+                error={errors.housingTypeError}
+                tooltipText={tooltipTexts.housingType}
+              />
+            )}
+
+            {isProject && (
+              <FormDatePicker
+                label="Fecha Estimada de Entrega"
+                name="availableDate"
+                value={formData.availableDate ?? null}
+                onChange={handleDateChange}
+                tooltipText={tooltipTexts.availableDate}
+              />
+            )}
+          </div>
+        )}
+
+        {formData.propertyType?.id === 1002 && isProperty && (
+          <FormInput
+            label="Nombre del conjunto"
+            type="text"
+            name="complexName"
+            value={formData.complexName || ""}
+            onChange={handleChangeText}
+            maxLength={100}
+            placeholder="Ingrese el nombre del proyecto"
+            tooltipText={tooltipTexts.complexName}
+          />
+        )}
 
         <FormMultiSelect
           label="Áreas Comunes"

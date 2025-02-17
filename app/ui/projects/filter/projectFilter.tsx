@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import FilterOption from "./filterOption";
 import FilterNumericCounter from "./filterNumericCounter";
 import FilterOptionWithSlider from "./filterOptionWithSlider";
-import FilterSkeleton from "./skeleton/filterSkeleton";
+import FilterSkeleton from "../../skeletons/filterSkeleton";
 
 const Building2 = dynamic(() =>
   import("lucide-react").then((mod) => mod.Building2)
@@ -170,7 +170,7 @@ const ProjectFilter = ({
       bedrooms: [0],
       bathrooms: [0],
       lobbies: [0],
-      price: [1],
+      price: [0],
       area: [1],
     });
   };

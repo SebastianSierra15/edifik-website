@@ -4,14 +4,15 @@ import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { useCallback } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { Plus } from "lucide-react";
+import { Plus, Eye } from "lucide-react";
 import { User, UserData, Header } from "@/lib/definitios";
 import { useUsers } from "@/app/hooks/users/useUsers";
 import { useUserValidation } from "@/app/hooks/users/useUserValidation";
 import { useUserApi } from "@/app/hooks/users/useUserApi";
 import { useUsersMetadata } from "@/app/hooks/users/useUsersMetadata";
-import Table from "@/app/ui/admin/table";
-import TableSkeleton from "@/app/ui/admin/skeletons/tableSkeleton";
+import Table from "@/app/ui/table/table";
+import TableSkeleton from "@/app/ui/skeletons/tableSkeleton";
+import UserProjectsModal from "@/app/ui/users/userProjectsModal ";
 import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
 import Alert from "@/app/ui/alert";
 
@@ -28,6 +29,8 @@ export default function UsersPage() {
   const [registerUser, setRegisterUser] = useState<UserData>({});
   const [tempUser, setTempUser] = useState<UserData | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [isUserProjectsModalOpen, setIsUserProjectsModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [confirmationAction, setConfirmationAction] = useState<
     "register" | "edit" | null
   >(null);
@@ -183,6 +186,11 @@ export default function UsersPage() {
     setCurrentPage(1);
   };
 
+  const openUserProjectsModal = (userId: number) => {
+    setSelectedUserId(userId);
+    setIsUserProjectsModalOpen(true);
+  };
+
   const headers: Header<User>[] = [
     { label: "Id", key: "id", type: "number" },
     { label: "Username", key: "username", type: "string" },
@@ -196,7 +204,18 @@ export default function UsersPage() {
     { label: "Última conexión", key: "lastLogin", type: "date" },
     { label: "Rol", key: "role.name", type: "string" },
     { label: "Membresía", key: "membership.name", type: "string" },
+    { label: "Num. Propiedades", key: "totalProperties", type: "number" },
     { label: "Prov. autenticación", key: "provider", type: "string" },
+  ];
+
+  const actions = [
+    {
+      icon: Eye,
+      title: "Ver Propiedades",
+      className: "text-green-500 hover:text-green-600",
+      onClick: (item: User) => openUserProjectsModal(item.id),
+      shouldRender: (item: User) => (item.totalProperties ?? 0) > 0,
+    },
   ];
 
   return (
@@ -215,7 +234,7 @@ export default function UsersPage() {
       </div>
 
       {showSkeleton ? (
-        <TableSkeleton rows={5} columns={headers.length + 1} />
+        <TableSkeleton />
       ) : (
         <Table
           data={users}
@@ -230,7 +249,7 @@ export default function UsersPage() {
           handleEntriesPerPageChange={handleEntriesPerPageChange}
           handleSearchChange={(e) => debouncedSearch(e.target.value)}
           onEditClick={handleEditClick}
-          canDelete={false}
+          actions={actions}
         />
       )}
 
@@ -252,6 +271,14 @@ export default function UsersPage() {
         />
       )}
 
+      {isUserProjectsModalOpen && selectedUserId && (
+        <UserProjectsModal
+          show={isUserProjectsModalOpen}
+          onClose={() => setIsUserProjectsModalOpen(false)}
+          userId={selectedUserId}
+        />
+      )}
+
       {isConfirmationModalOpen && (
         <ModalConfirmation
           isOpen={isConfirmationModalOpen}
@@ -265,6 +292,7 @@ export default function UsersPage() {
           cancelLabel="Cancelar"
         />
       )}
+
       {alert.show && (
         <Alert
           type={alert.type!}

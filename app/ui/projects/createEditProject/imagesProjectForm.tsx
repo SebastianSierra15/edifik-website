@@ -3,7 +3,7 @@
 import { useState, ChangeEvent, useEffect, useCallback, useMemo } from "react";
 import { ProjectData, ImageType, Media } from "@/lib/definitios";
 import { useImagesProjectValidation } from "@/app/hooks/projects/createEditProject/useImagesProjectValidation";
-import ImageUploadSection from "./ImageUploadSection";
+import ImageUploadSection from "./imageUploadSection";
 import StepNavigationButtons from "../../admin/stepNavigationButtons";
 import ModalAlert from "../../modals/modalAlert";
 

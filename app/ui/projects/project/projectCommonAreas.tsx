@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import ImageModal from "./imageModal";
 import { CommonArea, ProjectMedia } from "@/lib/definitios";
-import { AiOutlineDown } from "react-icons/ai";
-import { motion } from "framer-motion";
+//import { AiOutlineDown } from "react-icons/ai";
+//import { motion } from "framer-motion";
 
 type ProjectCommonAreasProps = {
   areas: CommonArea[];
@@ -22,7 +22,7 @@ export default function ProjectCommonAreas({
 
   const toggleAccordion = (index: number) => {
     setOpenAccordions((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
 
@@ -38,7 +38,7 @@ export default function ProjectCommonAreas({
       </h2>
       {areas.map((area, index) => {
         const areaImages = projectMedia.filter(
-          (media) => media.commonArea === area.id,
+          (media) => media.commonArea === area.id
         );
 
         const isOpen = openAccordions.includes(index);

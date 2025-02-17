@@ -6,13 +6,23 @@ export const useLocationProjectValidation = (formData: ProjectData) => {
     departamentError: "",
     cityError: "",
     addressError: "",
+    mapAddressError: "",
   });
 
   const validateField = (fieldName: keyof typeof errors, value: any) => {
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [fieldName]: value ? "" : getErrorMessage(fieldName, value),
-    }));
+    if (fieldName === "mapAddressError" && typeof value === "string") {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        mapAddressError: value.trim()
+          ? ""
+          : getErrorMessage("mapAddressError", value),
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [fieldName]: value ? "" : getErrorMessage(fieldName, value),
+      }));
+    }
   };
 
   const getErrorMessage = (fieldName: keyof typeof errors, value: any) => {
@@ -22,13 +32,15 @@ export const useLocationProjectValidation = (formData: ProjectData) => {
       case "cityError":
         return !value ? "La ciudad es obligatoria." : "";
       case "addressError":
-        return !value?.trim() ? "La dirección es obligatoria." : "";
+        return !value?.trim() ? "La dirección pública es obligatoria." : "";
+      case "mapAddressError":
+        return !value?.trim() ? "La ubicación en el mapa es obligatoria." : "";
       default:
         return "";
     }
   };
 
-  const validateFields = () => {
+  const validateFields = (mapAddress: string) => {
     const newErrors: typeof errors = {
       departamentError: getErrorMessage(
         "departamentError",
@@ -36,6 +48,7 @@ export const useLocationProjectValidation = (formData: ProjectData) => {
       ),
       cityError: getErrorMessage("cityError", formData.city?.id),
       addressError: getErrorMessage("addressError", formData.address),
+      mapAddressError: getErrorMessage("mapAddressError", mapAddress),
     };
 
     setErrors(newErrors);

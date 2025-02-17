@@ -98,7 +98,7 @@ export default function FormSearchAddress({
   };
 
   return (
-    <>
+    <div>
       <label
         htmlFor="searchAddress"
         className="mb-2 flex items-center gap-2 text-premium-textPrimary dark:text-premium-textPrimary"
@@ -123,6 +123,7 @@ export default function FormSearchAddress({
             : "border-premium-borderColor dark:border-premium-borderColorHover"
         )}
       />
+
       {isListVisible && suggestions.length > 0 && (
         <ul
           ref={listRef}
@@ -145,6 +146,6 @@ export default function FormSearchAddress({
         </ul>
       )}
       {error && <FormErrorMessage error={error} />}
-    </>
+    </div>
   );
 }

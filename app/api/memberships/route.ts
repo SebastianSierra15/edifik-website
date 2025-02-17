@@ -7,13 +7,29 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
+  const session = await getServerSession(authOptions);
 
-  const page = parseInt(searchParams.get("page") || "1", 10);
-  const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
-  const searchTerm = escapeSearchTerm(searchParams.get("searchTerm") || null);
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) => perm.name === "Gestionar membresias"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
 
   try {
+    const { searchParams } = new URL(req.url);
+
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
+    const searchTerm = escapeSearchTerm(searchParams.get("searchTerm") || null);
+
     const [result] = await db.query("CALL get_memberships(?, ?, ?)", [
       page,
       pageSize,
@@ -35,13 +51,23 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) => perm.name === "Gestionar membresias"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
     const userId = session.user.id;
 
     const {

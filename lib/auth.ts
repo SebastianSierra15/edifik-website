@@ -1,6 +1,6 @@
 import { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 import { db } from "@/lib/db";
+import GoogleProvider from "next-auth/providers/google";
 import { RowDataPacket } from "mysql2";
 import { Permission } from "./definitios";
 

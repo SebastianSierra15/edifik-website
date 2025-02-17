@@ -69,7 +69,7 @@ export default function ContactSection() {
               placeholder="Mensaje"
               required
               className="h-32 w-full rounded-md border border-gray-500 p-3 focus:ring-2 focus:ring-blue-600"
-            ></textarea>
+            />
 
             <button
               type="submit"

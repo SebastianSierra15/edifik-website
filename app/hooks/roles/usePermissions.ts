@@ -16,7 +16,7 @@ export const usePermissions = () => {
           );
         }
         const data = await response.json();
-        setPermissions(data.permissions);
+        setPermissions(data.permission);
       } catch (error) {
         console.error("Error en la busqueda de permisos:", error);
       } finally {

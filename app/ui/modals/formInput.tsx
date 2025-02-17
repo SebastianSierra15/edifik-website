@@ -17,6 +17,7 @@ interface FormInputProps {
   error?: string;
   flag?: boolean;
   tooltipText?: string;
+  isEdit?: boolean;
 }
 
 export default function FormInput({
@@ -33,6 +34,7 @@ export default function FormInput({
   error,
   flag,
   tooltipText,
+  isEdit = true,
 }: FormInputProps) {
   const formattedValue =
     type === "number" && typeof value === "number"
@@ -59,6 +61,7 @@ export default function FormInput({
         maxLength={type === "text" ? maxLength : undefined}
         min={type === "number" ? min : undefined}
         max={type === "number" ? max : undefined}
+        disabled={!isEdit}
         autoComplete={
           type === "email"
             ? "email"

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import UserMenuButton from "./login/userMenuButton";
+import UserMenu from "./userMenu";
 
 export default function Header() {
   const pathname = usePathname();
@@ -63,39 +63,8 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="flex items-center space-x-4 text-black">
-          {/*
-          {[
-            {
-              href: "https://www.facebook.com",
-              icon: FaFacebook,
-              label: "Facebook",
-            },
-            {
-              href: "https://www.instagram.com",
-              icon: FaInstagram,
-              label: "Instagram",
-            },
-            { href: "https://www.tiktok.com", icon: FaTiktok, label: "TikTok" },
-            {
-              href: "https://www.whatsapp.com",
-              icon: FaWhatsapp,
-              label: "WhatsApp",
-            },
-          ].map(({ href, icon: Icon, label }) => (
-            <Link
-              key={href}
-              href={href}
-              target="_blank"
-              className="hover:text-blue-600"
-              aria-label={`EdifiK en ${label}`}
-            >
-              <Icon size={24} />
-            </Link>
-          ))}
-          */}
-
-          <UserMenuButton />
+        <div className="flex items-center justify-end space-x-4">
+          <UserMenu />
         </div>
       </div>
     </header>

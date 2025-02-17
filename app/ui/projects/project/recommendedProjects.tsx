@@ -33,7 +33,6 @@ export default function RecommendedProjects({
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
             }}
           >
-            {/* Etiquetas de entrega y habitaciones */}
             <div className="absolute left-2 top-2 flex flex-col space-y-1">
               <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
                 {project.deliveryTime}
@@ -43,14 +42,12 @@ export default function RecommendedProjects({
               </span>
             </div>
 
-            {/* Imagen principal de la propiedad */}
             <img
               src={project.images[0]}
               alt={project.name}
               className="h-40 w-full rounded-t-lg object-cover"
             />
 
-            {/* Detalles de la propiedad */}
             <div className="p-4">
               <h3
                 className="line-clamp-1 text-lg font-semibold text-gray-800"

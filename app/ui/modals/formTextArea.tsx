@@ -13,6 +13,7 @@ interface FormTextareaProps {
   tooltipText?: string;
   rows?: number;
   maxLength?: number;
+  isEdit?: boolean;
 }
 
 export default function FormTextarea({
@@ -26,6 +27,7 @@ export default function FormTextarea({
   tooltipText,
   rows = 4,
   maxLength,
+  isEdit,
 }: FormTextareaProps) {
   return (
     <div>
@@ -45,6 +47,7 @@ export default function FormTextarea({
         placeholder={placeholder}
         rows={rows}
         maxLength={maxLength}
+        disabled={isEdit}
         className={clsx(
           "w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary",
           error && !flag && "border-red-500 bg-red-50",

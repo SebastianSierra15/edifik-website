@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { poppins } from "@/app/ui/fonts";
+import { poppins } from "@/app/fonts/fonts";
 import { Providers } from "../providers";
 import "../globals.css";
 

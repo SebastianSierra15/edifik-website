@@ -5,7 +5,7 @@ import { ProjectSummary } from "@/lib/definitios";
 import { useProjectsMetadata } from "@/app/hooks/projects/Metadata/useProjectsMetadata";
 import ProjectFilter from "@/app/ui/projects/filter/projectFilter";
 import ProjectCard from "@/app/ui/projects/projectCard";
-import ProjectCardSkeleton from "./skeleton/projectCardSkeleton";
+import ProjectCardSkeleton from "../skeletons/projectCardSkeleton";
 import ProjectsMap from "@/app/ui/projects/projectsMap";
 
 interface ProjectsContainerProps {
@@ -26,6 +26,7 @@ interface ProjectsContainerProps {
   setBounds: (bounds: google.maps.LatLngBounds | null) => void;
   onDelete: (id: number, name: string) => void;
   permission?: boolean;
+  onShowUser?: (username: string) => void;
 }
 
 export default function ProjectsContainer({
@@ -44,6 +45,7 @@ export default function ProjectsContainer({
   setBounds,
   onDelete,
   permission,
+  onShowUser,
 }: ProjectsContainerProps) {
   const skeletonCount = 8;
 
@@ -124,33 +126,29 @@ export default function ProjectsContainer({
                         id={project.id}
                         images={project.projectMedia}
                         name={project.name}
-                        location={`${project.city.name}, ${project.city.departament.name}`}
+                        location={project.city.name}
                         price={project.price || 0}
                         area={project.totalArea}
-                        username={project.username}
+                        bedrooms={project.bedrooms || undefined}
+                        bathrooms={project.bathrooms || undefined}
+                        parkingSpots={project.parkingSpots || undefined}
+                        email={project.email}
                         isFromMap={false}
                         showActions={true}
                         onClose={null}
                         url={
                           isProperty
-                            ? `/inmobiliaria/${project.name
-                                .toLowerCase()
-                                .replace(/\s+/g, "-")}`
-                            : `/proyectos/${project.name
-                                .toLowerCase()
-                                .replace(/\s+/g, "-")}`
+                            ? `/inmobiliaria/${project.id}`
+                            : `/proyectos/${project.id}`
                         }
                         urlEdit={
                           isProperty
-                            ? `/admin/propiedades/${project.name
-                                .toLowerCase()
-                                .replace(/\s+/g, "-")}`
-                            : `/admin/proyectos/${project.name
-                                .toLowerCase()
-                                .replace(/\s+/g, "-")}`
+                            ? `/admin/propiedades/${project.id}`
+                            : `/admin/proyectos/${project.id}`
                         }
                         onDelete={onDelete}
                         permission={permission}
+                        onShowUser={onShowUser}
                       />
                     </div>
                   </div>

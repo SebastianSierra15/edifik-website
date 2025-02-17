@@ -12,15 +12,15 @@ export async function middleware(req: NextRequest) {
       "Gestionar propiedades",
       "Gestionar usuarios",
       "Gestionar roles",
-      "Gestionar membresías",
-      "Gestionar peticiones",
+      "Gestionar membresias",
+      "Gestionar solicitudes",
     ],
     "/admin/proyectos": ["Gestionar proyectos"],
     "/admin/propiedades": ["Gestionar propiedades"],
     "/admin/usuarios": ["Gestionar usuarios"],
     "/admin/roles": ["Gestionar roles"],
-    "/admin/membresias": ["Gestionar membresías"],
-    "/admin/peticiones": ["Gestionar peticiones"],
+    "/admin/membresias": ["Gestionar membresias"],
+    "/admin/solicitudes": ["Gestionar solicitudes"],
   };
 
   const matchedRoute = Object.keys(protectedRoutes)

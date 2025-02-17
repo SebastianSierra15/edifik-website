@@ -92,7 +92,7 @@ export default function RoleModal({
             label="Asignar permiso"
             name="addPermission"
             value={""}
-            options={permissions
+            options={(permissions ?? [])
               .filter(
                 (perm) =>
                   !role.permissions?.some(

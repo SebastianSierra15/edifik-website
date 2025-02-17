@@ -1,12 +1,19 @@
 import { DateTime } from "next-auth/providers/kakao";
 
-export type ColumnType = "string" | "number" | "boolean" | "date" | "array";
+export type ColumnType =
+  | "string"
+  | "number"
+  | "boolean"
+  | "date"
+  | "array"
+  | "status";
 
 export interface Header<T> {
   label: string;
   key: keyof T | string;
   type: ColumnType;
   subKey?: string;
+  statusMapping?: Record<string, { label: string; className: string }>;
 }
 
 export interface User {
@@ -26,6 +33,7 @@ export interface User {
   role: Role;
   membership: MembershipSummary;
   provider: string;
+  totalProperties?: number;
 }
 
 export interface Gender {
@@ -117,8 +125,8 @@ export interface Project {
   city: City;
   membership: number;
   commonAreas: CommonArea[];
-  user?: User;
-  username?: string;
+  ownerId?: number;
+  email?: string;
   residentialProjectId?: number;
   warehouseProjectId?: number;
   nearbyServices: NearbyService[];
@@ -204,6 +212,18 @@ export interface Media {
   category: string;
 }
 
+export interface Request {
+  id: number;
+  date: Date;
+  operation: string;
+  responseMessage?: string;
+  userId: number;
+  userEmail: string;
+  statusRequestName: string;
+  projectId: number;
+  projectName: string;
+}
+
 export type ProjectData = Partial<Project>;
 export type UserData = Partial<User>;
 
@@ -213,12 +233,15 @@ export type ProjectSummary = Pick<
   | "name"
   | "price"
   | "totalArea"
+  | "bedrooms"
+  | "bathrooms"
+  | "parkingSpots"
   | "address"
   | "longitude"
   | "latitude"
   | "city"
   | "projectMedia"
-  | "username"
+  | "email"
 >;
 
 export type MembershipSummary = Pick<Membership, "id" | "name">;

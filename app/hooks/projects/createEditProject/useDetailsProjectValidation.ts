@@ -5,7 +5,6 @@ export const useDetailsProjectValidation = (formData: ProjectData) => {
   const [errors, setErrors] = useState({
     priceError: "",
     housingTypeError: "",
-    availableUnitsError: "",
   });
 
   const validateField = (fieldName: keyof typeof errors, value: any) => {
@@ -23,12 +22,6 @@ export const useDetailsProjectValidation = (formData: ProjectData) => {
           !value
           ? "El precio es obligatorio y debe ser mayor que 0."
           : "";
-      case "availableUnitsError":
-        return (formData.projectType?.id === 2 ||
-          formData.projectType?.id === 3) &&
-          !value
-          ? "La cantidad de unidades disponibles es obligatoria"
-          : "";
       case "housingTypeError":
         return (formData.propertyType?.id === 1001 ||
           formData.propertyType?.id === 1002) &&
@@ -43,10 +36,6 @@ export const useDetailsProjectValidation = (formData: ProjectData) => {
   const validateFields = () => {
     const newErrors: typeof errors = {
       priceError: getErrorMessage("priceError", formData.price),
-      availableUnitsError: getErrorMessage(
-        "availableUnitsError",
-        formData.availableUnits
-      ),
       housingTypeError: getErrorMessage(
         "housingTypeError",
         formData.housingType

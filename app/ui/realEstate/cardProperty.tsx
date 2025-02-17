@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaTimes } from "react-icons/fa";
+//import { FaTimes } from "react-icons/fa";
 import Link from "next/link";
 
 type ProjectCardProps = {
@@ -84,7 +84,7 @@ export default function ProjectCard({
 
             {/* Degradado en la parte inferior de la imagen solo si isFromMap es false */}
             {!isFromMap && (
-              <div className="dark:from-darkBackground dark:via-darkBackgroundLight absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-900 via-gray-800 to-transparent"></div>
+              <div className="dark:from-darkBackground dark:via-darkBackgroundLight absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-900 via-gray-800 to-transparent" />
             )}
           </div>
 

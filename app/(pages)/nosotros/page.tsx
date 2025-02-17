@@ -123,7 +123,7 @@ export default function AboutUsPage() {
           imagePosition="right"
         />
 
-        <hr className="mx-auto my-2 w-5/6 border-t border-gray-400 bg-transparent"></hr>
+        <hr className="mx-auto my-2 w-5/6 border-t border-gray-400 bg-transparent" />
 
         <SocialResponsibilitySection
           title="Responsabilidad Social"
@@ -158,7 +158,7 @@ export default function AboutUsPage() {
               <h2 className="text-center text-2xl font-semibold text-blue-600 md:text-4xl">
                 Estamos Certificados
               </h2>
-              <hr className="mx-auto my-2 w-1/4 border-t border-gray-400"></hr>
+              <hr className="mx-auto my-2 w-1/4 border-t border-gray-400" />
             </div>
 
             <div className="mt-14 flex items-stretch justify-center md:mt-20">

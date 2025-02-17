@@ -56,8 +56,8 @@ export default function TimelineElement({
             isActive ? "bg-blue-500" : "bg-transparent"
           } border-blue-500`}
           aria-label={`Paso del timeline: ${year}`}
-        ></span>
-        <div className="h-0.5 w-full bg-blue-500"></div>
+        />
+        <div className="h-0.5 w-full bg-blue-500" />
       </div>
 
       <h3 className="mx-5 mb-10 mt-5 text-left text-xl font-bold lg:text-3xl">

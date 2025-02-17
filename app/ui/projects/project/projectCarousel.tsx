@@ -19,7 +19,7 @@ export default function ProjectCarousel({
 
   const prevSlide = () => {
     setCurrentImage(
-      (prev) => (prev - 1 + projectMedia.length) % projectMedia.length,
+      (prev) => (prev - 1 + projectMedia.length) % projectMedia.length
     );
   };
 
@@ -66,7 +66,7 @@ export default function ProjectCarousel({
         transition: "transform 0.5s ease",
       };
     },
-    [currentImage, projectMedia.length],
+    [currentImage, projectMedia.length]
   );
 
   const getVisibleDots = () => {
@@ -149,7 +149,7 @@ export default function ProjectCarousel({
                 ? "scale-125 bg-[#8B4513]"
                 : "scale-100 bg-[#DAA520] opacity-75"
             }`}
-          ></button>
+          />
         ))}
       </div>
 

@@ -95,7 +95,7 @@ export default function Timeline() {
       function stopImageRotation() {
         clearInterval(interval);
         images.forEach((img, index) =>
-          img.classList.toggle("hidden", index !== 0),
+          img.classList.toggle("hidden", index !== 0)
         );
         currentIndex = 0;
       }
@@ -118,7 +118,7 @@ export default function Timeline() {
           Nuestra Historia
         </h2>
         <div className="w-full text-center">
-          <div className="mx-auto my-2 w-1/3 border-t border-blue-400"></div>
+          <div className="mx-auto my-2 w-1/3 border-t border-blue-400" />
         </div>
 
         <div className="lg:mt-15 relative mt-10 flex h-auto w-full">
@@ -210,7 +210,7 @@ export default function Timeline() {
             &#10095;
           </button>
 
-          <div className="pointer-events-none absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-gray-200 to-transparent"></div>
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-gray-200 to-transparent" />
         </div>
       </div>
     </section>

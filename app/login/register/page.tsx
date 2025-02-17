@@ -149,7 +149,6 @@ export default function Page() {
                   Continuar
                 </button>
 
-                {/* Botón volver */}
                 <button
                   className="mt-4 w-full transform rounded-lg bg-gray-200 p-3 text-gray-700 shadow-lg transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500"
                   type="button"

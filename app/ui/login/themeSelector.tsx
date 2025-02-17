@@ -1,5 +1,5 @@
 import { FaSun, FaMoon, FaAdjust } from "react-icons/fa";
-import { useEffect, useState } from "react";
+//import { useEffect, useState } from "react";
 
 export default function ThemeSelector({
   closeMenu,
@@ -12,7 +12,7 @@ export default function ThemeSelector({
     const savedTheme =
       (localStorage.getItem("theme") as "light" | "dark" | "auto") || "auto";
     const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
+      "(prefers-color-scheme: dark)"
     ).matches;
     const initialTheme =
       savedTheme === "auto" ? (prefersDark ? "dark" : "light") : savedTheme;
@@ -24,7 +24,7 @@ export default function ThemeSelector({
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
     const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
+      "(prefers-color-scheme: dark)"
     ).matches;
     const appliedTheme =
       newTheme === "auto" ? (prefersDark ? "dark" : "light") : newTheme;

@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
-import SkeletonAdminCard from "../ui/admin/skeletons/skeletonAdminCard";
+import AdminCardSkeleton from "../ui/skeletons/AdminCardSkeleton";
 
 const AdminCard = dynamic(() => import("../ui/admin/adminCard"), {
   ssr: false,
@@ -61,15 +61,15 @@ export default function Page() {
       title: "Membresías",
       description:
         "Gestiona las membresías disponibles para usuarios y propiedades, incluyendo niveles y beneficios.",
-      permission: "Gestionar membresías",
+      permission: "Gestionar membresias",
     },
     {
-      href: "/admin/peticiones",
+      href: "/admin/solicitudes",
       icon: ClipboardList,
-      title: "Peticiones",
+      title: "Solicitudes",
       description:
         "Revisa y gestiona las solicitudes de los usuarios relacionadas con propiedades.",
-      permission: "Gestionar peticiones",
+      permission: "Gestionar solicitudes",
     },
   ];
 
@@ -94,7 +94,7 @@ export default function Page() {
               key={index}
               className="min-h-[200px] bg-premium-backgroundAlt dark:bg-premium-secondaryLight rounded-lg"
             >
-              <SkeletonAdminCard />
+              <AdminCardSkeleton />
             </div>
           ))}
 

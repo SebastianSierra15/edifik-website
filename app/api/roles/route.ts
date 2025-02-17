@@ -7,6 +7,22 @@ import { RowDataPacket } from "mysql2";
 import { getServerSession } from "next-auth";
 
 export async function GET(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) => perm.name === "Gestionar roles"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   const { searchParams } = new URL(req.url);
 
   const page = parseInt(searchParams.get("page") || "1", 10);
@@ -57,25 +73,35 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) => perm.name === "Gestionar roles"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
     const userId = session.user.id;
 
-    const { id, name, permissions } = await req.json();
+    const { id, name, permission } = await req.json();
 
-    if (!id || !name || !permissions) {
+    if (!id || !name || !permission) {
       return NextResponse.json(
         { error: "Faltan datos obligatorios" },
         { status: 400 }
       );
     }
 
-    const permissionsJson = JSON.stringify(permissions);
+    const permissionsJson = JSON.stringify(permission);
 
     await db.query("CALL update_role(?, ?, ?, ?)", [
       id,
@@ -95,25 +121,35 @@ export async function PUT(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) => perm.name === "Gestionar roles"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
     const userId = session.user.id;
 
-    const { name, permissions } = await req.json();
+    const { name, permission } = await req.json();
 
-    if (!name || !permissions) {
+    if (!name || !permission) {
       return NextResponse.json(
         { error: "Faltan datos obligatorios" },
         { status: 400 }
       );
     }
 
-    const permissionsJson = JSON.stringify(permissions);
+    const permissionsJson = JSON.stringify(permission);
 
     const result = await db.query("CALL create_role(?, ?, ?)", [
       name,
@@ -132,13 +168,23 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) => perm.name === "Gestionar roles"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
     const userId = session.user.id;
 
     const { id } = await req.json();

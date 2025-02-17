@@ -2,7 +2,7 @@ import { useMemo, useCallback } from "react";
 import clsx from "clsx";
 import { ChevronDown } from "lucide-react";
 import { ImageType } from "@/lib/definitios";
-import ImageWithTag from "./ImageWithTag";
+import ImageWithTag from "./imageWithTag";
 import FormErrorMessage from "../../modals/formErrorMessage";
 
 interface ImageUploadSectionProps {

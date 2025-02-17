@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+//import { motion } from "framer-motion";
 import DetailCard from "./detailCard";
 import { Project } from "@/lib/definitios";
-import {
+/*import {
   FaRulerCombined,
   FaBed,
   FaBath,
@@ -30,7 +30,7 @@ import {
   MdOutlineDeck,
   MdOutlineHomeWork,
 } from "react-icons/md";
-import { RiRuler2Fill } from "react-icons/ri";
+import { RiRuler2Fill } from "react-icons/ri";*/
 
 type ProjectDetailsProps = {
   project: Project;

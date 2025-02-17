@@ -9,8 +9,8 @@ import { useRoles } from "@/app/hooks/roles/useRoles";
 import { useRoleValidation } from "@/app/hooks/roles/useRoleValidation";
 import { useRoleApi } from "@/app/hooks/roles/useRoleApi";
 import { usePermissions } from "@/app/hooks/roles/usePermissions";
-import Table from "@/app/ui/admin/table";
-import TableSkeleton from "@/app/ui/admin/skeletons/tableSkeleton";
+import Table from "@/app/ui/table/table";
+import TableSkeleton from "@/app/ui/skeletons/tableSkeleton";
 import Alert from "@/app/ui/alert";
 import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
 
@@ -252,7 +252,7 @@ export default function RolesPage() {
       </div>
 
       {showSkeleton ? (
-        <TableSkeleton rows={3} columns={headers.length + 1} />
+        <TableSkeleton />
       ) : (
         <Table
           data={roles}
@@ -268,7 +268,6 @@ export default function RolesPage() {
           handleSearchChange={(e) => debouncedSearch(e.target.value)}
           onEditClick={handleEditClick}
           onDeleteClick={handleDeleteClick}
-          canDelete={true}
         />
       )}
 

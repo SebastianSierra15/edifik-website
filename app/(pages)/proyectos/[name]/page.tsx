@@ -1,8 +1,8 @@
 "use client";
 
 import Head from "next/head";
-import { motion } from "framer-motion";
-import { useProjectByName } from "@/app/hooks/projects/useProjectByName";
+//import { motion } from "framer-motion";
+import { useProjectByName } from "@/app/hooks/projects/useProjectById";
 import ProjectHeader from "@/app/ui/projects/project/projectHeader";
 import ProjectCarousel from "@/app/ui/projects/project/projectCarousel";
 import ProjectPlans from "@/app/ui/projects/project/projectPlans";
@@ -12,14 +12,14 @@ import ProjectCommonAreas from "@/app/ui/projects/project/projectCommonAreas";
 import ContactForm from "@/app/ui/projects/contactForm";
 import CarouselRecommendedProjects from "@/app/ui/projects/project/carouselRecommendedProjects";
 
-import ProjectHeaderSkeleton from "@/app/ui/projects/project/skeleton/projectHeaderSkeleton";
-import { ProjectCarouselSkeleton } from "@/app/ui/projects/project/skeleton/projectCarouselSkeleton";
-import { ProjectPlansSkeleton } from "@/app/ui/projects/project/skeleton/projectPlansSkeleton";
-import ProjectDetailsSkeleton from "@/app/ui/projects/project/skeleton/projectDetailsSkeleton";
-import { ProjectNearbyServicesSkeleton } from "@/app/ui/projects/project/skeleton/projectNearbyServicesSkeleton";
-import { ProjectCommonAreasSkeleton } from "@/app/ui/projects/project/skeleton/projectCommonAreasSkeleton";
-import { ProjectShortDescriptionSkeleton } from "@/app/ui/projects/project/skeleton/projectShortDescriptionSkeleton";
-import { ProjectDetailedDescriptionSkeleton } from "@/app/ui/projects/project/skeleton/projectDetailedDescriptionSkeleton";
+import ProjectHeaderSkeleton from "@/app/ui/skeletons/projectHeaderSkeleton";
+import { ProjectCarouselSkeleton } from "@/app/ui/skeletons/projectCarouselSkeleton";
+import { ProjectPlansSkeleton } from "@/app/ui/skeletons/projectPlansSkeleton";
+import ProjectDetailsSkeleton from "@/app/ui/skeletons/projectDetailsSkeleton";
+import { ProjectNearbyServicesSkeleton } from "@/app/ui/skeletons/projectNearbyServicesSkeleton";
+import { ProjectCommonAreasSkeleton } from "@/app/ui/skeletons/projectCommonAreasSkeleton";
+import { ProjectShortDescriptionSkeleton } from "@/app/ui/skeletons/projectShortDescriptionSkeleton";
+import { ProjectDetailedDescriptionSkeleton } from "@/app/ui/skeletons/projectDetailedDescriptionSkeleton";
 
 import Map from "@/app/ui/projects/project/map";
 
@@ -83,7 +83,7 @@ export default function ProjectPage({ params }: { params: { name: string } }) {
 
               <ProjectCommonAreasSkeleton />
 
-              <div className="h-80 w-full animate-pulse rounded bg-gray-300"></div>
+              <div className="h-80 w-full animate-pulse rounded bg-gray-300" />
             </div>
 
             <motion.div

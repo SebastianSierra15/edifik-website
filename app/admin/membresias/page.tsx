@@ -9,8 +9,8 @@ import { useMemberships } from "@/app/hooks/memberships/useMemberships";
 import { useMembershipValidation } from "@/app/hooks/memberships/useMembershipValidation";
 import { useMembershipUpdate } from "@/app/hooks/memberships/useMembershipUpdate";
 import Alert from "@/app/ui/alert";
-import Table from "@/app/ui/admin/table";
-import TableSkeleton from "@/app/ui/admin/skeletons/tableSkeleton";
+import Table from "@/app/ui/table/table";
+import TableSkeleton from "@/app/ui/skeletons/tableSkeleton";
 import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
 
 const MembershipModal = dynamic(
@@ -174,7 +174,7 @@ export default function MembershipsPage() {
       </h1>
 
       {showSkeleton ? (
-        <TableSkeleton rows={3} columns={headers.length + 1} />
+        <TableSkeleton />
       ) : (
         <Table
           data={filteredMemberships}
@@ -188,7 +188,6 @@ export default function MembershipsPage() {
           entriesPerPage={entriesPerPage}
           handleEntriesPerPageChange={handleEntriesPerPageChange}
           handleSearchChange={(e) => debouncedSearch(e.target.value)}
-          canDelete={false}
           onEditClick={handleEditClick}
         />
       )}

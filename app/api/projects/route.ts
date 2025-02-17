@@ -5,6 +5,8 @@ import { RowDataPacket } from "mysql2";
 import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { sendEmail } from "@/lib/email/sendEmail";
+import { generateEmailTemplate } from "@/utils/emailTemplates";
 
 const formatDateForMySQL = (date: any) => {
   if (!date) return null;
@@ -21,8 +23,18 @@ const formatDateForMySQL = (date: any) => {
 
 export async function GET(req: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    const permissions = session?.user?.permissions || [];
+
+    const hasPermission = permissions?.some(
+      (perm) => perm.name === "Gestionar proyectos"
+    );
+
     const url = new URL(req.url);
     const searchParams = url.searchParams;
+
+    // 🔹 Inicia medición de tiempo total de API
+    const startAPITime = performance.now();
 
     const page = parseInt(searchParams.get("page") || "1", 10);
     const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
@@ -67,6 +79,8 @@ export async function GET(req: Request) {
     const validatedPage = page > 0 ? page : 1;
     const validatedPageSize = pageSize > 0 ? pageSize : 16;
 
+    // 🔹 Inicia medición de la consulta SQL
+    const startDBQuery = performance.now();
     const [result] = await db.query<RowDataPacket[][]>(
       "CALL get_projects(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
@@ -91,7 +105,10 @@ export async function GET(req: Request) {
         maxLng || null,
       ]
     );
+    const endDBQuery = performance.now();
 
+    // 🔹 Inicia medición de procesamiento de datos
+    const startProcessing = performance.now();
     const [projectsRows = [], projectMediaRows = [], [totalEntriesRow] = []] =
       result;
 
@@ -117,6 +134,9 @@ export async function GET(req: Request) {
       name: row.name,
       price: row.price || null,
       totalArea: row.area,
+      bedrooms: row.bedrooms || null,
+      bathrooms: row.bathrooms || null,
+      parkingSpots: row.parkingSpots || null,
       longitude: row.longitude as number,
       latitude: row.latitude as number,
       address: row.address,
@@ -128,11 +148,20 @@ export async function GET(req: Request) {
           name: row.departamentName,
         },
       },
-      username: row.username,
+      email: hasPermission ? row.email : "Usuario Privado",
       projectMedia: projectMediaMap[row.id] || [],
     }));
+    const endProcessing = performance.now();
 
-    return NextResponse.json({ projects, totalEntries }, { status: 200 });
+    // 🔹 Finaliza medición del tiempo total de API
+    const endAPITime = performance.now();
+
+    const response = NextResponse.json({ projects, totalEntries });
+    response.headers.set(
+      "Server-Timing",
+      `db_query;dur=${(endDBQuery - startDBQuery).toFixed(2)}, processing;dur=${(endProcessing - startProcessing).toFixed(2)}, total_api;dur=${(endAPITime - startAPITime).toFixed(2)}`
+    );
+    return response;
   } catch (error) {
     console.error("Error en la búsqueda de propiedades: ", error);
     return NextResponse.json(
@@ -143,22 +172,41 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermissionToManageProperties =
+    permissions?.some((perm) => perm.name === "Gestionar propiedades") || false;
+
+  const client =
+    permissions?.some(
+      (perm) => perm.name === "Gestionar propiedades propias"
+    ) || false;
+
+  const hasPermission =
+    hasPermissionToManageProperties ||
+    permissions?.some(
+      (perm) =>
+        perm.name === "Gestionar proyectos" ||
+        perm.name === "Gestionar propiedades propias"
+    );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
     const userId = session.user.id;
-    const userRole = session.user.role;
 
     const projectData = await req.json();
 
     const {
       id,
       name,
-      state,
       price,
       builtArea,
       totalArea,
@@ -199,6 +247,8 @@ export async function PUT(req: Request) {
       nearbyServices,
       residentialProjectId,
       warehouseProjectId,
+      ownerId,
+      email,
     } = projectData;
 
     if (
@@ -237,11 +287,7 @@ export async function PUT(req: Request) {
     const queryParams = [
       id,
       name,
-      state !== undefined && state !== null
-        ? state
-        : Number(userRole) === 1
-          ? true
-          : false,
+      !client ? "1" : "3", //state
       price,
       builtArea,
       totalArea,
@@ -282,7 +328,11 @@ export async function PUT(req: Request) {
       warehouseProjectId || null,
       commonAreaIds,
       nearbyServiceIds,
-      userRole !== undefined && Number(userRole) === 1 ? 1 : userId || null,
+      hasPermissionToManageProperties
+        ? ownerId !== undefined && ownerId !== null
+          ? ownerId
+          : 1
+        : userId || null,
     ];
 
     const [result] = await db.query(
@@ -295,6 +345,16 @@ export async function PUT(req: Request) {
       return NextResponse.json(
         { error: "No se pudo actualizar el proyecto correctamente." },
         { status: 500 }
+      );
+    } else if (!client) {
+      const emailContent = generateEmailTemplate(
+        name,
+        email ? email : ownerId ? ownerId : session.user.email
+      );
+      await sendEmail(
+        "sebasirra13@gmail.com",
+        "Propiedad Editada en EdifiK",
+        emailContent
       );
     }
 
@@ -314,21 +374,41 @@ export async function PUT(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermissionToManageProperties =
+    permissions?.some((perm) => perm.name === "Gestionar propiedades") || false;
+
+  const client =
+    permissions?.some(
+      (perm) => perm.name === "Gestionar propiedades propias"
+    ) || false;
+
+  const hasPermission =
+    hasPermissionToManageProperties ||
+    permissions?.some(
+      (perm) =>
+        perm.name === "Gestionar proyectos" ||
+        perm.name === "Gestionar propiedades propias"
+    );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
     const userId = session.user.id;
-    const userRole = session.user.role;
 
     const projectData = await req.json();
 
     const {
       name,
-      state,
       price,
       builtArea,
       totalArea,
@@ -367,6 +447,8 @@ export async function POST(req: Request) {
       statusProject,
       commonAreas,
       nearbyServices,
+      ownerId,
+      email,
     } = projectData;
 
     if (
@@ -403,11 +485,7 @@ export async function POST(req: Request) {
 
     const queryParams = [
       name,
-      state !== undefined && state !== null
-        ? state
-        : Number(userRole) === 1
-          ? true
-          : false,
+      !client ? "1" : "2", //state
       price,
       builtArea,
       totalArea,
@@ -446,7 +524,11 @@ export async function POST(req: Request) {
       statusProjectId || 1,
       commonAreaIds,
       nearbyServiceIds,
-      userRole !== undefined && Number(userRole) === 1 ? 1 : userId || null,
+      hasPermissionToManageProperties
+        ? ownerId !== undefined && ownerId !== null
+          ? ownerId
+          : 1
+        : userId || null,
     ];
 
     const [result] = await db.query(
@@ -462,6 +544,16 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "No se pudo crear el proyecto correctamente." },
         { status: 500 }
+      );
+    } else if (client) {
+      const emailContent = generateEmailTemplate(
+        name,
+        email ? email : ownerId ? ownerId : session.user.email
+      );
+      await sendEmail(
+        "sebasirra13@gmail.com",
+        "Nueva Propiedad Registrada en EdifiK",
+        emailContent
       );
     }
 
@@ -482,13 +574,26 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) =>
+      perm.name === "Gestionar proyectos" ||
+      perm.name === "Gestionar propiedades" ||
+      perm.name === "Gestionar propiedades propias"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
     const userId = session.user.id;
 
     const url = new URL(req.url);
@@ -501,7 +606,7 @@ export async function DELETE(req: Request) {
       );
     }
 
-    await db.query("CALL delete_project(?, ?)", [projectId, userId]);
+    await db.query("CALL delete_project_state(?, ?)", [projectId, userId]);
 
     return NextResponse.json(
       { message: "Proyecto eliminado correctamente." },

@@ -6,7 +6,7 @@ interface FormSelectProps {
   label: string;
   name: string;
   value: string | number;
-  options: { id: number; name: string }[];
+  options: { id: number | string; name: string }[];
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   error?: string;
   flag?: boolean;
@@ -47,7 +47,7 @@ export default function FormSelect({
       >
         <option value="">Seleccione {label.toLowerCase()}</option>
         {options.map((option) => (
-          <option key={option.id} value={option.id}>
+          <option key={option.id} value={option.id.toString()}>
             {option.name}
           </option>
         ))}

@@ -1,12 +1,14 @@
-import { useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import clsx from "clsx";
 import { propertyType, ProjectData } from "@/lib/definitios";
 import { useBasicProjectValidation } from "@/app/hooks/projects/createEditProject/useBasicProjectValidation";
+import { useCheckEmail } from "@/app/hooks/users/useCheckEmail";
 import StepNavigationButtons from "../../admin/stepNavigationButtons";
 import FormInput from "@/app/ui/modals/formInput";
 import FormSelect from "@/app/ui/modals/formSelect";
 import FormCheckbox from "@/app/ui/modals/formCheckbox";
 import FormTextarea from "@/app/ui/modals/formTextArea";
+import FormSearchEmail from "../../modals/formSearchEmail";
 
 interface BasicProjectFormProps {
   formData: ProjectData;
@@ -19,6 +21,7 @@ interface BasicProjectFormProps {
   totalSteps: number;
   isProperty: boolean;
   isEdit: boolean;
+  hasPermission?: boolean;
 }
 
 export default function BasicProjectForm({
@@ -31,12 +34,20 @@ export default function BasicProjectForm({
   isProperty,
   isEdit,
   onNext,
+  hasPermission,
 }: BasicProjectFormProps) {
   const { errors, validateFields, validateField } = useBasicProjectValidation(
     formData,
     isProperty,
     isEdit
   );
+  const { checkEmailExists } = useCheckEmail();
+  const [ownerEmail, setOwnerEmail] = useState(formData.email || "");
+
+  const handleEmailChange = (email: string, ownerId: number | undefined) => {
+    setOwnerEmail(email);
+    onChange({ email, ownerId });
+  };
 
   const propertyOptions = useMemo(
     () => propertyTypes.map((type) => ({ id: type.id, name: type.name })),
@@ -95,19 +106,38 @@ export default function BasicProjectForm({
     async (e?: React.FormEvent) => {
       e?.preventDefault();
 
+      if (formData.email && !formData.ownerId) {
+        const ownerId = await checkEmailExists(formData.email);
+
+        if (!ownerId) {
+          await validateField("emailError", formData.email);
+          return;
+        }
+
+        await new Promise((resolve) => {
+          onChange({ ownerId });
+          setTimeout(resolve, 0);
+        });
+      }
+
       const isValid = await validateFields();
       if (!isValid) return;
 
       onNext();
     },
-    [validateFields, onNext]
+    [
+      validateFields,
+      onNext,
+      checkEmailExists,
+      formData,
+      onChange,
+      validateField,
+    ]
   );
 
   const tooltipTexts = useMemo(
     () => ({
-      name: isProperty
-        ? "Nombre de la propiedad que se mostrará al público."
-        : "Nombre del proyecto que se mostrará al público.",
+      name: "Nombre del proyecto que se mostrará al público.",
       propertyType: isProperty
         ? "Seleccione el tipo de propiedad que más se ajuste."
         : "Seleccione el tipo de propiedad que más se ajuste a su proyecto.",
@@ -129,21 +159,25 @@ export default function BasicProjectForm({
         Datos Básicos
       </h2>
       <form onSubmit={handleNext} className="space-y-6">
-        <FormInput
-          label={isProperty ? "Nombre de la propiedad" : "Nombre del proyecto"}
-          type="text"
-          name="name"
-          value={formData.name || ""}
-          placeholder={
-            isProperty
-              ? "Ingrese el nombre de la propiedad"
-              : "Ingrese el nombre del proyecto"
-          }
-          maxLength={100}
-          onChange={handleChange}
-          error={errors.nameError}
-          tooltipText={tooltipTexts.name}
-        />
+        {!isProperty && (
+          <FormInput
+            label={
+              isProperty ? "Nombre de la propiedad" : "Nombre del proyecto"
+            }
+            type="text"
+            name="name"
+            value={formData.name || ""}
+            placeholder={
+              isProperty
+                ? "Ingrese el nombre de la propiedad"
+                : "Ingrese el nombre del proyecto"
+            }
+            maxLength={100}
+            onChange={handleChange}
+            error={errors.nameError}
+            tooltipText={tooltipTexts.name}
+          />
+        )}
 
         <div
           className={clsx(
@@ -176,6 +210,17 @@ export default function BasicProjectForm({
             />
           )}
         </div>
+
+        {isProperty && hasPermission && (
+          <FormSearchEmail
+            label="Correo del Propietario"
+            value={ownerEmail}
+            onChange={setOwnerEmail}
+            onSelect={(email, ownerId) => handleEmailChange(email, ownerId)}
+            error={errors.emailError}
+            tooltipText="Seleccione el propietario de la propiedad (si es un proyecto propio de la empresa puedes omitir este campo)."
+          />
+        )}
 
         <FormTextarea
           label="Resumen breve"

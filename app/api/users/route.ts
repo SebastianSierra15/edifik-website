@@ -1,12 +1,28 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { authOptions } from "@/lib/auth";
 import { User } from "@/lib/definitios";
-import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
 import { RowDataPacket } from "mysql2";
+import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function GET(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) => perm.name === "Gestionar usuarios"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   const { searchParams } = new URL(req.url);
 
   const page = parseInt(searchParams.get("page") || "1", 10);
@@ -45,6 +61,7 @@ export async function GET(req: Request) {
         id: row.membershipId,
         name: row.membershipName,
       },
+      totalProperties: row.totalProperties,
       provider: row.providerName,
     }));
 
@@ -62,13 +79,23 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) => perm.name === "Gestionar usuarios"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
     const userId = session.user.id;
 
     const {
@@ -124,13 +151,23 @@ export async function PUT(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) => perm.name === "Gestionar usuarios"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-
     const userId = session.user.id;
 
     const {

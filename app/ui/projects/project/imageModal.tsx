@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { AiOutlineClose } from "react-icons/ai";
+import { X } from "lucide-react";
 import { ProjectMedia } from "@/lib/definitios";
 
-type ImageModalProps = {
+interface ImageModalProps {
   isOpen: boolean;
   onClose: () => void;
   media: ProjectMedia[];
   initialIndex: number;
-};
+}
 
 export default function ImageModal({
   isOpen,
@@ -21,14 +21,12 @@ export default function ImageModal({
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Update `currentIndex` when `initialIndex` changes or the modal is reopened
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(initialIndex);
     }
   }, [initialIndex, isOpen]);
 
-  // Lock body scroll when the modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -56,7 +54,7 @@ export default function ImageModal({
     setIsTransitioning(true);
     setTimeout(() => {
       setCurrentIndex(
-        (prevIndex) => (prevIndex - 1 + media.length) % media.length,
+        (prevIndex) => (prevIndex - 1 + media.length) % media.length
       );
       setIsTransitioning(false);
     }, 300);
@@ -77,7 +75,7 @@ export default function ImageModal({
           className="absolute right-6 top-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-500 text-2xl text-black hover:bg-yellow-600"
           aria-label="Close Modal"
         >
-          <AiOutlineClose size={20} />
+          <X size={20} />
         </button>
 
         {/* Image */}

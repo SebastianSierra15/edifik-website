@@ -1,7 +1,27 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) =>
+      perm.name === "Gestionar proyectos" ||
+      perm.name === "Gestionar propiedades"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
     const { projectMedia } = await req.json();
 
@@ -31,6 +51,24 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) =>
+      perm.name === "Gestionar proyectos" ||
+      perm.name === "Gestionar propiedades"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
     const { projectMedia } = await req.json();
 
@@ -60,6 +98,24 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const permissions = session?.user?.permissions;
+
+  const hasPermission = permissions?.some(
+    (perm) =>
+      perm.name === "Gestionar proyectos" ||
+      perm.name === "Gestionar propiedades"
+  );
+
+  if (!hasPermission) {
+    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
+  }
+
   try {
     const { mediaIds } = await req.json();
 

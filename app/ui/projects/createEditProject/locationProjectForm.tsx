@@ -1,11 +1,12 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useEffect } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import { ProjectData, City, Departament } from "@/lib/definitios";
 import { useLocationProjectValidation } from "@/app/hooks/projects/createEditProject/useLocationProjectValidation";
-import FormSearchAddress from "../../modals/formSearchAddress";
 import StepNavigationButtons from "../../admin/stepNavigationButtons";
 import LocationMap from "../locationMap";
+import FormSearchAddress from "../../modals/formSearchAddress";
 import FormSelect from "../../modals/formSelect";
+import FormInput from "../../modals/formInput";
 
 const GOOGLE_MAPS_LIBRARIES: ("places" | "marker")[] = ["places", "marker"];
 
@@ -19,6 +20,8 @@ interface LocationProjectFormProps {
   totalSteps: number;
   departaments: Departament[];
   cities: City[];
+  mapAddress: string;
+  setMapAddress: (value: string) => void;
 }
 
 export default function LocationProjectForm({
@@ -30,6 +33,8 @@ export default function LocationProjectForm({
   totalSteps,
   departaments,
   cities,
+  mapAddress,
+  setMapAddress,
 }: LocationProjectFormProps) {
   const { errors, validateFields, validateField } =
     useLocationProjectValidation(formData);
@@ -53,6 +58,7 @@ export default function LocationProjectForm({
     () => process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
     []
   );
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: mapsApiKey,
     libraries: GOOGLE_MAPS_LIBRARIES,
@@ -173,13 +179,21 @@ export default function LocationProjectForm({
     ]
   );
 
-  const handleUpdateAddress = (address: string) => {
-    onChange({ address });
-  };
-
   const handleNext = (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (validateFields()) {
+
+    if (formData.projectType?.id !== 1) {
+      const propertyTypeName = formData.propertyType?.name || "Propiedad";
+      const projectTypeName = formData.projectType?.name || "";
+      const cityName = formData.city?.name || "";
+      const departamentName = formData.city?.departament?.name || "";
+      const generatedName =
+        `${propertyTypeName} en ${projectTypeName} en ${cityName}, ${departamentName}`.trim();
+
+      onChange({ name: generatedName });
+    }
+
+    if (validateFields(mapAddress)) {
       onNext();
     }
   };
@@ -233,15 +247,26 @@ export default function LocationProjectForm({
           />
         </div>
 
-        <div className="relative z-20">
-          <FormSearchAddress
-            label="Dirección"
+        <div className="relative z-20 space-y-4">
+          <FormInput
+            label="Dirección Pública"
+            name="address"
+            type="text"
+            placeholder="Ej: Calle 123 #45-67, Barrio XYZ"
             value={formData.address || ""}
-            onChange={(value) => onChange({ address: value })}
-            onSelect={handleAddressSelect}
+            onChange={(e) => onChange({ address: e.target.value })}
             error={errors.addressError}
+            tooltipText="Ingresa la dirección que se mostrará públicamente."
+          />
+
+          <FormSearchAddress
+            label="Ubicación en el Mapa"
+            value={mapAddress || ""}
+            onChange={(value) => setMapAddress(value)}
+            onSelect={handleAddressSelect}
+            error={errors.mapAddressError}
             isLoaded={isLoaded}
-            tooltipText={tooltipTexts.departament}
+            tooltipText="Busca la dirección en el mapa para obtener la ubicación exacta."
           />
         </div>
 
@@ -259,6 +284,8 @@ export default function LocationProjectForm({
                   : -74.2973,
             }}
             onLocationSelect={(coords) => {
+              setMapAddress(coords.address ?? "");
+
               const selectedCity = cities.find((c) => c.name === coords.city);
               const selectedDepartment = departaments.find(
                 (d) => d.name === coords.department
@@ -274,7 +301,6 @@ export default function LocationProjectForm({
                 onChange({
                   latitude: coords.lat,
                   longitude: coords.lng,
-                  address: coords.address,
                   city: selectedCity || {
                     id: 0,
                     name: "Ciudad desconocida",
@@ -288,11 +314,10 @@ export default function LocationProjectForm({
                 onChange({
                   latitude: coords.lat,
                   longitude: coords.lng,
-                  address: coords.address,
                 });
               }
             }}
-            onUpdateAddress={handleUpdateAddress}
+            showUserLocationButton={true}
           />
         </div>
 

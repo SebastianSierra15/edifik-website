@@ -9,6 +9,7 @@ import Image from "next/image";
 
 const Edit = dynamic(() => import("lucide-react").then((mod) => mod.Edit));
 const Trash2 = dynamic(() => import("lucide-react").then((mod) => mod.Trash2));
+const User = dynamic(() => import("lucide-react").then((mod) => mod.User));
 
 interface ProjectCardProps {
   id: number;
@@ -17,7 +18,10 @@ interface ProjectCardProps {
   location: string;
   price?: number;
   area: number;
-  username?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  parkingSpots?: number;
+  email?: string;
   isFromMap: boolean;
   showActions: boolean;
   onClose?: (() => void) | null;
@@ -25,6 +29,7 @@ interface ProjectCardProps {
   urlEdit: string;
   onDelete: (id: number, name: string) => void;
   permission?: boolean;
+  onShowUser?: (username: string) => void;
 }
 
 export default function ProjectCard({
@@ -34,7 +39,10 @@ export default function ProjectCard({
   location,
   price,
   area,
-  username,
+  bedrooms,
+  bathrooms,
+  parkingSpots,
+  email,
   isFromMap,
   showActions,
   onClose,
@@ -42,6 +50,7 @@ export default function ProjectCard({
   urlEdit,
   onDelete,
   permission,
+  onShowUser,
 }: ProjectCardProps) {
   const router = useRouter();
   const [currentImage, setCurrentImage] = useState(0);
@@ -115,18 +124,28 @@ export default function ProjectCard({
 
             <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-premium-secondaryDark via-premium-secondaryDark to-transparent px-2 pb-2 pt-16 dark:from-black dark:via-gray-800">
               <h3 className="line-clamp-1 break-words text-lg font-semibold leading-tight text-white">
-                {name}
+                {location}
               </h3>
-              <p className="text-sm text-gray-300">{location}</p>
-              {area > 0 && (
-                <p className="text-xs text-gray-300">Área: {area} m²</p>
-              )}
+
+              <p className="truncate break-all leading-tight w-full overflow-hidden text-sm text-gray-300">
+                {name}
+              </p>
+
               {id && permission && (
                 <p className="text-xs text-gray-300">id: {id}</p>
               )}
-              {username && permission && (
-                <p className="text-xs text-gray-300">Usuario: {username}</p>
+              {email && permission && (
+                <p className="truncate break-all leading-tight text-xs text-gray-300 w-full overflow-hidden">
+                  Usuario: {email}
+                </p>
               )}
+
+              <div className="flex items-center text-xs text-gray-300 divide-x divide-gray-400 dark:divide-gray-600">
+                {area > 0 && <p className="pr-2">{area}m²</p>}
+                {bedrooms && <p className="pl-2 pr-2">{bedrooms} Hab.</p>}
+                {bathrooms && <p className="pl-2 pr-2">{bathrooms} Baños.</p>}
+                {parkingSpots && <p className="pl-2">{parkingSpots} Parq.</p>}
+              </div>
             </div>
           </div>
         </div>
@@ -134,7 +153,23 @@ export default function ProjectCard({
 
       {showActions && (
         <div className="absolute right-2 top-2 z-50 flex space-x-1">
+          {email && (
+            <button
+              title="Propietario"
+              onClick={(e) => {
+                e.preventDefault();
+                if (email && onShowUser) {
+                  onShowUser(email);
+                }
+              }}
+              className="rounded-full bg-green-500 p-2 text-white transition-colors hover:bg-green-600"
+            >
+              <User className="h-4 w-4" />
+            </button>
+          )}
+
           <button
+            title="Editar"
             onClick={(e) => {
               e.preventDefault();
               router.push(urlEdit);
@@ -145,6 +180,7 @@ export default function ProjectCard({
           </button>
 
           <button
+            title="Eliminar"
             onClick={(e) => {
               e.preventDefault();
               onDelete(id, name);

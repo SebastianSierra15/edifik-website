@@ -17,7 +17,9 @@ export default function LocationMap({
   onLocationSelect,
   isLoaded,
   onUpdateAddress,
+  showUserLocationButton,
 }: {
+  showUserLocationButton?: boolean;
   coordinates: { lat: number; lng: number };
   onLocationSelect: (location: {
     lat: number;
@@ -31,11 +33,14 @@ export default function LocationMap({
   onUpdateAddress?: (address: string) => void;
 }) {
   const [mapCenter, setMapCenter] = useState(coordinates || DEFAULT_CENTER);
+
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
+
   const mapRef = useRef<google.maps.Map | null>(null);
+
   const markerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(
     null
   );
@@ -52,14 +57,18 @@ export default function LocationMap({
 
         if (markerRef.current) {
           markerRef.current.map = null;
+          markerRef.current = null;
         }
 
-        markerRef.current = new AdvancedMarkerElement({
-          position: coordinates,
-          map: mapRef.current,
-        });
+        if (coordinates.lat && coordinates.lng) {
+          markerRef.current = new AdvancedMarkerElement({
+            position: coordinates,
+            map: mapRef.current,
+            title: "Ubicación seleccionada",
+          });
 
-        mapRef.current.panTo(coordinates);
+          mapRef.current.panTo(coordinates);
+        }
       }
     }
 
@@ -70,8 +79,20 @@ export default function LocationMap({
     mapRef.current = map;
 
     if (coordinates.lat && coordinates.lng) {
-      map.panTo({ lat: coordinates.lat, lng: coordinates.lng });
+      map.panTo(coordinates);
       map.setZoom(15);
+
+      if (!markerRef.current) {
+        google.maps
+          .importLibrary("marker")
+          .then(({ AdvancedMarkerElement }: any) => {
+            markerRef.current = new AdvancedMarkerElement({
+              position: coordinates,
+              map,
+              title: "Ubicación seleccionada",
+            });
+          });
+      }
     }
   };
 
@@ -81,6 +102,11 @@ export default function LocationMap({
         lat: event.latLng.lat(),
         lng: event.latLng.lng(),
       };
+
+      if (userMarkerRef.current) {
+        userMarkerRef.current.map = null;
+        userMarkerRef.current = null;
+      }
 
       setMapCenter(newCoordinates);
       setUserLocation(null);
@@ -251,7 +277,7 @@ export default function LocationMap({
           mapTypeId: "roadmap",
           mapId: "78a223abe416be2b",
         }}
-      ></GoogleMap>
+      />
 
       <div className="absolute top-4 left-4 z-10 flex flex-col bg-white shadow-lg rounded-md">
         <button
@@ -270,13 +296,15 @@ export default function LocationMap({
           <Minus size={24} />
         </button>
 
-        <button
-          type="button"
-          className="flex items-center justify-center w-10 h-10 bg-white text-gray-700 hover:bg-gray-100"
-          onClick={handleGoToUserLocation}
-        >
-          <LocateFixed size={24} />
-        </button>
+        {showUserLocationButton && (
+          <button
+            type="button"
+            className="flex items-center justify-center w-10 h-10 bg-white text-gray-700 hover:bg-gray-100"
+            onClick={handleGoToUserLocation}
+          >
+            <LocateFixed size={24} />
+          </button>
+        )}
       </div>
     </>
   );
