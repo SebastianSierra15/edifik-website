@@ -9,12 +9,12 @@ import { useMemberships } from "@/app/hooks/memberships/useMemberships";
 import { useMembershipValidation } from "@/app/hooks/memberships/useMembershipValidation";
 import { useMembershipUpdate } from "@/app/hooks/memberships/useMembershipUpdate";
 import Alert from "@/app/ui/alert";
-import Table from "@/app/ui/table/table";
-import TableSkeleton from "@/app/ui/skeletons/tableSkeleton";
-import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
+import Table from "@/app/ui/admin/table/table";
+import TableSkeleton from "@/app/ui/skeletons/admin/tableSkeleton";
+import ModalConfirmation from "@/app/ui/modals/admin/modalConfirmation";
 
 const MembershipModal = dynamic(
-  () => import("@/app/ui/memberships/membershipModal"),
+  () => import("@/app/ui/admin/memberships/membershipModal"),
   { ssr: false }
 );
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import TimelineElement from "./timeLineElement";
 
 export default function Timeline() {
@@ -21,10 +22,10 @@ export default function Timeline() {
       timeLineElements.forEach((element, index) => {
         const circle = element.querySelector(".circle")!;
         if (index === currentIndexCircle) {
-          circle.classList.add("bg-blue-500");
+          circle.classList.add("bg-client-accentLight");
           circle.classList.remove("bg-transparent");
         } else {
-          circle.classList.remove("bg-blue-500");
+          circle.classList.remove("bg-accentLight");
           circle.classList.add("bg-transparent");
         }
       });
@@ -112,21 +113,20 @@ export default function Timeline() {
   }, []);
 
   return (
-    <section className="bg-gray-200 p-10 lg:p-20">
-      <div className="mx-auto bg-transparent xl:w-3/4">
-        <h2 className="text-center text-2xl font-semibold text-blue-600 lg:text-4xl">
+    <section className="p-10 lg:p-14 bg-client-backgroundAlt">
+      <div className="xl:w-3/4 bg-transparent mx-auto">
+        <h2 className="text-center text-3xl font-bold text-white lg:text-4xl">
           Nuestra Historia
         </h2>
-        <div className="w-full text-center">
-          <div className="mx-auto my-2 w-1/3 border-t border-blue-400" />
-        </div>
+
+        <hr className="mx-auto my-2 w-1/3 border-t border-white" />
 
         <div className="lg:mt-15 relative mt-10 flex h-auto w-full">
           <button
             ref={prevButtonRef}
-            className="absolute -left-10 z-10 h-10 w-10 self-center rounded-full border-2 border-blue-500 bg-transparent text-blue-500 transition duration-300 hover:bg-gray-300"
+            className="absolute -left-10 z-10 p-2 self-center bg-client-primaryLight rounded-full hover:bg-client-secondaryDark transition-all"
           >
-            &#10094;
+            <ChevronLeft className="w-6 h-6 text-client-text" />
           </button>
 
           <div className="flex w-full overflow-hidden">
@@ -205,12 +205,12 @@ export default function Timeline() {
 
           <button
             ref={nextButtonRef}
-            className="absolute -right-10 z-10 h-10 w-10 self-center rounded-full border-2 border-blue-500 bg-transparent text-blue-500 transition duration-300 hover:bg-gray-300"
+            className="absolute -right-10 z-10 p-2 self-center bg-client-primaryLight rounded-full hover:bg-client-secondaryDark transition-all"
           >
-            &#10095;
+            <ChevronRight className="w-6 h-6 text-client-text" />
           </button>
 
-          <div className="pointer-events-none absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-gray-200 to-transparent" />
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-client-backgroundAlt to-transparent" />
         </div>
       </div>
     </section>

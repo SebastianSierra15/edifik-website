@@ -10,13 +10,13 @@ import { useUsers } from "@/app/hooks/users/useUsers";
 import { useUserValidation } from "@/app/hooks/users/useUserValidation";
 import { useUserApi } from "@/app/hooks/users/useUserApi";
 import { useUsersMetadata } from "@/app/hooks/users/useUsersMetadata";
-import Table from "@/app/ui/table/table";
-import TableSkeleton from "@/app/ui/skeletons/tableSkeleton";
-import UserProjectsModal from "@/app/ui/users/userProjectsModal ";
-import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
+import Table from "@/app/ui/admin/table/table";
+import TableSkeleton from "@/app/ui/skeletons/admin/tableSkeleton";
+import UserProjectsModal from "@/app/ui/admin/users/userProjectsModal ";
+import ModalConfirmation from "@/app/ui/modals/admin/modalConfirmation";
 import Alert from "@/app/ui/alert";
 
-const UserModal = dynamic(() => import("@/app/ui/users/userModal"), {
+const UserModal = dynamic(() => import("@/app/ui/admin/users/userModal"), {
   ssr: false,
 });
 
@@ -26,7 +26,6 @@ export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editUser, setEditUser] = useState<UserData | null>(null);
-  const [registerUser, setRegisterUser] = useState<UserData>({});
   const [tempUser, setTempUser] = useState<UserData | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [isUserProjectsModalOpen, setIsUserProjectsModalOpen] = useState(false);

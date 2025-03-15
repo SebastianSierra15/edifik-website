@@ -7,6 +7,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -30,10 +32,14 @@ export async function GET(req: NextRequest) {
   const searchTerm = escapeSearchTerm(searchParams.get("searchTerm") || null);
 
   try {
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     const [result] = await db.query<RowDataPacket[][]>(
       "CALL get_requests(?, ?, ?)",
       [page, pageSize, searchTerm]
     );
+
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
 
     const [requestRows = [], [totalEntriesRow] = []] = result;
 
@@ -51,10 +57,20 @@ export async function GET(req: NextRequest) {
       projectName: row.projectName,
     }));
 
-    return NextResponse.json({
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json({
       requests,
       totalEntries,
     });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("Error al recuperar las solicitudes:", error);
     return NextResponse.json(
@@ -65,6 +81,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -93,6 +111,8 @@ export async function PUT(req: NextRequest) {
       );
     }
 
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     const [result] = await db.query("CALL update_request(?, ?, ?, ?)", [
       id,
       statusId,
@@ -100,10 +120,22 @@ export async function PUT(req: NextRequest) {
       userId,
     ]);
 
-    return NextResponse.json(
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
+
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json(
       { message: "Solicitud actualizada correctamente", result },
       { status: 200 }
     );
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("Error al actualizar la solicitud:", error);
     return NextResponse.json(

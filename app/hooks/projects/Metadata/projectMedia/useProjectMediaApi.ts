@@ -27,11 +27,21 @@ export function useProjectMediaApi() {
           imageTypeId: media.imageType ?? null,
         }));
 
+        const startFetch = performance.now(); // Inicia medición del tiempo de fetch
+
         const response = await fetch("/api/projects/metadata/project-media", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ projectMedia: formattedProjectMedia }),
         });
+
+        const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
+        const serverTiming = response.headers.get("Server-Timing");
+
+        console.log(
+          `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
+        );
+        console.log("⏳ Server Timing Metrics:", serverTiming);
 
         if (!response.ok) {
           const data = await response.json();
@@ -63,11 +73,21 @@ export function useProjectMediaApi() {
       setSuccess(false);
 
       try {
+        const startFetch = performance.now(); // Inicia medición del tiempo de fetch
+
         const response = await fetch("/api/projects/metadata/project-media", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ projectMedia }),
         });
+
+        const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
+        const serverTiming = response.headers.get("Server-Timing");
+
+        console.log(
+          `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
+        );
+        console.log("⏳ Server Timing Metrics:", serverTiming);
 
         if (!response.ok) {
           const data = await response.json();
@@ -98,11 +118,21 @@ export function useProjectMediaApi() {
     setSuccess(false);
 
     try {
+      const startFetch = performance.now(); // Inicia medición del tiempo de fetch
+
       const response = await fetch("/api/projects/metadata/project-media", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mediaIds: mediaIds }),
       });
+
+      const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
+      const serverTiming = response.headers.get("Server-Timing");
+
+      console.log(
+        `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
+      );
+      console.log("⏳ Server Timing Metrics:", serverTiming);
 
       if (!response.ok) {
         const data = await response.json();

@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import ProjectForm from "@/app/ui/projects/createEditProject/projectForm";
+import ProjectForm from "@/app/ui/admin/projects/createEditProject/projectForm";
 
 export default function EditProjectPage() {
   const { data: session, status } = useSession();

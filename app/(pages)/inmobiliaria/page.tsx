@@ -1,73 +1,152 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import clsx from "clsx";
+import { Search, ShoppingCart, KeySquare } from "lucide-react";
+import { useGetProperties } from "@/app/hooks/realEstate/useGetProperties";
+import FilterMapControls from "@/app/ui/realEstate/filter/filterMapControls";
+import ProjectSkeletonList from "@/app/ui/skeletons/projectSkeletonList";
 
-const HomePage = () => {
-  const [selectedTab, setSelectedTab] = useState(0);
+const MapToggleButton = dynamic(
+  () => import("@/app/ui/realEstate/filter/mapToggleButton"),
+  {
+    ssr: false,
+  }
+);
+const ProjectsContainer = dynamic(
+  () => import("@/app/ui/realEstate/projectsContainer"),
+  {
+    loading: () => <ProjectSkeletonList count={8} />,
+    ssr: false,
+  }
+);
 
-  const tabs = ["Destacadas", "Venta", "Sobre Planos", "Arriendo"];
+export default function RealEstatePage() {
+  const [selectedButtons, setSelectedButtons] = useState<
+    Record<string, number[]>
+  >({
+    cities: [],
+    propertyTypes: [],
+    housingTypes: [],
+    commonAreas: [],
+    nearbyServices: [],
+    bedrooms: [0],
+    bathrooms: [0],
+    lobbies: [0],
+    area: [1],
+  });
 
-  const handleTabChange = (index: number) => {
-    setSelectedTab(index);
-  };
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
+  const [areaRange, setAreaRange] = useState({ min: 0, max: 0 });
 
+  const [entriesPerPage] = useState(16);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
+  const [projectTypeId, setProjectTypeId] = useState(2);
+
+  const {
+    projects,
+    totalEntries,
+    fetchMoreProjects,
+    debouncedSearch,
+    isLoading,
+  } = useGetProperties({
+    entriesPerPage,
+    selectedButtons,
+    projectTypeId,
+    bounds: showMap ? bounds : null,
+    showMap,
+  });
+
+  useEffect(() => {
+    setPriceRange({ min: 0, max: 2500000000 });
+    setAreaRange({ min: 0, max: 5000 });
+    setSelectedButtons((prev) => ({ ...prev, price: [], area: [] }));
+  }, []);
+
+  useEffect(() => {
+    if (!showMap) {
+      setBounds(null);
+    }
+  }, [showMap]);
+
+  console.log(projects);
   return (
-    <main>
-      <div className="relative h-[500px] w-full bg-cover bg-center">
-        <Image
-          src="/images/image1.png"
-          alt="Imagen de nosotros"
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-          <h1 className="text-center text-5xl text-white lg:text-7xl">
-            Nosotros
-          </h1>
-        </div>
-      </div>
+    <div className="relative">
+      <div className="px-6 pb-2 pt-6">
+        <h1 className="mt-16 text-center text-3xl font-semibold text-client-text mb-10">
+          Inmobiliaria
+        </h1>
 
-      <div className="bg-gray-200 px-1 py-10 md:px-5 lg:px-16">
-        <div className="container mx-auto rounded-lg bg-slate-800 px-5 py-2">
-          <h2 className="border-b pb-5 pt-3 text-center text-2xl font-bold text-white lg:text-4xl">
-            Propiedades
-          </h2>
-
-          <div className="flex justify-between border-b border-gray-300 px-0 py-2 text-center text-white md:px-10">
-            {tabs.map((tab, index) => (
-              <button
-                key={index}
-                className={`tab-button text-md border-b-2 border-transparent px-0 font-semibold hover:border-blue-600 md:px-4 md:text-xl ${
-                  selectedTab === index ? "border-blue-600 text-blue-600" : ""
-                }`}
-                onClick={() => handleTabChange(index)}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          <div className="mb-2 mt-4 py-3">
-            <div
-              className={`grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${
-                selectedTab === 0 ? "block" : "hidden"
+        <div className="mb-6 flex items-center justify-center gap-4">
+          {[
+            { id: 2, label: "Venta", icon: <ShoppingCart /> },
+            { id: 3, label: "Arriendo", icon: <KeySquare /> },
+          ].map(({ id, label, icon }) => (
+            <button
+              key={id}
+              onClick={() => setProjectTypeId && setProjectTypeId(id)}
+              className={`flex items-center gap-2 border px-4 py-2 rounded-full shadow-md text-sm font-medium transition whitespace-nowrap ${
+                projectTypeId === id
+                  ? "bg-white text-black hover:bg-gray-200"
+                  : "bg-transparent text-client-text border-client-text hover:bg-white hover:text-black"
               }`}
             >
-              {/* Otras propiedades */}
-            </div>
-            {/* Otros div de propiedades ocultos con hidden o visible en función del selectedTab */}
-          </div>
-
-          <div className="py-2 text-center text-white">
-            <button className="rounded-full border-2 border-white px-5 py-2 font-semibold hover:bg-slate-600">
-              Mostrar más
+              {icon}
+              <span>{label}</span>
             </button>
+          ))}
+        </div>
+
+        <div className="mb-10 flex flex-col items-center gap-8 sm:px-6 md:flex-row md:justify-between">
+          <div className="relative w-full">
+            <input
+              name="searchProject"
+              type="text"
+              placeholder="Buscar un lugar..."
+              onChange={(e) => debouncedSearch(e.target.value)}
+              className="w-full rounded-md border border-client-secondary bg-client-background-light p-2 pl-10 text-client-text"
+            />
+            <Search className="absolute left-3 top-2 text-client-text-placeholder" />
           </div>
         </div>
       </div>
-    </main>
-  );
-};
 
-export default HomePage;
+      <hr className="w-full border-client-secondary" />
+
+      <div
+        className={clsx(
+          "bg-client-background px-2 sm:px-6 md:px-20 pt-2 pb-14",
+          showMap && "pb-7"
+        )}
+      >
+        <FilterMapControls
+          filterOpen={filterOpen}
+          setFilterOpen={setFilterOpen}
+          showMap={showMap}
+          setShowMap={setShowMap}
+          totalEntries={totalEntries}
+        />
+      </div>
+
+      <ProjectsContainer
+        projects={projects}
+        totalEntries={totalEntries}
+        isLoading={isLoading}
+        fetchMoreProjects={fetchMoreProjects}
+        filterOpen={filterOpen}
+        showMap={showMap}
+        setFilterOpen={setFilterOpen}
+        priceRange={priceRange}
+        areaRange={areaRange}
+        selectedButtons={selectedButtons}
+        setSelectedButtons={setSelectedButtons}
+        setBounds={setBounds}
+      />
+
+      <MapToggleButton showMap={showMap} setShowMap={setShowMap} />
+    </div>
+  );
+}

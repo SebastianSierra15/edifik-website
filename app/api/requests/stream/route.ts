@@ -24,8 +24,24 @@ export async function GET(req: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       const sendEvent = (data: any) => {
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+        try {
+          if (controller.desiredSize !== null) {
+            // Solo enviar si el stream sigue abierto
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
+            );
+          }
+        } catch (err) {
+          console.error("⚠️ Error en sendEvent: Stream cerrado", err);
+        }
       };
+
+      const heartbeat = setInterval(() => {
+        if (controller.desiredSize !== null) {
+          // Solo enviar si el stream sigue abierto
+          sendEvent({ type: "heartbeat", message: "Conexión activa" });
+        }
+      }, 10000); // Reducir a 10s
 
       let lastRequests: any[] = [];
 
@@ -49,10 +65,8 @@ export async function GET(req: NextRequest) {
             JSON.stringify(requests) !== JSON.stringify(lastRequests);
 
           if (hasChanged) {
-            if (hasChanged) {
-              sendEvent({ type: "newRequests", data: requests });
-              lastRequests = requests;
-            }
+            sendEvent({ type: "newRequests", data: requests });
+            lastRequests = requests;
           }
         } catch (error) {
           console.error(
@@ -62,11 +76,17 @@ export async function GET(req: NextRequest) {
         }
       };
 
-      const interval = setInterval(checkForNewRequests, 5000);
+      const interval = setInterval(checkForNewRequests, 10000);
 
       req.signal.onabort = () => {
+        console.warn("🔴 Conexión SSE cerrada por el cliente");
         clearInterval(interval);
-        controller.close();
+        clearInterval(heartbeat);
+        try {
+          controller.close();
+        } catch (err) {
+          console.error("⚠️ Error al cerrar el stream:", err);
+        }
       };
     },
   });

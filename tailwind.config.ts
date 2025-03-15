@@ -11,64 +11,68 @@ const config: Config = {
     extend: {
       colors: {
         premium: {
-          primary: "var(--primary)",
-          primaryLight: "var(--primary-light)",
-          primaryDark: "var(--primary-dark)",
+          primary: "var(--premium-primary)",
+          primaryLight: "var(--premium-primary-light)",
+          primaryDark: "var(--premium-primary-dark)",
 
-          secondary: "var(--secondary)",
-          secondaryLight: "var(--secondary-light)",
-          secondaryDark: "var(--secondary-dark)",
+          secondary: "var(--premium-secondary)",
+          secondaryLight: "var(--premium-secondary-light)",
+          secondaryDark: "var(--premium-secondary-dark)",
 
-          background: "var(--background)",
-          backgroundLight: "var(--background-light)",
-          backgroundDark: "var(--background-dark)",
-          backgroundAlt: "var(--background-alt)",
+          background: "var(--premium-background)",
+          backgroundLight: "var(--premium-background-light)",
+          backgroundDark: "var(--premium-background-dark)",
+          backgroundAlt: "var(--premium-background-alt)",
 
-          textPrimary: "var(--text-primary)",
-          textSecondary: "var(--text-secondary)",
-          textPlaceholder: "var(--text-placeholder)",
+          textPrimary: "var(--premium-text-primary)",
+          textSecondary: "var(--premium-text-secondary)",
+          textPlaceholder: "var(--premium-text-placeholder)",
 
-          borderColor: "var(--border-color)",
-          borderColorHover: "var(--border-color-hover)",
+          borderColor: "var(--premium-border-color)",
+          borderColorHover: "var(--premium-border-color-hover)",
         },
 
-        cliente: {
-          primary: "#8B4513", // Marrón Tierra
-          primaryLight: "#A0522D", // Marrón Claro
-          primaryDark: "#5D4037", // Marrón Oscuro
+        client: {
+          primary: "var(--client-primary)",
+          primaryLight: "var(--client-primary-light)",
+          primaryDark: "var(--client-primary-dark)",
+          primaryHover: "var(--client-primary-hover)",
 
-          secondary: "#D2B48C", // Ocre Claro
-          secondaryLight: "#E4CBA8", // Ocre Más Claro
-          secondaryDark: "#C19A6B", // Ocre Oscuro
+          secondary: "var(--client-secondary)",
+          secondaryLight: "var(--client-secondary-light)",
+          secondaryDark: "var(--client-secondary-dark)",
+          secondaryHover: "var(--client-secondary-hover)",
 
-          contrast: "#5D4037", // Marrón Oscuro
-          contrastLight: "#7E5A44", // Marrón Claro
-          contrastDark: "#4B3225", // Marrón Más Oscuro
+          accent: "var(--client-accent)",
+          accentLight: "var(--client-accent-light)",
+          accentDark: "var(--client-accent-dark)",
+          accentHover: "var(--client-accent-hover)",
 
-          background: "#EDEDED", // Gris Claro
-          backgroundLight: "#F5F5F5", // Gris Más Claro
-          backgroundDark: "#D9D9D9", // Gris Oscuro
-          backgroundAlt: "#FFFFFF", // Blanco
+          white: "var(--client-white)",
+          whiteOff: "var(--client-white-off)",
 
-          highlight: "#DAA520", // Dorado Claro
-          highlightLight: "#E6B800", // Dorado Brillante
-          highlightDark: "#B8860B", // Dorado Oscuro
+          background: "var(--client-background)",
+          backgroundLight: "var(--client-background-light)",
+          backgroundDark: "var(--client-background-dark)",
+          backgroundAlt: "var(--client-background-alt)",
 
-          textPrimary: "#333333",
-          textSecondary: "#4D4D4D",
-          textPlaceholder: "#9E9E9E",
-
-          borderColor: "#C19A6B",
-          borderColorHover: "#A0522D",
+          text: "var(--client-text-primary)",
+          textSecondary: "var(--client-text-secondary)",
+          textPlaceholder: "var(--client-text-placeholder)",
         },
       },
       animation: {
         gradient: "gradient 3s ease-in-out infinite",
+        "slide-left-infinite": "slide-left 16s linear infinite",
       },
       keyframes: {
         gradient: {
           "0%": { "background-position": "200% 0%" },
           "100%": { "background-position": "-200% 0%" },
+        },
+        "slide-left": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-100%)" },
         },
       },
       backgroundImage: {

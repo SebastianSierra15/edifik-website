@@ -17,7 +17,7 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
-      if (account?.provider === "google" && user) {
+      if (account?.provider === "google" && user && !token.id) {
         const { email, name, image } = user;
 
         const [result] = await db.query<RowDataPacket[][]>(
@@ -52,5 +52,5 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  debug: process.env.NODE_ENV === "development",
+  debug: process.env.AUTH_DEBUG === "true",
 };

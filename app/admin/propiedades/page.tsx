@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ProjectManager from "@/app/ui/projects/projectManager";
+import ProjectManager from "@/app/ui/admin/projects/projectManager";
 
 export default function PropertyPage() {
   const [projectTypeId, setProjectTypeId] = useState<number>(2);

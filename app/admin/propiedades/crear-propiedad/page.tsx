@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import ProjectForm from "@/app/ui/projects/createEditProject/projectForm";
+import ProjectForm from "@/app/ui/admin/projects/createEditProject/projectForm";
 
 export default function CreatePropertyPage() {
   const { data: session, status } = useSession();

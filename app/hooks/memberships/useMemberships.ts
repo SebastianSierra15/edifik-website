@@ -5,7 +5,7 @@ export const useMemberships = (
   currentPage: number,
   entriesPerPage: number,
   searchTerm: string,
-  refreshTrigger: number,
+  refreshTrigger: number
 ) => {
   const [memberships, setMemberships] = useState<Membership[]>([]);
   const [totalEntries, setTotalEntries] = useState(0);
@@ -15,11 +15,22 @@ export const useMemberships = (
     const fetchMemberships = async () => {
       setIsLoading(true);
       try {
+        const startFetch = performance.now(); // Inicia medición del tiempo de fetch
+
         const response = await fetch(
           `/api/memberships?page=${currentPage}&pageSize=${entriesPerPage}&searchTerm=${encodeURIComponent(
-            searchTerm,
-          )}`,
+            searchTerm
+          )}`
         );
+
+        const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
+        const serverTiming = response.headers.get("Server-Timing");
+
+        console.log(
+          `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
+        );
+        console.log("⏳ Server Timing Metrics:", serverTiming);
+
         if (!response.ok) {
           throw new Error("Failed to fetch memberships");
         }

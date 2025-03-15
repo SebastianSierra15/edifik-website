@@ -33,23 +33,20 @@ export async function middleware(req: NextRequest) {
 
   const requiredPermissions = protectedRoutes[matchedRoute];
 
-  const token = await getToken({
-    req: req,
-    secret: process.env.AUTH_SECRET,
-  });
+  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
 
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
+  if (pathname.startsWith("/login") && token) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   const userPermissions = token?.permissions as Permission[];
 
-  if (
-    (pathname.startsWith("/login") && token) ||
-    !userPermissions ||
-    userPermissions.length === 0
-  ) {
-    return NextResponse.redirect(new URL("/", req.url));
+  if (!userPermissions?.length) {
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
   const hasPermission = requiredPermissions.some((perm) =>

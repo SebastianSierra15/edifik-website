@@ -15,6 +15,9 @@ export const useRoleApi = () => {
     try {
       const method =
         action === "delete" ? "DELETE" : action === "edit" ? "PUT" : "POST";
+
+      const startFetch = performance.now(); // Inicia medición del tiempo de fetch
+
       const response = await fetch("/api/roles", {
         method,
         headers: {
@@ -22,6 +25,14 @@ export const useRoleApi = () => {
         },
         body: JSON.stringify(role),
       });
+
+      const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
+      const serverTiming = response.headers.get("Server-Timing");
+
+      console.log(
+        `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
+      );
+      console.log("⏳ Server Timing Metrics:", serverTiming);
 
       if (!response.ok) {
         const { error } = await response.json();

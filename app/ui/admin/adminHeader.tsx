@@ -73,7 +73,7 @@ export default function AdminHeader() {
       : "text-premium-textPrimary dark:text-premium-textSecondary hover:text-premium-primary dark:hover:text-premium-primaryLight";
 
   return (
-    <header className="fixed space-x-3 left-0 top-0 z-30 min-h-16 w-full bg-premium-background bg-opacity-90 text-premium-textPrimary shadow-md dark:bg-premium-secondaryDark dark:text-premium-textPrimary flex items-center justify-between py-1 px-4">
+    <header className="fixed space-x-3 left-0 top-0 z-50 min-h-16 w-full bg-premium-background bg-opacity-90 text-premium-textPrimary shadow-md dark:bg-premium-secondaryDark dark:text-premium-textPrimary flex items-center justify-between py-1 px-4">
       <Link
         href="/admin"
         className={clsx(

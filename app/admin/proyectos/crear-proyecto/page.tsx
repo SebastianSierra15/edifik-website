@@ -1,4 +1,4 @@
-import ProjectForm from "@/app/ui/projects/createEditProject/projectForm";
+import ProjectForm from "@/app/ui/admin/projects/createEditProject/projectForm";
 
 export default function CreateProjectPage() {
   return <ProjectForm isEdit={false} isProperty={false} />;

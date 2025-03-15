@@ -51,11 +51,19 @@ export const useBasicProjectValidation = (
     let errorMessage = getErrorMessage(fieldName, value);
 
     if (!isProperty && fieldName === "nameError" && value) {
+      const startCheckName = performance.now(); // Inicia medición del tiempo de verificación de nombre
+
       const total = await checkName(
         "project",
         value,
         isEdit ? formData.id : undefined
       );
+
+      const endCheckName = performance.now(); // Finaliza medición del tiempo de verificación de nombre
+      console.log(
+        `⏱️ Tiempo de verificación de nombre: ${(endCheckName - startCheckName).toFixed(2)}ms`
+      );
+
       if (total) {
         errorMessage = "El nombre del proyecto ya está en uso, elige otro.";
       }
@@ -98,11 +106,19 @@ export const useBasicProjectValidation = (
     }
 
     if (!isProperty && formData.name) {
+      const startCheckName = performance.now(); // Inicia medición del tiempo de verificación de nombre
+
       const total = await checkName(
         "project",
         formData.name,
         isEdit ? formData.id : undefined
       );
+
+      const endCheckName = performance.now(); // Finaliza medición del tiempo de verificación de nombre
+      console.log(
+        `⏱️ Tiempo de verificación de nombre: ${(endCheckName - startCheckName).toFixed(2)}ms`
+      );
+
       if (total) {
         newErrors.nameError =
           "El nombre del proyecto ya está en uso, elige otro.";

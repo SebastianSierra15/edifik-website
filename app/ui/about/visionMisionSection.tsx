@@ -1,46 +1,38 @@
-import Image from "next/image";
+import VisionMisionCard from "./visionMisionCard";
 
-interface VisionMisionSectionProps {
-  title: string;
-  description: string;
-  imageSrc: string;
-  bgColor: string;
-  textColor: string;
-}
-
-export default function VisionMisionSection({
-  title,
-  description,
-  imageSrc,
-  bgColor,
-  textColor,
-}: VisionMisionSectionProps) {
+export default function VisionMisionSection() {
   return (
-    <div
-      className={`col-span-3 mx-auto flex w-full overflow-hidden md:col-span-1`}
+    <section
+      id="mision-vision"
+      className="p-10 lg:p-14 -translate-y-10 bg-client-backgroundLight"
     >
-      <div
-        className={`flex flex-col justify-between rounded-lg border px-6 py-8 text-center shadow ${bgColor} border-blue-700`}
-      >
-        <h3
-          className={`mb-5 text-xl font-semibold uppercase tracking-wider ${textColor}`}
-        >
-          {title}
-        </h3>
-        <p className="text-justify text-sm font-light text-gray-700">
-          {description}
-        </p>
-        <div className="mt-5 justify-center text-center">
-          <Image
-            className="self-center object-cover"
-            src={imageSrc}
-            alt={`Imagen representativa de ${title}`}
-            width={500}
-            height={300}
-            priority
-          />
+      <div className="bg-transparent mx-auto pt-44 md:pt-16 lg:pt-8 py-12">
+        <div className="max-w-3xl text-center md:mx-auto md:pt-10">
+          <h2 className="text-2xl font-semibold text-client-text md:text-4xl">
+            Nuestra Visión y Misión
+          </h2>
+
+          <hr className="mx-auto my-2 w-1/3 border-t border-white" />
+        </div>
+
+        <div className="mt-14 flex items-stretch justify-center md:mt-20">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+            <VisionMisionCard
+              title="Visión"
+              description="Convertirse en el referente líder en soluciones integrales de arquitectura..."
+              imageSrc="/images/house2.png"
+              bgColor="bg-client-secondaryLight"
+            />
+
+            <VisionMisionCard
+              title="Misión"
+              description="Ofrecer servicios de arquitectura, modelado 3D..."
+              imageSrc="/images/house1.png"
+              bgColor="bg-client-accentLight"
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

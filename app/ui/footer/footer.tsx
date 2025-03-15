@@ -1,0 +1,178 @@
+import Link from "next/link";
+import WhatsAppIcon from "../icons/whatsAppIcon";
+import XIcon from "../icons/xIcon";
+import InstagramIcon from "../icons/instagramIcon";
+import TikTokIcon from "../icons/tikTokIcon";
+import YouTubeIcon from "../icons/youTubeIcon";
+
+export default function Footer() {
+  return (
+    <footer className="bg-client-backgroundAlt text-client-textPlaceholder pt-10 pb-4">
+      <div className="max-w-7xl mx-auto grid grid-cols-2 gap-8 px-10 md:grid-cols-4">
+        <div>
+          <h3 className="mb-2 text-sm font-semibold text-client-text">
+            COMPAÑÍA
+          </h3>
+
+          <ul className="space-y-1 text-sm">
+            <li>
+              <Link
+                href="/nosotros"
+                className="hover:text-client-text transition"
+              >
+                Quienes somos
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                href="/proyectos"
+                className="hover:text-client-text transition"
+              >
+                Portafolio
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                href="/contactanos"
+                className="hover:text-client-text transition"
+              >
+                Contáctanos
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="mb-2 text-sm font-semibold text-client-text">
+            SOBRE NOSOTROS
+          </h3>
+
+          <ul className="space-y-1 text-sm">
+            <li>
+              <Link
+                href="/nosotros#mision-vision"
+                className="hover:text-client-text transition"
+              >
+                Misión
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                href="/nosotros#mision-vision"
+                className="hover:text-client-text transition"
+              >
+                Visión
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                href="/nosotros/#nuestro-equipo"
+                className="hover:text-client-text transition"
+              >
+                Nuestro Equipo
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="mb-2 text-sm font-semibold text-client-text">
+            CONTACTO
+          </h3>
+
+          <p className="text-sm">+57 123 456 7890</p>
+          <p className="text-sm">contacto@edifik.com</p>
+          <p className="text-sm">@Edifik</p>
+        </div>
+
+        <div>
+          <h3 className="mb-2 text-sm font-semibold text-client-text">
+            TE CONTACTAMOS AHORA
+          </h3>
+
+          <div className="flex items-center border-b border-client-text-secondary pb-2">
+            <div className="flex-1">
+              <input
+                name="inputSendEmail"
+                type="email"
+                placeholder="Tu email"
+                className="w-full bg-transparent text-sm text-client-text placeholder-client-text-placeholder focus:outline-none"
+              />
+            </div>
+
+            <button className="ml-3 bg-transparent border border-client-text text-client-text px-4 py-2 rounded-full shadow-md text-sm font-medium hover:bg-white hover:text-black transition whitespace-nowrap">
+              Enviar ↗
+            </button>
+          </div>
+
+          <div className="flex items-center border-b border-client-text-secondary pb-2">
+            <div className="flex-1">
+              <input
+                name="inputSendEmail"
+                type="email"
+                placeholder="Tu email"
+                className="w-full bg-transparent text-sm text-client-text placeholder-client-text-placeholder focus:outline-none"
+              />
+            </div>
+
+            <button className="ml-3 bg-transparent border border-client-text text-client-text px-4 py-2 rounded-full shadow-md text-sm font-medium hover:bg-white hover:text-black transition whitespace-nowrap">
+              Contactanos ↗
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <hr className="border-client-textPlaceholder mx-10 my-4" />
+
+      <div className="flex justify-between items-center text-sm mx-10">
+        <span>&copy; 2025 Edifik - Todos los derechos reservados.</span>
+
+        <div className="flex space-x-4">
+          <Link
+            href="https://wa.me/tuNumero"
+            target="_blank"
+            aria-label="WhatsApp"
+          >
+            <WhatsAppIcon className="h-6 w-6 hover:text-client-text transition" />
+          </Link>
+
+          <Link
+            href="https://x.com/tuUsuario"
+            target="_blank"
+            aria-label="X (Twitter)"
+          >
+            <XIcon className="h-6 w-6 hover:text-client-text transition" />
+          </Link>
+
+          <Link
+            href="https://instagram.com/tuUsuario"
+            target="_blank"
+            aria-label="Instagram"
+          >
+            <InstagramIcon className="h-6 w-6 hover:text-client-text transition" />
+          </Link>
+
+          <Link
+            href="https://tiktok.com/tuUsuario"
+            target="_blank"
+            aria-label="Instagram"
+          >
+            <TikTokIcon className="h-6 w-6 hover:text-client-text transition" />
+          </Link>
+
+          <Link
+            href="https://youtube.com/tuUsuario"
+            target="_blank"
+            aria-label="Instagram"
+          >
+            <YouTubeIcon className="h-6 w-6 hover:text-client-text transition" />
+          </Link>
+        </div>
+      </div>
+    </footer>
+  );
+}

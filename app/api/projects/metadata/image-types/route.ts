@@ -6,6 +6,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 export async function GET() {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -25,7 +27,12 @@ export async function GET() {
   }
 
   try {
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     const [result] = await db.query("CALL get_image_types()");
+
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
+
     const rows = (result as RowDataPacket[][])[0];
 
     const ImageTypes: ImageType[] = rows.map((row: any) => ({
@@ -36,7 +43,17 @@ export async function GET() {
       isRequired: row.isRequired,
     }));
 
-    return NextResponse.json(ImageTypes);
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json(ImageTypes);
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("Error en la búsqueda de tipos de imagenes: ", error);
     return NextResponse.json(

@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
-import AdminCardSkeleton from "../ui/skeletons/AdminCardSkeleton";
+import AdminCardSkeleton from "../ui/skeletons/admin/adminCardSkeleton";
 
 const AdminCard = dynamic(() => import("../ui/admin/adminCard"), {
   ssr: false,

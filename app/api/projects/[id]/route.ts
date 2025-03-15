@@ -6,6 +6,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 export async function GET(request: Request, context: any) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   try {
     const session = await getServerSession(authOptions);
     const permissions = session?.user?.permissions || [];
@@ -27,10 +29,15 @@ export async function GET(request: Request, context: any) {
 
     const id = decodeURIComponent(params.id).replace(/-/g, " ");
 
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     const [result] = await db.query<RowDataPacket[][]>(
       "CALL get_project_by_id(?)",
       [id]
     );
+
+    const dbEndTime = performance.now(); // Finaliza medición de la consulta del proyecto
+
     const [
       projectsRows = [],
       nearbyServicesRows = [],
@@ -138,10 +145,14 @@ export async function GET(request: Request, context: any) {
       type: row.commonAreaName ?? row.imageTypeName ?? "Sin categoría",
     }));
 
+    const dbRecommendedStartTime = performance.now(); // Inicia medición de la consulta de proyectos recomendados
+
     const [recommendedResult] = await db.query<RowDataPacket[][]>(
       "CALL get_recommended_projects(1000, ?, 10, 5, 3, 2)",
       [project.propertyType.id]
     );
+
+    const dbRecommendedEndTime = performance.now(); // Finaliza medición de la consulta de proyectos recomendados
 
     const recommendedRows = (recommendedResult as RowDataPacket[][])[0] || [];
 
@@ -185,7 +196,18 @@ export async function GET(request: Request, context: any) {
       }));
     }
 
-    return NextResponse.json({ project, projectRecommended });
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+    const dbRecommendedDuration = dbRecommendedEndTime - dbRecommendedStartTime;
+
+    const response = NextResponse.json({ project, projectRecommended });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}, db-recommended;dur=${dbRecommendedDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     return NextResponse.json(
       { error: "Error al buscar el proyecto" },
@@ -195,6 +217,8 @@ export async function GET(request: Request, context: any) {
 }
 
 export async function DELETE(req: Request, context: any) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -226,12 +250,26 @@ export async function DELETE(req: Request, context: any) {
       );
     }
 
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     await db.query("CALL delete_project(?, ?)", [projectId, userId]);
 
-    return NextResponse.json(
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
+
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json(
       { message: "Proyecto eliminado correctamente." },
       { status: 200 }
     );
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("Error al eliminar el proyecto:", error);
     return NextResponse.json(

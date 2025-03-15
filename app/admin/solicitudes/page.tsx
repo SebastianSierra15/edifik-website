@@ -7,10 +7,10 @@ import { Request, Header } from "@/lib/definitios";
 import { useRequests } from "@/app/hooks/requests/useRequests";
 import { useRequestApi } from "@/app/hooks/requests/useRequestApi";
 import { useRequestValidation } from "@/app/hooks/requests/useRequestValidation";
-import Table from "@/app/ui/table/table";
-import TableSkeleton from "@/app/ui/skeletons/tableSkeleton";
-import RequestModal from "@/app/ui/requests/requestModal";
-import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
+import Table from "@/app/ui/admin/table/table";
+import TableSkeleton from "@/app/ui/skeletons/admin/tableSkeleton";
+import RequestModal from "@/app/ui/admin/requests/requestModal";
+import ModalConfirmation from "@/app/ui/modals/admin/modalConfirmation";
 import Alert from "@/app/ui/alert";
 
 export default function RequestsPage() {

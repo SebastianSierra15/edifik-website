@@ -224,6 +224,20 @@ export interface Request {
   projectName: string;
 }
 
+export interface ProjectView {
+  id: number;
+  name: string;
+  cityName: string;
+  price?: number;
+  area?: number;
+  bathrooms?: number;
+  parkingSpots?: number;
+  bedrooms?: number;
+  longitude?: number;
+  latitude?: number;
+  images: ProjectMedia[];
+}
+
 export type ProjectData = Partial<Project>;
 export type UserData = Partial<User>;
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   City,
   CommonArea,
@@ -29,29 +29,43 @@ export const useProjectsMetadata = () => {
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchMetadata = async () => {
-      setIsLoadingMetadata(true);
-      setError(null);
+  const fetchMetadata = useCallback(async () => {
+    if (metadata.cities.length > 0) return;
 
-      try {
-        const response = await fetch("/api/projects/metadata");
-        if (!response.ok) {
-          throw new Error(`Error fetching metadata: ${response.statusText}`);
-        }
+    setIsLoadingMetadata(true);
+    setError(null);
 
-        const data = await response.json();
-        setMetadata(data);
-      } catch (err) {
-        console.error("Error fetching metadata:", err);
-        setError((err as Error).message || "Error desconocido");
-      } finally {
-        setIsLoadingMetadata(false);
+    try {
+      const startFetch = performance.now();
+      const response = await fetch("/api/projects/metadata");
+
+      const endFetch = performance.now();
+      const serverTiming = response.headers.get("Server-Timing");
+
+      console.log(
+        `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
+      );
+      console.log("⏳ Server Timing Metrics:", serverTiming);
+
+      if (!response.ok) {
+        throw new Error(`Error fetching metadata: ${response.statusText}`);
       }
-    };
 
+      const data = await response.json();
+      setMetadata(data);
+    } catch (err) {
+      console.error("Error fetching metadata:", err);
+      setError((err as Error).message || "Error desconocido");
+    } finally {
+      setIsLoadingMetadata(false);
+    }
+  }, [metadata]);
+
+  useEffect(() => {
     fetchMetadata();
-  }, []);
+  }, [fetchMetadata]);
 
-  return { metadata, isLoadingMetadata, error };
+  const memoizedMetadata = useMemo(() => metadata, [metadata]);
+
+  return { metadata: memoizedMetadata, isLoadingMetadata, error };
 };

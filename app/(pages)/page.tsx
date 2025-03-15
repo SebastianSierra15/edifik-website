@@ -1,30 +1,37 @@
-import Image from "next/image";
+import HeroSection from "../ui/home/heroSection";
+import WordCarousel from "../ui/home/wordCarousel";
+import ProjectsSection from "../ui/home/projectsSection";
+import AboutUsSection from "../ui/home/abaoutUsSection";
+import RealEstateSection from "../ui/home/realEstateSection";
+import TestimonialCarousel from "../ui/home/testimonialCarousel";
+import ModelsSection from "../ui/home/modelsSection";
 
 export default function Home() {
   return (
-    <div className="relative m-0 h-[500px] w-full bg-cover bg-center p-0">
-      <Image
-        src="/images/image1.png"
-        alt="Vista aérea del edificio de EdifiK"
-        fill
-        className="object-cover"
-        priority
+    <>
+      <HeroSection
+        srcImage="/images/home/home.webp"
+        altImage="Vista del interior de un proyecto de EdifiK"
+        title="Diseñamos sueños, Construimos realidades"
+        description="Nos encargamos de cada detalle, desde la concepción hasta la
+          construcción."
       />
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-        <Image
-          src="/images/logo.webp"
-          alt="Logotipo de EdifiK"
-          width={400}
-          height={150}
-          priority
-          style={{ width: "auto", height: "auto" }}
-        />
+      <WordCarousel />
 
-        <h1 className="mt-4 text-center text-xl text-white">
-          Diseñamos Sueños, Construimos Realidades
-        </h1>
+      <ProjectsSection />
+
+      <AboutUsSection />
+
+      <RealEstateSection />
+
+      <div className="px-6 sm:px-20 lg:px-28">
+        <TestimonialCarousel />
       </div>
-    </div>
+
+      <div className="px-6">
+        <ModelsSection />
+      </div>
+    </>
   );
 }

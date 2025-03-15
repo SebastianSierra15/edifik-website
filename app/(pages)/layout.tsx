@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { poppins } from "@/app/fonts/fonts";
-import Header from "../ui/header";
-import Footer from "../ui/footer";
+import { inter } from "@/app/fonts/fonts";
 import { Providers } from "../providers";
+import Header from "../ui/header/header";
+import Footer from "../ui/footer/footer";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -18,11 +18,11 @@ export default function AdminLayout({
   return (
     <html lang="es">
       <body
-        className={`${poppins.className} flex min-h-screen flex-col bg-premium-background antialiased dark:bg-premium-background`}
+        className={`${inter.className} flex min-h-screen flex-col bg-client-background antialiased`}
       >
         <Providers>
           <Header />
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow space-y-12">{children}</main>
           <Footer />
         </Providers>
       </body>

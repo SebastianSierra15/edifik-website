@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 export async function POST(req: Request) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -36,11 +38,27 @@ export async function POST(req: Request) {
       );
     }
 
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     await db.query("CALL insert_multiple_project_media(?)", [
       JSON.stringify(projectMedia),
     ]);
 
-    return NextResponse.json({ message: "Medios insertados correctamente." });
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
+
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json({
+      message: "Medios insertados correctamente.",
+    });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("❌ Error al insertar los medios:", error);
     return NextResponse.json(
@@ -51,6 +69,8 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -83,11 +103,27 @@ export async function PUT(req: Request) {
       );
     }
 
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     await db.query("CALL update_multiple_project_media(?)", [
       JSON.stringify(projectMedia),
     ]);
 
-    return NextResponse.json({ message: "Medios actualizados correctamente." });
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
+
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json({
+      message: "Medios actualizados correctamente.",
+    });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("❌ Error al actualizar los medios:", error);
     return NextResponse.json(
@@ -98,6 +134,8 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -129,11 +167,27 @@ export async function DELETE(req: Request) {
       );
     }
 
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     await db.query("CALL delete_multiple_project_media(?)", [
       JSON.stringify(mediaIds),
     ]);
 
-    return NextResponse.json({ message: "Medios eliminados correctamente." });
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
+
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json({
+      message: "Medios eliminados correctamente.",
+    });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("❌ Error al eliminar los medios:", error);
     return NextResponse.json(

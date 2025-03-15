@@ -24,25 +24,25 @@ const stats: Stat[] = [
   {
     label: "Proyectos en Desarrollo",
     value: 15,
-    bgColor: "bg-blue-600",
+    bgColor: "bg-client-accentLight",
     textColor: "text-white",
   },
   {
     label: "Proyectos Completados",
     value: 200,
-    bgColor: "bg-gray-100",
-    textColor: "text-gray-800",
+    bgColor: "bg-white",
+    textColor: "text-client-primary",
   },
   {
     label: "Unidades de Proyectos",
     value: 300,
-    bgColor: "bg-gray-800",
+    bgColor: "bg-client-primaryLight",
     textColor: "text-white",
   },
   {
     label: "Venta de Proyectos",
     value: 150,
-    bgColor: "bg-blue-600",
+    bgColor: "bg-client-accentLight",
     textColor: "text-white",
   },
 ];
@@ -54,7 +54,7 @@ export default function StatsSection() {
     function animateNumbers() {
       const counters =
         sectionRef.current?.querySelectorAll<HTMLHeadingElement>(
-          "h3[data-target]",
+          "h3[data-target]"
         );
       if (!counters) return;
 

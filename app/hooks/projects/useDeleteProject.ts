@@ -11,9 +11,19 @@ const useDeleteProject = () => {
     setSuccess(false);
 
     try {
+      const startFetch = performance.now(); // Inicia medición del tiempo de fetch
+
       const response = await fetch(`/api/projects/${projectId}`, {
         method: "DELETE",
       });
+
+      const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
+      const serverTiming = response.headers.get("Server-Timing");
+
+      console.log(
+        `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
+      );
+      console.log("⏳ Server Timing Metrics:", serverTiming);
 
       const data = await response.json();
 

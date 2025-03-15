@@ -26,9 +26,19 @@ export default function useBasicMetadata() {
 
     try {
       setLoadingMetadata(true);
+      const startFetch = performance.now(); // Inicia medición del tiempo de fetch
+
       const response = await fetch("/api/projects/metadata/basic-metadata", {
         signal,
       });
+
+      const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
+      const serverTiming = response.headers.get("Server-Timing");
+
+      console.log(
+        `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
+      );
+      console.log("⏳ Server Timing Metrics:", serverTiming);
 
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);

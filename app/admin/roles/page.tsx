@@ -9,12 +9,12 @@ import { useRoles } from "@/app/hooks/roles/useRoles";
 import { useRoleValidation } from "@/app/hooks/roles/useRoleValidation";
 import { useRoleApi } from "@/app/hooks/roles/useRoleApi";
 import { usePermissions } from "@/app/hooks/roles/usePermissions";
-import Table from "@/app/ui/table/table";
-import TableSkeleton from "@/app/ui/skeletons/tableSkeleton";
+import Table from "@/app/ui/admin/table/table";
+import TableSkeleton from "@/app/ui/skeletons/admin/tableSkeleton";
 import Alert from "@/app/ui/alert";
-import ModalConfirmation from "@/app/ui/modals/modalConfirmation";
+import ModalConfirmation from "@/app/ui/modals/admin/modalConfirmation";
 
-const RoleModal = dynamic(() => import("@/app/ui/roles/roleModal"), {
+const RoleModal = dynamic(() => import("@/app/ui/admin/roles/roleModal"), {
   ssr: false,
 });
 
@@ -55,7 +55,7 @@ export default function RolesPage() {
     setHasLoadedOnce(true);
   }
 
-  const { errors, validateFields, validateField } = useRoleValidation(
+  const { errors, validateFields } = useRoleValidation(
     editRole || registerRole,
     !!editRole
   );

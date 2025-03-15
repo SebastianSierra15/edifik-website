@@ -7,6 +7,8 @@ import { authOptions } from "@/lib/auth";
 import sharp from "sharp";
 
 export async function POST(req: Request) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -52,9 +54,14 @@ export async function POST(req: Request) {
     }
 
     const originalBuffer = await file.arrayBuffer();
+
+    const conversionStartTime = performance.now(); // Inicia medición del tiempo de conversión de la imagen
+
     const webpBuffer = await sharp(Buffer.from(originalBuffer))
       .webp({ quality: 80 })
       .toBuffer();
+
+    const conversionEndTime = performance.now(); // Finaliza medición de la conversión de la imagen
 
     const fileKey = `${folderPath}${Date.now()}/${uuidv4()}.webp`;
 
@@ -65,14 +72,29 @@ export async function POST(req: Request) {
       ContentType: "image/webp",
     });
 
+    const uploadStartTime = performance.now(); // Inicia medición del tiempo de subida a S3
+
     await s3.send(command);
+
+    const uploadEndTime = performance.now(); // Finaliza medición de la subida a S3
 
     const cloudFrontUrl = `https://${process.env.CLOUDFRONT_DOMAIN}/${fileKey}`;
 
-    return NextResponse.json({
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const conversionDuration = conversionEndTime - conversionStartTime;
+    const uploadDuration = uploadEndTime - uploadStartTime;
+
+    const response = NextResponse.json({
       message: "Imagen cargada con éxito y convertida a .webp",
       url: cloudFrontUrl,
     });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, image-conversion;dur=${conversionDuration.toFixed(2)}, s3-upload;dur=${uploadDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("Error al cargar y convertir la imagen:", error);
     return NextResponse.json(
@@ -83,6 +105,8 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -114,12 +138,26 @@ export async function DELETE(req: Request) {
       Key: key,
     });
 
+    const deleteStartTime = performance.now(); // Inicia medición del tiempo de eliminación en S3
+
     await s3.send(command);
 
-    return NextResponse.json({
+    const deleteEndTime = performance.now(); // Finaliza medición del tiempo de eliminación en S3
+
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const deleteDuration = deleteEndTime - deleteStartTime;
+
+    const response = NextResponse.json({
       message: "Imagen eliminada correctamente de S3",
       deletedKey: key,
     });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, s3-delete;dur=${deleteDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("🚨 Error al borrar la imagen de S3:", error);
     return NextResponse.json(

@@ -11,12 +11,23 @@ export const useUsersMetadata = () => {
     const fetchUsersMetadata = async () => {
       setIsLoadingUsersMetadata(true);
       try {
+        const startFetch = performance.now(); // Inicia medición del tiempo de fetch
+
         const response = await fetch("/api/users/metadata");
         if (!response.ok) {
           throw new Error(
             `Error en la busqueda de datos de usuario: ${response.statusText}`
           );
         }
+
+        const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
+        const serverTiming = response.headers.get("Server-Timing");
+
+        console.log(
+          `⏱️ Tiempo total de fetch para obtener metadata de usuarios: ${(endFetch - startFetch).toFixed(2)}ms`
+        );
+        console.log("⏳ Server Timing Metrics:", serverTiming);
+
         const data = await response.json();
         setRoles(data.roles);
         setGenders(data.genders);

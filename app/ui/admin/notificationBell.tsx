@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { Bell, ArrowRight } from "lucide-react";
 import { usePendingRequests } from "@/app/hooks/requests/usePendingRequests";
-import NotificationSkeleton from "../skeletons/notificationSkeleton";
+import NotificationSkeleton from "../skeletons/admin/notificationSkeleton";
 
 export default function NotificationBell() {
   const router = useRouter();
@@ -23,10 +23,12 @@ export default function NotificationBell() {
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
 
-      setUnreadNotifications(() => {
-        const count = data.data.length;
-        return count;
-      });
+      if (!data.data || !Array.isArray(data.data)) {
+        console.warn("⚠️ Respuesta inválida en SSE:", data);
+        return;
+      }
+
+      setUnreadNotifications(() => data.data.length);
     };
 
     eventSource.onerror = () => {

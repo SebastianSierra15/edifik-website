@@ -7,6 +7,8 @@ import { RowDataPacket } from "mysql2";
 import { getServerSession } from "next-auth";
 
 export async function GET(req: Request) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -30,10 +32,14 @@ export async function GET(req: Request) {
   const searchTerm = escapeSearchTerm(searchParams.get("searchTerm") || null);
 
   try {
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     const [result] = await db.query<RowDataPacket[][]>(
       "CALL get_roles_with_permissions(?, ?, ?)",
       [page, pageSize, searchTerm]
     );
+
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
 
     const [rolesRows = [], [totalEntriesRow] = [], permissionRows = []] =
       result;
@@ -60,10 +66,20 @@ export async function GET(req: Request) {
       permissions: permissionsByRole[id] || [],
     }));
 
-    return NextResponse.json({
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json({
       roles,
       totalEntries,
     });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     return NextResponse.json(
       { error: "Error al recuperar los roles" },
@@ -73,6 +89,8 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -103,6 +121,8 @@ export async function PUT(req: Request) {
 
     const permissionsJson = JSON.stringify(permission);
 
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     await db.query("CALL update_role(?, ?, ?, ?)", [
       id,
       name,
@@ -110,7 +130,21 @@ export async function PUT(req: Request) {
       userId,
     ]);
 
-    return NextResponse.json({ message: "Rol actualizado exitosamente" });
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
+
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json({
+      message: "Rol actualizado exitosamente",
+    });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("Error al actualizar el rol:", error);
     return NextResponse.json(
@@ -121,6 +155,8 @@ export async function PUT(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -151,13 +187,30 @@ export async function POST(req: Request) {
 
     const permissionsJson = JSON.stringify(permission);
 
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     const result = await db.query("CALL create_role(?, ?, ?)", [
       name,
       permissionsJson,
       userId,
     ]);
 
-    return NextResponse.json({ message: "Rol creado exitosamente", result });
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
+
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json({
+      message: "Rol creado exitosamente",
+      result,
+    });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("Error al crear el rol:", error);
     return NextResponse.json(
@@ -168,6 +221,8 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const startTime = performance.now(); // Inicia medición del tiempo total de la API
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -196,9 +251,25 @@ export async function DELETE(req: Request) {
       );
     }
 
+    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
+
     await db.query("CALL delete_role(?, ?)", [id, userId]);
 
-    return NextResponse.json({ message: "Rol eliminado exitosamente" });
+    const dbEndTime = performance.now(); // Finaliza medición de la BD
+
+    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
+    const apiDuration = endTime - startTime;
+    const dbDuration = dbEndTime - dbStartTime;
+
+    const response = NextResponse.json({
+      message: "Rol eliminado exitosamente",
+    });
+    response.headers.set(
+      "Server-Timing",
+      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
+    );
+
+    return response;
   } catch (error) {
     console.error("Error al eliminar el rol:", error);
     return NextResponse.json(

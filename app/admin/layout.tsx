@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: "Panel de administración de EdifiK",
 };
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

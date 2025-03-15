@@ -49,11 +49,19 @@ export const useUserValidation = (user: any, isEdit: boolean) => {
     let errorMessage = getErrorMessage(fieldName, value);
 
     if (fieldName === "usernameError" && value) {
+      const startCheckName = performance.now(); // Inicia medición del tiempo de verificación de nombre
+
       const total = await checkName(
         "user",
         value,
         isEdit ? user.id : undefined
       );
+
+      const endCheckName = performance.now(); // Finaliza medición del tiempo de verificación de nombre
+      console.log(
+        `⏱️ Tiempo de verificación de nombre: ${(endCheckName - startCheckName).toFixed(2)}ms`
+      );
+
       if (total > 0) {
         errorMessage = "El nombre de usuario ya está en uso, elige otro.";
       }
@@ -78,11 +86,19 @@ export const useUserValidation = (user: any, isEdit: boolean) => {
     };
 
     if (user.username) {
+      const startCheckName = performance.now(); // Inicia medición del tiempo de verificación de nombre
+
       const total = await checkName(
         "user",
         user.username,
         isEdit ? user.id : undefined
       );
+
+      const endCheckName = performance.now(); // Finaliza medición del tiempo de verificación de nombre
+      console.log(
+        `⏱️ Tiempo de verificación de nombre: ${(endCheckName - startCheckName).toFixed(2)}ms`
+      );
+
       if (total > 0) {
         newErrors.usernameError =
           "El nombre de usuario ya está en uso, elige otro.";

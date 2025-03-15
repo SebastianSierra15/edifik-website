@@ -25,16 +25,25 @@ export default function useColombianLocations() {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
+        const startFetch = performance.now(); // Inicia medición del tiempo de fetch
+
         const response = await fetch(
-          "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json",
+          "https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json"
         );
+
+        const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
+
+        console.log(
+          `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
+        );
+
         const data = await response.json();
 
         const departaments: Departament[] = data.map(
           (dept: any, index: number) => ({
             id: index + 1,
             name: dept.departamento,
-          }),
+          })
         );
 
         const cities = data.reduce(
@@ -44,11 +53,11 @@ export default function useColombianLocations() {
                 id: cityIndex + 1,
                 name: cityName,
                 departamentId: index + 1,
-              }),
+              })
             );
             return acc;
           },
-          {},
+          {}
         );
 
         setLocations({ departaments, cities });

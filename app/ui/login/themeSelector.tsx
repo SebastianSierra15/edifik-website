@@ -1,5 +1,5 @@
-import { FaSun, FaMoon, FaAdjust } from "react-icons/fa";
-//import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Sun, Moon, SunMoon } from "lucide-react";
 
 export default function ThemeSelector({
   closeMenu,
@@ -42,7 +42,7 @@ export default function ThemeSelector({
             : "text-textPrimary dark:text-textSecondary"
         }`}
       >
-        <FaSun className="mr-2 text-yellow-400" />
+        <Sun className="mr-2 text-yellow-400" />
         Modo Claro
       </button>
 
@@ -54,7 +54,7 @@ export default function ThemeSelector({
             : "text-textPrimary dark:text-textSecondary"
         }`}
       >
-        <FaMoon className="dark:text-textPrimary mr-2" />
+        <Moon className="dark:text-textPrimary mr-2" />
         Modo Oscuro
       </button>
 
@@ -66,7 +66,7 @@ export default function ThemeSelector({
             : "text-textPrimary dark:text-textSecondary"
         }`}
       >
-        <FaAdjust className="mr-2 text-blue-500" />
+        <SunMoon className="mr-2 text-blue-500" />
         Automático
       </button>
     </div>
