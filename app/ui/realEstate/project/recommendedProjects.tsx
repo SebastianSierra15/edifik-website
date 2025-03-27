@@ -11,9 +11,9 @@ interface Project {
   rooms: string;
 }
 
-type RecommendedProjectsProps = {
+interface RecommendedProjectsProps {
   projects: Project[];
-};
+}
 
 export default function RecommendedProjects({
   projects,

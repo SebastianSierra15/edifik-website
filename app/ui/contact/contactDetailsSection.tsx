@@ -7,8 +7,8 @@ const Mail = dynamic(() => import("lucide-react").then((mod) => mod.Mail));
 
 export default function ContactDetailsSection() {
   return (
-    <div className="py-8">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-0 px-10 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-8">
+    <>
+      <div className="mx-auto grid sm:justify-normal max-w-7xl grid-cols-1 gap-0 px-4 sm:px-6 lg:px-12 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-8">
         <ContactInfo
           icon={
             <MapPin className="h-6 w-6 text-client-accent" aria-hidden="true" />
@@ -38,6 +38,6 @@ export default function ContactDetailsSection() {
           py="10"
         />
       </div>
-    </div>
+    </>
   );
 }

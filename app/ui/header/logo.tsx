@@ -10,7 +10,6 @@ export default function Logo() {
           alt="Logo de EdifiK"
           width={90}
           height={36}
-          priority
           className="lg:w-auto h-auto object-contain"
         />
       </div>

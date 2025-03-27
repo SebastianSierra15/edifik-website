@@ -14,10 +14,10 @@ interface ProjectNearbyServicesProps {
 }
 
 const serviceIcons: { [key: string]: JSX.Element } = {
-  Colegios: <School className="text-yellow-600" />,
-  Comercio: <Store className="text-yellow-600" />,
-  "Centros de Salud": <Hospital className="text-yellow-600" />,
-  "Parque de Juegos": <Smile className="text-yellow-600" />,
+  Colegios: <School className="text-client-accent" />,
+  Comercio: <Store className="text-client-accent" />,
+  "Centros de Salud": <Hospital className="text-client-accent" />,
+  "Parque de Juegos": <Smile className="text-client-accent" />,
 };
 
 export default function ProjectNearbyServices({
@@ -25,9 +25,10 @@ export default function ProjectNearbyServices({
 }: ProjectNearbyServicesProps) {
   return (
     <div className="my-8">
-      <h2 className="mb-6 text-2xl font-semibold text-[#8B4513]">
+      <h2 className="mb-6 text-2xl font-semibold text-white">
         Servicios Cercanos
       </h2>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {services.map((service) => (
           <div key={service.id}>

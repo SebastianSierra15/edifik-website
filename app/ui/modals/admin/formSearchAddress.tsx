@@ -36,6 +36,7 @@ export default function FormSearchAddress({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    console.log("[Mount] FormSearchAddress rendered");
     const handleClickOutside = (event: MouseEvent) => {
       if (
         listRef.current &&
@@ -54,21 +55,32 @@ export default function FormSearchAddress({
   }, []);
 
   useEffect(() => {
+    console.log("[Effect] isLoaded:", isLoaded);
+    console.log(
+      "[Effect] typeof window.google:",
+      typeof window !== "undefined" ? typeof window.google : "undefined"
+    );
+
     if (
       isLoaded &&
-      typeof google !== "undefined" &&
+      typeof window !== "undefined" &&
+      typeof window.google !== "undefined" &&
+      window.google.maps?.places &&
       !autocompleteServiceRef.current
     ) {
       autocompleteServiceRef.current =
-        new google.maps.places.AutocompleteService();
+        new window.google.maps.places.AutocompleteService();
+      console.log("[Init] AutocompleteService initialized");
     }
   }, [isLoaded]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
+    console.log("[Change] Input changed:", newValue);
     onChange(newValue);
 
     if (newValue.trim() && autocompleteServiceRef.current) {
+      console.log("[Search] Fetching predictions for:", newValue);
       autocompleteServiceRef.current.getPlacePredictions(
         {
           input: newValue,
@@ -76,6 +88,7 @@ export default function FormSearchAddress({
         },
         (predictions) => {
           if (predictions) {
+            console.log("[Predictions]", predictions);
             setSuggestions(
               predictions.map((prediction) => ({
                 place_id: prediction.place_id,
@@ -83,10 +96,13 @@ export default function FormSearchAddress({
               }))
             );
             setIsListVisible(true);
+          } else {
+            console.warn("[Predictions] No predictions found");
           }
         }
       );
     } else {
+      console.log("[Autocomplete] Empty input or service not initialized");
       setSuggestions([]);
     }
   };
@@ -98,7 +114,7 @@ export default function FormSearchAddress({
   };
 
   return (
-    <div>
+    <div className="relative">
       <label
         htmlFor="searchAddress"
         className="mb-2 flex items-center gap-2 text-premium-textPrimary dark:text-premium-textPrimary"
@@ -107,13 +123,17 @@ export default function FormSearchAddress({
         {error !== undefined && " *"}
         {tooltipText && <TooltipIcon tooltipText={tooltipText} />}
       </label>
+
       <input
         ref={inputRef}
         id="searchAddress"
         type="text"
         name="address"
-        value={value}
-        onChange={handleInputChange}
+        defaultValue={value}
+        onChange={(e) => {
+          console.log("[INPUT] value typed:", e.target.value);
+          handleInputChange(e);
+        }}
         placeholder="Ingrese la dirección"
         autoComplete="street-address"
         className={clsx(

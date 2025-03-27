@@ -27,32 +27,32 @@ export default function FilterNumericCounter({
   return (
     <>
       <div
-        className="flex transform cursor-pointer items-center justify-between transition-transform duration-200 hover:scale-105 hover:font-semibold"
+        className="flex transform cursor-pointer items-center justify-between transition-transform duration-200 hover:scale-105 hover:font-semibold text-white"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div
           className={clsx(
             "flex items-center space-x-2 text-lg font-medium",
-            value > 0 ? "text-client-primary" : "text-black"
+            value > 0 && "text-client-accent"
           )}
         >
           {icon}
           <span>{label}</span>
         </div>
+
         <ChevronDown
           className={clsx(
             "transform transition-transform duration-300",
-            isOpen && "rotate-180",
-            "text-black"
+            isOpen && "rotate-180"
           )}
         />
       </div>
 
       {isOpen && (
-        <div className="mt-2 flex items-center justify-center space-x-1 px-10">
+        <div className="mt-2 flex items-center justify-center space-x-1 px-10 text-white">
           <button
             onClick={() => value > 0 && decrement()}
-            className="flex h-8 w-8 items-center justify-center rounded-l-md bg-gray-300 text-black transition-colors hover:bg-client-secondaryLight"
+            className="flex h-8 w-8 items-center justify-center rounded-l-md transition-colors hover:bg-client-accentHover"
           >
             -
           </button>
@@ -61,12 +61,12 @@ export default function FilterNumericCounter({
             readOnly
             type="text"
             value={value}
-            className="w-12 border border-gray-300 bg-white text-center text-black"
+            className="w-12 bg-transparent border border-client-accent text-center"
           />
 
           <button
             onClick={increment}
-            className="flex h-8 w-8 items-center justify-center rounded-r-md bg-gray-300 text-black transition-colors hover:bg-client-secondaryLight"
+            className="flex h-8 w-8 items-center justify-center rounded-r-md transition-colors hover:bg-client-accentHover"
           >
             +
           </button>

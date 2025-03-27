@@ -2,8 +2,8 @@ import Image from "next/image";
 
 export default function AboutSection() {
   return (
-    <section className="p-5 lg:px-10 lg:pb-10 mx-auto grid grid-cols-1 gap-10 lg:grid-cols-2 text-client-text">
-      <div className="mx-8 text-center lg:text-left">
+    <section className="p-4 lg:px-10 lg:pb-10 mx-auto grid grid-cols-1 gap-10 lg:grid-cols-2 text-client-text">
+      <div className="md:mx-8 text-center lg:text-left">
         <h1 className="mb-10 text-3xl font-bold text-client-text lg:text-5xl">
           Te damos la bienvenida a EdifiK
         </h1>

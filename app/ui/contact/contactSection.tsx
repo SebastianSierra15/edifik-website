@@ -4,8 +4,8 @@ import ContactForm from "./contactForm";
 export default function ContactSection() {
   return (
     <section>
-      <div className="mx-auto mb-10 grid grid-cols-1 gap-10 px-5 md:grid-cols-2 lg:px-10">
-        <div className="mx-auto grid w-3/4 grid-cols-1 gap-5 pt-5 lg:w-full lg:px-10">
+      <div className="mx-auto mb-10 grid grid-cols-1 gap-10 px-4 sm:px-6 lg:px-12 md:grid-cols-2">
+        <div className="mx-auto grid w-full grid-cols-1 gap-5 pt-5 lg:w-full">
           <Image
             className="h-auto w-full self-center object-cover xl:self-start rounded-lg"
             src="/images/constructor.jpg"

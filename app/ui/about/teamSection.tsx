@@ -3,7 +3,7 @@ import TeamMember from "./teamMember";
 export default function TeamSection() {
   return (
     <>
-      <section id="nuestro-equipo" className="p-5 lg:p-10">
+      <section id="nuestro-equipo" className="p-4 md:p-10">
         <div className="mx-auto px-4 text-center sm:px-6 lg:px-10">
           <h2 className="text-center text-2xl font-semibold text-white lg:text-4xl">
             Fundadores
@@ -29,7 +29,7 @@ export default function TeamSection() {
 
       <hr className="mx-auto my-2 w-5/6 border-t border-white bg-transparent" />
 
-      <section className="p-5 pb-52 sm:pb-44 md:pb-20 lg:p-10">
+      <section className="p-4 pb-52 sm:pb-44 md:pb-20 md:p-10">
         <div className="mx-auto px-4 text-center sm:px-6 lg:px-10">
           <h2 className="text-center text-2xl font-semibold text-white lg:text-4xl">
             Nuestro Equipo

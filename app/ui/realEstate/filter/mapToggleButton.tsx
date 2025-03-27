@@ -18,7 +18,7 @@ export default function MapToggleButton({
   return (
     showMap && (
       <button
-        className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 flex items-center space-x-2 rounded-full border border-client-secondary bg-client-background px-4 py-3 text-sm shadow-lg transition-colors hover:bg-client-background-light"
+        className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 flex items-center space-x-2 rounded-full border bg-client-background px-4 py-3 text-sm shadow-lg transition-colors border-client-accent text-client-text hover:bg-client-backgroundLight"
         onClick={handleClick}
       >
         <span className="text-client-text">

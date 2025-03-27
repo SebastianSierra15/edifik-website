@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import clsx from "clsx";
 import { usePathname } from "next/navigation";
 
 const navItems = [
@@ -13,6 +14,13 @@ const navItems = [
 export default function NavBar() {
   const pathname = usePathname();
 
+  const getLinkClasses = (path: string) => {
+    const isActive =
+      path === "/" ? pathname === "/" : pathname.startsWith(path);
+
+    return isActive ? "bg-white text-black" : "text-gray-800 hover:text-black";
+  };
+
   return (
     <nav
       className="flex space-x-2 px-2 lg:px-4 py-2 rounded-full bg-gray-300/50 backdrop-blur-md shadow-md"
@@ -22,12 +30,16 @@ export default function NavBar() {
         <Link
           key={path}
           href={path}
-          className={`px-2 lg:px-4 py-1 rounded-full transition font-medium ${
-            pathname === path
-              ? "bg-white text-black"
-              : "text-gray-800 hover:text-black"
-          }`}
-          aria-current={pathname === path ? "page" : undefined}
+          className={clsx(
+            "px-2 lg:px-4 py-1 rounded-full transition font-medium",
+            getLinkClasses(path)
+          )}
+          aria-current={
+            (path === "/" && pathname === "/") ||
+            (path !== "/" && pathname.startsWith(path))
+              ? "page"
+              : undefined
+          }
         >
           {label}
         </Link>

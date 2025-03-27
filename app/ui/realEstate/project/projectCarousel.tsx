@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProjectMedia } from "@/lib/definitios";
 import ImageModal from "./imageModal";
 
@@ -123,20 +124,18 @@ export default function ProjectCarousel({
 
       <button
         onClick={prevSlide}
-        className="absolute left-2 top-1/2 z-10 mx-5 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-white bg-opacity-80 text-xl font-bold text-black hover:bg-opacity-100 sm:left-3 lg:left-4"
-        style={{ color: "#8B4513", backgroundColor: "#DAA520" }}
+        className="absolute left-2 top-1/2 z-10 mx-5 flex p-1 -translate-y-1/2 transform items-center justify-center rounded-full bg-client-accent hover:bg-client-accentHover font-bold sm:left-3 lg:left-4 transition-all"
         aria-label="Previous Slide"
       >
-        &#10094;
+        <ChevronLeft className="w-6 h-6 text-client-text" />
       </button>
 
       <button
         onClick={nextSlide}
-        className="absolute right-2 top-1/2 z-10 mx-5 flex h-8 w-8 -translate-y-1/2 transform items-center justify-center rounded-full bg-white bg-opacity-80 text-xl font-bold text-black hover:bg-opacity-100 sm:right-3 lg:right-4"
-        style={{ color: "#8B4513", backgroundColor: "#DAA520" }}
+        className="absolute right-2 top-1/2 z-10 mx-5 flex p-1 -translate-y-1/2 transform items-center justify-center rounded-full bg-client-accent hover:bg-client-accentHover font-bold  sm:right-3 lg:right-4 transition-all"
         aria-label="Next Slide"
       >
-        &#10095;
+        <ChevronRight className="w-6 h-6 text-client-text" />
       </button>
 
       <div className="flex justify-center space-x-2">
@@ -144,10 +143,10 @@ export default function ProjectCarousel({
           <button
             key={index}
             onClick={() => setCurrentImage(index)}
-            className={`h-2 w-2 rounded-full transition-transform duration-300 ${
+            className={`h-2 w-2 rounded-full transition-transform duration-300 hover:bg-client-accentHover ${
               currentImage === index
-                ? "scale-125 bg-[#8B4513]"
-                : "scale-100 bg-[#DAA520] opacity-75"
+                ? "scale-125 bg-client-accentDark"
+                : "scale-100 bg-client-accentLight opacity-75"
             }`}
           />
         ))}

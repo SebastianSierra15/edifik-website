@@ -1,12 +1,19 @@
 "use client";
 
 import React, { useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
 import clsx from "clsx";
 import { ProjectView } from "@/lib/definitios";
 import { useProjectsMetadata } from "@/app/hooks/projects/metadata/useProjectsMetadata";
-import ProjectFilter from "./projectFilter";
 import PropertyCard from "./PropertyCard";
 import ProjectsMap from "./projectsMap";
+
+const ProjectFilter = dynamic(
+  () => import("@/app/ui/realEstate/projectFilter"),
+  {
+    ssr: false,
+  }
+);
 
 interface ProjectsContainerProps {
   projects: ProjectView[];
@@ -52,10 +59,6 @@ const ProjectsContainer = ({
     };
   }, [metadata]);
 
-  useEffect(() => {
-    console.log("Recibiendo proyectos en ProjectsContainer:", projects);
-  }, [projects]);
-
   const projectCards = useMemo(
     () =>
       projects.map((project) => (
@@ -66,6 +69,8 @@ const ProjectsContainer = ({
           <div className="w-full max-w-xs h-80">
             <PropertyCard
               id={project.id}
+              name={project.name}
+              location={project.cityName}
               images={project.images}
               price={project.price || 0}
               area={project.area}
@@ -139,10 +144,10 @@ const ProjectsContainer = ({
               onClick={fetchMoreProjects}
               disabled={isLoading}
               className={clsx(
-                "mt-6 self-center rounded-lg px-6 py-2 text-white shadow-lg transition-colors",
+                "mt-6 self-center bg-client-backgroundAlt border border-white rounded-full px-6 py-2 text-white shadow-lg transition-colors",
                 isLoading
-                  ? "bg-client-primaryDark cursor-not-allowed"
-                  : "bg-client-primary hover:bg-client-primaryDark"
+                  ? "cursor-not-allowed"
+                  : "hover:bg-client-white hover:text-black"
               )}
             >
               {isLoading ? "Cargando..." : "Mostrar más"}

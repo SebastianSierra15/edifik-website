@@ -30,14 +30,14 @@ export default function FilterOption({
         role="button"
         aria-expanded={isOpen}
         tabIndex={0}
-        className="mb-4 flex transform cursor-pointer items-center justify-between transition-transform duration-200 hover:scale-105 hover:font-semibold"
+        className="mb-4 flex transform cursor-pointer items-center justify-between transition-transform duration-200 hover:scale-105 hover:font-semibold text-white"
         onClick={onToggleOpen}
         onKeyDown={(e) => e.key === "Enter" && onToggleOpen()}
       >
         <div
           className={clsx(
             "flex items-center space-x-2 text-lg font-medium",
-            selectedItems.length ? "text-client-primary" : "text-black"
+            selectedItems.length && "text-client-accent"
           )}
         >
           {icon}
@@ -47,8 +47,7 @@ export default function FilterOption({
         <ChevronDown
           className={clsx(
             "transform transition-transform duration-300",
-            isOpen && "rotate-180",
-            "text-black"
+            isOpen && "rotate-180"
           )}
         />
       </div>
@@ -61,13 +60,13 @@ export default function FilterOption({
               onClick={() => onToggleItem(item.id)}
               className={clsx(
                 "relative overflow-hidden rounded-full border px-3 py-2 text-xs transition-colors duration-300",
-                "border-gray-300",
+                "border-client-accent",
                 selectedItems.includes(item.id)
-                  ? "bg-gray-200"
-                  : "bg-white hover:bg-gray-200"
+                  ? "bg-client-accent text-white"
+                  : "bg-transparent"
               )}
             >
-              <span className="relative z-10 text-black">{item.name}</span>
+              <span className="relative z-10 ">{item.name}</span>
             </button>
           ))}
         </div>

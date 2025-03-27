@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useMemo, useState } from "react";
+import { useEffect, useCallback, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ProjectData, Media } from "@/lib/definitios";
 import useLocations from "@/app/hooks/projects/metadata/location/useLocations";
@@ -58,7 +58,13 @@ export default function ProjectForm({
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mediaToSubmit, setMediaToSubmit] = useState<Media[] | null>(null);
-  const [mapAddress, setMapAddress] = useState(isEdit ? "Ubicación" : "");
+  const [mapAddress, _setMapAddress] = useState(isEdit ? "Ubicación" : "");
+  const mapAddressRef = useRef(mapAddress);
+
+  const setMapAddress = (value: string) => {
+    mapAddressRef.current = value;
+    _setMapAddress(value);
+  };
 
   useEffect(() => {
     if (isEdit && project && Object.keys(project).length > 0) {
@@ -66,6 +72,8 @@ export default function ProjectForm({
         ...prev,
         ...project,
       }));
+
+      setMapAddress(project.address || "");
     }
   }, [isEdit, project]);
 
@@ -361,7 +369,7 @@ export default function ProjectForm({
             totalSteps={totalSteps}
             departaments={locations.departaments}
             cities={locations.cities}
-            mapAddress={mapAddress}
+            mapAddress={mapAddressRef.current}
             setMapAddress={setMapAddress}
           />
         )}
@@ -408,6 +416,7 @@ export default function ProjectForm({
       </>
     );
   }, [currentStep, metadata, locations, projectData]);
+  console.log("[ProjectForm] mapAddress:", mapAddress);
 
   return (
     <div className="container mx-auto p-6">

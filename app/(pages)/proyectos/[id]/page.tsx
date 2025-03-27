@@ -3,7 +3,7 @@
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useProjectById } from "@/app/hooks/projects/useProjectById";
-import Map from "@/app/ui/admin/projects/project/map";
+import Map from "@/app/ui/realEstate/project/map";
 
 import ProjectHeaderSkeleton from "@/app/ui/skeletons/projectHeaderSkeleton";
 import { ProjectCarouselSkeleton } from "@/app/ui/skeletons/projectCarouselSkeleton";
@@ -15,44 +15,44 @@ import { ProjectShortDescriptionSkeleton } from "@/app/ui/skeletons/projectShort
 import { ProjectDetailedDescriptionSkeleton } from "@/app/ui/skeletons/projectDetailedDescriptionSkeleton";
 
 const ProjectHeader = dynamic(
-  () => import("@/app/ui/admin/projects/project/projectHeader"),
+  () => import("@/app/ui/realEstate/project/projectHeader"),
   { loading: () => <ProjectHeaderSkeleton /> }
 );
 
 const ProjectCarousel = dynamic(
-  () => import("@/app/ui/admin/projects/project/projectCarousel"),
+  () => import("@/app/ui/realEstate/project/projectCarousel"),
   { loading: () => <ProjectCarouselSkeleton /> }
 );
 
 const ProjectPlans = dynamic(
-  () => import("@/app/ui/admin/projects/project/projectPlans"),
+  () => import("@/app/ui/realEstate/project/projectPlans"),
   { loading: () => <ProjectPlansSkeleton /> }
 );
 
 const ProjectDetails = dynamic(
-  () => import("@/app/ui/admin/projects/project/projectDetails"),
+  () => import("@/app/ui/realEstate/project/projectDetails"),
   { loading: () => <ProjectDetailsSkeleton /> }
 );
 
 const ProjectNearbyServices = dynamic(
-  () => import("@/app/ui/admin/projects/project/projectNearbyServices"),
+  () => import("@/app/ui/realEstate/project/projectNearbyServices"),
   { loading: () => <ProjectNearbyServicesSkeleton /> }
 );
 
 const ProjectCommonAreas = dynamic(
-  () => import("@/app/ui/admin/projects/project/projectCommonAreas"),
+  () => import("@/app/ui/realEstate/project/projectCommonAreas"),
   { loading: () => <ProjectCommonAreasSkeleton /> }
 );
 
 const ContactForm = dynamic(
-  () => import("@/app/ui/admin/projects/contactForm"),
+  () => import("@/app/ui/realEstate/project/contactFormSection"),
   {
     loading: () => <div>Cargando formulario de contacto...</div>,
   }
 );
 
 const CarouselRecommendedProjects = dynamic(
-  () => import("@/app/ui/admin/projects/project/carouselRecommendedProjects"),
+  () => import("@/app/ui/realEstate/project/carouselRecommendedProjects"),
   { loading: () => <div>Cargando proyectos recomendados...</div> }
 );
 

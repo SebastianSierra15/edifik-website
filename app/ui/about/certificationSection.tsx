@@ -2,7 +2,7 @@ import CertificationCard from "./certificationCard";
 
 export default function CertificationSenction() {
   return (
-    <section className="relative mx-auto max-w-7xl bg-client-backgroundLight px-14 md:px-20 py-8 md:py-12 lg:py-16">
+    <section className="relative mx-auto bg-client-backgroundLight px-4 md:px-20 py-8 md:py-12 lg:py-16">
       <div className="max-w-3xl text-center md:mx-auto">
         <h2 className="text-center text-2xl font-semibold text-client-white md:text-4xl">
           Estamos Certificados

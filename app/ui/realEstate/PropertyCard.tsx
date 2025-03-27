@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
+import { X } from "lucide-react";
 import { ProjectMedia } from "@/lib/definitios";
 
 interface PropertyCardProps {
   id: number;
+  name?: string;
+  location?: string;
   images: ProjectMedia[];
   price?: number;
   area?: number;
@@ -13,10 +16,14 @@ interface PropertyCardProps {
   bathrooms?: number;
   parkingSpots?: number;
   url: string;
+  isFromMap?: boolean;
+  onClose?: (() => void) | null;
 }
 
 export default function PropertyCard({
   id,
+  name,
+  location,
   images,
   price,
   area,
@@ -24,6 +31,8 @@ export default function PropertyCard({
   bathrooms,
   parkingSpots,
   url,
+  isFromMap,
+  onClose,
 }: PropertyCardProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -41,9 +50,12 @@ export default function PropertyCard({
   }, [isHovered, images]);
 
   return (
-    <Link href={`/${url}/${id}`} target="_blank" rel="noopener noreferrer">
+    <Link href={`${url}/${id}`} target="_blank" rel="noopener noreferrer">
       <div
-        className="relative w-full h-full cursor-pointer overflow-hidden rounded-lg bg-client-primary"
+        className={clsx(
+          "relative w-full h-full cursor-pointer overflow-hidden rounded-lg bg-client-primary shadow-sm shadow-white",
+          isFromMap && "z-20"
+        )}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => {
           setIsHovered(false);
@@ -51,8 +63,24 @@ export default function PropertyCard({
         }}
       >
         <div className="relative flex h-full flex-col rounded-lg bg-client-primaryDark">
+          {onClose && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onClose();
+              }}
+              className="absolute right-2 top-2 z-20 rounded-full bg-black bg-opacity-50 p-2 text-white transition-all hover:bg-opacity-75"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
           {images.length > 0 ? (
-            <div className="relative w-full h-full overflow-hidden flex-shrink-0">
+            <div
+              className={clsx(
+                "relative w-full overflow-hidden",
+                !isFromMap ? "h-full flex-shrink-0" : "h-72"
+              )}
+            >
               {images.map((img, index) => (
                 <Image
                   key={index + img.projectId}
@@ -82,7 +110,15 @@ export default function PropertyCard({
           )}
 
           <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black via-gray-800 to-transparent px-2 pb-2 pt-16">
-            <div className="flex items-center text-xs text-gray-300 divide-x divide-gray-600">
+            <h3 className="line-clamp-1 break-words text-lg font-semibold leading-tight text-white">
+              {location}
+            </h3>
+
+            <p className="truncate break-all leading-tight w-full overflow-hidden text-sm text-gray-300">
+              {name}
+            </p>
+
+            <div className="mt-2 flex items-center text-xs text-gray-300 divide-x divide-gray-600">
               {typeof area === "number" && area > 0 && (
                 <p className="pr-2">{area}m²</p>
               )}

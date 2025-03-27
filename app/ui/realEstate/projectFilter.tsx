@@ -205,7 +205,7 @@ const ProjectFilter = ({
   return (
     <div
       ref={filterRef}
-      className={`w-full rounded-lg bg-white py-4 shadow-md transition-all duration-300 ease-in-out sm:w-72 md:w-80 ${
+      className={`w-full rounded-lg bg-client-backgroundAlt text-white py-4 shadow-md transition-all duration-300 ease-in-out sm:w-72 md:w-80 ${
         isFixed ? "sticky top-32 z-10 lg:top-20" : ""
       }`}
     >
@@ -213,19 +213,20 @@ const ProjectFilter = ({
         <div className="flex items-center justify-between rounded-md pl-2 pr-6">
           <button
             onClick={resetFilters}
-            className="transform px-4 py-1 text-lg font-medium text-black transition-transform duration-200 hover:scale-110 hover:font-semibold rounded-md"
+            className="transform px-4 py-1 text-lg font-medium transition-transform duration-200 hover:scale-105 hover:font-semibold rounded-md"
           >
             Borrar filtros
           </button>
+
           <div
-            className="flex cursor-pointer items-center text-black p-1 rounded-md"
+            className="flex cursor-pointer items-center p-1 rounded-md"
             onClick={() => setFilterOpen(false)}
           >
-            <X className="transform transition-transform duration-200 hover:scale-125" />
+            <X className="transform transition-transform duration-200 hover:scale-110" />
           </div>
         </div>
 
-        <hr className="border-gray-300" />
+        <hr className="border-client-accent" />
 
         <div className="space-y-4 overflow-x-hidden px-3 py-1 sm:max-h-[65vh] sm:overflow-y-auto">
           {mainFilters.map(({ label, icon, items, category }) => (

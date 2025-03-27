@@ -4,7 +4,7 @@ export default function VisionMisionSection() {
   return (
     <section
       id="mision-vision"
-      className="p-10 lg:p-14 -translate-y-10 bg-client-backgroundLight"
+      className="px-4 py-8 md:p-10 -translate-y-10 bg-client-backgroundLight"
     >
       <div className="bg-transparent mx-auto pt-44 md:pt-16 lg:pt-8 py-12">
         <div className="max-w-3xl text-center md:mx-auto md:pt-10">

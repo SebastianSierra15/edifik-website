@@ -32,10 +32,12 @@ export default function FilterMapControls({
     <div className="flex items-center gap-x-2 sm:gap-x-4 mt-4 justify-between">
       <button
         onClick={toggleFilterVisibility}
-        className="flex items-center space-x-2 whitespace-nowrap rounded-full bg-transparent border border-client-text text-client-text hover:bg-white hover:text-black px-6 py-2 transition-colors"
+        className="flex items-center space-x-2 whitespace-nowrap rounded-full bg-transparent border border-client-accent text-client-text hover:bg-client-backgroundLight px-6 py-2 transition-colors"
       >
         <span>Filtro</span>
+
         <SlidersHorizontal className="w-4 h-4" />
+
         <ChevronDown
           className={clsx(
             "transition-transform duration-300",
@@ -46,14 +48,16 @@ export default function FilterMapControls({
 
       <p className="text-client-text flex flex-col sm:flex-row items-center">
         <span>{totalEntries}</span>
+
         <span className="sm:ml-1">resultados</span>
       </p>
 
       <button
         onClick={handleToggleMap}
-        className="flex items-center space-x-2 whitespace-nowrap rounded-full bg-transparent border border-client-text text-client-text hover:bg-white hover:text-black px-6 py-2 transition-colors"
+        className="flex items-center space-x-2 whitespace-nowrap rounded-full bg-transparent border border-client-accent text-client-text hover:bg-client-backgroundLight px-6 py-2 transition-colors"
       >
         <span>{showMap ? "Propiedades" : "Mapa"}</span>
+
         {showMap ? <House size={18} /> : <Map size={18} />}
       </button>
     </div>

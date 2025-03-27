@@ -19,13 +19,16 @@ const MapToggleButton = dynamic(() => import("./filter/mapToggleButton"), {
 const ProjectsContainer = dynamic(
   () => import("@/app/ui/admin/projects/projectsContainer"),
   {
-    loading: () => <ProjectSkeletonList count={8} />,
+    loading: () => <ProjectSkeletonList />,
     ssr: false,
   }
 );
-const OwnerModal = dynamic(() => import("./project/ownerModal"), {
-  ssr: false,
-});
+const OwnerModal = dynamic(
+  () => import("../../realEstate/project/ownerModal"),
+  {
+    ssr: false,
+  }
+);
 const ModalConfirmation = dynamic(
   () => import("@/app/ui/modals/admin/modalConfirmation"),
   { ssr: false }

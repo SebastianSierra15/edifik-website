@@ -75,29 +75,29 @@ export default function FilterOptionSlider({
   return (
     <>
       <div
-        className="mb-4 flex transform cursor-pointer items-center justify-between text-black transition-transform duration-200 hover:scale-105 hover:font-semibold"
+        className="mb-4 flex transform cursor-pointer items-center justify-between text-white transition-transform duration-200 hover:scale-105 hover:font-semibold"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div
           className={clsx(
             "flex items-center space-x-2 text-lg font-medium",
-            sliderValue > 1 ? "text-client-primary" : "text-black"
+            sliderValue > 1 && "text-client-accent"
           )}
         >
           {icon}
           <span>{label}</span>
         </div>
+
         <ChevronDown
           className={clsx(
             "transform transition-transform duration-300",
-            isOpen && "rotate-180",
-            "text-black"
+            isOpen && "rotate-180"
           )}
         />
       </div>
 
       {isOpen && (
-        <div className="mb-6 flex flex-col items-center space-y-2 px-4">
+        <div className="mb-6 flex flex-col items-center space-y-2 px-4 text-white">
           <input
             type="range"
             min={min}
@@ -107,44 +107,48 @@ export default function FilterOptionSlider({
             onChange={handleSliderChange}
             onMouseUp={handleSliderComplete}
             onTouchEnd={handleSliderComplete}
-            className="h-1 w-full cursor-pointer appearance-none rounded-full bg-gray-300"
+            className="h-1 w-full cursor-pointer appearance-none rounded-full bg-client-accentLight"
           />
+
           <style jsx>{`
             input[type="range"]::-webkit-slider-thumb {
               appearance: none;
               height: 20px;
               width: 20px;
-              background-color: black;
+              background-color: var(--client-accent);
               border-radius: 50%;
               cursor: pointer;
-              border: 2px solid gray;
+              border: 2px solid var(--client-accent-dark);
             }
 
             input[type="range"]::-moz-range-thumb {
               height: 20px;
               width: 20px;
-              background-color: black;
+              background-color: var(--client-accent);
               border-radius: 50%;
               cursor: pointer;
-              border: 2px solid gray;
+              border: 2px solid var(--client-accent-dark);
             }
 
             input[type="range"]::-ms-thumb {
               height: 20px;
               width: 20px;
-              background-color: black;
+              background-color: var(--client-accent);
               border-radius: 50%;
               cursor: pointer;
-              border: 2px solid gray;
+              border: 2px solid var(--client-accent-dark);
             }
           `}</style>
+
           {sliderValue > 1 && (
-            <div className="text-center text-base text-black">
+            <div className="text-center text-base">
               <span>{prefixText} </span>
+
               <span className="text-2xl font-bold">
                 {category === "price" ? "$" : "+"}
                 {formatDisplayValue(sliderValue)}
               </span>
+
               <span> {suffixText}</span>
             </div>
           )}

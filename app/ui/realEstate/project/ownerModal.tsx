@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { useBodyOverflow } from "@/app/hooks/useBodyOverflow ";
 import { UserData } from "@/lib/definitios";
-import ModalHeader from "../../../modals/admin/modalHeader";
+import ModalHeader from "../../modals/admin/modalHeader";
 
 const FormInput = dynamic(() => import("@/app/ui/modals/admin/formInput"), {
   ssr: false,

@@ -111,42 +111,46 @@ export default function FilterOptionWithSlider({
             onTouchEnd={handleSliderComplete}
             className="h-1 w-full cursor-pointer appearance-none rounded-full bg-premium-primary dark:bg-premium-primaryLight"
           />
+
           <style jsx>{`
             input[type="range"]::-webkit-slider-thumb {
               appearance: none;
               height: 20px;
               width: 20px;
-              background-color: var(--primary);
+              background-color: var(--premium-primary);
               border-radius: 50%;
               cursor: pointer;
-              border: 2px solid var(--backgroundAlt);
+              border: 2px solid var(--premium-backgroundAlt);
             }
 
             input[type="range"]::-moz-range-thumb {
               height: 20px;
               width: 20px;
-              background-color: var(--primary);
+              background-color: var(--premium-primary);
               border-radius: 50%;
               cursor: pointer;
-              border: 2px solid var(--backgroundAlt);
+              border: 2px solid var(--premium-backgroundAlt);
             }
 
             input[type="range"]::-ms-thumb {
               height: 20px;
               width: 20px;
-              background-color: var(--primary);
+              background-color: var(--premium-primary);
               border-radius: 50%;
               cursor: pointer;
-              border: 2px solid var(--backgroundAlt);
+              border: 2px solid var(--premium-backgroundAlt);
             }
           `}</style>
+
           {sliderValue > 1 && (
             <div className="text-center text-base text-premium-textPrimary dark:text-premium-textPrimary">
               <span>{prefixText} </span>
+
               <span className="text-2xl font-bold">
                 {category === "price" ? "$" : "+"}
                 {formatDisplayValue(sliderValue)}
               </span>
+
               <span> {suffixText}</span>
             </div>
           )}

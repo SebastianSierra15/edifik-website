@@ -1,18 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Project, ProjectSummary } from "@/lib/definitios";
+import { Project } from "@/lib/definitios";
 
 interface ProjectData {
   project: Project;
-  projectRecommended: ProjectSummary[];
 }
 
 export function useProjectById(id?: number) {
   const [project, setProject] = useState<Project | null>(null);
-  const [projectRecommended, setProjectRecommended] = useState<
-    ProjectSummary[]
-  >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,12 +34,10 @@ export function useProjectById(id?: number) {
 
         const data: ProjectData = await response.json();
         setProject(data.project);
-        setProjectRecommended(data.projectRecommended || []);
         setError(null);
       } catch (error) {
         setError(error instanceof Error ? error.message : "Error desconocido");
         setProject(null);
-        setProjectRecommended([]);
       } finally {
         setLoading(false);
       }
@@ -52,5 +46,5 @@ export function useProjectById(id?: number) {
     fetchProject();
   }, [id]);
 
-  return { project, projectRecommended, loading, error };
+  return { project, loading, error };
 }

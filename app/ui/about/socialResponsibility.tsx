@@ -25,9 +25,9 @@ export default function SocialResponsibility({
 
   return (
     <section>
-      <div className="mx-auto mb-10 px-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10">
+      <div className="mx-auto mb-10 px-4 md:px-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10">
         {isImageLeft && (
-          <div className="mx-auto h-full grid grid-cols-1 gap-5 px-20 pt-5 w-full sm:px-0 lg:px-10">
+          <div className="mx-auto h-full grid grid-cols-1 gap-5 px-4 md:px-20 pt-5 w-full sm:px-0 lg:px-10">
             <Image
               className="h-full w-full self-stretch object-cover xl:self-stretch rounded-lg"
               src={imageSrc}
@@ -39,7 +39,7 @@ export default function SocialResponsibility({
           </div>
         )}
 
-        <div className="lg:mx-8 py-5">
+        <div className="lg:mx-8">
           <div className="mb-10">
             <h2 className="mb-5 text-2xl font-semibold text-white md:text-4xl">
               {title}
@@ -75,7 +75,7 @@ export default function SocialResponsibility({
         </div>
 
         {!isImageLeft && (
-          <div className="mx-auto h-full grid grid-cols-1 gap-5 px-20 pt-5 w-full sm:px-0 lg:px-10">
+          <div className="mx-auto h-full grid grid-cols-1 gap-5 px-4 md:px-20 pt-5 w-full sm:px-0 lg:px-10">
             <Image
               className="h-full w-full self-stretch object-cover xl:self-stretch rounded-lg"
               src={imageSrc}

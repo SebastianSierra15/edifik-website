@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { ProjectView } from "@/lib/definitios";
-import { useDebouncedCallback } from "use-debounce";
 
 interface UseGetPropertiesOptions {
   entriesPerPage: number;
@@ -10,6 +9,7 @@ interface UseGetPropertiesOptions {
   projectTypeId: number | null;
   bounds?: google.maps.LatLngBounds | null;
   showMap: boolean;
+  searchCoords?: { latitude: number; longitude: number } | null;
 }
 
 export function useGetProperties({
@@ -18,6 +18,7 @@ export function useGetProperties({
   projectTypeId,
   bounds = null,
   showMap,
+  searchCoords = null,
 }: UseGetPropertiesOptions) {
   const [projects, setProjects] = useState<ProjectView[]>([]);
   const [totalEntries, setTotalEntries] = useState(0);
@@ -32,16 +33,14 @@ export function useGetProperties({
     projectTypeId: number | null;
     showMap: boolean;
     bounds: google.maps.LatLngBounds | undefined;
+    searchCoords: { latitude: number; longitude: number } | null;
   }>({
     selectedButtons: {},
     projectTypeId: null,
     showMap: false,
     bounds: undefined,
+    searchCoords: null,
   });
-
-  const debouncedSearch = useDebouncedCallback((term: string) => {
-    resetProjects();
-  }, 300);
 
   const resetProjects = useCallback(() => {
     setProjects([]);
@@ -61,12 +60,26 @@ export function useGetProperties({
         projectTypeId,
         showMap,
         bounds,
+        searchCoords,
       };
 
-      if (
-        !isLoadMore &&
-        JSON.stringify(currentFilters) === JSON.stringify(lastFetchedFilters)
-      ) {
+      const areFiltersEqual = (
+        a: typeof currentFilters,
+        b: typeof lastFetchedFilters
+      ): boolean => {
+        return (
+          JSON.stringify(a.selectedButtons) ===
+            JSON.stringify(b.selectedButtons) &&
+          a.projectTypeId === b.projectTypeId &&
+          a.showMap === b.showMap &&
+          JSON.stringify(a.bounds) === JSON.stringify(b.bounds) &&
+          ((!a.searchCoords && !b.searchCoords) ||
+            (a.searchCoords?.latitude === b.searchCoords?.latitude &&
+              a.searchCoords?.longitude === b.searchCoords?.longitude))
+        );
+      };
+
+      if (!isLoadMore && areFiltersEqual(currentFilters, lastFetchedFilters)) {
         console.log(
           "⏳ [fetchProjects] Filtros sin cambios, omitiendo llamada."
         );
@@ -100,6 +113,12 @@ export function useGetProperties({
           params.append("maxLat", bounds.getNorthEast().lat().toString());
           params.append("minLng", bounds.getSouthWest().lng().toString());
           params.append("maxLng", bounds.getNorthEast().lng().toString());
+        }
+
+        if (searchCoords) {
+          console.log("🛰️ Enviando coords:", searchCoords);
+          params.append("latitude", searchCoords.latitude.toString());
+          params.append("longitude", searchCoords.longitude.toString());
         }
 
         console.log(
@@ -145,11 +164,22 @@ export function useGetProperties({
         setIsLoading(false);
       }
     },
-    [entriesPerPage, isLoading, selectedButtons, projectTypeId, showMap, bounds]
+    [
+      entriesPerPage,
+      isLoading,
+      selectedButtons,
+      projectTypeId,
+      showMap,
+      bounds,
+      searchCoords,
+    ]
   );
 
   useEffect(() => {
     console.log("🔄 Fetching Properties...");
+
+    setCurrentPage(1); // 🔹 Reinicia el número de página a 1
+    pageRef.current = 1;
 
     const timeoutId = setTimeout(() => {
       fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
@@ -160,10 +190,11 @@ export function useGetProperties({
       projectTypeId,
       showMap,
       bounds,
+      searchCoords,
     });
 
     return () => clearTimeout(timeoutId);
-  }, [selectedButtons, projectTypeId, showMap, bounds]);
+  }, [selectedButtons, projectTypeId, showMap, bounds, searchCoords]);
 
   const fetchMoreProjects = useCallback(() => {
     if (isLoading) return;
@@ -190,7 +221,6 @@ export function useGetProperties({
     projects,
     totalEntries,
     fetchMoreProjects,
-    debouncedSearch,
     resetProjects,
     isLoading,
     errorProjects,

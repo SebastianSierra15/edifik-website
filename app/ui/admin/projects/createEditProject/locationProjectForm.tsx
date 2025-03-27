@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, memo } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import { ProjectData, City, Departament } from "@/lib/definitios";
 import { useLocationProjectValidation } from "@/app/hooks/projects/createEditProject/useLocationProjectValidation";
@@ -24,7 +24,7 @@ interface LocationProjectFormProps {
   setMapAddress: (value: string) => void;
 }
 
-export default function LocationProjectForm({
+function LocationProjectForm({
   formData,
   onChange,
   onPrevious,
@@ -216,6 +216,16 @@ export default function LocationProjectForm({
     [formData.projectType?.id]
   );
 
+  const handleMapAddressChange = useCallback((value: string) => {
+    console.log("[Form] mapAddress before set:", mapAddress);
+    setMapAddress(value);
+    console.log("[Form] mapAddress after set:", value);
+  }, []);
+
+  const handleInputChange = (value: string) => {
+    setMapAddress(value);
+  };
+
   return (
     <div className="container mx-auto w-full rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
       <h2 className="mb-6 text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight">
@@ -262,7 +272,7 @@ export default function LocationProjectForm({
           <FormSearchAddress
             label="Ubicación en el Mapa"
             value={mapAddress || ""}
-            onChange={(value) => setMapAddress(value)}
+            onChange={handleMapAddressChange}
             onSelect={handleAddressSelect}
             error={errors.mapAddressError}
             isLoaded={isLoaded}
@@ -331,3 +341,5 @@ export default function LocationProjectForm({
     </div>
   );
 }
+
+export default memo(LocationProjectForm);

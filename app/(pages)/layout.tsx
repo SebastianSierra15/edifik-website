@@ -3,6 +3,7 @@ import { inter } from "@/app/fonts/fonts";
 import { Providers } from "../providers";
 import Header from "../ui/header/header";
 import Footer from "../ui/footer/footer";
+import GoogleMapsProvider from "../ui/googleMapsProvider";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -21,9 +22,11 @@ export default function AdminLayout({
         className={`${inter.className} flex min-h-screen flex-col bg-client-background antialiased`}
       >
         <Providers>
-          <Header />
-          <main className="flex-grow space-y-12">{children}</main>
-          <Footer />
+          <GoogleMapsProvider>
+            <Header />
+            <main className="flex-grow space-y-12">{children}</main>
+            <Footer />
+          </GoogleMapsProvider>
         </Providers>
       </body>
     </html>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { ProjectMedia } from "@/lib/definitios";
 
 interface ImageModalProps {
@@ -69,16 +69,14 @@ export default function ImageModal({
         className="relative flex aspect-video w-full max-w-full items-center justify-center p-4 md:w-[80%] lg:w-[70%]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-6 top-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-500 text-2xl text-black hover:bg-yellow-600"
+          className="absolute right-6 top-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-client-accent hover:bg-client-accentHover text-2xl text-white"
           aria-label="Close Modal"
         >
           <X size={20} />
         </button>
 
-        {/* Image */}
         <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg bg-black bg-opacity-50">
           <div
             className={`absolute inset-0 transition-opacity duration-500 ${
@@ -95,19 +93,16 @@ export default function ImageModal({
           </div>
         </div>
 
-        {/* Tag */}
         {media[currentIndex]?.tag && (
           <div className="absolute left-8 top-8 rounded bg-black bg-opacity-70 px-3 py-1 text-lg text-white">
             {media[currentIndex].tag}
           </div>
         )}
 
-        {/* Counter */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 transform rounded bg-black bg-opacity-70 px-3 py-1 text-lg text-white">
           {currentIndex + 1}/{media.length}
         </div>
 
-        {/* Navigation Buttons */}
         <div className="absolute inset-0 flex items-center justify-between px-4">
           <button
             onClick={(e) => {
@@ -115,14 +110,14 @@ export default function ImageModal({
               prevImage();
             }}
             disabled={media.length === 1}
-            className={`flex h-10 w-10 items-center justify-center rounded-full text-black ${
+            className={`flex p-2 items-center justify-center rounded-full font-bold transition-all  ${
               media.length === 1
                 ? "bg-gray-400"
-                : "bg-yellow-500 hover:bg-yellow-600"
+                : "bg-client-accent hover:bg-client-accentHover"
             } translate-x-4`}
             aria-label="Previous Image in Modal"
           >
-            &#10094;
+            <ChevronLeft className="w-6 h-6 text-client-text" />
           </button>
 
           <button
@@ -131,14 +126,14 @@ export default function ImageModal({
               nextImage();
             }}
             disabled={media.length === 1}
-            className={`flex h-10 w-10 items-center justify-center rounded-full text-black ${
+            className={`flex p-2 items-center justify-center rounded-full font-bold transition-all  ${
               media.length === 1
                 ? "bg-gray-400"
-                : "bg-yellow-500 hover:bg-yellow-600"
+                : "bg-client-accent hover:bg-client-accentHover"
             } -translate-x-4`}
             aria-label="Next Image in Modal"
           >
-            &#10095;
+            <ChevronRight className="w-6 h-6 text-client-text" />
           </button>
         </div>
       </div>

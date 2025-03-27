@@ -109,7 +109,7 @@ const ProjectsMap = ({
     validProjects.forEach((project) => {
       const contentDiv = document.createElement("div");
       contentDiv.innerHTML = `
-     <div class="bg-client-primary hover:bg-client-primaryDark hover:scale-105 focus:scale-105 focus:bg-client-primaryDark text-client-white font-semibold py-1 px-3 rounded-full text-sm transition-all duration-300 ease-in-out">
+     <div class="bg-client-accent hover:bg-client-accentHover border border-client-textSecondary hover:scale-105 focus:scale-105 focus:bg-client-accentLight text-client-white font-semibold py-1 px-3 rounded-full text-sm transition-all duration-300 ease-in-out">
         $${project.price?.toLocaleString()}
       </div>
     `;
@@ -234,9 +234,11 @@ const ProjectsMap = ({
       </div>
 
       {selectedProject && (
-        <div className="absolute left-1/2 top-1/3 sm:top-4 z-20 w-72 -translate-x-1/2 transform rounded-lg bg-client-backgroundLight shadow-lg sm:left-auto sm:right-4 sm:translate-x-0">
+        <div className="absolute left-1/2 top-1/3 sm:top-4 z-20 w-72 -translate-x-1/2 transform rounded-lg shadow-lg sm:left-auto sm:right-4 sm:translate-x-0">
           <PropertyCard
             id={selectedProject.id}
+            name={selectedProject.name}
+            location={selectedProject.cityName}
             images={selectedProject.images}
             price={selectedProject.price || undefined}
             area={selectedProject.area || 0}
@@ -244,6 +246,8 @@ const ProjectsMap = ({
             bathrooms={selectedProject.bathrooms}
             parkingSpots={selectedProject.parkingSpots}
             url={`/inmobiliaria`}
+            isFromMap={true}
+            onClose={handleCloseCard}
           />
         </div>
       )}

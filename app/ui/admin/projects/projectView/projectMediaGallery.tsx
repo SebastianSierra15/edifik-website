@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ProjectMedia, ImageType, CommonArea } from "@/lib/definitios";
-import ImageModal from "../project/imageModal";
+import ImageModal from "../../../realEstate/project/imageModal";
 
 interface ProjectMediaGalleryProps {
   images: ProjectMedia[];

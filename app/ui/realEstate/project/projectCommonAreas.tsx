@@ -36,9 +36,7 @@ export default function ProjectCommonAreas({
 
   return (
     <div className="my-8 w-full lg:w-2/3">
-      <h2 style={{ color: "#8B4513" }} className="mb-4 text-2xl font-semibold">
-        Áreas Comunes
-      </h2>
+      <h2 className="mb-4 text-2xl font-semibold text-white">Áreas Comunes</h2>
 
       {areas.map((area, index) => {
         const areaImages = projectMedia.filter(
@@ -48,25 +46,17 @@ export default function ProjectCommonAreas({
         const isOpen = openAccordions.includes(index);
 
         return (
-          <div
-            key={area.id}
-            className="mb-4 rounded-lg p-4 shadow"
-            style={{
-              backgroundColor: "#ffffff",
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            }}
-          >
+          <div key={area.id} className="mb-4 rounded-lg p-4 shadow bg-white">
             <button
               onClick={() => toggleAccordion(index)}
-              className="flex w-full items-center justify-between text-lg font-semibold"
-              style={{ color: "#5D4037" }}
+              className="flex w-full items-center justify-between text-lg font-medium text-client-primary"
             >
               <span>{area.name}</span>
+
               <ChevronDown
-                className={`transition-transform ${
+                className={`transition-transform text-client-accent ${
                   isOpen ? "rotate-180" : "rotate-0"
                 }`}
-                style={{ color: "#DAA520" }}
               />
             </button>
 
@@ -77,25 +67,14 @@ export default function ProjectCommonAreas({
                     {areaImages.map((media, imgIndex) => (
                       <div
                         key={imgIndex}
-                        className="flex-shrink-0 cursor-pointer"
+                        className="relative flex-shrink-0 cursor-pointer w-40 h-28"
                         onClick={() => handleImageClick(imgIndex)}
-                        style={{
-                          width: "150px",
-                          height: "100px",
-                        }}
                       >
                         <Image
                           src={media.url}
                           alt={`Imagen de ${area.name}`}
-                          width={150}
-                          height={100}
-                          className="rounded-lg object-cover"
-                          style={{
-                            objectFit: "cover",
-                            border: "2px solid #EDEDED",
-                            width: "100%",
-                            height: "100%",
-                          }}
+                          fill
+                          className="rounded-lg object-cover border border-client-primary"
                         />
                       </div>
                     ))}

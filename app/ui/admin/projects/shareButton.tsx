@@ -62,55 +62,58 @@ export default function ShareButton({ message }: ShareButtonProps) {
     <div className="relative">
       <button
         onClick={() => setIsOpen(true)}
-        className="rounded-full p-2 text-[#8B4513] transition duration-300 hover:text-[#DAA520]"
+        className="rounded-full p-2 text-client-accent transition duration-300 hover:text-client-accentHover"
         aria-label="Compartir"
       >
-        <Share2 size={20} />
+        <Share2 size={24} />
       </button>
+
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-64 rounded-lg bg-white px-4 pb-4 pt-2">
+          <div className="relative w-64 rounded-lg bg-client-backgroundAlt px-4 pb-4 pt-2">
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute right-3 top-3 text-gray-500 transition duration-200 hover:text-gray-700"
+              className="absolute right-3 top-3 text-white transition duration-200 hover:text-gray-200"
               aria-label="Cerrar modal"
             >
               <X size={20} />
             </button>
-            <h2
-              className="mb-4 text-center text-lg font-semibold"
-              style={{ color: "#8B4513" }}
-            >
+
+            <h2 className="mb-4 text-center text-xl font-semibold text-white">
               Compartir en:
             </h2>
+
             <div className="flex items-center justify-around">
               <button
                 onClick={() => handleShare("whatsapp")}
-                className="text-green-500 transition duration-200 hover:scale-110"
+                className="transition duration-200 hover:scale-110"
                 aria-label="Compartir en WhatsApp"
               >
-                <WhatsAppIcon className="w-4 h-4" />
+                <WhatsAppIcon className="w-8 h-8" />
               </button>
+
               <button
                 onClick={() => handleShare("facebook")}
-                className="text-blue-500 transition duration-200 hover:scale-110"
+                className="transition duration-200 hover:scale-110"
                 aria-label="Compartir en Facebook"
               >
-                <FacebookIcon className="w-4 h-4" />
+                <FacebookIcon className="w-8 h-8" />
               </button>
+
               <button
                 onClick={() => handleShare("twitter")}
-                className="text-blue-400 transition duration-200 hover:scale-110"
+                className="transition duration-200 hover:scale-110"
                 aria-label="Compartir en Twitter"
               >
-                <XIcon className="w-4 h-4" />
+                <XIcon className="w-8 h-8" />
               </button>
+
               <button
                 onClick={() => handleShare("telegram")}
-                className="text-blue-300 transition duration-200 hover:scale-110"
+                className="transition duration-200 hover:scale-110"
                 aria-label="Compartir en Telegram"
               >
-                <TelegramIcon className="w-4 h-4" />
+                <TelegramIcon className="w-8 h-8" />
               </button>
             </div>
           </div>

@@ -248,31 +248,23 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
 
   return (
     <div className="my-8">
-      <h2 className="mb-6 text-2xl font-semibold text-[#8B4513]">
+      <h2 className="mb-6 text-2xl font-semibold text-white">
         Detalles del Proyecto
       </h2>
+
       <div className="space-y-6">
         {details.map((group, index) => (
           <div key={index} className="mb-4">
             <div
-              className="flex cursor-pointer items-center justify-between rounded-lg p-4 shadow"
-              style={{
-                backgroundColor: "#ffffff",
-                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-              }}
+              className="flex cursor-pointer items-center justify-between rounded-lg p-4 shadow bg-white text-client-primary"
               onClick={() => toggleGroup(index)}
             >
+              <span className="text-lg font-medium">{group.group}</span>
+
               <span
-                className="text-lg font-semibold"
-                style={{ color: "#5D4037" }}
-              >
-                {group.group}
-              </span>
-              <span
-                className={`transition-transform ${
+                className={`transition-transform text-client-accent ${
                   openGroups[index] ? "rotate-180" : "rotate-0"
                 }`}
-                style={{ color: "#DAA520" }}
               >
                 ▼
               </span>
@@ -286,7 +278,7 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
                       <DetailCard
                         key={index}
                         icon={
-                          <div className="text-yellow-600">{item.icon}</div>
+                          <div className="text-client-accent">{item.icon}</div>
                         }
                         label={item.label}
                         value={item.value}

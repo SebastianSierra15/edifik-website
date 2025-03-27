@@ -36,6 +36,13 @@ export async function GET(req: Request) {
       ? parseFloat(searchParams.get("maxLng")!)
       : null;
 
+    const latitude = searchParams.has("latitude")
+      ? parseFloat(searchParams.get("latitude")!)
+      : null;
+    const longitude = searchParams.has("longitude")
+      ? parseFloat(searchParams.get("longitude")!)
+      : null;
+
     const parseCommaSeparated = (param: string | null): string | null =>
       param ? JSON.stringify(param.split(",").map(Number)) : null;
 
@@ -55,7 +62,7 @@ export async function GET(req: Request) {
     // 🔹 Inicia medición de la consulta SQL
     const startDBQuery = performance.now();
     const [result] = await db.query<RowDataPacket[][]>(
-      "CALL get_properties(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "CALL get_properties(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         validatedPage,
         validatedPageSize,
@@ -74,6 +81,8 @@ export async function GET(req: Request) {
         maxLat || null,
         minLng || null,
         maxLng || null,
+        latitude,
+        longitude,
       ]
     );
     const endDBQuery = performance.now();
@@ -118,7 +127,7 @@ export async function GET(req: Request) {
 
     // 🔹 Finaliza medición del tiempo total de API
     const endAPITime = performance.now();
-    console.log(projects);
+
     const response = NextResponse.json({ projects, totalEntries });
     response.headers.set(
       "Server-Timing",
