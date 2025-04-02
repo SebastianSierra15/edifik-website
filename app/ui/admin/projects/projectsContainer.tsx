@@ -47,19 +47,7 @@ const ProjectsContainer = ({
   permission,
   onShowUser,
 }: ProjectsContainerProps) => {
-  // 🔄 Medición del tiempo de fetch de metadata solo cuando cambia `metadata`
   const { metadata, isLoadingMetadata } = useProjectsMetadata();
-
-  useEffect(() => {
-    const startMetadataFetch = performance.now();
-
-    return () => {
-      const endMetadataFetch = performance.now();
-      console.log(
-        `⏱️ Tiempo total de fetch de metadata en ProjectsContainer: ${(endMetadataFetch - startMetadataFetch).toFixed(2)}ms`
-      );
-    };
-  }, [metadata]);
 
   const projectCards = useMemo(
     () =>

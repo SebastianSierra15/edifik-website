@@ -95,7 +95,9 @@ export default function ProjectView({ project }: ProjectViewProps) {
             </p>
           </div>
 
-          <ProjectNearbyServices services={project.nearbyServices} />
+          {project.nearbyServices && project.nearbyServices.length > 0 && (
+            <ProjectNearbyServices services={project.nearbyServices} />
+          )}
 
           {project.commonAreas && project.commonAreas.length > 0 && (
             <div>

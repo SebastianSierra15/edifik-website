@@ -9,10 +9,10 @@ interface ProjectsGridProps {
 }
 
 const gridClasses = [
-  "col-span-2 row-span-2", // Primer proyecto (grande)
-  "col-start-3", // Segundo proyecto (pequeño)
-  "col-start-4", // Tercer proyecto (pequeño)
-  "col-span-2 col-start-3 row-start-2", // Cuarto proyecto (mediano horizontal)
+  "col-span-2 row-span-2",
+  "col-start-3",
+  "col-start-4",
+  "col-span-2 col-start-3 row-start-2",
 ];
 
 export default function ProjectsGrid({ projects }: ProjectsGridProps) {
@@ -23,8 +23,6 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
       </p>
     );
   }
-
-  console.log("Proyectos cargados:", projects);
 
   return (
     <div className="grid grid-cols-5 auto-rows-[200px] lg:auto-rows-[300px] gap-4 px-4">

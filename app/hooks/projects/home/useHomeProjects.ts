@@ -14,8 +14,6 @@ export function useHomeProjects(numberProjects: number, isProperty: boolean) {
       setError(null);
 
       try {
-        const startFetch = performance.now(); // Inicia medición
-
         const response = await fetch(
           `/api/projects/home/${isProperty ? "realEstate" : "company"}?numberProjects=${numberProjects}`
         );
@@ -26,19 +24,8 @@ export function useHomeProjects(numberProjects: number, isProperty: boolean) {
           );
         }
 
-        const serverTiming = response.headers.get("Server-Timing");
-        console.log("⏳ Server Timing Metrics:", serverTiming);
-
         const data = await response.json();
         setProjects(data.projects || []);
-
-        const endFetch = performance.now(); // Finaliza medición
-        console.log(
-          `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
-        );
-        console.log(
-          `📦 Tamaño de respuesta: ${JSON.stringify(data).length} bytes`
-        );
       } catch (error: any) {
         setError(error.message || "Error desconocido");
       } finally {

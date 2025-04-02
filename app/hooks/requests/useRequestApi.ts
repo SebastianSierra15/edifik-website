@@ -21,8 +21,6 @@ export const useRequestApi = () => {
     try {
       const statusId = action === "approve" ? 2 : action === "reject" ? 3 : 4;
 
-      const startFetch = performance.now(); // Inicia medición del tiempo de fetch
-
       const response = await fetch(`/api/requests`, {
         method: "PUT",
         headers: {
@@ -34,14 +32,6 @@ export const useRequestApi = () => {
           responseMessage: message,
         }),
       });
-
-      const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
-      const serverTiming = response.headers.get("Server-Timing");
-
-      console.log(
-        `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
-      );
-      console.log("⏳ Server Timing Metrics:", serverTiming);
 
       if (!response.ok) {
         const { error } = await response.json();

@@ -1,5 +1,4 @@
 import { useCallback, useMemo, memo } from "react";
-import { useLoadScript } from "@react-google-maps/api";
 import { ProjectData, City, Departament } from "@/lib/definitios";
 import { useLocationProjectValidation } from "@/app/hooks/projects/createEditProject/useLocationProjectValidation";
 import StepNavigationButtons from "../../stepNavigationButtons";
@@ -7,8 +6,6 @@ import LocationMap from "../locationMap";
 import FormSearchAddress from "../../../modals/admin/formSearchAddress";
 import FormSelect from "../../../modals/admin/formSelect";
 import FormInput from "../../../modals/admin/formInput";
-
-const GOOGLE_MAPS_LIBRARIES: ("places" | "marker")[] = ["places", "marker"];
 
 interface LocationProjectFormProps {
   formData: ProjectData;
@@ -54,15 +51,7 @@ function LocationProjectForm({
     [cities, formData.city?.departament?.id]
   );
 
-  const mapsApiKey = useMemo(
-    () => process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    []
-  );
-
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: mapsApiKey,
-    libraries: GOOGLE_MAPS_LIBRARIES,
-  });
+  const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
 
   const handleDepartamentChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -217,14 +206,8 @@ function LocationProjectForm({
   );
 
   const handleMapAddressChange = useCallback((value: string) => {
-    console.log("[Form] mapAddress before set:", mapAddress);
     setMapAddress(value);
-    console.log("[Form] mapAddress after set:", value);
   }, []);
-
-  const handleInputChange = (value: string) => {
-    setMapAddress(value);
-  };
 
   return (
     <div className="container mx-auto w-full rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
@@ -275,14 +258,14 @@ function LocationProjectForm({
             onChange={handleMapAddressChange}
             onSelect={handleAddressSelect}
             error={errors.mapAddressError}
-            isLoaded={isLoaded}
+            isLoaded={isMapsReady}
             tooltipText="Busca la dirección en el mapa para obtener la ubicación exacta."
           />
         </div>
 
         <div className="relative h-64 w-full">
           <LocationMap
-            isLoaded={isLoaded}
+            isLoaded={isMapsReady}
             coordinates={{
               lat:
                 typeof formData.latitude === "number"

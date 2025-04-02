@@ -29,16 +29,11 @@ export async function GET(req: Request) {
     const validatedPage = page > 0 ? page : 1;
     const validatedPageSize = pageSize > 0 ? pageSize : 16;
 
-    // 🔹 Inicia medición de la consulta SQL
-    const startDBQuery = performance.now();
     const [result] = await db.query<RowDataPacket[][]>(
       "CALL get_user_project_list(?, ?, ?)",
       [userId, validatedPage, validatedPageSize]
     );
-    const endDBQuery = performance.now();
 
-    // 🔹 Procesamiento de datos
-    const startProcessing = performance.now();
     const [projectsRows = [], projectMediaRows = [], [totalEntriesRow] = []] =
       result;
     const totalEntries = totalEntriesRow.totalEntries || 0;
@@ -79,14 +74,8 @@ export async function GET(req: Request) {
       },
       projectMedia: projectMediaMap[row.id] || [],
     }));
-    const endProcessing = performance.now();
 
-    // 🔹 Respuesta con tiempos de ejecución
     const response = NextResponse.json({ projects, totalEntries });
-    response.headers.set(
-      "Server-Timing",
-      `db_query;dur=${(endDBQuery - startDBQuery).toFixed(2)}, processing;dur=${(endProcessing - startProcessing).toFixed(2)}`
-    );
 
     return response;
   } catch (error) {

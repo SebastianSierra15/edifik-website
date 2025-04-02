@@ -18,15 +18,8 @@ export function useAddressSearch() {
     setError(null);
 
     try {
-      const startFetch = performance.now(); // Inicia medición del tiempo de fetch
-
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${query}`
-      );
-
-      const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
-      console.log(
-        `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
       );
 
       if (!response.ok) {

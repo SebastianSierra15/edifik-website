@@ -10,8 +10,6 @@ export function useCheckEmail() {
       setError(null);
 
       try {
-        const startFetch = performance.now(); // Inicia medición del tiempo de fetch
-
         const response = await fetch(
           `/api/users/check-email?email=${encodeURIComponent(email)}`,
           {
@@ -21,14 +19,6 @@ export function useCheckEmail() {
             },
           }
         );
-
-        const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
-        const serverTiming = response.headers.get("Server-Timing");
-
-        console.log(
-          `⏱️ Tiempo total de fetch para verificar email: ${(endFetch - startFetch).toFixed(2)}ms`
-        );
-        console.log("⏳ Server Timing Metrics:", serverTiming);
 
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);

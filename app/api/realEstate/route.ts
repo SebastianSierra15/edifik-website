@@ -8,9 +8,6 @@ export async function GET(req: Request) {
     const url = new URL(req.url);
     const searchParams = url.searchParams;
 
-    // 🔹 Inicia medición de tiempo total de API
-    const startAPITime = performance.now();
-
     const page = parseInt(searchParams.get("page") || "1", 10);
     const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
     const price = parseInt(searchParams.get("price") || "", 10) || null;
@@ -59,8 +56,6 @@ export async function GET(req: Request) {
     const validatedPage = page > 0 ? page : 1;
     const validatedPageSize = pageSize > 0 ? pageSize : 16;
 
-    // 🔹 Inicia medición de la consulta SQL
-    const startDBQuery = performance.now();
     const [result] = await db.query<RowDataPacket[][]>(
       "CALL get_properties(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
@@ -85,10 +80,7 @@ export async function GET(req: Request) {
         longitude,
       ]
     );
-    const endDBQuery = performance.now();
 
-    // 🔹 Inicia medición de procesamiento de datos
-    const startProcessing = performance.now();
     const [projectsRows = [], projectMediaRows = [], [totalEntriesRow] = []] =
       result;
 
@@ -123,16 +115,9 @@ export async function GET(req: Request) {
       latitude: row.latitude,
       images: projectMediaMap[row.id] || [],
     }));
-    const endProcessing = performance.now();
-
-    // 🔹 Finaliza medición del tiempo total de API
-    const endAPITime = performance.now();
 
     const response = NextResponse.json({ projects, totalEntries });
-    response.headers.set(
-      "Server-Timing",
-      `db_query;dur=${(endDBQuery - startDBQuery).toFixed(2)}, processing;dur=${(endProcessing - startProcessing).toFixed(2)}, total_api;dur=${(endAPITime - startAPITime).toFixed(2)}`
-    );
+
     return response;
   } catch (error) {
     console.error("Error en la búsqueda de propiedades: ", error);

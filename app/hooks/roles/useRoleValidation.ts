@@ -26,17 +26,10 @@ export const useRoleValidation = (role: any, isEdit: boolean) => {
     let errorMessage = getErrorMessage(fieldName, value);
 
     if (fieldName === "nameError" && value) {
-      const startCheckName = performance.now(); // Inicia medición del tiempo de verificación de nombre
-
       const total = await checkName(
         "role",
         value,
         isEdit ? role.id : undefined
-      );
-
-      const endCheckName = performance.now(); // Finaliza medición del tiempo de verificación de nombre
-      console.log(
-        `⏱️ Tiempo de verificación de nombre: ${(endCheckName - startCheckName).toFixed(2)}ms`
       );
 
       if (total > 0) {
@@ -57,17 +50,10 @@ export const useRoleValidation = (role: any, isEdit: boolean) => {
     };
 
     if (role.name) {
-      const startCheckName = performance.now(); // Inicia medición del tiempo de verificación de nombre
-
       const total = await checkName(
         "role",
         role.name,
         isEdit ? role.id : undefined
-      );
-
-      const endCheckName = performance.now(); // Finaliza medición del tiempo de verificación de nombre
-      console.log(
-        `⏱️ Tiempo de verificación de nombre: ${(endCheckName - startCheckName).toFixed(2)}ms`
       );
 
       if (total > 0) {

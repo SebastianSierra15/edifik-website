@@ -51,7 +51,6 @@ export function useGetProperties({
   const fetchProjects = useCallback(
     async (isLoadMore = false, page = 1, bounds?: google.maps.LatLngBounds) => {
       if (isLoading) {
-        console.log("⚠️ [fetchProjects] Bloqueado por isLoading");
         return;
       }
 
@@ -80,22 +79,13 @@ export function useGetProperties({
       };
 
       if (!isLoadMore && areFiltersEqual(currentFilters, lastFetchedFilters)) {
-        console.log(
-          "⏳ [fetchProjects] Filtros sin cambios, omitiendo llamada."
-        );
         return;
       }
 
       setLastFetchedFilters(currentFilters);
       setIsLoading(true);
 
-      console.log(
-        `📡 [fetchProjects] Ejecutando - isLoadMore: ${isLoadMore}, page: ${page}`
-      );
-
       try {
-        const startFetch = performance.now();
-
         const params = new URLSearchParams({
           page: page.toString(),
           pageSize: entriesPerPage.toString(),
@@ -116,14 +106,9 @@ export function useGetProperties({
         }
 
         if (searchCoords) {
-          console.log("🛰️ Enviando coords:", searchCoords);
           params.append("latitude", searchCoords.latitude.toString());
           params.append("longitude", searchCoords.longitude.toString());
         }
-
-        console.log(
-          `📡 [fetchProjects] URL: /api/realEstate?${params.toString()}`
-        );
 
         const response = await fetch(`/api/realEstate?${params.toString()}`);
 
@@ -132,17 +117,7 @@ export function useGetProperties({
         }
 
         const data = await response.json();
-        console.log(`📡 [fetchProjects] Datos recibidos:`, data);
-
         const newProjects: ProjectView[] = data.projects;
-
-        const endFetch = performance.now();
-        console.log(
-          `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
-        );
-        console.log(
-          `📦 Tamaño de respuesta: ${JSON.stringify(data).length} bytes`
-        );
 
         setProjects((prev) =>
           isLoadMore
@@ -176,22 +151,12 @@ export function useGetProperties({
   );
 
   useEffect(() => {
-    console.log("🔄 Fetching Properties...");
-
-    setCurrentPage(1); // 🔹 Reinicia el número de página a 1
+    setCurrentPage(1);
     pageRef.current = 1;
 
     const timeoutId = setTimeout(() => {
       fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
     }, 500);
-
-    console.log("🔄 Fetching Properties con filtros:", {
-      selectedButtons,
-      projectTypeId,
-      showMap,
-      bounds,
-      searchCoords,
-    });
 
     return () => clearTimeout(timeoutId);
   }, [selectedButtons, projectTypeId, showMap, bounds, searchCoords]);
@@ -203,9 +168,6 @@ export function useGetProperties({
 
     setCurrentPage((prevPage) => {
       const nextPage = prevPage + 1;
-      console.log(
-        `➡️ [fetchMoreProjects] Llamando a fetchProjects para la página: ${nextPage}`
-      );
 
       fetchProjects(
         true,

@@ -26,8 +26,6 @@ export default function ForgetPassword() {
       setEmailError("El correo electrónico no es válido.");
       return;
     }
-
-    // Lógica para enviar el email de recuperación
   };
 
   return (

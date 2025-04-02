@@ -41,7 +41,7 @@ export function useGetProjects({
     selectedButtons: {},
     projectTypeId: null,
     showMap: false,
-    bounds: undefined, // Cambiado de `null` a `undefined` para coincidir con `currentFilters`
+    bounds: undefined,
   });
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
@@ -58,7 +58,6 @@ export function useGetProjects({
   const fetchProjects = useCallback(
     async (isLoadMore = false, page = 1, bounds?: google.maps.LatLngBounds) => {
       if (isLoading) {
-        console.log("⚠️ [fetchProjects] Bloqueado por isLoading");
         return;
       }
 
@@ -70,27 +69,17 @@ export function useGetProjects({
         bounds,
       };
 
-      // 🔥 Permitir la carga de más páginas aunque los filtros sean los mismos
       if (
         !isLoadMore &&
         JSON.stringify(currentFilters) === JSON.stringify(lastFetchedFilters)
       ) {
-        console.log(
-          "⏳ [fetchProjects] No hay cambios en los filtros, omitiendo llamada."
-        );
         return;
       }
 
-      setLastFetchedFilters(currentFilters); // Guarda los últimos filtros usados
+      setLastFetchedFilters(currentFilters);
       setIsLoading(true);
 
-      console.log(
-        `📡 [fetchProjects] Ejecutando - isLoadMore: ${isLoadMore}, page: ${page}`
-      );
-
       try {
-        const startFetch = performance.now(); // Inicia medición
-
         const params = new URLSearchParams({
           page: page.toString(),
           pageSize: entriesPerPage.toString(),
@@ -111,10 +100,6 @@ export function useGetProjects({
           params.append("maxLng", bounds.getNorthEast().lng().toString());
         }
 
-        console.log(
-          `📡 [fetchProjects] URL: /api/projects?${params.toString()}`
-        );
-
         const response = await fetch(`/api/projects?${params.toString()}`);
 
         if (!response.ok) {
@@ -122,17 +107,8 @@ export function useGetProjects({
         }
 
         const data = await response.json();
-        console.log(`📡 [fetchProjects] Datos recibidos:`, data);
 
         const newProjects: ProjectSummary[] = data.projects;
-
-        const endFetch = performance.now(); // Finaliza medición
-        console.log(
-          `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
-        );
-        console.log(
-          `📦 Tamaño de respuesta: ${JSON.stringify(data).length} bytes`
-        );
 
         setProjects((prev) =>
           isLoadMore
@@ -166,38 +142,26 @@ export function useGetProjects({
   );
 
   useEffect(() => {
-    console.log("🔄 Fetching Projects...");
-
     const timeoutId = setTimeout(() => {
       fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
-    }, 500); // Espera 500ms antes de llamar la API (reduce llamadas innecesarias)
-    console.log("🔄 Fetching Projects con filtros:", {
-      selectedButtons,
-      searchTerm,
-      projectTypeId,
-      showMap,
-      bounds,
-    });
+    }, 500);
 
-    return () => clearTimeout(timeoutId); // Cancela llamadas anteriores si hay nuevos cambios
+    return () => clearTimeout(timeoutId);
   }, [searchTerm, selectedButtons, projectTypeId, showMap, bounds]);
 
   const fetchMoreProjects = useCallback(() => {
-    if (isLoading) return; // 🚨 Previene llamadas duplicadas, pero no bloquea siempre
+    if (isLoading) return;
 
-    setIsLoading(true); // 🔥 Activa el estado de carga antes de llamar la API
+    setIsLoading(true);
 
     setCurrentPage((prevPage) => {
       const nextPage = prevPage + 1;
-      console.log(
-        `➡️ [fetchMoreProjects] Llamando a fetchProjects para la página: ${nextPage}`
-      );
 
       fetchProjects(
         true,
         nextPage,
         showMap && bounds !== null ? bounds : undefined
-      ).finally(() => setIsLoading(false)); // 🔥 Asegura que el estado de carga se resetee
+      ).finally(() => setIsLoading(false));
 
       return nextPage;
     });

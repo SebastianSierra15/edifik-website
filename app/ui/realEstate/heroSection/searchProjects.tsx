@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useLoadScript } from "@react-google-maps/api";
 import { MapPin } from "lucide-react";
-
-const GOOGLE_MAPS_LIBRARIES: "places"[] = ["places"];
 
 interface SearchProjectsProps {
   onSelectLocation: (coords: { latitude: number; longitude: number }) => void;
@@ -24,10 +21,7 @@ export default function SearchProjects({
   const autocompleteServiceRef =
     useRef<google.maps.places.AutocompleteService | null>(null);
 
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    libraries: GOOGLE_MAPS_LIBRARIES,
-  });
+  const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -47,7 +41,7 @@ export default function SearchProjects({
 
   useEffect(() => {
     if (
-      isLoaded &&
+      isMapsReady &&
       typeof window !== "undefined" &&
       typeof window.google !== "undefined" &&
       window.google.maps?.places &&
@@ -56,7 +50,7 @@ export default function SearchProjects({
       autocompleteServiceRef.current =
         new window.google.maps.places.AutocompleteService();
     }
-  }, [isLoaded]);
+  }, [isMapsReady]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -91,8 +85,6 @@ export default function SearchProjects({
     );
 
     service.getDetails({ placeId }, (place, status) => {
-      console.log("🔍 getDetails status:", status, place);
-
       if (
         status === google.maps.places.PlacesServiceStatus.OK &&
         place?.geometry?.location

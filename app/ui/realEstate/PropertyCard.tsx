@@ -37,8 +37,6 @@ export default function PropertyCard({
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  console.log(id, area, bedrooms, bathrooms, parkingSpots);
-
   useEffect(() => {
     if (isHovered && images.length > 1) {
       const interval = setInterval(

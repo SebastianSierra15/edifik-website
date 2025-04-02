@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useState, useRef, useMemo } from "react";
-import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap } from "@react-google-maps/api";
 import Loader from "../../loader";
-
-const GOOGLE_MAPS_LIBRARIES: ("places" | "marker")[] = ["places", "marker"];
 
 const mapContainerStyle = {
   width: "100%",
@@ -16,15 +14,7 @@ export default function Map({
 }: {
   coordinates: { lat: number; lng: number };
 }) {
-  const mapsApiKey = useMemo(
-    () => process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    []
-  );
-
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: mapsApiKey,
-    libraries: GOOGLE_MAPS_LIBRARIES,
-  });
+  const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
 
   const [mapCenter, setMapCenter] = useState(coordinates);
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -33,7 +23,7 @@ export default function Map({
   );
 
   const setMarker = async () => {
-    if (!isLoaded || !mapRef.current || !google?.maps) {
+    if (!isMapsReady || !mapRef.current || !google?.maps) {
       return;
     }
 
@@ -63,7 +53,7 @@ export default function Map({
     if (mapRef.current) {
       setMarker();
     }
-  }, [isLoaded, coordinates, mapRef.current]);
+  }, [isMapsReady, coordinates, mapRef.current]);
 
   const handleMapLoad = (map: google.maps.Map) => {
     mapRef.current = map;
@@ -73,7 +63,7 @@ export default function Map({
     setMarker();
   };
 
-  if (!isLoaded) {
+  if (!isMapsReady) {
     return (
       <div className="flex justify-center items-center w-full h-full">
         <Loader size={48} />

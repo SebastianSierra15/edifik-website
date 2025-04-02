@@ -7,8 +7,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 export async function GET(req: Request) {
-  const startTime = performance.now(); // Inicia medición del tiempo total de la API
-
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -32,30 +30,18 @@ export async function GET(req: Request) {
     const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
     const searchTerm = escapeSearchTerm(searchParams.get("searchTerm") || null);
 
-    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
-
     const [result] = await db.query("CALL get_memberships(?, ?, ?)", [
       page,
       pageSize,
       searchTerm,
     ]);
 
-    const dbEndTime = performance.now(); // Finaliza medición de la BD
-
     const rows = (result as RowDataPacket[][])[0];
     const totalEntries = (result as RowDataPacket[][])[1][0].totalEntries - 1;
 
     const memberships = rows as Membership[];
 
-    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
-    const apiDuration = endTime - startTime;
-    const dbDuration = dbEndTime - dbStartTime;
-
     const response = NextResponse.json({ memberships, totalEntries });
-    response.headers.set(
-      "Server-Timing",
-      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
-    );
 
     return response;
   } catch (error) {
@@ -67,8 +53,6 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  const startTime = performance.now(); // Inicia medición del tiempo total de la API
-
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -113,8 +97,6 @@ export async function PUT(req: Request) {
       );
     }
 
-    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
-
     await db.query("CALL update_membership(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
       id,
       name,
@@ -127,19 +109,9 @@ export async function PUT(req: Request) {
       projectsFeatured,
       userId,
     ]);
-    const dbEndTime = performance.now(); // Finaliza medición de la BD
-
-    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
-    const apiDuration = endTime - startTime;
-    const dbDuration = dbEndTime - dbStartTime;
-
     const response = NextResponse.json({
       message: "Membresía actualizada correctamente",
     });
-    response.headers.set(
-      "Server-Timing",
-      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
-    );
 
     return response;
   } catch (error) {

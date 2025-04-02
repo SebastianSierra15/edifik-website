@@ -20,7 +20,7 @@ export default function ProjectPage() {
     area: [1],
   });
 
-  const [entriesPerPage] = useState(8); // Obtiene más proyectos
+  const [entriesPerPage] = useState(8);
   const { projects, isLoading } = useGetProperties({
     entriesPerPage,
     selectedButtons,
@@ -39,7 +39,7 @@ export default function ProjectPage() {
       </h1>
 
       {isLoading ? (
-        <ProjectSkeletonList count={4} />
+        <ProjectSkeletonList />
       ) : projects.length > 0 ? (
         <div className="space-y-10">
           {projects

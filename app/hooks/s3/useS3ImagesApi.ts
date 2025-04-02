@@ -95,21 +95,11 @@ export function useS3ImagesApi() {
               `projects/images/${propertyTypeName}/${projectId}/${item.type}/`
             );
 
-            const startFetch = performance.now(); // Inicia medición del tiempo de fetch
-
             const response = await fetch("/api/s3", {
               method: "POST",
               body: formData,
               signal,
             });
-
-            const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
-            const serverTiming = response.headers.get("Server-Timing");
-
-            console.log(
-              `⏱️ Tiempo total de fetch para subir ${processedFile.name}: ${(endFetch - startFetch).toFixed(2)}ms`
-            );
-            console.log("⏳ Server Timing Metrics:", serverTiming);
 
             if (!response.ok) {
               throw new Error(
@@ -186,8 +176,6 @@ export function useS3ImagesApi() {
             return null;
           }
 
-          const startFetch = performance.now(); // Inicia medición del tiempo de fetch
-
           const response = await fetch("/api/s3", {
             method: "DELETE",
             body: JSON.stringify({ key: s3Key }),
@@ -195,14 +183,6 @@ export function useS3ImagesApi() {
               "Content-Type": "application/json",
             },
           });
-
-          const endFetch = performance.now(); // Finaliza medición del tiempo de fetch
-          const serverTiming = response.headers.get("Server-Timing");
-
-          console.log(
-            `⏱️ Tiempo total de fetch para eliminar ${s3Key}: ${(endFetch - startFetch).toFixed(2)}ms`
-          );
-          console.log("⏳ Server Timing Metrics:", serverTiming);
 
           if (!response.ok) {
             throw new Error(`❌ Error al eliminar la imagen: ${s3Key}`);

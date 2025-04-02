@@ -1,11 +1,8 @@
 import { useMemo } from "react";
 import { ProjectData } from "@/lib/definitios";
-import { useLoadScript } from "@react-google-maps/api";
 import LocationMap from "../locationMap";
 import StepNavigationButtons from "../../stepNavigationButtons";
 import FormDisplay from "@/app/ui/modals/admin/formDisplay";
-
-const GOOGLE_MAPS_LIBRARIES: ("places" | "marker")[] = ["places", "marker"];
 
 interface LocationProjectViewProps {
   project: ProjectData;
@@ -22,15 +19,7 @@ export default function LocationProjectView({
   onPrevious,
   onNext,
 }: LocationProjectViewProps) {
-  const mapsApiKey = useMemo(
-    () => process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    []
-  );
-
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: mapsApiKey,
-    libraries: GOOGLE_MAPS_LIBRARIES,
-  });
+  const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
 
   return (
     <div className="container mx-auto w-full rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
@@ -58,7 +47,7 @@ export default function LocationProjectView({
 
       <div className="relative mt-6 h-64 w-full">
         <LocationMap
-          isLoaded={isLoaded}
+          isLoaded={isMapsReady}
           coordinates={{
             lat: project.latitude || 4.5709,
             lng: project.longitude || -74.2973,

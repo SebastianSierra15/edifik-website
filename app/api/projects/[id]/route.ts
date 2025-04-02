@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { Project, ProjectSummary } from "@/lib/definitios";
+import { Project } from "@/lib/definitios";
 import { RowDataPacket } from "mysql2";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 export async function GET(request: Request, context: any) {
-  const startTime = performance.now(); // Inicia medición del tiempo total de la API
-
   try {
     const session = await getServerSession(authOptions);
     const permissions = session?.user?.permissions || [];
@@ -29,14 +27,10 @@ export async function GET(request: Request, context: any) {
 
     const id = decodeURIComponent(params.id).replace(/-/g, " ");
 
-    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
-
     const [result] = await db.query<RowDataPacket[][]>(
       "CALL get_project_by_id(?)",
       [id]
     );
-
-    const dbEndTime = performance.now(); // Finaliza medición de la consulta del proyecto
 
     const [
       projectsRows = [],
@@ -145,15 +139,7 @@ export async function GET(request: Request, context: any) {
       type: row.commonAreaName ?? row.imageTypeName ?? "Sin categoría",
     }));
 
-    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
-    const apiDuration = endTime - startTime;
-    const dbDuration = dbEndTime - dbStartTime;
-
     const response = NextResponse.json({ project });
-    response.headers.set(
-      "Server-Timing",
-      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
-    );
 
     return response;
   } catch (error) {
@@ -164,9 +150,7 @@ export async function GET(request: Request, context: any) {
   }
 }
 
-export async function DELETE(req: Request, context: any) {
-  const startTime = performance.now(); // Inicia medición del tiempo total de la API
-
+export async function DELETE(request: Request, context: any) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -198,23 +182,11 @@ export async function DELETE(req: Request, context: any) {
       );
     }
 
-    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
-
     await db.query("CALL delete_project(?, ?)", [projectId, userId]);
-
-    const dbEndTime = performance.now(); // Finaliza medición de la BD
-
-    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
-    const apiDuration = endTime - startTime;
-    const dbDuration = dbEndTime - dbStartTime;
 
     const response = NextResponse.json(
       { message: "Proyecto eliminado correctamente." },
       { status: 200 }
-    );
-    response.headers.set(
-      "Server-Timing",
-      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
     );
 
     return response;

@@ -1,13 +1,11 @@
 "use client";
 
 import { memo, useMemo, useState, useEffect, useRef } from "react";
-import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap } from "@react-google-maps/api";
 import { Plus, Minus, LocateFixed } from "lucide-react";
 import { ProjectView } from "@/lib/definitios";
 import PropertyCard from "./PropertyCard";
 import Loader from "../loader";
-
-const GOOGLE_MAPS_LIBRARIES: ("places" | "marker")[] = ["places", "marker"];
 
 const containerStyle = {
   width: "100%",
@@ -16,33 +14,29 @@ const containerStyle = {
 
 const DEFAULT_CENTER = { lat: 4.5709, lng: -74.2973 };
 
-const ProjectsMap = ({
+export default function ProjectsMap({
   projects,
   setBounds,
   showMap,
+  highlightCoords,
 }: {
   projects: ProjectView[];
   setBounds: (bounds: google.maps.LatLngBounds | null) => void;
   showMap: boolean;
-}) => {
+  highlightCoords?: { latitude: number; longitude: number } | null;
+}) {
   const [selectedProject, setSelectedProject] = useState<ProjectView | null>(
     null
   );
-  const [currentCenter, setCurrentCenter] = useState(DEFAULT_CENTER);
-  const [userLocation, setUserLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   let [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [locationMarker, setLocationMarker] =
+    useState<google.maps.marker.AdvancedMarkerElement | null>(null);
 
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    libraries: GOOGLE_MAPS_LIBRARIES,
-  });
+  const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
 
   const handleBoundsChanged = () => {
     if (!showMap) {
@@ -64,17 +58,20 @@ const ProjectsMap = ({
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const { latitude, longitude } = position.coords;
-        const location = { lat: latitude, lng: longitude };
-        setCurrentCenter(location);
-        setUserLocation(location);
+        const location = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        if (mapRef.current) {
+          updateLocationMarker(mapRef.current, location);
+        }
       },
       (error) => {
         console.error(
           "Error obteniendo la ubicación del usuario:",
           error.message
         );
-        setCurrentCenter(DEFAULT_CENTER);
       }
     );
   }, []);
@@ -88,11 +85,39 @@ const ProjectsMap = ({
   }, [projects]);
 
   useEffect(() => {
-    if (mapRef.current && isLoaded) {
+    if (mapRef.current && isMapsReady) {
       clearMarkers();
       addMarkers(mapRef.current);
     }
-  }, [validProjects, userLocation, isLoaded, isMapLoaded]);
+  }, [validProjects, isMapsReady, isMapLoaded, highlightCoords]);
+
+  useEffect(() => {
+    if (!highlightCoords || !mapRef.current || !isMapLoaded) return;
+
+    const map = mapRef.current;
+
+    const waitForMapToRender = () => {
+      const container = map.getDiv();
+      const isVisible =
+        container.offsetWidth > 0 &&
+        container.offsetHeight > 0 &&
+        container.getClientRects().length > 0;
+
+      if (isVisible) {
+        updateLocationMarker(map, highlightCoords);
+      } else {
+        setTimeout(waitForMapToRender, 100);
+      }
+    };
+
+    waitForMapToRender();
+  }, [highlightCoords, isMapLoaded]);
+
+  useEffect(() => {
+    if (highlightCoords && mapRef.current) {
+      updateLocationMarker(mapRef.current, highlightCoords);
+    }
+  }, [highlightCoords]);
 
   const clearMarkers = () => {
     markers.forEach((marker) => {
@@ -100,6 +125,35 @@ const ProjectsMap = ({
       marker.element?.remove();
     });
     setMarkers([]);
+  };
+
+  const updateLocationMarker = (
+    map: google.maps.Map,
+    coords:
+      | { lat: number; lng: number }
+      | { latitude: number; longitude: number }
+  ) => {
+    const { AdvancedMarkerElement } = google.maps.marker;
+
+    const lat = "lat" in coords ? coords.lat : coords.latitude;
+    const lng = "lng" in coords ? coords.lng : coords.longitude;
+    const position = { lat, lng };
+
+    map.setCenter(position);
+    map.setZoom(14);
+
+    window.google.maps.event.trigger(map, "idle");
+
+    if (locationMarker) {
+      locationMarker.position = position;
+      locationMarker.map = map;
+    } else {
+      const marker = new AdvancedMarkerElement({
+        position,
+        map,
+      });
+      setLocationMarker(marker);
+    }
   };
 
   const addMarkers = (map: google.maps.Map) => {
@@ -127,32 +181,6 @@ const ProjectsMap = ({
       newMarkers.push(marker);
     });
 
-    if (userLocation) {
-      const { AdvancedMarkerElement } = google.maps.marker;
-
-      markers.forEach((marker) => {
-        const markerLat =
-          typeof marker.position?.lat === "function"
-            ? marker.position.lat()
-            : marker.position?.lat;
-        const markerLng =
-          typeof marker.position?.lng === "function"
-            ? marker.position.lng()
-            : marker.position?.lng;
-
-        if (markerLat === userLocation.lat && markerLng === userLocation.lng) {
-          marker.map = null;
-        }
-      });
-
-      const userMarker = new AdvancedMarkerElement({
-        position: userLocation,
-        map,
-      });
-
-      newMarkers.push(userMarker);
-    }
-
     setMarkers((prev) => [...prev, ...newMarkers]);
   };
 
@@ -171,16 +199,24 @@ const ProjectsMap = ({
   };
 
   const handleGoToUserLocation = () => {
-    const map = mapRef.current;
-    if (userLocation && map) {
-      map.panTo(userLocation);
-      map.setZoom(14);
-    } else {
-      console.warn("No se pudo obtener la ubicación del usuario.");
-    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const coords = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        if (mapRef.current) {
+          updateLocationMarker(mapRef.current, coords);
+        }
+      },
+      (error) => {
+        console.warn("No se pudo obtener la ubicación del usuario.");
+      }
+    );
   };
 
-  if (!isLoaded) {
+  if (!isMapsReady) {
     return (
       <div className="flex justify-center items-center w-full h-full">
         <Loader size={48} />
@@ -192,11 +228,11 @@ const ProjectsMap = ({
     <>
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={currentCenter}
         zoom={12}
         onLoad={(map) => {
           mapRef.current = map;
           setIsMapLoaded(true);
+          map.setCenter(DEFAULT_CENTER);
           setTimeout(() => handleBoundsChanged(), 500);
         }}
         onBoundsChanged={handleBoundsChanged}
@@ -253,6 +289,4 @@ const ProjectsMap = ({
       )}
     </>
   );
-};
-
-export default memo(ProjectsMap);
+}

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "Bienvenido a EdifiK",
 };
 
-export default function AdminLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -22,11 +22,11 @@ export default function AdminLayout({
         className={`${inter.className} flex min-h-screen flex-col bg-client-background antialiased`}
       >
         <Providers>
+          <Header />
           <GoogleMapsProvider>
-            <Header />
-            <main className="flex-grow space-y-12">{children}</main>
-            <Footer />
+            <main className="flex flex-col flex-grow gap-12">{children}</main>
           </GoogleMapsProvider>
+          <Footer />
         </Providers>
       </body>
     </html>

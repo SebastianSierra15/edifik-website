@@ -416,7 +416,6 @@ export default function ProjectForm({
       </>
     );
   }, [currentStep, metadata, locations, projectData]);
-  console.log("[ProjectForm] mapAddress:", mapAddress);
 
   return (
     <div className="container mx-auto p-6">

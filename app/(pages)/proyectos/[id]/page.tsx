@@ -51,13 +51,8 @@ const ContactForm = dynamic(
   }
 );
 
-const CarouselRecommendedProjects = dynamic(
-  () => import("@/app/ui/realEstate/project/carouselRecommendedProjects"),
-  { loading: () => <div>Cargando proyectos recomendados...</div> }
-);
-
 export default function ProjectPage({ params }: { params: { id: number } }) {
-  const { project, projectRecommended, loading } = useProjectById(params.id);
+  const { project, loading } = useProjectById(params.id);
 
   return (
     <div
@@ -195,11 +190,6 @@ export default function ProjectPage({ params }: { params: { id: number } }) {
                 <ContactForm />
               </div>
             </div>
-
-            {/*
-            <div className="mx-32 mt-20">
-              <CarouselRecommendedProjects projects={projectRecommended} />
-            </div>*/}
           </>
         )
       )}

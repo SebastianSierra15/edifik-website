@@ -1,13 +1,11 @@
 "use client";
 
 import { memo, useMemo, useState, useEffect, useRef } from "react";
-import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap } from "@react-google-maps/api";
 import { Plus, Minus, LocateFixed } from "lucide-react";
 import { ProjectSummary } from "@/lib/definitios";
 import ProjectCardAdmin from "./projectCardAdmin";
 import Loader from "../../loader";
-
-const GOOGLE_MAPS_LIBRARIES: ("places" | "marker")[] = ["places", "marker"];
 
 const containerStyle = {
   width: "100%",
@@ -41,10 +39,7 @@ const ProjectsMap = ({
   >([]);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    libraries: GOOGLE_MAPS_LIBRARIES,
-  });
+  const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
 
   const handleBoundsChanged = () => {
     if (!showMap) {
@@ -90,11 +85,11 @@ const ProjectsMap = ({
   }, [projects]);
 
   useEffect(() => {
-    if (mapRef.current && isLoaded) {
+    if (mapRef.current && isMapsReady) {
       clearMarkers();
       addMarkers(mapRef.current);
     }
-  }, [validProjects, userLocation, isLoaded, isMapLoaded]);
+  }, [validProjects, userLocation, isMapsReady, isMapLoaded]);
 
   const clearMarkers = () => {
     markers.forEach((marker) => {
@@ -182,7 +177,7 @@ const ProjectsMap = ({
     }
   };
 
-  if (!isLoaded) {
+  if (!isMapsReady) {
     return (
       <div className="flex justify-center items-center w-full h-full">
         <Loader size={48} />

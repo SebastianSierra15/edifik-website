@@ -100,7 +100,6 @@ export default function CarouselRecommendedProjects({
           </div>
         </div>
 
-        {/* Botón Next */}
         <button
           className={`absolute right-2 z-10 rounded-full p-3 shadow-md transition md:right-4 ${
             currentIndex + visibleCards >= totalProjects

@@ -26,7 +26,6 @@ export async function GET(req: NextRequest) {
       const sendEvent = (data: any) => {
         try {
           if (controller.desiredSize !== null) {
-            // Solo enviar si el stream sigue abierto
             controller.enqueue(
               encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
             );
@@ -38,10 +37,9 @@ export async function GET(req: NextRequest) {
 
       const heartbeat = setInterval(() => {
         if (controller.desiredSize !== null) {
-          // Solo enviar si el stream sigue abierto
           sendEvent({ type: "heartbeat", message: "Conexión activa" });
         }
-      }, 10000); // Reducir a 10s
+      }, 10000);
 
       let lastRequests: any[] = [];
 

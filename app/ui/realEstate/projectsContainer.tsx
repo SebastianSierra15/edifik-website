@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import dynamic from "next/dynamic";
 import clsx from "clsx";
 import { ProjectView } from "@/lib/definitios";
@@ -12,6 +12,7 @@ const ProjectFilter = dynamic(
   () => import("@/app/ui/realEstate/projectFilter"),
   {
     ssr: false,
+    loading: () => null,
   }
 );
 
@@ -30,6 +31,7 @@ interface ProjectsContainerProps {
     React.SetStateAction<Record<string, number[]>>
   >;
   setBounds: (bounds: google.maps.LatLngBounds | null) => void;
+  highlightCoords?: { latitude: number; longitude: number } | null;
 }
 
 const ProjectsContainer = ({
@@ -45,19 +47,9 @@ const ProjectsContainer = ({
   selectedButtons,
   setSelectedButtons,
   setBounds,
+  highlightCoords,
 }: ProjectsContainerProps) => {
   const { metadata, isLoadingMetadata } = useProjectsMetadata();
-
-  useEffect(() => {
-    const startMetadataFetch = performance.now();
-
-    return () => {
-      const endMetadataFetch = performance.now();
-      console.log(
-        `⏱️ Tiempo total de fetch de metadata en ProjectsContainer: ${(endMetadataFetch - startMetadataFetch).toFixed(2)}ms`
-      );
-    };
-  }, [metadata]);
 
   const projectCards = useMemo(
     () =>
@@ -117,6 +109,7 @@ const ProjectsContainer = ({
             projects={projects}
             setBounds={setBounds}
             showMap={showMap}
+            highlightCoords={highlightCoords}
           />
         </div>
       ) : (

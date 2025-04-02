@@ -17,6 +17,7 @@ const ProjectsContainer = dynamic(
   () => import("@/app/ui/realEstate/projectsContainer"),
   {
     ssr: false,
+    loading: () => null,
   }
 );
 
@@ -48,6 +49,10 @@ export default function RealEstatePage() {
     latitude: number;
     longitude: number;
   } | null>(null);
+  const [highlightCoords, setHighlightCoords] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   const { projects, totalEntries, fetchMoreProjects, isLoading } =
     useGetProperties({
@@ -71,12 +76,25 @@ export default function RealEstatePage() {
     }
   }, [showMap]);
 
+  const handleSelectCoords = (coords: {
+    latitude: number;
+    longitude: number;
+  }) => {
+    if (showMap) {
+      setSearchCoords(null);
+      setHighlightCoords(coords);
+    } else {
+      setSearchCoords(coords);
+      setHighlightCoords(null);
+    }
+  };
+
   return (
     <div className="relative">
       <HeroSearch
         projectTypeId={projectTypeId}
         setProjectTypeId={setProjectTypeId}
-        setSearchCoords={setSearchCoords}
+        setSearchCoords={handleSelectCoords}
       />
 
       <hr className="w-full border-client-accent" />
@@ -106,6 +124,7 @@ export default function RealEstatePage() {
         selectedButtons={selectedButtons}
         setSelectedButtons={setSelectedButtons}
         setBounds={setBounds}
+        highlightCoords={highlightCoords}
       />
 
       <MapToggleButton showMap={showMap} setShowMap={setShowMap} />

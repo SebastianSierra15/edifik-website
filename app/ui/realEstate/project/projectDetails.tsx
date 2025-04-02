@@ -117,83 +117,95 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
       ],
     },
 
-    {
-      group: "Espacios y comodidades",
-      items: [
-        {
-          label: "Habitaciones",
-          value:
-            project.bedrooms && project.bedrooms > 0
-              ? project.bedrooms.toString()
-              : null,
-          icon: <Bed />,
-        },
-        {
-          label: "Baños",
-          value:
-            project.bathrooms && project.bathrooms > 0
-              ? project.bathrooms.toString()
-              : null,
-          icon: <Toilet />,
-        },
-        {
-          label: "Salas de estar",
-          value:
-            project.lobbies && project.lobbies > 0
-              ? project.lobbies.toString()
-              : null,
-          icon: <Armchair />,
-        },
-        {
-          label: "Parqueaderos",
-          value:
-            project.parkingSpots && project.parkingSpots > 0
-              ? project.parkingSpots.toString()
-              : null,
-          icon: <Car />,
-        },
-        {
-          label: "Est. vehículos pesados",
-          value:
-            project.heavyParking && project.heavyParking > 0
-              ? project.heavyParking.toString()
-              : null,
-          icon: <Truck />,
-        },
-        {
-          label: "Torres",
-          value:
-            project.towers && project.towers > 0
-              ? project.towers.toString()
-              : null,
-          icon: <Building />,
-        },
-        {
-          label: "Bodegas",
-          value:
-            project.storageUnits && project.storageUnits > 0
-              ? project.storageUnits.toString()
-              : null,
-          icon: <Warehouse />,
-        },
-        {
-          label: "Nivel Socioeconómico",
-          value:
-            project.socioeconomicLevel && project.socioeconomicLevel > 0
-              ? project.socioeconomicLevel.toString()
-              : null,
-          icon: <CircleDollarSign />,
-        },
-        {
-          label: "Número de Piso",
-          value:
-            project.floorNumber && project.floorNumber > 0
-              ? project.floorNumber.toString()
-              : null,
-          icon: <ArrowUp10 />,
-        },
-      ],
-    },
+    ...(project.bedrooms ||
+    project.bathrooms ||
+    project.lobbies ||
+    project.parkingSpots ||
+    project.heavyParking ||
+    project.towers ||
+    project.storageUnits ||
+    project.socioeconomicLevel ||
+    project.floorNumber
+      ? [
+          {
+            group: "Espacios y comodidades",
+            items: [
+              {
+                label: "Habitaciones",
+                value:
+                  project.bedrooms && project.bedrooms > 0
+                    ? project.bedrooms.toString()
+                    : null,
+                icon: <Bed />,
+              },
+              {
+                label: "Baños",
+                value:
+                  project.bathrooms && project.bathrooms > 0
+                    ? project.bathrooms.toString()
+                    : null,
+                icon: <Toilet />,
+              },
+              {
+                label: "Salas de estar",
+                value:
+                  project.lobbies && project.lobbies > 0
+                    ? project.lobbies.toString()
+                    : null,
+                icon: <Armchair />,
+              },
+              {
+                label: "Parqueaderos",
+                value:
+                  project.parkingSpots && project.parkingSpots > 0
+                    ? project.parkingSpots.toString()
+                    : null,
+                icon: <Car />,
+              },
+              {
+                label: "Est. vehículos pesados",
+                value:
+                  project.heavyParking && project.heavyParking > 0
+                    ? project.heavyParking.toString()
+                    : null,
+                icon: <Truck />,
+              },
+              {
+                label: "Torres",
+                value:
+                  project.towers && project.towers > 0
+                    ? project.towers.toString()
+                    : null,
+                icon: <Building />,
+              },
+              {
+                label: "Bodegas",
+                value:
+                  project.storageUnits && project.storageUnits > 0
+                    ? project.storageUnits.toString()
+                    : null,
+                icon: <Warehouse />,
+              },
+              {
+                label: "Nivel Socioeconómico",
+                value:
+                  project.socioeconomicLevel && project.socioeconomicLevel > 0
+                    ? project.socioeconomicLevel.toString()
+                    : null,
+                icon: <CircleDollarSign />,
+              },
+              {
+                label: "Número de Piso",
+                value:
+                  project.floorNumber && project.floorNumber > 0
+                    ? project.floorNumber.toString()
+                    : null,
+                icon: <ArrowUp10 />,
+              },
+            ],
+          },
+        ]
+      : []),
 
     ...(project.propertyType.id === 1001 || project.propertyType.id === 1002
       ? [

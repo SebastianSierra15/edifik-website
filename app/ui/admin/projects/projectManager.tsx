@@ -75,14 +75,7 @@ export default function ProjectManager({
   const [selectedOwner, setSelectedOwner] = useState<string | null>(null);
   const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
 
-  const startOwnerFetch = performance.now(); // Inicia medición del tiempo de fetch de propietario
-
   const { owner, refetchUser } = useOwner(selectedOwner ?? "");
-
-  const endOwnerFetch = performance.now(); // Finaliza medición del tiempo de fetch de propietario
-  console.log(
-    `⏱️ Tiempo total de fetch de propietario en ProjectManager: ${(endOwnerFetch - startOwnerFetch).toFixed(2)}ms`
-  );
 
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
   const [areaRange, setAreaRange] = useState({ min: 0, max: 0 });
@@ -95,8 +88,6 @@ export default function ProjectManager({
     type: string;
     message: string;
   } | null>(null);
-
-  const startProjectsFetch = performance.now(); // Inicia medición del tiempo de fetch de proyectos
 
   const {
     projects,
@@ -114,32 +105,11 @@ export default function ProjectManager({
     showMap: showMap,
   });
 
-  const endProjectsFetch = performance.now(); // Finaliza medición del tiempo de fetch de proyectos
-  console.log(
-    `⏱️ Tiempo total de fetch de proyectos en ProjectManager: ${(endProjectsFetch - startProjectsFetch).toFixed(2)}ms`
-  );
-
   useEffect(() => {
     if (selectedOwner) {
       refetchUser();
     }
   }, [selectedOwner]);
-
-  useEffect(() => {
-    console.log("🔄 selectedButtons actualizado:", selectedButtons);
-  }, [selectedButtons]);
-
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      const startRender = performance.now();
-      return () => {
-        const endRender = performance.now();
-        console.log(
-          `⏱️ Tiempo de renderizado en UI: ${(endRender - startRender).toFixed(2)}ms`
-        );
-      };
-    }
-  }, []);
 
   useEffect(() => {
     const message = sessionStorage.getItem("projectMessage");

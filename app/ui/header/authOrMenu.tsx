@@ -19,7 +19,6 @@ export default function AuthOrMenu() {
   };
 
   const toggleSidebar = () => {
-    console.log("Toggling Sidebar:", !isSidebarOpen);
     setIsSidebarOpen((prev) => !prev);
   };
 

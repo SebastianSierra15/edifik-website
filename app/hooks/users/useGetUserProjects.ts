@@ -38,8 +38,6 @@ export function useGetUserProjects({
       const signal = controller.signal;
 
       try {
-        const startFetch = performance.now(); // Inicia medición
-
         const params = new URLSearchParams({
           userId: userId.toString(),
           page: page.toString(),
@@ -58,20 +56,8 @@ export function useGetUserProjects({
           );
         }
 
-        const serverTiming = response.headers.get("Server-Timing");
-        console.log("⏳ Server Timing Metrics:", serverTiming);
-
         const data = await response.json();
         const newProjects: ProjectSummary[] = data.projects;
-
-        const endFetch = performance.now(); // Finaliza medición
-
-        console.log(
-          `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
-        );
-        console.log(
-          `📦 Tamaño de respuesta: ${JSON.stringify(data).length} bytes`
-        );
 
         setProjects((prev) =>
           isLoadMore
@@ -99,13 +85,11 @@ export function useGetUserProjects({
   );
 
   useEffect(() => {
-    console.log("🔄 Fetching User Projects...");
-
     const timeoutId = setTimeout(() => {
       fetchUserProjects(false, 1);
-    }, 500); // Espera 500ms antes de llamar la API (reduce llamadas innecesarias)
+    }, 500);
 
-    return () => clearTimeout(timeoutId); // Cancela llamadas anteriores si hay nuevos cambios
+    return () => clearTimeout(timeoutId);
   }, [searchTerm, userId]);
 
   const fetchMoreUserProjects = useCallback(() => {

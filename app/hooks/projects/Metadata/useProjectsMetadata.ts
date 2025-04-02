@@ -36,16 +36,7 @@ export const useProjectsMetadata = () => {
     setError(null);
 
     try {
-      const startFetch = performance.now();
       const response = await fetch("/api/projects/metadata");
-
-      const endFetch = performance.now();
-      const serverTiming = response.headers.get("Server-Timing");
-
-      console.log(
-        `⏱️ Tiempo total de fetch: ${(endFetch - startFetch).toFixed(2)}ms`
-      );
-      console.log("⏳ Server Timing Metrics:", serverTiming);
 
       if (!response.ok) {
         throw new Error(`Error fetching metadata: ${response.statusText}`);

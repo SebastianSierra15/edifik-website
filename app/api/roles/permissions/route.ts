@@ -6,8 +6,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 export async function GET(req: Request) {
-  const startTime = performance.now(); // Inicia medición del tiempo total de la API
-
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -25,13 +23,9 @@ export async function GET(req: Request) {
   }
 
   try {
-    const dbStartTime = performance.now(); // Inicia medición del tiempo de consulta a la BD
-
     const [result] = await db.query<RowDataPacket[][]>(
       "CALL get_permissions()"
     );
-
-    const dbEndTime = performance.now(); // Finaliza medición de la BD
 
     const [permissionsRows = []] = result;
 
@@ -40,17 +34,9 @@ export async function GET(req: Request) {
       name,
     }));
 
-    const endTime = performance.now(); // Finaliza medición del tiempo total de la API
-    const apiDuration = endTime - startTime;
-    const dbDuration = dbEndTime - dbStartTime;
-
     const response = NextResponse.json({
       permission,
     });
-    response.headers.set(
-      "Server-Timing",
-      `api-total;dur=${apiDuration.toFixed(2)}, db-query;dur=${dbDuration.toFixed(2)}`
-    );
 
     return response;
   } catch (error) {

@@ -22,11 +22,11 @@ export default async function AdminLayout({
         className={`${inter.className} flex min-h-screen flex-col bg-premium-background antialiased dark:bg-premium-background`}
       >
         <Providers>
+          <AdminHeader />
           <GoogleMapsProvider>
-            <AdminHeader />
             <main className="flex-grow">{children}</main>
-            <AdminFooter />
           </GoogleMapsProvider>
+          <AdminFooter />
         </Providers>
       </body>
     </html>

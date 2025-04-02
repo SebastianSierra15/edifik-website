@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import clsx from "clsx";
 import Image from "next/image";
 import { Search, ShoppingCart, KeySquare, Building2 } from "lucide-react";
@@ -9,9 +9,7 @@ import SearchProjects from "./searchProjects";
 interface HeroSearchProps {
   projectTypeId: number;
   setProjectTypeId: Dispatch<SetStateAction<number>>;
-  setSearchCoords: Dispatch<
-    SetStateAction<{ latitude: number; longitude: number } | null>
-  >;
+  setSearchCoords: (coords: { latitude: number; longitude: number }) => void;
 }
 
 export default function HeroSearch({
