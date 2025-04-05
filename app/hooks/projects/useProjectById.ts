@@ -7,7 +7,7 @@ interface ProjectData {
   project: Project;
 }
 
-export function useProjectById(id?: number) {
+export function useProjectById(id?: number, isProject?: boolean) {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +16,10 @@ export function useProjectById(id?: number) {
     const fetchProject = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/projects/${id}`);
+        const isProjectFlag = isProject ? 1 : 0;
+        const query = `?isProject=${isProjectFlag}`;
+
+        const response = await fetch(`/api/projects/${id}${query}`);
 
         if (!response.ok) {
           throw new Error("Propiedad no encontrada");
@@ -34,7 +37,7 @@ export function useProjectById(id?: number) {
     };
 
     fetchProject();
-  }, [id]);
+  }, [id, isProject]);
 
   return { project, loading, error };
 }

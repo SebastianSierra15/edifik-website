@@ -161,23 +161,6 @@ export interface Membership {
   projectsFeatured: number;
 }
 
-export interface Reservation {
-  id: number;
-  startDate: Date;
-  endDate: Date;
-  reservationDate: Date;
-  price: number;
-  userId: number;
-  paymentMethodId: number;
-  projectId: number;
-  statusReservationId: number;
-}
-
-export interface StatusReservation {
-  id: number;
-  name: string;
-}
-
 export interface Permission {
   id: number;
   name: string;

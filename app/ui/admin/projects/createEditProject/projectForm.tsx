@@ -35,7 +35,7 @@ export default function ProjectForm({
   hasPermission,
 }: ProjectFormProps) {
   const projectQuery = isEdit
-    ? useProjectById(projectId)
+    ? useProjectById(projectId, isProperty)
     : { project: null, loading: false };
   const { project, loading: loadingProject } = projectQuery;
 

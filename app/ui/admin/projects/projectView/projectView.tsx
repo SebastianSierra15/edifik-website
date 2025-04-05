@@ -24,7 +24,10 @@ export default function ProjectView({
   projectId,
   isProperty,
 }: ProjectViewProps) {
-  const { project, loading: loadingProject } = useProjectById(projectId);
+  const { project, loading: loadingProject } = useProjectById(
+    projectId,
+    isProperty
+  );
   const [currentStep, setCurrentStep] = useState(0);
   const totalSteps = 5;
   const router = useRouter();

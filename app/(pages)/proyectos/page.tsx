@@ -1,47 +1,54 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useGetProperties } from "@/app/hooks/realEstate/useGetProperties";
-import ProjectSkeletonList from "@/app/ui/skeletons/projectSkeletonList";
+import { useGetBasicProjects } from "@/app/hooks/projects/basic/useGetBasicProjects";
+import HeroSection from "@/app/ui/home/heroSection";
 import ProjectsShowcase from "@/app/ui/projects/projectsShowcase";
+import ProjectSkeletonList from "@/app/ui/skeletons/projectSkeletonList";
+import { ProjectView } from "@/lib/definitios";
 
 export default function ProjectPage() {
-  const [selectedButtons, setSelectedButtons] = useState<
-    Record<string, number[]>
-  >({
-    cities: [],
-    propertyTypes: [],
-    housingTypes: [],
-    commonAreas: [],
-    nearbyServices: [],
-    bedrooms: [0],
-    bathrooms: [0],
-    lobbies: [0],
-    area: [1],
-  });
+  const { projects, isLoading } = useGetBasicProjects();
 
-  const [entriesPerPage] = useState(8);
-  const { projects, isLoading } = useGetProperties({
-    entriesPerPage,
-    selectedButtons,
-    projectTypeId: 1,
-    showMap: false,
-  });
-
-  useEffect(() => {
-    setSelectedButtons((prev) => ({ ...prev, price: [], area: [] }));
-  }, []);
+  const staticProjects: ProjectView[] = Array.from(
+    { length: 8 },
+    (_, index) => ({
+      id: 1000 + index,
+      name: `Proyecto Estático ${index + 1}`,
+      cityName: "Florencia",
+      price: 300000000 + index * 10000000,
+      area: 80 + index * 5,
+      bathrooms: 2,
+      parkingSpots: 1,
+      bedrooms: 3,
+      images: [
+        {
+          projectId: 1000 + index,
+          url: [
+            "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Oficina/1184/Previsualización/1739223319337/32610d5d-1b85-444f-b639-75000a182f92.webp",
+            "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Lote/1183/Previsualización/1739196512465/3bf19008-d212-4517-bfc0-c8c9bd0d75a7.webp",
+            "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Local/1182/Previsualización/1739135799491/59bc8a98-b78c-4f09-9d2f-edc5fdfe9e1f.webp",
+            "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Casa/1171/Previsualización/1738259098424/b089c576-06e0-4922-b176-3a58316c9f14.webp",
+            "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Finca/1176/Previsualización/1738461644899/00365cc9-353f-47d2-87c1-0c729b80ea40.webp",
+          ][index % 5],
+          tag: "previsualizacion",
+        },
+      ],
+    })
+  );
 
   return (
-    <div className="px-6 pb-10 pt-6">
-      <h1 className="mt-16 text-center text-3xl font-semibold text-client-text mb-10">
-        Proyectos Destacados
-      </h1>
+    <div>
+      <HeroSection
+        srcImage="/images/home/home.webp"
+        altImage="Nuestros proyectos"
+        title="Proyectos"
+        description="Conoce nuestros proyectos"
+      />
 
       {isLoading ? (
         <ProjectSkeletonList />
       ) : projects.length > 0 ? (
-        <div className="space-y-10">
+        <div className="px-6 py-10">
           {projects
             .reduce(
               (acc, _, index) => {
@@ -52,8 +59,17 @@ export default function ProjectPage() {
               },
               [] as (typeof projects)[]
             )
-            .map((projectGroup, index) => (
-              <ProjectsShowcase key={index} projects={projectGroup} />
+            .map((projectGroup, index, array) => (
+              <div key={index}>
+                <ProjectsShowcase
+                  projects={projectGroup}
+                  reverse={index % 2 === 1}
+                />
+
+                {index < array.length - 1 && (
+                  <hr className="mx-auto my-6 w-5/6 border-t border-white bg-transparent" />
+                )}
+              </div>
             ))}
         </div>
       ) : (

@@ -5,10 +5,10 @@ import { useParams } from "next/navigation";
 import { useProjectById } from "@/app/hooks/projects/useProjectById";
 import ProjectView from "@/app/ui/realEstate/project/projectView";
 
-export default function ProjectPage() {
+export default function PropertyPage() {
   const params = useParams();
   const projectId = params?.id ? decodeURIComponent(params.id as string) : "";
-  const { project } = useProjectById(Number(projectId));
+  const { project } = useProjectById(Number(projectId), false);
 
   return (
     <div className="bg-client-backgroundLight">

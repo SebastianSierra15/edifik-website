@@ -18,6 +18,18 @@ export async function GET(request: Request, context: any) {
 
     const params = await context.params;
 
+    const { searchParams } = new URL(request.url);
+    const isProjectParam = searchParams.get("isProject");
+
+    if (isProjectParam === null) {
+      return NextResponse.json(
+        { error: "El parámetro 'isProject' es requerido" },
+        { status: 400 }
+      );
+    }
+
+    const isProject = parseInt(isProjectParam, 10);
+
     if (!params?.id) {
       return NextResponse.json(
         { error: "Id del proyecto no proporcionado" },
@@ -28,8 +40,8 @@ export async function GET(request: Request, context: any) {
     const id = decodeURIComponent(params.id).replace(/-/g, " ");
 
     const [result] = await db.query<RowDataPacket[][]>(
-      "CALL get_project_by_id(?)",
-      [id]
+      "CALL get_project_by_id(?, ?)",
+      [id, isProject]
     );
 
     const [
