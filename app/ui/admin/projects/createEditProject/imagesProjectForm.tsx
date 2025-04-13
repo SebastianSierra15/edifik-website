@@ -87,24 +87,10 @@ export default function ImagesProjectForm({
   }, []);
 
   const handleImageChange = useCallback(
-    (
-      category: string,
-      event: ChangeEvent<HTMLInputElement>,
-      maxImages: number
-    ) => {
+    (category: string, event: ChangeEvent<HTMLInputElement>) => {
       if (!event.target.files || event.target.files.length === 0) return;
 
       const selectedFiles = Array.from(event.target.files);
-
-      const existingMediaCount =
-        formData.media?.filter((m) => m.type === category).length || 0;
-
-      if (existingMediaCount + selectedFiles.length > maxImages) {
-        console.warn(
-          `⚠️ No puedes subir más de ${maxImages} imágenes para ${category}`
-        );
-        return;
-      }
 
       const newMedia = selectedFiles.map((file) => ({
         file,
@@ -240,9 +226,7 @@ export default function ImagesProjectForm({
           error={errors[type.name] || null}
           errors={{ ...errors }}
           onToggleExpand={() => toggleSection(type.name)}
-          onImageChange={(e) =>
-            handleImageChange(type.name, e, type.maxImagesAllowed)
-          }
+          onImageChange={(e) => handleImageChange(type.name, e)}
           onRemoveImage={(index) => handleRemoveImage(type.name, index)}
           onTagChange={(index, newTag) =>
             handleTagChange(type.name, index, newTag)
@@ -280,7 +264,7 @@ export default function ImagesProjectForm({
           error={errors[area.name] || null}
           errors={{ ...errors }}
           onToggleExpand={() => toggleSection(area.name)}
-          onImageChange={(e) => handleImageChange(area.name, e, 5)}
+          onImageChange={(e) => handleImageChange(area.name, e)}
           onRemoveImage={(index) => handleRemoveImage(area.name, index)}
           onTagChange={(index, newTag) =>
             handleTagChange(area.name, index, newTag)

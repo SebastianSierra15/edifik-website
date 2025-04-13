@@ -1,11 +1,35 @@
-export function generateEmailTemplate(propertyName: string, ownerId: string) {
+export type EmailTemplateOptions = {
+  title: string;
+  greeting?: string;
+  intro?: string;
+  items?: { label: string; value: string }[];
+  body?: string;
+  buttonText?: string;
+  buttonUrl?: string;
+};
+
+export function generateEmailTemplate(options: EmailTemplateOptions) {
+  const {
+    title,
+    greeting = "Hola,",
+    intro,
+    items = [],
+    body,
+    buttonText = "Ir a EdifiK",
+    buttonUrl = "https://edifik.com/login",
+  } = options;
+
+  const itemsHtml = items
+    .map((item) => `<li><strong>${item.label}:</strong> ${item.value}</li>`)
+    .join("");
+
   return `
       <!DOCTYPE html>
       <html lang="es">
       <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Nueva Propiedad Registrada</title>
+          <title>${title}</title>
           <style>
               body {
                   font-family: Arial, sans-serif;
@@ -62,19 +86,19 @@ export function generateEmailTemplate(propertyName: string, ownerId: string) {
                   margin-top: 20px;
               }
               .btn {
-                    display: inline-block;
-                    width: 100%;
-                    max-width: 250px;
-                    padding: 14px 0;
-                    background-color: #9A5939;
-                    color: #ffffff !important;
-                    text-decoration: none !important;
-                    font-size: 16px;
-                    font-weight: bold;
-                    border-radius: 8px;
-                    text-align: center;
-                    transition: background-color 0.3s, transform 0.2s;
-                }
+                  display: inline-block;
+                  width: 100%;
+                  max-width: 250px;
+                  padding: 14px 0;
+                  background-color: #9A5939;
+                  color: #ffffff !important;
+                  text-decoration: none !important;
+                  font-size: 16px;
+                  font-weight: bold;
+                  border-radius: 8px;
+                  text-align: center;
+                  transition: background-color 0.3s, transform 0.2s;
+              }
               .btn:hover {
                   background-color: #7d442b;
                   transform: scale(1.05);
@@ -87,17 +111,13 @@ export function generateEmailTemplate(propertyName: string, ownerId: string) {
                   <img src="https://tu-dominio.com/logo.png" alt="EdifiK Logo">
               </div>
               <div class="content">
-                  <h2>Nueva Propiedad Registrada en EdifiK</h2>
-                  <p>Estimado equipo de EdifiK,</p>
-                  <p>Se ha registrado una nueva propiedad en la plataforma.</p>
-                  <ul>
-                      <li><strong>Nombre de la Propiedad:</strong> ${propertyName}</li>
-                      <li><strong>Propietario:</strong> ${ownerId}</li>
-                  </ul>
-                  <p>Le recomendamos revisar y validar la información en el sistema administrativo.</p>
-                  <p>Para más detalles, acceda a su cuenta en EdifiK.</p>
+                  <h2>${title}</h2>
+                  <p>${greeting}</p>
+                  ${intro ? `<p>${intro}</p>` : ""}
+                  ${items.length > 0 ? `<ul>${itemsHtml}</ul>` : ""}
+                  ${body ? `<p>${body}</p>` : ""}
                   <div class="button-container">
-                      <a href="https://edifik.com/login" class="btn">Ingresar a EdifiK</a>
+                      <a href="${buttonUrl}" class="btn">${buttonText}</a>
                   </div>
               </div>
               <div class="footer">

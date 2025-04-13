@@ -20,6 +20,7 @@ export default function FormCheckboxToggle({
         <span className="text-premium-textPrimary dark:text-premium-textSecondary">
           {label}
         </span>
+
         <input
           id={name}
           type="checkbox"

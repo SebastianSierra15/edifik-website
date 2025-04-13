@@ -9,10 +9,10 @@ import {
   Briefcase,
   Store,
   User,
-  Bell,
   HousePlus,
   Upload,
   LogOut,
+  MonitorCog,
 } from "lucide-react";
 
 interface SidebarMenuProps {
@@ -117,7 +117,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
 
               <li>
                 <Link
-                  href="/perfil"
+                  href="/usuario/perfil"
                   onClick={onClose}
                   className="flex items-center gap-2 px-6 py-3 hover:bg-gray-200 transition-all"
                 >
@@ -126,31 +126,37 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                 </Link>
               </li>
 
-              <li>
-                <Link
-                  href="/notificaciones"
-                  onClick={onClose}
-                  className="flex items-center gap-2 px-6 py-3 hover:bg-gray-200 transition-all"
-                >
-                  <Bell className="w-5 h-5 text-black" />
-                  Notificaciones
-                </Link>
-              </li>
+              {session?.user?.permissions?.some(
+                (perm: any) => perm.name !== "Gestionar propiedades propias"
+              ) && (
+                <li>
+                  <Link
+                    href="/admin"
+                    onClick={onClose}
+                    className="flex items-center gap-3 w-full cursor-pointer px-4 py-2 text-left hover:bg-gray-200 transition-all"
+                  >
+                    <MonitorCog className="w-5 h-5 text-black" />
+                    Panel Administrador
+                  </Link>
+                </li>
+              )}
+
+              {session?.user?.membershipId && (
+                <li>
+                  <Link
+                    href="/usuario/mis-propiedades"
+                    onClick={onClose}
+                    className="flex items-center gap-2 px-6 py-3 hover:bg-gray-200 transition-all"
+                  >
+                    <HousePlus className="w-5 h-5 text-black" />
+                    Mis Propiedades
+                  </Link>
+                </li>
+              )}
 
               <li>
                 <Link
-                  href="/mis-propiedades"
-                  onClick={onClose}
-                  className="flex items-center gap-2 px-6 py-3 hover:bg-gray-200 transition-all"
-                >
-                  <HousePlus className="w-5 h-5 text-black" />
-                  Mis Propiedades
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/subir-propiedad"
+                  href="/usuario/subir-propiedad"
                   onClick={onClose}
                   className="flex items-center gap-2 px-6 py-3 hover:bg-gray-200 transition-all"
                 >

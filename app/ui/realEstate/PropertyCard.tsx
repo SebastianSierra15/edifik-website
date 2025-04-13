@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { ProjectMedia } from "@/lib/definitios";
+import ProjectCardActions from "./projectCardActions";
 
 interface PropertyCardProps {
   id: number;
@@ -18,6 +19,8 @@ interface PropertyCardProps {
   url: string;
   isFromMap?: boolean;
   onClose?: (() => void) | null;
+  showActions?: boolean;
+  onDelete?: (id: number, name: string) => void;
 }
 
 export default function PropertyCard({
@@ -33,6 +36,8 @@ export default function PropertyCard({
   url,
   isFromMap,
   onClose,
+  showActions = false,
+  onDelete,
 }: PropertyCardProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -132,6 +137,15 @@ export default function PropertyCard({
             </div>
           </div>
         </div>
+
+        {showActions && onDelete && (
+          <ProjectCardActions
+            id={id}
+            name={name || ""}
+            urlEdit={`${id}`}
+            onDelete={onDelete}
+          />
+        )}
       </div>
     </Link>
   );

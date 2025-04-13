@@ -2,7 +2,7 @@ import { useState } from "react";
 import clsx from "clsx";
 import { Eye, EyeOff } from "lucide-react";
 import { formatNumber } from "@/utils/formatters";
-import TooltipIcon from "../admin/tooltipIcon";
+import TooltipIcon from "./tooltipIcon";
 import FormErrorMessage from "../formErrorMessage";
 
 interface FormInputProps {
@@ -20,6 +20,7 @@ interface FormInputProps {
   flag?: boolean;
   tooltipText?: string;
   isEdit?: boolean;
+  isAccent?: boolean;
 }
 
 export default function FormInput({
@@ -37,6 +38,7 @@ export default function FormInput({
   flag,
   tooltipText,
   isEdit = true,
+  isAccent = false,
 }: FormInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -81,8 +83,9 @@ export default function FormInput({
           }
           className={clsx(
             "w-full rounded-md border bg-client-backgroundLight px-3 py-2 text-client-text placeholder-client-textPlaceholder focus:outline-none",
-            error && !flag
-              ? "border-red-500"
+            error && !flag && "border-red-500",
+            isAccent
+              ? "border-client-accent focus:border-x-client-accentHover"
               : "border-client-secondaryLight focus:border-client-secondaryHover"
           )}
         />

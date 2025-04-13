@@ -6,6 +6,7 @@ declare module "next-auth" {
     user: {
       id?: string | null;
       role?: string | null;
+      membershipId?: string | null;
       permissions?: Permission[] | null;
     } & DefaultSession["user"];
   }
@@ -13,6 +14,7 @@ declare module "next-auth" {
   interface JWT {
     id?: string;
     role?: string;
+    membershipId?: string;
     permissions?: Permission[];
   }
 }

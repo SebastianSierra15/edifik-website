@@ -73,11 +73,14 @@ export default function ProjectView({ project }: ProjectViewProps) {
 
       <div className="grid grid-cols-1 gap-4 pt-8 lg:grid-cols-3">
         <div className="px-4 sm:px-6 lg:px-12 lg:col-span-2 lg:pr-10">
-          <ProjectPlans
-            projectMedia={project.projectMedia.filter(
-              (media) => media.imageType === 1005
-            )}
-          />
+          {project.projectMedia.filter((media) => media.imageType === 1005)
+            .length > 0 && (
+            <ProjectPlans
+              projectMedia={project.projectMedia.filter(
+                (media) => media.imageType === 1005
+              )}
+            />
+          )}
 
           <p className="my-8 text-lg text-client-textPlaceholder">
             {project.shortDescription}

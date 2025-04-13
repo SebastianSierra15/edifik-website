@@ -78,7 +78,8 @@ export default function RequestsPage() {
     const success = await processRequest(
       selectedRequest.id,
       requestAction,
-      message
+      message,
+      selectedRequest.userEmail
     );
 
     closeConfirmationModal();

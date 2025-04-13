@@ -16,7 +16,7 @@ export default function UserMenu({
       {session ? (
         <>
           <Link
-            href="/subir-propiedad"
+            href="/usuario/subir-propiedad"
             className="text-client-text px-4 md:px-2 lg:px-4 py-2 rounded-full hover:bg-gray-800 transition"
           >
             Subir Propiedad

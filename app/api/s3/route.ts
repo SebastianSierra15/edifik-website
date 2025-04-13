@@ -16,7 +16,10 @@ export async function POST(req: Request) {
   const permissions = session?.user?.permissions;
 
   const hasPermission = permissions?.some(
-    (perm) => perm.name === "Gestionar usuarios"
+    (perm) =>
+      perm.name === "Gestionar usuarios" ||
+      perm.name === "Gestionar proyectos" ||
+      perm.name === "Gestionar propiedades propias"
   );
 
   if (!hasPermission) {
@@ -95,7 +98,10 @@ export async function DELETE(req: Request) {
   const permissions = session?.user?.permissions;
 
   const hasPermission = permissions?.some(
-    (perm) => perm.name === "Gestionar usuarios"
+    (perm) =>
+      perm.name === "Gestionar usuarios" ||
+      perm.name === "Gestionar proyectos" ||
+      perm.name === "Gestionar propiedades propias"
   );
 
   if (!hasPermission) {

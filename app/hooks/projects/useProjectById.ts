@@ -7,7 +7,11 @@ interface ProjectData {
   project: Project;
 }
 
-export function useProjectById(id?: number, isProject?: boolean) {
+export function useProjectById(
+  id?: number,
+  isProject?: boolean,
+  isAdmin?: boolean
+) {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,7 +21,7 @@ export function useProjectById(id?: number, isProject?: boolean) {
       try {
         setLoading(true);
         const isProjectFlag = isProject ? 1 : 0;
-        const query = `?isProject=${isProjectFlag}`;
+        const query = `?isProject=${isProjectFlag}&isAdmin=${isAdmin ? 1 : 0}`;
 
         const response = await fetch(`/api/projects/${id}${query}`);
 

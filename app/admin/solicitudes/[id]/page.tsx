@@ -14,5 +14,5 @@ export default function ViewPropertyPage() {
 
   if (!projectId) return null;
 
-  return <ProjectView projectId={Number(projectId)} isProperty={true} />;
+  return <ProjectView projectId={Number(projectId)} isProperty={false} />;
 }

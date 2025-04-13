@@ -1,11 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { Project } from "@/lib/definitios";
 import { RowDataPacket } from "mysql2";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-export async function GET(request: Request, context: any) {
+export async function GET(
+  req: NextRequest,
+  context: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(authOptions);
     const permissions = session?.user?.permissions || [];
@@ -13,13 +16,19 @@ export async function GET(request: Request, context: any) {
     const hasPermission = permissions?.some(
       (perm) =>
         perm.name === "Gestionar proyectos" ||
-        perm.name === "Gestionar propiedades"
+        perm.name === "Gestionar propiedades" ||
+        perm.name === "Gestionar propiedades propias"
     );
 
-    const params = await context.params;
+    const projectId = Number(context.params.id);
 
-    const { searchParams } = new URL(request.url);
+    if (!projectId) {
+      return NextResponse.json({ message: "ID inválido" }, { status: 400 });
+    }
+
+    const { searchParams } = new URL(req.url);
     const isProjectParam = searchParams.get("isProject");
+    const isAdminParam = searchParams.get("isAdmin");
 
     if (isProjectParam === null) {
       return NextResponse.json(
@@ -29,19 +38,11 @@ export async function GET(request: Request, context: any) {
     }
 
     const isProject = parseInt(isProjectParam, 10);
-
-    if (!params?.id) {
-      return NextResponse.json(
-        { error: "Id del proyecto no proporcionado" },
-        { status: 400 }
-      );
-    }
-
-    const id = decodeURIComponent(params.id).replace(/-/g, " ");
+    const isAdmin = parseInt(isAdminParam ?? "0", 10);
 
     const [result] = await db.query<RowDataPacket[][]>(
-      "CALL get_project_by_id(?, ?)",
-      [id, isProject]
+      "CALL get_project_by_id(?, ?, ?)",
+      [projectId, isProject, isAdmin]
     );
 
     const [
@@ -162,7 +163,10 @@ export async function GET(request: Request, context: any) {
   }
 }
 
-export async function DELETE(request: Request, context: any) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -184,7 +188,6 @@ export async function DELETE(request: Request, context: any) {
 
   try {
     const userId = session.user.id;
-    const { params } = await context;
     const projectId = Number(params?.id);
 
     if (!projectId) {

@@ -5,6 +5,8 @@ import { RowDataPacket } from "mysql2";
 import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { sendEmail } from "@/lib/email/sendEmail";
+import { generateEmailTemplate } from "@/utils/emailTemplates";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -86,9 +88,9 @@ export async function PUT(req: NextRequest) {
   try {
     const userId = session.user.id;
 
-    const { id, statusId, responseMessage } = await req.json();
+    const { id, statusId, responseMessage, userEmail } = await req.json();
 
-    if (!id || !statusId || !responseMessage) {
+    if (!id || !statusId || !responseMessage || !userEmail) {
       return NextResponse.json(
         { error: "Faltan datos obligatorios" },
         { status: 400 }
@@ -101,6 +103,26 @@ export async function PUT(req: NextRequest) {
       responseMessage,
       userId,
     ]);
+
+    const statusMap: Record<number, string> = {
+      2: "aprobada",
+      3: "rechazada",
+      4: "enviada a revisión",
+    };
+
+    const statusName = statusMap[statusId];
+    const subject = `Tu solicitud ha sido ${statusName}`;
+
+    const htmlContent = generateEmailTemplate({
+      title: subject,
+      greeting: "Hola,",
+      intro: `Hemos revisado tu solicitud y ha sido <strong>${statusName}</strong>.`,
+      body: `<strong>Respuesta del revisor:</strong> ${responseMessage}`,
+      buttonText: "Ver mis propiedades",
+      buttonUrl: "https://edifik.co/usuario/mis-propiedades",
+    });
+
+    await sendEmail(userEmail, subject, htmlContent);
 
     const response = NextResponse.json(
       { message: "Solicitud actualizada correctamente", result },

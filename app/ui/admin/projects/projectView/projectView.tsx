@@ -26,7 +26,8 @@ export default function ProjectView({
 }: ProjectViewProps) {
   const { project, loading: loadingProject } = useProjectById(
     projectId,
-    isProperty
+    isProperty,
+    true
   );
   const [currentStep, setCurrentStep] = useState(0);
   const totalSteps = 5;

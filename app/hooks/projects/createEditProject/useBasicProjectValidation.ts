@@ -30,8 +30,6 @@ export const useBasicProjectValidation = (
           }
         }
         return "";
-      case "emailError":
-        return !value ? "El usuario es obligatorio." : "";
       case "shortDescriptionError":
         return !value ? "El resumen breve es obligatorio." : "";
       case "detailedDescriptionError":

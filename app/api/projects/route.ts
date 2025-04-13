@@ -330,10 +330,22 @@ export async function PUT(req: Request) {
         { status: 500 }
       );
     } else if (!client) {
-      const emailContent = generateEmailTemplate(
-        name,
-        email ? email : ownerId ? ownerId : session.user.email
-      );
+      const emailContent = generateEmailTemplate({
+        title: "Propiedad Editada en EdifiK",
+        intro:
+          "Una propiedad ha sido modificada recientemente en la plataforma.",
+        items: [
+          { label: "Nombre de la Propiedad", value: name },
+          {
+            label: "Propietario",
+            value: email ?? ownerId?.toString() ?? session.user.email,
+          },
+        ],
+        body: "Le recomendamos revisar los cambios en el sistema administrativo.",
+        buttonText: "Ver propiedad",
+        buttonUrl: "https://edifik.co/admin/solicitudes",
+      });
+
       await sendEmail(
         "sebasirra13@gmail.com",
         "Propiedad Editada en EdifiK",
@@ -531,10 +543,21 @@ export async function POST(req: Request) {
         { status: 500 }
       );
     } else if (client) {
-      const emailContent = generateEmailTemplate(
-        name,
-        email ? email : ownerId ? ownerId : session.user.email
-      );
+      const emailContent = generateEmailTemplate({
+        title: "Nueva Propiedad Registrada",
+        intro: "Se ha registrado una nueva propiedad en la plataforma EdifiK.",
+        items: [
+          { label: "Nombre de la Propiedad", value: name },
+          {
+            label: "Propietario",
+            value: email ?? ownerId?.toString() ?? session.user.email,
+          },
+        ],
+        body: "Le recomendamos revisar y validar la información en el sistema administrativo.",
+        buttonText: "Ingresar a EdifiK",
+        buttonUrl: "https://edifik.co/solicitudes",
+      });
+
       await sendEmail(
         "sebasirra13@gmail.com",
         "Nueva Propiedad Registrada en EdifiK",

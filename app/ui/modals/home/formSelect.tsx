@@ -11,6 +11,7 @@ interface FormSelectProps {
   error?: string;
   flag?: boolean;
   tooltipText?: string;
+  isAccent?: boolean;
 }
 
 export default function FormSelect({
@@ -22,6 +23,7 @@ export default function FormSelect({
   error,
   flag,
   tooltipText,
+  isAccent = false,
 }: FormSelectProps) {
   return (
     <div>
@@ -33,6 +35,7 @@ export default function FormSelect({
         {error !== undefined && " *"}
         {tooltipText && <TooltipIcon tooltipText={tooltipText} />}
       </label>
+
       <select
         id={name}
         name={name}
@@ -40,8 +43,9 @@ export default function FormSelect({
         onChange={onChange}
         className={clsx(
           "w-full rounded-md border bg-client-backgroundLight px-3 py-2 text-client-text placeholder-client-textPlaceholder focus:outline-none",
-          error && !flag
-            ? "border-red-500"
+          error && !flag && "border-red-500",
+          isAccent
+            ? "border-client-accent focus:border-client-accentHover"
             : "border-client-secondaryLight focus:border-client-secondaryHover"
         )}
       >

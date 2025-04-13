@@ -14,6 +14,7 @@ interface FormTextareaProps {
   rows?: number;
   maxLength?: number;
   isEdit?: boolean;
+  isAccent?: boolean;
 }
 
 export default function FormTextarea({
@@ -28,6 +29,7 @@ export default function FormTextarea({
   rows = 4,
   maxLength,
   isEdit = true,
+  isAccent = false,
 }: FormTextareaProps) {
   return (
     <div>
@@ -51,8 +53,9 @@ export default function FormTextarea({
         disabled={!isEdit}
         className={clsx(
           "w-full rounded-md border bg-client-backgroundLight px-3 py-2 text-client-text placeholder-client-textPlaceholder focus:outline-none",
-          error && !flag
-            ? "border-red-500 bg-red-50"
+          error && !flag && "border-red-500",
+          isAccent
+            ? "border-client-accent focus:border-client-accentHover"
             : "border-client-secondaryLight focus:border-client-secondaryHover"
         )}
       />

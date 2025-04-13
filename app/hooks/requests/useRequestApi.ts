@@ -7,7 +7,8 @@ export const useRequestApi = () => {
   const processRequest = async (
     requestId: number,
     action: "approve" | "reject" | "revision",
-    message: string
+    message: string,
+    userEmail: string
   ): Promise<boolean> => {
     setIsProcessing(true);
     setError(null);
@@ -30,6 +31,7 @@ export const useRequestApi = () => {
           id: requestId,
           statusId,
           responseMessage: message,
+          userEmail: userEmail,
         }),
       });
 

@@ -84,6 +84,30 @@ export default function ImageUploadSection({
     handleDescriptionChange,
   ]);
 
+  const handleImageChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!event.target.files) return;
+
+      const selectedFiles = Array.from(event.target.files);
+      const totalImages = images.length + selectedFiles.length;
+
+      if (
+        imageType.maxImagesAllowed &&
+        totalImages > imageType.maxImagesAllowed
+      ) {
+        alert(
+          `Solo puedes subir hasta ${imageType.maxImagesAllowed} imagen${
+            imageType.maxImagesAllowed > 1 ? "es" : ""
+          } para ${imageType.name}`
+        );
+        return;
+      }
+
+      onImageChange(event);
+    },
+    [images.length, imageType.maxImagesAllowed, imageType.name, onImageChange]
+  );
+
   return (
     <div
       className={clsx(
@@ -120,7 +144,7 @@ export default function ImageUploadSection({
             type="file"
             accept="image/*"
             multiple
-            onChange={onImageChange}
+            onChange={handleImageChange}
             className={clsx(
               "mt-2 w-full rounded-lg px-3 py-2 text-premium-textPrimary",
               error ? "border-red-500" : "border-none"

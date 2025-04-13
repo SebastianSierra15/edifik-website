@@ -24,6 +24,7 @@ export const authOptions: NextAuthOptions = {
           "CALL get_user_session(?)",
           [email]
         );
+
         let [userRows = [], permissionsRows = []] = result;
 
         if (userRows.length === 0) {
@@ -39,16 +40,23 @@ export const authOptions: NextAuthOptions = {
           ({ id, name }) => ({ id, name })
         );
 
-        token.id = userRows[0].id.toString();
-        token.role = userRows[0].role.toString();
-        token.permissions = permissions;
+        token.id = userRows[0].id?.toString() || "";
+        token.membershipId = userRows[0].membershipId?.toString() || "";
+        token.role = userRows[0].role?.toString() || "";
+        token.permissions = permissions || [];
+      }
+
+      if (!token.permissions) {
+        token.permissions = [];
       }
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id + "";
-      session.user.role = token.role + "";
-      session.user.permissions = token.permissions as Permission[];
+      session.user.id = token.id?.toString() || "";
+      session.user.membershipId = token.membershipId?.toString() || "";
+      session.user.role = token.role?.toString() || "";
+      session.user.permissions = (token.permissions as Permission[]) || [];
+
       return session;
     },
   },

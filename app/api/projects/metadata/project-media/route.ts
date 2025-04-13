@@ -15,7 +15,8 @@ export async function POST(req: Request) {
   const hasPermission = permissions?.some(
     (perm) =>
       perm.name === "Gestionar proyectos" ||
-      perm.name === "Gestionar propiedades"
+      perm.name === "Gestionar propiedades" ||
+      perm.name === "Gestionar propiedades propias"
   );
 
   if (!hasPermission) {
@@ -66,7 +67,8 @@ export async function PUT(req: Request) {
   const hasPermission = permissions?.some(
     (perm) =>
       perm.name === "Gestionar proyectos" ||
-      perm.name === "Gestionar propiedades"
+      perm.name === "Gestionar propiedades" ||
+      perm.name === "Gestionar propiedades propias"
   );
 
   if (!hasPermission) {
@@ -117,7 +119,8 @@ export async function DELETE(req: Request) {
   const hasPermission = permissions?.some(
     (perm) =>
       perm.name === "Gestionar proyectos" ||
-      perm.name === "Gestionar propiedades"
+      perm.name === "Gestionar propiedades" ||
+      perm.name === "Gestionar propiedades propias"
   );
 
   if (!hasPermission) {

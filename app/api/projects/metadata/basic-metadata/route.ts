@@ -30,7 +30,8 @@ export async function GET() {
   const hasPermission = permissions?.some(
     (perm) =>
       perm.name === "Gestionar proyectos" ||
-      perm.name === "Gestionar propiedades"
+      perm.name === "Gestionar propiedades" ||
+      perm.name === "Gestionar propiedades propias"
   );
 
   if (!hasPermission) {

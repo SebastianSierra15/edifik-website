@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import clsx from "clsx";
 import { ProjectSummary } from "@/lib/definitios";
 import { useProjectsMetadata } from "@/app/hooks/projects/metadata/useProjectsMetadata";

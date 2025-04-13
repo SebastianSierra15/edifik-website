@@ -4,8 +4,7 @@ import Link from "next/link";
 
 export default function UnauthorizedPage() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-premium-background px-4 dark:bg-premium-backgroundDark">
-      {/* Icon */}
+    <div className="flex flex-col items-center justify-center h-screen px-4">
       <div className="mb-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -13,7 +12,7 @@ export default function UnauthorizedPage() {
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          className="h-24 w-24 text-premium-primary dark:text-premium-primaryLight"
+          className="h-24 w-24 text-client-accent"
         >
           <path
             strokeLinecap="round"
@@ -23,29 +22,25 @@ export default function UnauthorizedPage() {
         </svg>
       </div>
 
-      {/* Title */}
-      <h1 className="text-3xl font-bold text-premium-primary dark:text-premium-primaryLight">
-        Acceso Denegado
-      </h1>
+      <h1 className="text-3xl font-bold text-client-accent">Acceso Denegado</h1>
 
-      {/* Description */}
-      <p className="mt-4 text-center text-premium-textSecondary dark:text-premium-textPlaceholder">
+      <p className="mt-4 text-center text-client-text">
         Lo sentimos, no tienes permiso para acceder a esta página.
         <br />
         Por favor, verifica tu cuenta o contacta al administrador.
       </p>
 
-      {/* Actions */}
       <div className="mt-6 flex space-x-4">
         <Link
           href="/"
-          className="px-6 py-3 rounded-lg bg-premium-primary text-white font-semibold shadow-lg hover:bg-premium-primaryDark transition-colors dark:bg-premium-primaryLight dark:hover:bg-premium-primaryDark"
+          className="px-6 py-3 rounded-lg bg-client-accent text-white font-semibold shadow-lg hover:bg-client-accentDark transition-colors"
         >
           Ir a Inicio
         </Link>
+
         <Link
           href="/login"
-          className="px-6 py-3 rounded-lg bg-premium-secondary text-white font-semibold shadow-lg hover:bg-premium-secondaryDark transition-colors dark:bg-premium-secondaryLight dark:hover:bg-premium-secondaryDark"
+          className="px-6 py-3 rounded-lg bg-client-backgroundLight text-white font-semibold shadow-lg hover:bg-client-backgroundAlt transition-colors"
         >
           Iniciar Sesión
         </Link>

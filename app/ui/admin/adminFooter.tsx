@@ -1,11 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import dynamic from "next/dynamic";
-
-const BookText = dynamic(() =>
-  import("lucide-react").then((mod) => mod.BookText)
-);
 
 export default function AdminFooter() {
   return (
@@ -15,6 +10,7 @@ export default function AdminFooter() {
           &copy; 2025 EdifiK - Administración. Todos los derechos reservados.
         </span>
 
+        {/*
         <Link
           href="/admin/documentacion"
           className="flex items-center space-x-1 text-premium-primaryDark transition-colors duration-300 hover:text-premium-primary dark:text-premium-primaryLight dark:hover:text-premium-primaryDark"
@@ -22,7 +18,7 @@ export default function AdminFooter() {
         >
           <BookText className="h-5 w-5" />
           <span className="text-sm font-medium">Documentación</span>
-        </Link>
+        </Link>*/}
       </div>
     </footer>
   );
