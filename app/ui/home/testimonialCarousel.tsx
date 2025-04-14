@@ -8,19 +8,19 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const testimonials = [
   {
     text: "Desde el primer momento en que contacté a Edifik, supe que estaba en buenas manos. Su equipo de arquitectos escuchó atentamente mis ideas y necesidades, y me presentó un diseño que superó mis expectativas.",
-    name: "Melinda Victoria",
+    name: "Natalia Ortega",
     role: "Cliente Edifik",
     image: "/images/home/avatar.webp",
   },
   {
     text: "Trabajar con Edifik fue una experiencia increíble. No solo entendieron mi visión, sino que la llevaron a otro nivel con su profesionalismo y creatividad.",
-    name: "Carlos Ramírez",
-    role: "Cliente Edifik",
+    name: "Laura y Sebastián",
+    role: "Clientes Edifik",
     image: "/images/home/avatar.webp",
   },
   {
     text: "La dedicación y atención al detalle de Edifik me dejaron completamente satisfecho. Recomiendo sus servicios sin dudarlo.",
-    name: "Gabriela Torres",
+    name: "María Fernanda Ríos",
     role: "Cliente Edifik",
     image: "/images/home/avatar.webp",
   },

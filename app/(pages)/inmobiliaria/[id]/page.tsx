@@ -13,11 +13,8 @@ export default function PropertyPage() {
   return (
     <div className="bg-client-backgroundLight">
       <Head>
-        <title>{project?.name || "Cargando propiedad..."} - EdifiK</title>
-        <meta
-          property="og:title"
-          content={project?.name || "Cargando propiedad..."}
-        />
+        <title>{project?.name || ""} | EdifiK</title>
+        <meta property="og:title" content={project?.name || ""} />
         <meta
           property="og:description"
           content={
@@ -27,7 +24,7 @@ export default function PropertyPage() {
         />
         <meta
           property="og:url"
-          content={`https://tu-dominio.com/propiedades/${params.id}`}
+          content={`https://edifik.co/propiedades/${params.id}`}
         />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="EdifiK" />

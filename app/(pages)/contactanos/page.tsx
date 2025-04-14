@@ -1,3 +1,4 @@
+import Head from "next/head";
 import HeroSection from "@/app/ui/home/heroSection";
 import ContactSection from "../../ui/contact/contactSection";
 import ContactDetailsSection from "@/app/ui/contact/contactDetailsSection";
@@ -6,6 +7,14 @@ import Map from "@/app/ui/realEstate/project/map";
 export default function ContactPage() {
   return (
     <>
+      <Head>
+        <title>Contáctanos | EdifiK</title>
+        <meta
+          name="description"
+          content="¿Tienes preguntas o sugerencias? En EdifiK estamos listos para ayudarte con tu gestión inmobiliaria."
+        />
+      </Head>
+
       <HeroSection
         srcImage="/images/home/home.webp"
         altImage="Vista del interior de un proyecto de EdifiK"

@@ -102,7 +102,7 @@ export default function ProjectCarousel({
             style={getImageStyle(index)}
             onClick={() => handleImageClick(index)}
           >
-            <div className="relative h-[320px] w-[500px] transform overflow-hidden transition-transform duration-300 group-hover:scale-105">
+            <div className="relative h-[320px] w-[500px] transform overflow-hidden transition-transform duration-300 group-hover:scale-105 shadow-lg shadow-black">
               <Image
                 src={media.url}
                 alt={`Project Image ${index + 1}`}

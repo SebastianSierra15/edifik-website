@@ -82,7 +82,7 @@ export default function ProjectView({ project }: ProjectViewProps) {
             />
           )}
 
-          <p className="my-8 text-lg text-client-textSecondary">
+          <p className="my-8 text-lg text-client-text">
             {project.shortDescription}
           </p>
 
@@ -93,7 +93,7 @@ export default function ProjectView({ project }: ProjectViewProps) {
               Descripción General
             </h2>
 
-            <p className="whitespace-pre-line text-client-textSecondary">
+            <p className="whitespace-pre-line text-client-text">
               {project.detailedDescription}
             </p>
           </div>
