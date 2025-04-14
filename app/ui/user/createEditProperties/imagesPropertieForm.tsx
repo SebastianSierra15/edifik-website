@@ -104,7 +104,7 @@ export default function ImagesPropertieForm({
         description: "",
         idType: categoryId,
         type: category,
-        category: isImageType ? "imageType" : "CommonArea",
+        category: isImageType ? "imageType" : "commonArea",
       }));
 
       const updatedMedia = [...(formData.media || []), ...newMedia];

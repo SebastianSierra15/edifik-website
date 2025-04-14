@@ -13,8 +13,7 @@ export default function Home() {
         srcImage="/images/home/home.webp"
         altImage="Vista del interior de un proyecto de EdifiK"
         title="Diseñamos sueños, Construimos realidades"
-        description="Nos encargamos de cada detalle, desde la concepción hasta la
-          construcción."
+        description="Fusionamos diseño, emoción y estrategia para ayudarte a elegir y construir el espacio perfecto"
       />
 
       <WordCarousel />

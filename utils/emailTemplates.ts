@@ -102,13 +102,14 @@ export function generateEmailTemplate(options: EmailTemplateOptions) {
               .btn:hover {
                   background-color: #7d442b;
                   transform: scale(1.05);
+                  color: #ffffff !important;
               }
           </style>
       </head>
       <body>
           <div class="container">
               <div class="header">
-                  <img src="https://tu-dominio.com/logo.png" alt="EdifiK Logo">
+                  <img src="https://tu-dominio.com/images/logo.webp" alt="EdifiK Logo">
               </div>
               <div class="content">
                   <h2>${title}</h2>

@@ -9,9 +9,17 @@ interface ImageCarouselProps {
   id: number;
   images: ProjectMedia[];
   url: string;
+  name?: string;
+  showName?: boolean;
 }
 
-export default function ImageCarousel({ id, images, url }: ImageCarouselProps) {
+export default function ImageCarousel({
+  id,
+  images,
+  url,
+  name,
+  showName = false,
+}: ImageCarouselProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -50,6 +58,12 @@ export default function ImageCarousel({ id, images, url }: ImageCarouselProps) {
             )}
           />
         ))}
+
+        {showName && name && (
+          <div className="absolute bottom-2 left-2 bg-black/60 px-3 py-1 rounded-md max-w-[80%]">
+            <p className="text-white text-sm font-semibold truncate">{name}</p>
+          </div>
+        )}
       </div>
     </Link>
   );

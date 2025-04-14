@@ -11,14 +11,61 @@ export default function ContactForm() {
     message: "",
   });
 
+  const [errors, setErrors] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    message: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const newErrors = {
+      name: formData.name.trim() ? "" : "El nombre es obligatorio.",
+      phone: formData.phone.trim() ? "" : "El teléfono es obligatorio.",
+      email: formData.email.trim()
+        ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+          ? ""
+          : "El correo no es válido."
+        : "El correo es obligatorio.",
+      message: formData.message.trim() ? "" : "El mensaje es obligatorio.",
+    };
+
+    setErrors(newErrors);
+
+    const hasErrors = Object.values(newErrors).some((e) => e !== "");
+    if (hasErrors) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("✅ Mensaje enviado correctamente.");
+        setFormData({ name: "", phone: "", email: "", message: "" });
+      } else {
+        alert("❌ Hubo un error al enviar el mensaje.");
+      }
+    } catch (error) {
+      console.error("Error al enviar mensaje:", error);
+      alert("❌ Error inesperado. Intenta más tarde.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -34,6 +81,8 @@ export default function ContactForm() {
         value={formData.name}
         placeholder="Nombre completo"
         onChange={handleChange}
+        maxLength={50}
+        error={errors.name}
       />
 
       <FormInput
@@ -43,6 +92,8 @@ export default function ContactForm() {
         value={formData.phone}
         placeholder="Número de teléfono"
         onChange={handleChange}
+        maxLength={15}
+        error={errors.phone}
       />
 
       <FormInput
@@ -52,6 +103,8 @@ export default function ContactForm() {
         value={formData.email}
         placeholder="Correo electrónico"
         onChange={handleChange}
+        maxLength={50}
+        error={errors.email}
       />
 
       <FormTextarea
@@ -61,13 +114,16 @@ export default function ContactForm() {
         placeholder="Mensaje"
         onChange={handleChange}
         rows={4}
+        maxLength={500}
+        error={errors.message}
       />
 
       <button
         type="submit"
-        className="bg-transparent border border-client-text text-client-text px-4 py-2 rounded-full shadow-md text-lg font-medium hover:bg-white hover:text-black transition whitespace-nowrap"
+        disabled={isSubmitting}
+        className="bg-transparent border border-client-text text-client-text px-4 py-2 rounded-full shadow-md text-lg font-medium hover:bg-white hover:text-black transition whitespace-nowrap disabled:opacity-50"
       >
-        Enviar ↗
+        {isSubmitting ? "Enviando..." : "Enviar ↗"}
       </button>
     </form>
   );

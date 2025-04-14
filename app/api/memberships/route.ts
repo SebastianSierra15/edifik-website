@@ -13,16 +13,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "No autenticado" }, { status: 401 });
   }
 
-  const permissions = session?.user?.permissions;
-
-  const hasPermission = permissions?.some(
-    (perm) => perm.name === "Gestionar membresias"
-  );
-
-  if (!hasPermission) {
-    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
-  }
-
   try {
     const { searchParams } = new URL(req.url);
 

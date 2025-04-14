@@ -28,6 +28,8 @@ export async function middleware(req: NextRequest) {
     "/usuario/mis-propiedades": ["Gestionar propiedades propias"],
     "/usuario/subir-propiedad": ["Gestionar propiedades propias"],
 
+    "/membresias": null,
+
     "/login": null,
     "/login/register": null,
     "/login/forget-password": null,
@@ -59,6 +61,14 @@ export async function middleware(req: NextRequest) {
   const isAdmin = adminPermissions.some((perm) =>
     userPermissions?.some((p) => p.name === perm)
   );
+
+  if (pathname === "/membresias" && token && token.role != 2) {
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
+  }
+
+  if (pathname === "/usuario/subir-propiedad" && token && !token.membershipId) {
+    return NextResponse.redirect(new URL("/membresias", req.url));
+  }
 
   if (
     (pathname === "/login" ||
@@ -94,5 +104,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/usuario/:path*", "/login/:path*"],
+  matcher: ["/admin/:path*", "/usuario/:path*", "/login/:path*", "/membresias"],
 };

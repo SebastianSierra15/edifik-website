@@ -87,7 +87,12 @@ export default function ImagesProjectForm({
   }, []);
 
   const handleImageChange = useCallback(
-    (category: string, event: ChangeEvent<HTMLInputElement>) => {
+    (
+      category: string,
+      categoryId: number,
+      isImageType: boolean,
+      event: ChangeEvent<HTMLInputElement>
+    ) => {
       if (!event.target.files || event.target.files.length === 0) return;
 
       const selectedFiles = Array.from(event.target.files);
@@ -96,9 +101,9 @@ export default function ImagesProjectForm({
         file,
         tag: "",
         description: "",
-        idType: imagesTypes.find((type) => type.name === category)?.id ?? 0,
+        idType: categoryId,
         type: category,
-        category: "imageType",
+        category: isImageType ? "imageType" : "commonArea",
       }));
 
       const updatedMedia = [...(formData.media || []), ...newMedia];
@@ -226,7 +231,7 @@ export default function ImagesProjectForm({
           error={errors[type.name] || null}
           errors={{ ...errors }}
           onToggleExpand={() => toggleSection(type.name)}
-          onImageChange={(e) => handleImageChange(type.name, e)}
+          onImageChange={(e) => handleImageChange(type.name, type.id, true, e)}
           onRemoveImage={(index) => handleRemoveImage(type.name, index)}
           onTagChange={(index, newTag) =>
             handleTagChange(type.name, index, newTag)
@@ -264,7 +269,7 @@ export default function ImagesProjectForm({
           error={errors[area.name] || null}
           errors={{ ...errors }}
           onToggleExpand={() => toggleSection(area.name)}
-          onImageChange={(e) => handleImageChange(area.name, e)}
+          onImageChange={(e) => handleImageChange(area.name, area.id, false, e)}
           onRemoveImage={(index) => handleRemoveImage(area.name, index)}
           onTagChange={(index, newTag) =>
             handleTagChange(area.name, index, newTag)

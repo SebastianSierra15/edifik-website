@@ -91,9 +91,10 @@ export default function Footer() {
 
         <div>
           <h3 className="mb-2 text-sm font-semibold text-client-text">
-            TE CONTACTAMOS AHORA
+            CONTÁCTANOS
           </h3>
 
+          {/*
           <div className="flex items-center border-b border-client-text-secondary pb-2">
             <div className="flex-1">
               <input
@@ -108,21 +109,11 @@ export default function Footer() {
               Enviar ↗
             </button>
           </div>
+          */}
 
-          <div className="flex items-center border-b border-client-text-secondary pb-2">
-            <div className="flex-1">
-              <input
-                name="inputSendEmail"
-                type="email"
-                placeholder="Tu email"
-                className="w-full bg-transparent text-sm text-client-text placeholder-client-text-placeholder focus:outline-none"
-              />
-            </div>
-
-            <button className="ml-3 bg-transparent border border-client-text text-client-text px-4 py-2 rounded-full shadow-md text-sm font-medium hover:bg-white hover:text-black transition whitespace-nowrap">
-              Contactanos ↗
-            </button>
-          </div>
+          <button className="mt-2 bg-transparent border border-client-text text-client-text px-4 py-2 rounded-full shadow-md text-sm font-medium hover:bg-white hover:text-black transition whitespace-nowrap">
+            WhatsApp ↗
+          </button>
         </div>
       </div>
 

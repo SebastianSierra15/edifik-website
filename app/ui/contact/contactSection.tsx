@@ -7,11 +7,11 @@ export default function ContactSection() {
       <div className="mx-auto mb-10 grid grid-cols-1 gap-10 px-4 sm:px-6 lg:px-12 md:grid-cols-2">
         <div className="mx-auto grid w-full grid-cols-1 gap-5 pt-5 lg:w-full">
           <Image
-            className="h-auto w-full self-center object-cover xl:self-start rounded-lg"
+            className="self-center object-cover xl:self-start rounded-lg"
             src="/images/constructor.jpg"
             alt="Imagen de arquitecto en obra"
-            width={768}
-            height={512}
+            width={500}
+            height={400}
             priority
           />
         </div>

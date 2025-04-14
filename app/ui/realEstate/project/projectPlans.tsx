@@ -16,8 +16,8 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <div className="mt-4 rounded-lg p-3 bg-client-backgroundAlt border border-white">
-      <div className="mb-4 flex space-x-4 border-b-2 text-white">
+    <div className="mt-4 rounded-lg p-3 bg-client-backgroundAlt border border-client-accent">
+      <div className="mb-4 flex space-x-4 border-b-2 border-b-client-accent text-white">
         {projectMedia.map((plan, index) => (
           <button
             key={index}
@@ -25,7 +25,7 @@ export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
             className={`transform px-4 py-2 text-xl font-semibold transition duration-300 ${
               activeTab === index
                 ? "text-white hover:scale-105"
-                : "text-client-text hover:scale-105 hover:text-client-textSecondary"
+                : "text-client-secondary hover:scale-105 hover:text-client-textSecondary"
             }`}
           >
             {plan.tag}

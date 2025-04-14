@@ -70,6 +70,10 @@ export default function ProjectsShowcase({
             id={project.id}
             images={project.images}
             url="proyectos"
+            {...(!hasTwoRows(index) && {
+              name: project.name,
+              showName: true,
+            })}
           />
 
           {hasTwoRows(index) && (

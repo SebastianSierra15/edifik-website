@@ -20,7 +20,7 @@ export default function ProjectLocation({
         Ubicación del Proyecto
       </h2>
 
-      <p className="mb-6 text-lg text-client-textPlaceholder">
+      <p className="mb-6 text-lg text-client-textSecondary">
         Explora la ubicación exacta de tu próximo hogar en el mapa interactivo a
         continuación.
       </p>
@@ -29,7 +29,7 @@ export default function ProjectLocation({
         <Map coordinates={{ lat: latitude, lng: longitude }} />
       </div>
 
-      <p className="mt-4 text-xl text-client-text font-medium">{address}</p>
+      <p className="mt-2 text-lg text-client-text font-medium">{address}</p>
     </div>
   );
 }
