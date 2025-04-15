@@ -14,6 +14,7 @@ interface FormDatePickerProps {
   tooltipText?: string;
   dateMin?: Date;
   dateMax?: Date;
+  isAccent?: boolean;
 }
 
 export default function FormDatePicker({
@@ -26,6 +27,7 @@ export default function FormDatePicker({
   tooltipText,
   dateMin,
   dateMax,
+  isAccent = false,
 }: FormDatePickerProps) {
   return (
     <div>
@@ -52,8 +54,9 @@ export default function FormDatePicker({
         placeholderText="dd/mm/yyyy"
         className={clsx(
           "w-full rounded-md border bg-client-backgroundLight px-3 py-2 text-client-text placeholder-client-textPlaceholder focus:outline-none",
-          error && !flag
-            ? "border-red-500"
+          error && !flag && "border-red-500",
+          isAccent
+            ? "border-client-accent focus:border-x-client-accentHover"
             : "border-client-secondaryLight focus:border-client-secondaryHover"
         )}
         wrapperClassName="w-full"

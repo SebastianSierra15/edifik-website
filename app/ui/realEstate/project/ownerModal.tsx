@@ -58,18 +58,6 @@ export default function OwnerModal({
           />
 
           <FormInput
-            label="Nombre de usuario"
-            type="text"
-            name="username"
-            value={user.username || ""}
-            placeholder="Nombre de usuario"
-            maxLength={150}
-            onChange={handleChange}
-            flag={flag}
-            isEdit={false}
-          />
-
-          <FormInput
             label="Nombres"
             type="text"
             name="names"

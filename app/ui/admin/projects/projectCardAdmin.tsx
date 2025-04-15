@@ -28,7 +28,7 @@ interface ProjectCardAdminProps {
   urlEdit: string;
   onDelete: (id: number, name: string) => void;
   permission?: boolean;
-  onShowUser?: (username: string) => void;
+  onShowUser?: (name: string) => void;
 }
 
 export default function ProjectCardAdmin({

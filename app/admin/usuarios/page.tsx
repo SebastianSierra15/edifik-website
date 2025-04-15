@@ -192,7 +192,6 @@ export default function UsersPage() {
 
   const headers: Header<User>[] = [
     { label: "Id", key: "id", type: "number" },
-    { label: "Username", key: "username", type: "string" },
     { label: "Nombres", key: "names", type: "string" },
     { label: "Apellidos", key: "lastnames", type: "string" },
     { label: "Email", key: "email", type: "string" },

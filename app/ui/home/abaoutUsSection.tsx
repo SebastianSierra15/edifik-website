@@ -1,9 +1,9 @@
 import AnimatedStats from "./animatedStats";
 
 const stats = [
-  { label: "Años en el mercado", value: 7 },
-  { label: "Proyectos realizados", value: 756 },
-  { label: "Clientes felices", value: 120 },
+  { label: "Años en el mercado", value: 2 },
+  { label: "Proyectos realizados", value: 22 },
+  { label: "Proyectos en desarrollo", value: 3 },
 ];
 
 export default function AboutUsSection() {

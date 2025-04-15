@@ -26,7 +26,7 @@ interface ProjectsContainerProps {
   setBounds: (bounds: google.maps.LatLngBounds | null) => void;
   onDelete: (id: number, name: string) => void;
   permission?: boolean;
-  onShowUser?: (username: string) => void;
+  onShowUser?: (name: string) => void;
 }
 
 const ProjectsContainer = ({

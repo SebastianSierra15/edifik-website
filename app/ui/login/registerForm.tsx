@@ -13,7 +13,6 @@ export default function RegisterForm() {
   const [lastName, setLastName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [phone, setPhone] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -21,7 +20,6 @@ export default function RegisterForm() {
   const [lastNameError, setLastNameError] = useState("");
   const [birthDateError, setBirthDateError] = useState("");
   const [phoneError, setPhoneError] = useState("");
-  const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
@@ -86,16 +84,10 @@ export default function RegisterForm() {
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    setUsernameError("");
     setPasswordError("");
     setConfirmPasswordError("");
 
     let isValid = true;
-
-    if (!username) {
-      setUsernameError("El nombre de usuario es obligatorio.");
-      isValid = false;
-    }
 
     if (!password) {
       setPasswordError("La contraseña es obligatoria.");
@@ -196,17 +188,6 @@ export default function RegisterForm() {
 
       {step === 3 && (
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
-          <FormInput
-            label="Nombre de Usuario"
-            name="username"
-            placeholder="Elige un nombre de usuario"
-            type="text"
-            max={100}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            error={usernameError}
-          />
-
           <FormInput
             label="Contraseña"
             name="password"

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { CircleCheck, X } from "lucide-react";
 
@@ -23,9 +23,12 @@ export default function ModalConfirmation({
   cancelLabel = "Cancelar",
   confirmClassName,
 }: ModalConfirmationProps) {
+  const [isConfirming, setIsConfirming] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      setIsConfirming(false);
     } else {
       document.body.style.overflow = "auto";
     }
@@ -36,13 +39,19 @@ export default function ModalConfirmation({
 
   if (!isOpen) return null;
 
+  const handleConfirm = () => {
+    setIsConfirming(true);
+    onConfirm();
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-client-backgroundAlt relative w-full max-w-sm rounded-lg p-6 shadow-lg">
         <button
           className="absolute right-3 top-3 text-client-secondary hover:text-client-secondaryHover"
           onClick={onClose}
           aria-label="Close modal"
+          disabled={isConfirming}
         >
           <X className="h-5 w-5" />
         </button>
@@ -61,18 +70,20 @@ export default function ModalConfirmation({
 
         <div className="flex justify-center gap-4">
           <button
-            className="rounded-md bg-client-background px-4 py-2 text-white transition hover:bg-client-backgroundLight hover:opacity-90"
+            disabled={isConfirming}
+            className="rounded-md bg-client-background px-4 py-2 text-white transition hover:bg-client-backgroundLight hover:opacity-90 disabled:opacity-60"
             onClick={onClose}
           >
             {cancelLabel}
           </button>
 
           <button
+            disabled={isConfirming}
             className={clsx(
-              "rounded-md px-4 py-2 text-white transition",
+              "rounded-md px-4 py-2 text-white transition disabled:opacity-60",
               confirmClassName || "bg-client-accent hover:bg-client-accentHover"
             )}
-            onClick={onConfirm}
+            onClick={handleConfirm}
           >
             {confirmLabel}
           </button>

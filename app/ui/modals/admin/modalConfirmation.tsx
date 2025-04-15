@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { CircleCheck, X } from "lucide-react";
 
@@ -23,9 +23,12 @@ export default function ModalConfirmation({
   cancelLabel = "Cancelar",
   confirmClassName,
 }: ModalConfirmationProps) {
+  const [isConfirming, setIsConfirming] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      setIsConfirming(false);
     } else {
       document.body.style.overflow = "auto";
     }
@@ -34,13 +37,19 @@ export default function ModalConfirmation({
     };
   }, [isOpen]);
 
+  const handleConfirm = () => {
+    setIsConfirming(true);
+    onConfirm();
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="dark:bg-premium-backgroundDarkAlt relative w-full max-w-sm rounded-lg bg-premium-backgroundAlt p-6 shadow-lg">
         <button
-          className="absolute right-3 top-3 text-premium-textPrimary hover:text-premium-primary dark:text-premium-textSecondary dark:hover:text-premium-primaryLight"
+          disabled={isConfirming}
+          className="absolute right-3 top-3 text-premium-textPrimary hover:text-premium-primary dark:text-premium-textSecondary dark:hover:text-premium-primaryLight disabled:opacity-50"
           onClick={onClose}
           aria-label="Close modal"
         >
@@ -61,19 +70,21 @@ export default function ModalConfirmation({
 
         <div className="flex justify-center gap-4">
           <button
-            className="rounded-md bg-premium-secondary px-4 py-2 text-white transition hover:bg-premium-secondaryLight hover:opacity-90 dark:bg-premium-secondaryDark dark:hover:bg-premium-secondary"
+            disabled={isConfirming}
+            className="rounded-md bg-premium-secondary px-4 py-2 text-white transition hover:bg-premium-secondaryLight hover:opacity-90 dark:bg-premium-secondaryDark dark:hover:bg-premium-secondary disabled:opacity-60"
             onClick={onClose}
           >
             {cancelLabel}
           </button>
 
           <button
+            disabled={isConfirming}
             className={clsx(
-              "rounded-md px-4 py-2 text-white transition",
+              "rounded-md px-4 py-2 text-white transition disabled:opacity-60",
               confirmClassName ||
                 "bg-premium-primary hover:bg-premium-primaryDark dark:bg-premium-primary dark:hover:bg-premium-primaryDark"
             )}
-            onClick={onConfirm}
+            onClick={handleConfirm}
           >
             {confirmLabel}
           </button>

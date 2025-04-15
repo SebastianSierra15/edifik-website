@@ -50,7 +50,6 @@ export async function GET(req: Request) {
 
     const user: UserData = {
       id: userRow.id,
-      username: userRow.username,
       names: userRow.names,
       lastnames: userRow.lastnames,
       email: userRow.email,

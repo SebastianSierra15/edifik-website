@@ -3,7 +3,6 @@ import { useCheckName } from "../checkName/useCheckName";
 
 export const useUserValidation = (user: any, isEdit: boolean) => {
   const [errors, setErrors] = useState({
-    usernameError: "",
     namesError: "",
     lastnamesError: "",
     emailError: "",
@@ -16,8 +15,6 @@ export const useUserValidation = (user: any, isEdit: boolean) => {
 
   const getErrorMessage = (fieldName: keyof typeof errors, value: any) => {
     switch (fieldName) {
-      case "usernameError":
-        return !value ? "El nombre de usuario es obligatorio." : "";
       case "namesError":
         return !value ? "El nombre es obligatorio." : "";
       case "lastnamesError":
@@ -48,18 +45,6 @@ export const useUserValidation = (user: any, isEdit: boolean) => {
   const validateField = async (fieldName: keyof typeof errors, value: any) => {
     let errorMessage = getErrorMessage(fieldName, value);
 
-    if (fieldName === "usernameError" && value) {
-      const total = await checkName(
-        "user",
-        value,
-        isEdit ? user.id : undefined
-      );
-
-      if (total > 0) {
-        errorMessage = "El nombre de usuario ya está en uso, elige otro.";
-      }
-    }
-
     setErrors((prevErrors) => ({
       ...prevErrors,
       [fieldName]: errorMessage,
@@ -68,7 +53,6 @@ export const useUserValidation = (user: any, isEdit: boolean) => {
 
   const validateFields = async () => {
     const newErrors: typeof errors = {
-      usernameError: getErrorMessage("usernameError", user.username),
       namesError: getErrorMessage("namesError", user.names),
       lastnamesError: getErrorMessage("lastnamesError", user.lastnames),
       emailError: getErrorMessage("emailError", user.email),
@@ -77,19 +61,6 @@ export const useUserValidation = (user: any, isEdit: boolean) => {
       roleError: getErrorMessage("roleError", user.role?.id),
       membershipError: getErrorMessage("membershipError", user.membership?.id),
     };
-
-    if (user.username) {
-      const total = await checkName(
-        "user",
-        user.username,
-        isEdit ? user.id : undefined
-      );
-
-      if (total > 0) {
-        newErrors.usernameError =
-          "El nombre de usuario ya está en uso, elige otro.";
-      }
-    }
 
     setErrors(newErrors);
 

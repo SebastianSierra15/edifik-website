@@ -8,7 +8,7 @@ interface MembershipCardProps {
   name: string;
   benefits: string;
   price: number;
-  yearlyPrice: number;
+  threeMounthPrice: number;
   featured: number;
   maxProperties: number;
   colorScheme: {
@@ -20,17 +20,19 @@ interface MembershipCardProps {
     divider: string;
   };
   isMain?: boolean;
+  onBuy: () => void;
 }
 
 export default function MembershipCard({
   name,
   benefits,
   price,
-  yearlyPrice,
+  threeMounthPrice,
   featured,
   maxProperties,
   colorScheme,
   isMain = false,
+  onBuy,
 }: MembershipCardProps) {
   return (
     <div
@@ -60,7 +62,7 @@ export default function MembershipCard({
             <span className="text-sm opacity-80">/mes</span>
           </div>
           <p className="text-sm opacity-80 mt-1">
-            $ {formatNumber(yearlyPrice)}/año
+            $ {formatNumber(threeMounthPrice)}/3 meses
           </p>
         </div>
 
@@ -95,6 +97,7 @@ export default function MembershipCard({
       </div>
 
       <button
+        onClick={onBuy}
         className={clsx(
           "w-full py-3 rounded-full text-black font-semibold hover:opacity-90 transition mt-6",
           colorScheme.button

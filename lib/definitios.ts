@@ -18,8 +18,7 @@ export interface Header<T> {
 
 export interface User {
   id: number;
-  username: string;
-  identityDocument?: number;
+  identityDocument?: string;
   names?: string;
   lastnames?: string;
   birthdate?: Date;

@@ -32,7 +32,6 @@ interface UserModalProps {
   genders: Gender[];
   memberships: MembershipSummary[];
   errors: {
-    usernameError: string;
     namesError: string;
     lastnamesError: string;
     emailError: string;
@@ -75,18 +74,6 @@ export default function UserModal({
           noValidate
           className="h-[60vh] space-y-4 overflow-y-auto px-6 py-4"
         >
-          <FormInput
-            label="Nombre de usuario"
-            type="text"
-            name="username"
-            value={user.username || ""}
-            placeholder="Nombre de usuario"
-            maxLength={150}
-            onChange={handleChange}
-            error={errors.usernameError}
-            flag={flag}
-          />
-
           <FormInput
             label="Nombres"
             type="text"

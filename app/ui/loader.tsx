@@ -5,7 +5,7 @@ interface LoaderProps {
 export default function Loader({ size = 12 }: LoaderProps) {
   return (
     <div
-      className="border-3 border-client-accentLight border-t-transparent rounded-full animate-spin"
+      className="z-50 border-3 border-client-accentLight border-t-transparent rounded-full animate-spin"
       style={{
         width: `${size}px`,
         height: `${size}px`,

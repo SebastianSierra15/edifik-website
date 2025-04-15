@@ -296,7 +296,6 @@ export default function ProjectManager({
         user={
           owner || {
             id: 0,
-            username: "",
             names: "",
             lastnames: "",
             email: "",

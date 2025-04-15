@@ -41,7 +41,6 @@ export async function GET(req: Request) {
 
     const users: User[] = userRows.map((row: any) => ({
       id: row.id,
-      username: row.username,
       names: row.names,
       lastnames: row.lastnames,
       email: row.email,
@@ -102,7 +101,6 @@ export async function PUT(req: Request) {
 
     const {
       id,
-      username,
       names,
       lastnames,
       email,
@@ -113,24 +111,15 @@ export async function PUT(req: Request) {
       state,
     } = await req.json();
 
-    if (
-      !id ||
-      !username ||
-      !names ||
-      !lastnames ||
-      !email ||
-      !gender ||
-      !role
-    ) {
+    if (!id || !names || !lastnames || !email || !gender || !role) {
       return NextResponse.json(
         { error: "Faltan datos obligatorios" },
         { status: 400 }
       );
     }
 
-    await db.query("CALL update_user_admin(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+    await db.query("CALL update_user_admin(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
       id,
-      username,
       names,
       lastnames,
       email,
@@ -177,7 +166,6 @@ export async function POST(req: Request) {
     const userId = session.user.id;
 
     const {
-      username,
       names,
       lastnames,
       email,
@@ -188,15 +176,14 @@ export async function POST(req: Request) {
       state,
     } = await req.json();
 
-    if (!username || !names || !lastnames || !email || !gender || !role) {
+    if (!names || !lastnames || !email || !gender || !role) {
       return NextResponse.json(
         { error: "Faltan datos obligatorios" },
         { status: 400 }
       );
     }
 
-    await db.query("CALL insert_user(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-      username,
+    await db.query("CALL insert_user(?, ?, ?, ?, ?, ?, ?, ?, ?)", [
       names,
       lastnames,
       email,

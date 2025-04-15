@@ -30,14 +30,14 @@ export default function ClientForgetPasswordPage() {
 
   return (
     <div className="flex h-screen w-full items-center justify-center">
-      <div className="max-w-md w-full space-y-6 p-8">
+      <div className="max-w-md w-full bg-client-backgroundAlt p-10 rounded-2xl shadow my-8 space-y-6">
         <Image
           src="/images/logo.webp"
           alt="Logo de EdifiK"
           width={90}
           height={36}
           priority
-          className="mt-10 sm:mt-0 w-32 h-14 object-contain"
+          className="w-32 h-14 object-contain"
         />
 
         <div>
@@ -70,20 +70,8 @@ export default function ClientForgetPasswordPage() {
           </button>
         </form>
 
-        <div className="text-center text-sm text-client-textSecondary">
-          <p>
-            ¿Necesitas ayuda?{" "}
-            <Link
-              href="#"
-              className="ml-2 text-client-text transition hover:underline"
-            >
-              Contactar soporte
-            </Link>
-          </p>
-        </div>
-
         <button
-          className="w-full rounded-lg bg-client-backgroundLight p-3 text-client-text shadow-lg transition hover:bg-client-backgroundAlt"
+          className="w-full rounded-lg bg-client-backgroundLight p-3 text-client-text shadow-lg transition hover:bg-client-backgroundDark -translate-y-4"
           type="button"
           onClick={() => router.push("/")}
         >
