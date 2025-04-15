@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 import { Permission } from "./lib/definitios";
+import { withPath } from "./lib/middleware/withPath";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -63,11 +64,17 @@ export async function middleware(req: NextRequest) {
   );
 
   if (pathname === "/membresias" && token && token.role != 2) {
-    return NextResponse.redirect(new URL("/unauthorized", req.url));
+    return withPath(
+      NextResponse.redirect(new URL("/unauthorized", req.url)),
+      pathname
+    );
   }
 
   if (pathname === "/usuario/subir-propiedad" && token && !token.membershipId) {
-    return NextResponse.redirect(new URL("/membresias", req.url));
+    return withPath(
+      NextResponse.redirect(new URL("/membresias", req.url)),
+      pathname
+    );
   }
 
   if (
@@ -77,19 +84,28 @@ export async function middleware(req: NextRequest) {
     token
   ) {
     const redirectUrl = isAdmin ? "/admin" : "/";
-    return NextResponse.redirect(new URL(redirectUrl, req.url));
+    return withPath(
+      NextResponse.redirect(new URL(redirectUrl, req.url)),
+      pathname
+    );
   }
 
   if (!token && !pathname.startsWith("/login")) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return withPath(
+      NextResponse.redirect(new URL("/login", req.url)),
+      pathname
+    );
   }
 
   if (!requiredPermissions) {
-    return NextResponse.next();
+    return withPath(NextResponse.next(), pathname);
   }
 
   if (!userPermissions?.length) {
-    return NextResponse.redirect(new URL("/unauthorized", req.url));
+    return withPath(
+      NextResponse.redirect(new URL("/unauthorized", req.url)),
+      pathname
+    );
   }
 
   const hasPermission = requiredPermissions.some((perm) =>
@@ -97,10 +113,13 @@ export async function middleware(req: NextRequest) {
   );
 
   if (!hasPermission) {
-    return NextResponse.redirect(new URL("/unauthorized", req.url));
+    return withPath(
+      NextResponse.redirect(new URL("/unauthorized", req.url)),
+      pathname
+    );
   }
 
-  return NextResponse.next();
+  return withPath(NextResponse.next(), pathname);
 }
 
 export const config = {

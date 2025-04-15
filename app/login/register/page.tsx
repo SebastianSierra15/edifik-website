@@ -1,7 +1,14 @@
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import RegisterForm from "@/app/ui/login/registerForm";
 import AuthProviders from "@/app/ui/login/authProviders";
+
+export const metadata: Metadata = {
+  title: "Crear Cuenta | EdifiK",
+  description:
+    "Regístrate en EdifiK y comienza a publicar tus propiedades o explorar nuestros proyectos inmobiliarios.",
+};
 
 export default function RegisterPage() {
   return (

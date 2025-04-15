@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { inter } from "@/app/fonts/fonts";
-import { Providers } from "../providers";
 import AdminHeader from "../ui/admin/adminHeader";
 import AdminFooter from "../ui/admin/adminFooter";
-import GoogleMapsProvider from "../ui/googleMapsProvider";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -17,18 +15,10 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body
-        className={`${inter.className} flex min-h-screen flex-col bg-premium-background antialiased dark:bg-premium-background`}
-      >
-        <Providers>
-          <AdminHeader />
-          <GoogleMapsProvider>
-            <main className="flex-grow">{children}</main>
-          </GoogleMapsProvider>
-          <AdminFooter />
-        </Providers>
-      </body>
-    </html>
+    <div
+      className={`${inter.className} min-h-screen bg-premium-background antialiased`}
+    >
+      <main className="flex-grow">{children}</main>
+    </div>
   );
 }

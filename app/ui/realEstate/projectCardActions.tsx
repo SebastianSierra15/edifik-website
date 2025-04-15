@@ -19,7 +19,7 @@ export default function ProjectCardActions({
   const router = useRouter();
 
   return (
-    <div className="absolute right-2 top-2 z-50 flex space-x-1">
+    <div className="absolute right-2 top-2 z-10 flex space-x-1">
       <button
         title="Editar"
         onClick={(e) => {

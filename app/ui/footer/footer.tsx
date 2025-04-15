@@ -111,7 +111,7 @@ export default function Footer() {
           </div>
           */}
 
-          <button className="mt-2 bg-transparent border border-client-text text-client-text px-4 py-2 rounded-full shadow-md text-sm font-medium hover:bg-white hover:text-black transition whitespace-nowrap">
+          <button className="mt-2 bg-transparent border border-green-500 text-green-500 px-4 py-2 rounded-full shadow-md text-sm font-medium hover:bg-green-500 hover:text-white transition whitespace-nowrap">
             WhatsApp ↗
           </button>
         </div>
@@ -127,6 +127,7 @@ export default function Footer() {
             href="https://wa.me/tuNumero"
             target="_blank"
             aria-label="WhatsApp"
+            className="hover:scale-105"
           >
             <WhatsAppIcon className="h-6 w-6 hover:text-client-text transition" />
           </Link>
@@ -135,6 +136,7 @@ export default function Footer() {
             href="https://x.com/tuUsuario"
             target="_blank"
             aria-label="X (Twitter)"
+            className="hover:scale-105"
           >
             <XIcon className="h-6 w-6 hover:text-client-text transition" />
           </Link>
@@ -143,6 +145,7 @@ export default function Footer() {
             href="https://instagram.com/tuUsuario"
             target="_blank"
             aria-label="Instagram"
+            className="hover:scale-105"
           >
             <InstagramIcon className="h-6 w-6 hover:text-client-text transition" />
           </Link>
@@ -151,6 +154,7 @@ export default function Footer() {
             href="https://tiktok.com/tuUsuario"
             target="_blank"
             aria-label="Instagram"
+            className="hover:scale-105"
           >
             <TikTokIcon className="h-6 w-6 hover:text-client-text transition" />
           </Link>
@@ -159,6 +163,7 @@ export default function Footer() {
             href="https://youtube.com/tuUsuario"
             target="_blank"
             aria-label="Instagram"
+            className="hover:scale-105"
           >
             <YouTubeIcon className="h-6 w-6 hover:text-client-text transition" />
           </Link>

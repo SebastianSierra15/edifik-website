@@ -1,7 +1,14 @@
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import LoginForm from "../ui/login/loginForm";
 import AuthProviders from "../ui/login/authProviders";
+
+export const metadata: Metadata = {
+  title: "Iniciar Sesión | EdifiK",
+  description:
+    "Accede a tu cuenta para gestionar tus propiedades, proyectos y membresías en la plataforma inmobiliaria EdifiK.",
+};
 
 export default function LoginPage() {
   return (

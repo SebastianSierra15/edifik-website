@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useSession } from "next-auth/react";
-import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useGetMyProjects } from "@/app/hooks/user/useGetMyProjects";
 import { useUserProjectApi } from "@/app/hooks/user/useUserProjectApi";
@@ -15,9 +13,7 @@ const ModalConfirmation = dynamic(
   { ssr: false }
 );
 
-export default function MyPropertiesPage() {
-  const { data: session } = useSession();
-
+export default function ClientMyPropertiesPage() {
   const [statusFilter, setStatusFilter] = useState<
     "aceptado" | "pendiente" | "revision"
   >("aceptado");
@@ -71,14 +67,6 @@ export default function MyPropertiesPage() {
 
   return (
     <>
-      <Head>
-        <title>Mis Propiedades | EdifiK</title>
-        <meta
-          name="description"
-          content="Gestiona tus publicaciones, edita propiedades y haz seguimiento al estado de cada una desde tu panel EdifiK."
-        />
-      </Head>
-
       <div className="min-h-screen pt-20 pb-16 px-6 sm:px-12 flex flex-col gap-6">
         {alertMessage && (
           <Alert

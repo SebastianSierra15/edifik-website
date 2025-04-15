@@ -1,11 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import Head from "next/head";
+import { Metadata } from "next";
 import { useMemberships } from "@/app/hooks/memberships/useMemberships";
 import { useIsLgUp } from "@/app/hooks/useIsLgUp";
 import MembershipCard from "@/app/ui/memberships/membershipCard";
 import MembershipCardSkeleton from "@/app/ui/skeletons/membershipCardSkeleton";
+
+export const metadata: Metadata = {
+  title: "Membresías | EdifiK",
+  description:
+    "Activa una membresía para publicar más propiedades, mejorar tu visibilidad y acceder a herramientas premium.",
+};
 
 export default function MembershipsPage() {
   const [refresh, setRefresh] = useState(0);
@@ -53,14 +59,6 @@ export default function MembershipsPage() {
 
   return (
     <>
-      <Head>
-        <title>Membresías | EdifiK</title>
-        <meta
-          name="description"
-          content="Activa una membresía para publicar más propiedades, mejorar tu visibilidad y acceder a herramientas premium."
-        />
-      </Head>
-
       <section className="w-full py-10">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl my-12 font-bold text-center text-client-text">

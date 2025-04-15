@@ -1,28 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Head from "next/head";
-import dynamic from "next/dynamic";
 import clsx from "clsx";
+import dynamic from "next/dynamic";
 import { useGetProperties } from "@/app/hooks/realEstate/useGetProperties";
 import HeroSearch from "@/app/ui/realEstate/heroSection/heroSearch";
 import FilterMapControls from "@/app/ui/realEstate/filter/filterMapControls";
 
 const MapToggleButton = dynamic(
   () => import("@/app/ui/realEstate/filter/mapToggleButton"),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 const ProjectsContainer = dynamic(
   () => import("@/app/ui/realEstate/projectsContainer"),
-  {
-    ssr: false,
-    loading: () => null,
-  }
+  { ssr: false, loading: () => null }
 );
 
-export default function RealEstatePage() {
+export default function ClientRealEstatePage() {
   const [selectedButtons, setSelectedButtons] = useState<
     Record<string, number[]>
   >({
@@ -39,13 +33,11 @@ export default function RealEstatePage() {
 
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
   const [areaRange, setAreaRange] = useState({ min: 0, max: 0 });
-
   const [entriesPerPage] = useState(2);
   const [filterOpen, setFilterOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
   const [projectTypeId, setProjectTypeId] = useState(2);
-
   const [searchCoords, setSearchCoords] = useState<{
     latitude: number;
     longitude: number;
@@ -91,57 +83,44 @@ export default function RealEstatePage() {
   };
 
   return (
-    <>
-      <Head>
-        <title>Inmobiliaria | Propiedades en Venta y Arriendo EdifiK</title>
-        <meta
-          name="description"
-          content="Descubre las mejores propiedades disponibles en Colombia con EdifiK. Filtros, mapas, detalles y más."
-        />
-      </Head>
+    <div className="relative">
+      <HeroSearch
+        projectTypeId={projectTypeId}
+        setProjectTypeId={setProjectTypeId}
+        setSearchCoords={handleSelectCoords}
+      />
 
-      <div className="relative">
-        <HeroSearch
-          projectTypeId={projectTypeId}
-          setProjectTypeId={setProjectTypeId}
-          setSearchCoords={handleSelectCoords}
-        />
+      <hr className="w-full border-client-accent" />
 
-        <hr className="w-full border-client-accent" />
-
-        <div
-          className={clsx(
-            "px-2 sm:px-6 md:px-20 pt-2 pb-14",
-            showMap && "pb-7"
-          )}
-        >
-          <FilterMapControls
-            filterOpen={filterOpen}
-            setFilterOpen={setFilterOpen}
-            showMap={showMap}
-            setShowMap={setShowMap}
-            totalEntries={totalEntries}
-          />
-        </div>
-
-        <ProjectsContainer
-          projects={projects}
-          totalEntries={totalEntries}
-          isLoading={isLoading}
-          fetchMoreProjects={fetchMoreProjects}
+      <div
+        className={clsx("px-2 sm:px-6 md:px-20 pt-2 pb-14", showMap && "pb-7")}
+      >
+        <FilterMapControls
           filterOpen={filterOpen}
-          showMap={showMap}
           setFilterOpen={setFilterOpen}
-          priceRange={priceRange}
-          areaRange={areaRange}
-          selectedButtons={selectedButtons}
-          setSelectedButtons={setSelectedButtons}
-          setBounds={setBounds}
-          highlightCoords={highlightCoords}
+          showMap={showMap}
+          setShowMap={setShowMap}
+          totalEntries={totalEntries}
         />
-
-        <MapToggleButton showMap={showMap} setShowMap={setShowMap} />
       </div>
-    </>
+
+      <ProjectsContainer
+        projects={projects}
+        totalEntries={totalEntries}
+        isLoading={isLoading}
+        fetchMoreProjects={fetchMoreProjects}
+        filterOpen={filterOpen}
+        showMap={showMap}
+        setFilterOpen={setFilterOpen}
+        priceRange={priceRange}
+        areaRange={areaRange}
+        selectedButtons={selectedButtons}
+        setSelectedButtons={setSelectedButtons}
+        setBounds={setBounds}
+        highlightCoords={highlightCoords}
+      />
+
+      <MapToggleButton showMap={showMap} setShowMap={setShowMap} />
+    </div>
   );
 }
