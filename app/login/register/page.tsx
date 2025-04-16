@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/app/ui/header/logo";
-import RegisterForm from "@/app/ui/login/registerForm";
+import RegisterForm from "@/app/ui/login/register/registerForm";
 import AuthProviders from "@/app/ui/login/authProviders";
 
 export const metadata: Metadata = {

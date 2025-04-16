@@ -2,18 +2,23 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
+import { useResetPassword } from "@/app/hooks/login/resetPassword/useResetPassword";
+import Logo from "../header/logo";
 import FormInput from "@/app/ui/modals/home/formInput";
 
 export default function ClientForgetPasswordPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [formMessage, setFormMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { resetPassword, loading, error, success } = useResetPassword();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setEmailError("");
+    setFormMessage("");
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -26,19 +31,22 @@ export default function ClientForgetPasswordPage() {
       setEmailError("El correo electrónico no es válido.");
       return;
     }
+
+    const ok = await resetPassword(email);
+
+    if (ok) {
+      setFormMessage("Hemos enviado un código a tu correo electrónico.");
+    } else if (error) {
+      setFormMessage(error);
+    }
   };
 
   return (
     <div className="flex h-screen w-full items-center justify-center">
       <div className="max-w-md w-full bg-client-backgroundAlt p-10 rounded-2xl shadow my-8 space-y-6">
-        <Image
-          src="/images/logo.webp"
-          alt="Logo de EdifiK"
-          width={90}
-          height={36}
-          priority
-          className="w-32 h-14 object-contain"
-        />
+        <div className="-translate-x-4">
+          <Logo />
+        </div>
 
         <div>
           <h1 className="mt-2 text-2xl font-bold text-client-text">
@@ -62,11 +70,26 @@ export default function ClientForgetPasswordPage() {
             error={emailError}
           />
 
+          {formMessage && (
+            <p
+              className={`text-sm text-center ${
+                success
+                  ? "text-green-500"
+                  : error
+                    ? "text-red-500"
+                    : "text-yellow-500"
+              }`}
+            >
+              {formMessage}
+            </p>
+          )}
+
           <button
-            className="w-full rounded-lg bg-client-accent p-3 text-white shadow-lg transition hover:bg-client-accentHover"
+            className="w-full rounded-lg bg-client-accent p-3 text-white shadow-lg transition hover:bg-client-accentHover disabled:opacity-50"
             type="submit"
+            disabled={loading}
           >
-            Restablecer contraseña
+            {loading ? "Enviando código..." : "Restablecer contraseña"}
           </button>
         </form>
 
@@ -77,6 +100,18 @@ export default function ClientForgetPasswordPage() {
         >
           Volver a EdifiK
         </button>
+
+        <div className="flex justify-center mt-4">
+          <p className="text-client-textSecondary">
+            ¿Recordaste tu contraseña?
+          </p>
+          <Link
+            href="/login"
+            className="ml-2 text-client-text transition hover:underline"
+          >
+            Inicia sesión
+          </Link>
+        </div>
       </div>
     </div>
   );

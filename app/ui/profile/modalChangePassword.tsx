@@ -6,7 +6,10 @@ import FormInput from "../modals/home/formInput";
 interface ModalChangePasswordProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirmRequest: () => void;
+  onConfirmRequest: (data: {
+    currentPassword: string;
+    newPassword: string;
+  }) => void;
 }
 
 export default function ModalChangePassword({
@@ -49,7 +52,10 @@ export default function ModalChangePassword({
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      onConfirmRequest();
+      onConfirmRequest({
+        currentPassword,
+        newPassword,
+      });
     }
   };
 
@@ -106,7 +112,13 @@ export default function ModalChangePassword({
               </button>
 
               <button
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  setCurrentPassword("");
+                  setNewPassword("");
+                  setConfirmPassword("");
+                  setErrors({});
+                }}
                 className="w-full rounded-md bg-client-background text-white py-2 font-semibold hover:bg-client-backgroundLight transition"
               >
                 Cerrar

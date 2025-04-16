@@ -44,7 +44,14 @@ export default function ProfileForm({
     const newErrors: Record<string, string> = {};
     if (!form.names) newErrors.names = "Este campo es obligatorio";
     if (!form.lastnames) newErrors.lastnames = "Este campo es obligatorio";
-    if (!form.phoneNumber) newErrors.phoneNumber = "Este campo es obligatorio";
+
+    const phoneRegex = /^3\d{9}$/;
+
+    if (!form.phoneNumber) {
+      newErrors.phoneNumber = "El número de teléfono es obligatorio.";
+    } else if (!phoneRegex.test(form.phoneNumber.replace(/\s+/g, ""))) {
+      newErrors.phoneNumber = "Número de teléfono no válido.";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -115,9 +122,17 @@ export default function ProfileForm({
 
       <FormDatePicker
         label="Fecha de nacimiento"
-        name="birthdate"
-        value={form.birthdate ?? null}
+        name="birthDate"
+        value={form.birthdate ? new Date(form.birthdate) : null}
         onChange={handleBirthDate}
+        dateMax={
+          new Date(
+            new Date().getFullYear() - 18,
+            new Date().getMonth(),
+            new Date().getDate()
+          )
+        }
+        dateMin={new Date(new Date().getFullYear() - 120, 0, 1)}
         error={errors.birthdate}
         isAccent={true}
       />

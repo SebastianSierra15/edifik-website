@@ -21,7 +21,6 @@ export default function EpaycoButton({
 
   const publicKey = process.env.NEXT_PUBLIC_EPAYCO_PUBLIC_KEY;
 
-  console.log("EpaycoButton rendered", amount, tax, taxBase, name, description);
   useEffect(() => {
     if (formRef.current) {
       formRef.current.innerHTML = "";

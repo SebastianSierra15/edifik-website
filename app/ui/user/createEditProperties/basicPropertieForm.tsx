@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { propertyType, ProjectData } from "@/lib/definitios";
 import { useBasicProjectValidation } from "@/app/hooks/projects/createEditProject/useBasicProjectValidation";
-import { useCheckEmail } from "@/app/hooks/users/useCheckEmail";
 import StepNavigationButtons from "@/app/ui/user/stepNavigationButtons";
 import FormSelect from "@/app/ui/modals/home/formSelect";
 import FormTextarea from "@/app/ui/modals/home/formTextArea";
@@ -34,7 +33,6 @@ export default function BasicPropertieForm({
     true,
     isEdit
   );
-  const { checkEmailExists } = useCheckEmail();
 
   const propertyOptions = useMemo(
     () => propertyTypes.map((type) => ({ id: type.id, name: type.name })),
@@ -84,33 +82,12 @@ export default function BasicPropertieForm({
     async (e?: React.FormEvent) => {
       e?.preventDefault();
 
-      if (formData.email && !formData.ownerId) {
-        const ownerId = await checkEmailExists(formData.email);
-
-        if (!ownerId) {
-          await validateField("emailError", formData.email);
-          return;
-        }
-
-        await new Promise((resolve) => {
-          onChange({ ownerId });
-          setTimeout(resolve, 0);
-        });
-      }
-
       const isValid = await validateFields();
       if (!isValid) return;
 
       onNext();
     },
-    [
-      validateFields,
-      onNext,
-      checkEmailExists,
-      formData,
-      onChange,
-      validateField,
-    ]
+    [validateFields, onNext, formData, onChange, validateField]
   );
 
   const tooltipTexts = useMemo(

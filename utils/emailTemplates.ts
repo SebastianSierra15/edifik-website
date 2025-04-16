@@ -16,7 +16,7 @@ export function generateEmailTemplate(options: EmailTemplateOptions) {
     items = [],
     body,
     buttonText = "Ir a EdifiK",
-    buttonUrl = "https://edifik.com/login",
+    buttonUrl = "https://edifik.co/login",
   } = options;
 
   const itemsHtml = items
@@ -123,7 +123,7 @@ export function generateEmailTemplate(options: EmailTemplateOptions) {
               </div>
               <div class="footer">
                   <p>© ${new Date().getFullYear()} EdifiK. Todos los derechos reservados.</p>
-                  <p><a href="https://edifik.com">Sitio Web</a> | <a href="mailto:soporte@edifik.com">Soporte</a></p>
+                  <p><a href="https://edifik.com">Sitio Web</a> | <a href="mailto:edifik.arquitectos23@edifik.com">Soporte</a></p>
               </div>
           </div>
       </body>

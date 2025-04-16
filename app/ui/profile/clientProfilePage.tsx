@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { User } from "@/lib/definitios";
 import { useUserProfile } from "@/app/hooks/user/useUserProfile";
 import { useUpdateUserProfile } from "@/app/hooks/user/useUpdateUserProfile";
+import { useChangePassword } from "@/app/hooks/login/resetPassword/useChangePassword";
 import ModalConfirmation from "../modals/home/modalConfirmation";
 import ModalChangePassword from "./modalChangePassword";
 import Alert from "../alert";
@@ -21,6 +22,10 @@ export default function ClientProfilePage() {
   const [actionToConfirm, setActionToConfirm] = useState<
     "update" | "password" | null
   >(null);
+  const [passwordData, setPasswordData] = useState<{
+    currentPassword: string;
+    newPassword: string;
+  } | null>(null);
 
   useEffect(() => {
     if (user) setUserState(user);
@@ -32,6 +37,13 @@ export default function ClientProfilePage() {
     error: updateError,
     success,
   } = useUpdateUserProfile();
+
+  const {
+    changePassword,
+    loading: changingPassword,
+    error: changePasswordError,
+    success: passwordSuccess,
+  } = useChangePassword();
 
   const [pendingData, setPendingData] = useState<Partial<User> | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -51,8 +63,9 @@ export default function ClientProfilePage() {
       setPendingData(null);
     }
 
-    if (actionToConfirm === "password") {
-      console.log("Contraseña cambiada");
+    if (actionToConfirm === "password" && passwordData) {
+      const success = await changePassword(passwordData);
+      setPasswordData(null);
     }
 
     setShowConfirmModal(false);
@@ -68,9 +81,15 @@ export default function ClientProfilePage() {
     setShowChangePasswordModal(true);
   };
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = (data: {
+    currentPassword: string;
+    newPassword: string;
+  }) => {
+    if (!user) return;
+    setPasswordData(data);
     setActionToConfirm("password");
     setShowConfirmModal(true);
+    setShowChangePasswordModal(false);
   };
 
   return (
@@ -81,6 +100,17 @@ export default function ClientProfilePage() {
         )}
 
         {updateError && <Alert type="error" message={updateError} />}
+
+        {changePasswordError && (
+          <Alert type="error" message={changePasswordError} />
+        )}
+
+        {passwordSuccess && (
+          <Alert
+            type="success"
+            message="Contraseña actualizada correctamente"
+          />
+        )}
 
         <div className="bg-client-backgroundAlt p-10 rounded-2xl shadow my-12">
           <h2 className="text-3xl mb-8 font-bold text-center text-client-text">
@@ -108,17 +138,15 @@ export default function ClientProfilePage() {
                 />
               )}
 
-              {user.provider === "4" && (
-                <div className="col-span-1 md:col-span-2 mt-4">
-                  <button
-                    type="button"
-                    onClick={openPasswordModal}
-                    className="w-full rounded-md bg-client-text text-client-primary py-2 font-semibold hover:bg-client-textPlaceholder transition"
-                  >
-                    Cambiar contraseña
-                  </button>
-                </div>
-              )}
+              <div className="col-span-1 md:col-span-2 mt-4">
+                <button
+                  type="button"
+                  onClick={openPasswordModal}
+                  className="w-full rounded-md bg-client-text text-client-primary py-2 font-semibold hover:bg-client-textPlaceholder transition"
+                >
+                  Cambiar contraseña
+                </button>
+              </div>
             </div>
           )}
         </div>
