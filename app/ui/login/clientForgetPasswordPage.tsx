@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useResetPassword } from "@/app/hooks/login/resetPassword/useResetPassword";
+import { useResetPassword } from "@/app/hooks/auth/resetPassword/useResetPassword";
 import Logo from "../header/logo";
 import FormInput from "@/app/ui/modals/home/formInput";
 

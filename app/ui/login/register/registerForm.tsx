@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCheckEmail } from "@/app/hooks/users/useCheckEmail";
-import { useRegisterUser } from "@/app/hooks/login/register/useRegisterUser";
+import { useRegisterUser } from "@/app/hooks/auth/register/useRegisterUser";
 import StepEmail from "./stepEmail";
 import StepPersonalData from "./stepPersonalData";
 import StepPassword from "./stepPassword";

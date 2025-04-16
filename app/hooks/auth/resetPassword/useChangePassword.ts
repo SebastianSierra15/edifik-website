@@ -27,7 +27,7 @@ export function useChangePassword(): UseChangePasswordResult {
     setSuccess(false);
 
     try {
-      const res = await fetch("/api/login/reset-password", {
+      const res = await fetch("/api/auth/reset-password", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

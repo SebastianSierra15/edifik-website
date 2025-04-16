@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { User } from "@/lib/definitios";
 import { useUserProfile } from "@/app/hooks/user/useUserProfile";
 import { useUpdateUserProfile } from "@/app/hooks/user/useUpdateUserProfile";
-import { useChangePassword } from "@/app/hooks/login/resetPassword/useChangePassword";
+import { useChangePassword } from "@/app/hooks/auth/resetPassword/useChangePassword";
 import ModalConfirmation from "../modals/home/modalConfirmation";
 import ModalChangePassword from "./modalChangePassword";
 import Alert from "../alert";

@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import FormInput from "../modals/home/formInput";
+import Loader from "../loader";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -14,8 +15,11 @@ export default function LoginForm() {
   const [emptyFieldError, setEmptyFieldError] = useState("");
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     setEmailError("");
     setPasswordError("");
@@ -34,23 +38,12 @@ export default function LoginForm() {
       isValid = false;
     }
 
-    if (password && password.length < 8) {
-      setPasswordError("La contraseña debe tener al menos 8 caracteres.");
-      isValid = false;
-    }
-
     if (isValid) {
-      const result = await signIn("credentials", {
-        redirect: false,
+      await signIn("credentials", {
+        callbackUrl: "/",
         email,
         password,
       });
-
-      if (!result?.error) {
-        router.push("/");
-      } else {
-        setPasswordError("Credenciales incorrectas.");
-      }
     }
   };
 
@@ -83,8 +76,12 @@ export default function LoginForm() {
         ¿Olvidaste tu contraseña?
       </Link>
 
-      <button className="mt-4 w-full rounded-lg bg-client-accent p-3 text-white shadow-lg transition hover:bg-client-accentHover">
-        Iniciar sesión
+      <button
+        type="submit"
+        disabled={loading}
+        className="mt-4 w-full rounded-lg bg-client-accent p-3 text-white shadow-lg transition hover:bg-client-accentHover disabled:opacity-50 flex items-center justify-center gap-2"
+      >
+        {loading ? <Loader size={20} /> : "Iniciar sesión"}
       </button>
     </form>
   );

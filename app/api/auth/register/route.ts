@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { db } from "@/lib/db";
+import { hash } from "bcrypt";
 import { sendEmail } from "@/lib/email/sendEmail";
 import { generateEmailTemplate } from "@/utils/emailTemplates";
 
@@ -22,6 +23,8 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const hashedPassword = await hash(password, 10);
+
   try {
     await db.query("CALL register_user(?, ?, ?, ?, ?, ?)", [
       names,
@@ -29,7 +32,7 @@ export async function POST(req: NextRequest) {
       birthdate,
       email,
       phoneNumber,
-      password,
+      hashedPassword,
     ]);
 
     const html = generateEmailTemplate({

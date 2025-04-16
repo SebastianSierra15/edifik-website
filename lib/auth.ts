@@ -1,7 +1,9 @@
 import { NextAuthOptions } from "next-auth";
 import { db } from "@/lib/db";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { RowDataPacket } from "mysql2";
+import { compare } from "bcrypt";
 import { Permission } from "./definitios";
 
 export const authOptions: NextAuthOptions = {
@@ -10,13 +12,79 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+        },
+      },
+      async authorize(
+        credentials: Record<"email" | "password", string> | undefined
+      ) {
+        const { email, password } = credentials ?? {};
+
+        if (!email || !password) {
+          return null;
+        }
+
+        const [result] = await db.query<RowDataPacket[][]>(
+          "CALL get_user_session(?)",
+          [email]
+        );
+
+        let [userRows = [], permissionsRows = []] = result;
+
+        if (userRows.length === 0) {
+          return null;
+        }
+
+        const user = userRows[0];
+
+        const ispasswordValid = await compare(password, user.password);
+
+        if (!ispasswordValid) {
+          return null;
+        }
+
+        const permissions: Permission[] = permissionsRows.map(
+          ({ id, name }) => ({ id, name })
+        );
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          membershipId: user.membershipId,
+          role: user.role,
+          permissions: permissions || [],
+        };
+      },
+    }),
   ],
   secret: process.env.AUTH_SECRET,
   pages: {
     signIn: "/login",
   },
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60,
+    updateAge: 60 * 15,
+  },
   callbacks: {
     async jwt({ token, user, account }) {
+      if (account?.provider === "credentials" && user) {
+        token.id = user.id?.toString() || "";
+        token.membershipId = user.membershipId?.toString() || "";
+        token.role = user.role?.toString() || "";
+        token.permissions = user.permissions || [];
+      }
+
       if (account?.provider === "google" && user && !token.id) {
         const { email, name, image } = user;
 

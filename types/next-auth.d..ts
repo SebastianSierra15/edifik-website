@@ -1,4 +1,4 @@
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 import { Permission } from "@/lib/definitios";
 
 declare module "next-auth" {
@@ -11,10 +11,19 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 
+  interface User extends DefaultUser {
+    id: string;
+    role: string;
+    membershipId: string;
+    permissions: Permission[];
+  }
+}
+
+declare module "next-auth/jwt" {
   interface JWT {
-    id?: string;
-    role?: string;
-    membershipId?: string;
-    permissions?: Permission[];
+    id: string;
+    role: string;
+    membershipId: string;
+    permissions: Permission[];
   }
 }

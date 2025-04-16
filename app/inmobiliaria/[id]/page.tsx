@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import ClientProperty from "@/app/ui/realEstate/clientProperty";
 import { getProjectById } from "@/app/data/serverProjectService";
+import ClientProperty from "@/app/ui/realEstate/clientProperty";
 
 export const dynamic = "force-dynamic";
 

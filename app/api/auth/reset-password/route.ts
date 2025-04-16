@@ -1,7 +1,9 @@
 import { NextResponse, NextRequest } from "next/server";
 import { db } from "@/lib/db";
+import { compare, hash } from "bcrypt";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { RowDataPacket } from "mysql2";
 import { sendEmail } from "@/lib/email/sendEmail";
 import { generateEmailTemplate } from "@/utils/emailTemplates";
 
@@ -28,7 +30,12 @@ export async function POST(req: NextRequest) {
   const tempPassword = generateTempCode();
 
   try {
-    await db.query("CALL set_temporary_password(?, ?)", [email, tempPassword]);
+    const hashedPassword = await hash(tempPassword, 10);
+
+    await db.query("CALL set_temporary_password(?, ?)", [
+      email,
+      hashedPassword,
+    ]);
 
     const html = generateEmailTemplate({
       title: "Código de recuperación de contraseña",
@@ -80,11 +87,33 @@ export async function PUT(req: NextRequest) {
   }
 
   try {
-    await db.query("CALL changed_password(?, ?, ?)", [
-      id,
-      currentPassword,
-      newPassword,
-    ]);
+    const [results] = await db.query<RowDataPacket[][]>(
+      "CALL get_user_password(?)",
+      [id]
+    );
+
+    const userPasswordRow = results[0]?.[0];
+
+    if (!userPasswordRow) {
+      return NextResponse.json(
+        { error: "Usuario no encontrado" },
+        { status: 404 }
+      );
+    }
+
+    const storedPasswordHash = userPasswordRow.password;
+
+    const isMatch = await compare(currentPassword, storedPasswordHash);
+    if (!isMatch) {
+      return NextResponse.json(
+        { error: "La contraseña actual no es correcta" },
+        { status: 403 }
+      );
+    }
+
+    const newPasswordHash = await hash(newPassword, 10);
+
+    await db.query("CALL changed_password(?, ?)", [id, newPasswordHash]);
 
     return NextResponse.json({
       message: "Contraseña actualizada correctamente",

@@ -29,7 +29,7 @@ export function useRegisterUser(): UseRegisterUserResult {
     setSuccess(false);
 
     try {
-      const res = await fetch("/api/user/login", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
