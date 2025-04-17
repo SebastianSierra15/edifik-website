@@ -22,26 +22,26 @@ const StatCard = ({ label, value, bgColor, textColor }: Stat) => (
 
 const stats: Stat[] = [
   {
-    label: "Proyectos en Desarrollo",
-    value: 15,
+    label: "Años en el Mercado",
+    value: 2,
     bgColor: "bg-client-accentLight",
     textColor: "text-white",
   },
   {
-    label: "Proyectos Completados",
-    value: 200,
+    label: "Proyectos Realizados",
+    value: 22,
     bgColor: "bg-white",
     textColor: "text-client-primary",
   },
   {
-    label: "Unidades de Proyectos",
-    value: 300,
+    label: "Proyectos en Desarrollo",
+    value: 3,
     bgColor: "bg-client-primaryLight",
     textColor: "text-white",
   },
   {
-    label: "Venta de Proyectos",
-    value: 150,
+    label: "Familias Agradecidas",
+    value: 28,
     bgColor: "bg-client-accentLight",
     textColor: "text-white",
   },

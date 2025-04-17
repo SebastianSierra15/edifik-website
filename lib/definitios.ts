@@ -126,6 +126,7 @@ export interface Project {
   commonAreas: CommonArea[];
   ownerId?: number;
   email?: string;
+  phoneNumber?: string;
   residentialProjectId?: number;
   warehouseProjectId?: number;
   nearbyServices: NearbyService[];

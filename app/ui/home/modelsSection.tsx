@@ -12,7 +12,7 @@ export default function ModelsSection() {
 
       <div className="relative -translate-y-6 sm:-translate-y-12 lg:-translate-y-16 flex flex-col items-center justify-end w-full h-60 sm:h-80 bg-gradient-to-b from-white/80 to-client-background-dark rounded-2xl shadow-[0px_-20px_40px_rgba(0,0,0,0.8)] overflow-hidden">
         <Image
-          src="/images/home/home.webp"
+          src="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia4.webp"
           alt="Modelos"
           fill
           className="absolute inset-0 w-full h-full object-cover"

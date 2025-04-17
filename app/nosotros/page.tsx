@@ -18,25 +18,37 @@ export default function AboutUsPage() {
   return (
     <>
       <HeroSection
-        srcImage="/images/home/home.webp"
+        srcImage="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/QuintasLago/QuintasLago6.webp"
         altImage="Vista del interior de un proyecto de EdifiK"
         title="Sobre Nosotros"
         description="Conoce más sobre EdifiK y nuestro compromiso con la calidad y la innovación."
       />
 
-      <AboutSection />
+      <div className="flex flex-col flex-grow bg-client-backgroundAlt">
+        <div className="mb-12">
+          <AboutSection />
+        </div>
 
-      <Timeline />
+        <div className="mb-12">
+          <Timeline />
+        </div>
 
-      <TeamSection />
+        {/*
+        <TeamSection />
+        */}
 
-      <StatsSection />
+        <div className="mb-12">
+          <StatsSection />
+        </div>
 
-      <VisionMisionSection />
+        <VisionMisionSection />
 
-      <SocialSection />
+        <SocialSection />
 
-      <CertificationSenction />
+        {/*
+        <CertificationSenction />
+        */}
+      </div>
     </>
   );
 }

@@ -16,7 +16,7 @@ export default function RegisterPage() {
     <div className="relative  w-full">
       <div className="absolute inset-0 w-full h-screen sm:hidden">
         <Image
-          src="/images/login/login.webp"
+          src="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia4.webp"
           alt="Edificio moderno"
           fill
           objectFit="cover"
@@ -56,7 +56,7 @@ export default function RegisterPage() {
 
         <div className="hidden sm:block sm:w-1/2 h-screen fixed right-0 top-0">
           <Image
-            src="/images/login/login.webp"
+            src="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia4.webp"
             alt="Registro"
             fill
             objectFit="cover"

@@ -21,7 +21,7 @@ export async function generateMetadata({
       title: project?.name || "Propiedad en EdifiK",
       description:
         project?.shortDescription || "Propiedad destacada en EdifiK.",
-      url: `http://localhost:3000/inmobiliaria/${params.id}`,
+      url: `http://edifik.co/inmobiliaria/${params.id}`,
       siteName: "EdifiK",
       type: "website",
     },

@@ -44,7 +44,7 @@ export default function WhoWeAreSection() {
         <div className="flex flex-col sm:flex-row gap-10 items-center justify-center mt-6">
           {/*
           <ProfileCard
-            image="/images/constructor.jpg"
+            image="/images/profile/Alejandro.webp"
             name="ALEJANDRO TORRES"
             title="Arquitecto Universidad Piloto"
             role="CEO Edifik Estudios de Arquitectura"
@@ -53,7 +53,7 @@ export default function WhoWeAreSection() {
           */}
 
           <ProfileCard
-            image="/images/constructor.jpg"
+            image="/images/profile/Andres.webp"
             name="ANDRÉS TRUJILLO"
             title="Arquitecto Universidad Piloto"
             role="CEO Edifik Estudios de Arquitectura"

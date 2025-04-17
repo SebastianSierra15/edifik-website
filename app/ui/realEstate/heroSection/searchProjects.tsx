@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MapPin } from "lucide-react";
+import { MapPin, X } from "lucide-react";
 
 interface SearchProjectsProps {
-  onSelectLocation: (coords: { latitude: number; longitude: number }) => void;
+  onSelectLocation: (
+    coords: { latitude: number; longitude: number } | null
+  ) => void;
+  clearInput?: boolean;
 }
 
 export default function SearchProjects({
   onSelectLocation,
+  clearInput = false,
 }: SearchProjectsProps) {
   const [searchInput, setSearchInput] = useState("");
   const [suggestions, setSuggestions] = useState<
@@ -22,6 +26,14 @@ export default function SearchProjects({
     useRef<google.maps.places.AutocompleteService | null>(null);
 
   const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
+
+  useEffect(() => {
+    if (clearInput) {
+      setSearchInput("");
+      setSuggestions([]);
+      setIsListVisible(false);
+    }
+  }, [clearInput]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -112,6 +124,21 @@ export default function SearchProjects({
         value={searchInput}
         className="flex-1 px-4 py-2 text-sm text-client-primary placeholder:text-client-text-placeholder outline-none w-full rounded-md"
       />
+
+      {searchInput && (
+        <button
+          type="button"
+          onClick={() => {
+            setSearchInput("");
+            setIsListVisible(false);
+            onSelectLocation(null);
+          }}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-client-text-placeholder hover:text-black"
+          aria-label="Limpiar búsqueda"
+        >
+          <X size={18} />
+        </button>
+      )}
 
       {isListVisible && suggestions.length > 0 && (
         <ul

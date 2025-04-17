@@ -8,8 +8,8 @@ export default function BimHero() {
   return (
     <section className="relative w-full h-[550px] sm:h-[500px] lg:h-[510px]">
       <Image
-        src="/images/home/home.webp"
-        alt="Fondo BIM"
+        src="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia2.webp"
+        alt="BIM"
         fill
         className="object-cover"
         priority

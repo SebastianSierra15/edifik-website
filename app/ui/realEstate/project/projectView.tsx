@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import dynamic from "next/dynamic";
 import { Project } from "@/lib/definitios";
 
@@ -57,6 +58,9 @@ interface ProjectViewProps {
 }
 
 export default function ProjectView({ project }: ProjectViewProps) {
+  const locationRef = useRef<HTMLDivElement>(null);
+  const formWrapperRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className="bg-client-backgroundLight">
       <ProjectHeader project={project} />
@@ -114,16 +118,43 @@ export default function ProjectView({ project }: ProjectViewProps) {
           )}
         </div>
 
-        <div className="pr-16 pt-8">
-          <ContactFormSection />
+        <div
+          className="hidden lg:block relative pr-16 pt-8"
+          ref={formWrapperRef}
+        >
+          <ContactFormSection
+            locationRef={locationRef}
+            wrapperRef={formWrapperRef}
+            propertyId={project.id}
+            propertyName={project.name}
+            toEmail={
+              project.email ?? process.env.NEXT_PUBLIC_COMPANY_EMAIL ?? ""
+            }
+            phoneNumber={
+              project.phoneNumber ?? process.env.NEXT_PUBLIC_COMPANY_PHONE ?? ""
+            }
+          />
         </div>
       </div>
 
-      <div className="px-4 sm:px-6 lg:px-12">
+      <div ref={locationRef} className="px-4 sm:px-6 lg:px-12">
         <ProjectLocation
           latitude={project.latitude}
           longitude={project.longitude}
           address={project.address}
+        />
+      </div>
+
+      <div className="block px-4 sm:px-6 lg:hidden my-8">
+        <ContactFormSection
+          locationRef={locationRef}
+          wrapperRef={formWrapperRef}
+          propertyId={project.id}
+          propertyName={project.name}
+          toEmail={project.email ?? process.env.NEXT_PUBLIC_COMPANY_EMAIL ?? ""}
+          phoneNumber={
+            project.phoneNumber ?? process.env.NEXT_PUBLIC_COMPANY_PHONE ?? ""
+          }
         />
       </div>
     </div>

@@ -4,7 +4,7 @@ import { generateEmailTemplate } from "@/utils/emailTemplates";
 
 export async function POST(req: Request) {
   try {
-    const { name, phone, email, message } = await req.json();
+    const { name, phone, email, message, toEmail } = await req.json();
 
     const html = generateEmailTemplate({
       title: "Nuevo mensaje de contacto",
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
       ],
     });
 
-    await sendEmail("sebasirra13@gmail.com", "Nuevo mensaje de contacto", html);
+    await sendEmail(toEmail, "Nuevo mensaje de contacto", html);
 
     return NextResponse.json({ ok: true });
   } catch (error) {

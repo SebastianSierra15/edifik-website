@@ -3,21 +3,39 @@ import ProjectImageCard from "./projectImageCard";
 
 const projects = [
   {
-    name: "Proyecto BIM 1",
+    name: "Quintas del Lago",
     images: [
-      "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Casa/1111/Previsualización/1732917153366/92c8932a-cb74-428b-bbcb-acef6fa74963.webp",
-      "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Casa/1111/Previsualización/1732917153166/45f80c30-e810-4e95-9343-ee092601ff01.webp",
-      "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Casa/1111/Previsualización/1732917154036/faf32af0-d416-48fd-a0b5-6d6fcaf43d19.webp",
-      "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Casa/1111/Previsualización/1732917153937/02e8aaaf-5a15-421d-833c-8a076016d1db.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/QuintasLago/QuintasLago1.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/QuintasLago/QuintasLago2.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/QuintasLago/QuintasLago3.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/QuintasLago/QuintasLago4.webp",
     ],
   },
   {
-    name: "Proyecto BIM 2",
+    name: "Bella Vista",
     images: [
-      "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Casa/1111/Previsualización/1732917153366/92c8932a-cb74-428b-bbcb-acef6fa74963.webp",
-      "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Casa/1111/Previsualización/1732917153166/45f80c30-e810-4e95-9343-ee092601ff01.webp",
-      "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Casa/1111/Previsualización/1732917154036/faf32af0-d416-48fd-a0b5-6d6fcaf43d19.webp",
-      "https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Casa/1111/Previsualización/1732917153937/02e8aaaf-5a15-421d-833c-8a076016d1db.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/BellaVista/BellaVista1.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/BellaVista/BellaVista2.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/BellaVista/BellaVista3.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/BellaVista/BellaVista4.webp",
+    ],
+  },
+  {
+    name: "Casa Quinta del Mar",
+    images: [
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/CasaQuintaMar/QuintasMar1.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/CasaQuintaMar/QuintasMar2.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/CasaQuintaMar/QuintasMar3.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/CasaQuintaMar/QuintasMar4.webp",
+    ],
+  },
+  {
+    name: "Edificio San Carlos",
+    images: [
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia1.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia2.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia3.webp",
+      "https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia4.webp",
     ],
   },
 ];

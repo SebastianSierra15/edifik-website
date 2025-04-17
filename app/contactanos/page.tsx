@@ -14,8 +14,8 @@ export default function ContactPage() {
   return (
     <>
       <HeroSection
-        srcImage="/images/home/home.webp"
-        altImage="Vista del interior de un proyecto de EdifiK"
+        srcImage="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia3.webp"
+        altImage="Contactanos"
         title="Contáctanos"
         description="Estamos aquí para ayudarte con tus proyectos de construcción y diseño."
       />

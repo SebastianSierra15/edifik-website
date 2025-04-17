@@ -4,27 +4,37 @@ import React, { useState } from "react";
 import clsx from "clsx";
 
 interface ContactFormProps {
-  onSubmit?: (data: { name: string; email: string; phone: string }) => void;
+  name: string;
+  email: string;
+  phone: string;
+  setName: (v: string) => void;
+  setEmail: (v: string) => void;
+  setPhone: (v: string) => void;
 }
 
-export default function ContactForm({ onSubmit }: ContactFormProps) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [checked, setChecked] = useState(false);
+export default function ContactForm({
+  name,
+  email,
+  phone,
+  setName,
+  setEmail,
+  setPhone,
+}: ContactFormProps) {
+  // const [checked, setChecked] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSubmit) {
-      onSubmit({ name, email, phone });
-    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Nombre</label>
+        <label form="inputName" className="mb-1 font-medium">
+          Nombre
+        </label>
+
         <input
+          id="inputName"
           type="text"
           placeholder="Nombre completo"
           value={name}
@@ -38,8 +48,12 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
       </div>
 
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Correo electrónico</label>
+        <label form="inputEmail" className="mb-1 font-medium">
+          Correo electrónico
+        </label>
+
         <input
+          id="inputEmail"
           type="email"
           placeholder="Correo electrónico"
           value={email}
@@ -53,8 +67,12 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
       </div>
 
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Celular o Teléfono</label>
+        <label form="inputPhone" className="mb-1 font-medium">
+          Celular o Teléfono
+        </label>
+
         <input
+          id="inputPhone"
           type="tel"
           placeholder="Número de contacto"
           value={phone}
@@ -67,6 +85,7 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
         />
       </div>
 
+      {/*
       <div className="flex items-start">
         <input
           type="checkbox"
@@ -83,13 +102,7 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
           .
         </label>
       </div>
-
-      <button
-        type="submit"
-        className="w-full rounded-md border py-2 font-semibold text-white bg-client-accentLight hover:bg-client-accentHover"
-      >
-        Contáctame
-      </button>
+      */}
     </form>
   );
 }

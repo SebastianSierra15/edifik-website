@@ -18,7 +18,12 @@ export default function ProfileCard({
   return (
     <div className="flex flex-col items-center text-center">
       <div className="w-24 h-24 relative rounded-full overflow-hidden">
-        <Image src={image} alt={name} fill className="object-cover" />
+        <Image
+          src={image}
+          alt={name}
+          fill
+          className="object-cover object-top"
+        />
       </div>
 
       <p className="font-bold mt-6 text-client-text">{name}</p>

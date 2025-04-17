@@ -19,15 +19,18 @@ export default function VisionMisionSection() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
             <VisionMisionCard
               title="Visión"
-              description="Convertirse en el referente líder en soluciones integrales de arquitectura..."
-              imageSrc="/images/house2.png"
+              description="Ser una empresa referente en Colombia y Latinoamérica en el desarrollo de proyectos arquitectónicos e inmobiliarios integrales, reconocida por su innovación, su enfoque humano y su capacidad de transformar ideas en realidades tangibles.
+              Aspiramos a consolidarnos como una marca confiable, estratégica y emocionalmente cercana, que une el diseño con el negocio, la arquitectura con el bienestar, y la construcción con la experiencia de vivir."
+              imageSrc="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/about/Mision.webp"
               bgColor="bg-client-secondaryLight"
             />
 
             <VisionMisionCard
               title="Misión"
-              description="Ofrecer servicios de arquitectura, modelado 3D..."
-              imageSrc="/images/house1.png"
+              description="En Edifik, somos una empresa de arquitectura e inmobiliaria que diseña, construye y comercializa espacios con propósito.
+              Combinamos la creatividad del diseño arquitectónico, la eficiencia constructiva y la inteligencia del mercado inmobiliario para ofrecer soluciones completas, sostenibles y emocionalmente conectadas.
+              Nuestro compromiso es acompañar a cada cliente desde la idea hasta la entrega, desde el diseño hasta la venta, creando espacios que se habitan, se valoran y se sienten."
+              imageSrc="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/about/Vision2.webp"
               bgColor="bg-client-accentLight"
             />
           </div>

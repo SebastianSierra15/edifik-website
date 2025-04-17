@@ -16,7 +16,7 @@ export default function VisionMisionCard({
   return (
     <div className="col-span-3 mx-auto flex w-full overflow-hidden md:col-span-1">
       <div
-        className={`flex flex-col justify-stretch rounded-lg border px-6 py-8 text-center shadow ${bgColor} border-white`}
+        className={`flex flex-col justify-stretch rounded-lg border px-10 py-8 text-center shadow ${bgColor} border-white`}
       >
         <h3 className="mb-5 text-2xl font-semibold uppercase tracking-wider text-white">
           {title}

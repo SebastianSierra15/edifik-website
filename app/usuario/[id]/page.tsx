@@ -24,7 +24,7 @@ export async function generateMetadata({
       description:
         project?.shortDescription ||
         "Edita tu propiedad publicada en la plataforma EdifiK.",
-      url: `http://localhost:3000/usuario/${params.id}`,
+      url: `http://edifika.co/usuario/${params.id}`,
       siteName: "EdifiK",
       type: "website",
     },

@@ -16,7 +16,7 @@ export default function LoginPage() {
     <div className="relative w-full">
       <div className="absolute inset-0 w-full h-screen sm:hidden">
         <Image
-          src="/images/login/login.webp"
+          src="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia4.webp"
           alt="Edificio moderno"
           fill
           objectFit="cover"
@@ -58,7 +58,7 @@ export default function LoginPage() {
 
         <div className="w-1/2 h-screen relative hidden sm:block">
           <Image
-            src="/images/login/login.webp"
+            src="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia4.webp"
             alt="Edificio moderno"
             fill
             objectFit="cover"

@@ -347,7 +347,7 @@ export async function PUT(req: Request) {
       });
 
       await sendEmail(
-        "sebasirra13@gmail.com",
+        process.env.NEXT_PUBLIC_COMPANY_EMAIL ?? "",
         "Propiedad Editada en EdifiK",
         emailContent
       );
@@ -559,7 +559,7 @@ export async function POST(req: Request) {
       });
 
       await sendEmail(
-        "sebasirra13@gmail.com",
+        process.env.NEXT_PUBLIC_COMPANY_EMAIL ?? "",
         "Nueva Propiedad Registrada en EdifiK",
         emailContent
       );

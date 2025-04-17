@@ -17,10 +17,11 @@ export default function Home() {
   return (
     <>
       <HeroSection
-        srcImage="/images/home/home.webp"
-        altImage="Vista del interior de un proyecto de EdifiK"
+        srcImage="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/Modelos.webp"
+        altImage="Imagen Inicio"
         title="Diseñamos sueños, Construimos realidades"
         description="Fusionamos diseño, emoción y estrategia para ayudarte a elegir y construir el espacio perfecto"
+        objectPosition="top"
       />
 
       <WordCarousel />

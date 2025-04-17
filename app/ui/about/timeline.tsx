@@ -139,10 +139,10 @@ export default function Timeline() {
                 ImageSrc1="/images/image2.jpg"
                 ImageSrc2="/images/image3.jpg"
                 ImageSrc3="/images/image4.jpg"
-                ImageTitle="Project 2023"
-                year="2023"
+                ImageTitle="Quintas del Lago"
+                year="15 enero 2024"
                 title="Quintas del Lago"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo adipisci numquam similique quasi dolore tempore repellendus porro, ipsa ex nobis."
+                description="Quintas del Lago es un proyecto de vivienda campestre sostenible en Villavicencio, con 86 lotes distribuidos en 12 etapas, rodeado de lagos, zonas verdes y senderos ecológicos."
                 isActive={false}
               />
 
@@ -172,10 +172,10 @@ export default function Timeline() {
                 ImageSrc1="/images/image11.jpg"
                 ImageSrc2="/images/image12.jpg"
                 ImageSrc3="/images/image13.jpg"
-                ImageTitle="Project 2020"
-                year="2020"
-                title="Quintas del Lago 4"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo adipisci numquam similique quasi dolore tempore repellendus porro, ipsa ex nobis."
+                ImageTitle="Edificio San Carlos"
+                year="16 mayo 2024"
+                title="Edificio San Carlos en Florencia Caquetá"
+                description="Edificio San Carlos es un exclusivo proyecto de vivienda en Florencia, Caquetá. Ofrece apartamentos de 1, 2 y 3 habitaciones, con zonas sociales como terraza, BBQ, jacuzzi y lobby. Su entorno natural, alta valorización y desarrollo."
                 isActive={false}
               />
 

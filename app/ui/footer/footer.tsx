@@ -68,6 +68,7 @@ export default function Footer() {
               </Link>
             </li>
 
+            {/*
             <li>
               <Link
                 href="/nosotros/#nuestro-equipo"
@@ -76,6 +77,7 @@ export default function Footer() {
                 Nuestro Equipo
               </Link>
             </li>
+            */}
           </ul>
         </div>
 
@@ -84,36 +86,23 @@ export default function Footer() {
             CONTACTO
           </h3>
 
-          <p className="text-sm">+57 123 456 7890</p>
-          <p className="text-sm">contacto@edifik.com</p>
-          <p className="text-sm">@Edifik</p>
+          <p className="text-sm">+57 {process.env.NEXT_PUBLIC_COMPANY_PHONE}</p>
+          <p className="text-sm">{process.env.NEXT_PUBLIC_COMPANY_EMAIL}</p>
         </div>
 
-        <div>
-          <h3 className="mb-2 text-sm font-semibold text-client-text">
+        <div className="flex flex-col items-start gap-2">
+          <h3 className="text-sm font-semibold text-client-text">
             CONTÁCTANOS
           </h3>
 
-          {/*
-          <div className="flex items-center border-b border-client-text-secondary pb-2">
-            <div className="flex-1">
-              <input
-                name="inputSendEmail"
-                type="email"
-                placeholder="Tu email"
-                className="w-full bg-transparent text-sm text-client-text placeholder-client-text-placeholder focus:outline-none"
-              />
-            </div>
-
-            <button className="ml-3 bg-transparent border border-client-text text-client-text px-4 py-2 rounded-full shadow-md text-sm font-medium hover:bg-white hover:text-black transition whitespace-nowrap">
-              Enviar ↗
-            </button>
-          </div>
-          */}
-
-          <button className="mt-2 bg-transparent border border-green-500 text-green-500 px-4 py-2 rounded-full shadow-md text-sm font-medium hover:bg-green-500 hover:text-white transition whitespace-nowrap">
+          <Link
+            href={`https://wa.me/${process.env.NEXT_PUBLIC_COMPANY_PHONE}`}
+            target="_blank"
+            aria-label="WhatsApp"
+            className="bg-transparent border border-green-500 text-green-500 px-4 py-2 rounded-full shadow-md text-sm font-medium hover:bg-green-500 hover:text-white transition whitespace-nowrap"
+          >
             WhatsApp ↗
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -124,7 +113,7 @@ export default function Footer() {
 
         <div className="flex space-x-4">
           <Link
-            href="https://wa.me/tuNumero"
+            href={`https://wa.me/${process.env.NEXT_PUBLIC_COMPANY_PHONE}`}
             target="_blank"
             aria-label="WhatsApp"
             className="hover:scale-105"

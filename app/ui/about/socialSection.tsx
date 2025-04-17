@@ -2,54 +2,54 @@ import SocialResponsibility from "./socialResponsibility";
 
 export default function SocialSection() {
   return (
-    <div className="-translate-y-10">
+    <div className="-translate-y-10 bg-client-background pt-12">
       <SocialResponsibility
-        title="Responsabilidad Social"
-        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, est?"
+        title="Diseño con propósito"
+        description="En EdifiK creemos que la arquitectura debe servir a las personas, al entorno y al futuro, generando impacto positivo en cada proyecto."
         points={[
           {
-            title: "Lorem, ipsum dolor.",
+            title: "Arquitectura con sentido social",
             description:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+              "Diseñamos espacios accesibles y funcionales que mejoran la calidad de vida.",
           },
           {
-            title: "Lorem, ipsum dolor.",
+            title: "Construcción sostenible",
             description:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+              "Aplicamos BIM, diseño bioclimático y materiales ecoeficientes para reducir el impacto ambiental.",
           },
           {
-            title: "Lorem, ipsum dolor.",
+            title: "Impulso a la economía local",
             description:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+              "Generamos empleo digno y apoyamos proveedores y mano de obra regional.",
           },
         ]}
-        imageSrc="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=768&q=80&h=768"
+        imageSrc="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/about/ResponsabilidadSocial1.webp"
         imagePosition="right"
       />
 
-      <hr className="mx-auto my-2 w-5/6 border-t border-white bg-transparent" />
+      <hr className="mx-auto mt-2 mb-6 w-5/6 border-t border-white bg-transparent" />
 
       <SocialResponsibility
-        title="Responsabilidad Social"
-        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, est?"
+        title="Compromiso con la comunidad"
+        description="Construimos con propósito: cada espacio es una oportunidad para transformar vidas, comunidades y entornos sostenibles."
         points={[
           {
-            title: "Lorem, ipsum dolor.",
+            title: "Diseño para el bienestar",
             description:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+              "Creamos espacios emocionalmente conectados, usando principios de neuroarquitectura.",
           },
           {
-            title: "Lorem, ipsum dolor.",
+            title: "Innovación responsable",
             description:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+              "Integramos tecnologías modernas sin perder el enfoque humano y social del diseño.",
           },
           {
-            title: "Lorem, ipsum dolor.",
+            title: "Educación y conciencia social",
             description:
-              "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+              "Promovemos la formación en sostenibilidad entre nuestros equipos y comunidades.",
           },
         ]}
-        imageSrc="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=768&q=80&h=768"
+        imageSrc="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/about/ResponsabilidadSocial2.webp"
         imagePosition="left"
       />
     </div>

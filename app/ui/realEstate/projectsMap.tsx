@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { Plus, Minus, LocateFixed } from "lucide-react";
 import { ProjectView } from "@/lib/definitios";

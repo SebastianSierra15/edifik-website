@@ -11,10 +11,11 @@ export default function ClientProjectsPage() {
   return (
     <div>
       <HeroSection
-        srcImage="/images/home/home.webp"
-        altImage="Nuestros proyectos"
-        title="Proyectos"
+        srcImage="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia6.webp"
+        altImage="Nuestros Proyectos"
+        title="Nuestros Proyectos"
         description="Conoce nuestros proyectos"
+        objectPosition="top"
       />
 
       {isLoading ? (

@@ -9,6 +9,7 @@ export default function ContactForm() {
     phone: "",
     email: "",
     message: "",
+    toEmail: process.env.NEXT_PUBLIC_COMPANY_EMAIL,
   });
 
   const [errors, setErrors] = useState({
@@ -29,9 +30,17 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const phoneRegex = /^3\d{9}$/;
+
+    const isPhoneValid = phoneRegex.test(formData.phone.replace(/\s+/g, ""));
+
     const newErrors = {
       name: formData.name.trim() ? "" : "El nombre es obligatorio.",
-      phone: formData.phone.trim() ? "" : "El teléfono es obligatorio.",
+      phone: formData.phone.trim()
+        ? isPhoneValid
+          ? ""
+          : "Número de teléfono no válido."
+        : "El teléfono es obligatorio.",
       email: formData.email.trim()
         ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
           ? ""
@@ -56,7 +65,13 @@ export default function ContactForm() {
 
       if (response.ok) {
         alert("✅ Mensaje enviado correctamente.");
-        setFormData({ name: "", phone: "", email: "", message: "" });
+        setFormData({
+          name: "",
+          phone: "",
+          email: "",
+          message: "",
+          toEmail: process.env.NEXT_PUBLIC_COMPANY_EMAIL,
+        });
       } else {
         alert("❌ Hubo un error al enviar el mensaje.");
       }

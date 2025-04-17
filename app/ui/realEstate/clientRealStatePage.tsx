@@ -46,6 +46,7 @@ export default function ClientRealEstatePage() {
     latitude: number;
     longitude: number;
   } | null>(null);
+  const [clearSearchInputSignal, setClearSearchInputSignal] = useState(false);
 
   const { projects, totalEntries, fetchMoreProjects, isLoading } =
     useGetProperties({
@@ -64,21 +65,28 @@ export default function ClientRealEstatePage() {
   }, []);
 
   useEffect(() => {
-    if (!showMap) {
+    if (showMap) {
+      setSearchCoords(null);
+      setClearSearchInputSignal(true);
       setBounds(null);
     }
   }, [showMap]);
 
-  const handleSelectCoords = (coords: {
-    latitude: number;
-    longitude: number;
-  }) => {
+  const handleSelectCoords = (
+    coords: { latitude: number; longitude: number } | null
+  ) => {
+    if (!coords) {
+      setSearchCoords(null);
+      setHighlightCoords(null);
+      return;
+    }
+
     if (showMap) {
       setSearchCoords(null);
       setHighlightCoords(coords);
     } else {
       setSearchCoords(coords);
-      setHighlightCoords(null);
+      setHighlightCoords(coords);
     }
   };
 
@@ -88,6 +96,7 @@ export default function ClientRealEstatePage() {
         projectTypeId={projectTypeId}
         setProjectTypeId={setProjectTypeId}
         setSearchCoords={handleSelectCoords}
+        clearSearchInputSignal={clearSearchInputSignal}
       />
 
       <hr className="w-full border-client-accent" />

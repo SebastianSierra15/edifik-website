@@ -5,13 +5,13 @@ export default function ContactSection() {
   return (
     <section>
       <div className="mx-auto mb-10 grid grid-cols-1 gap-10 px-4 sm:px-6 lg:px-12 md:grid-cols-2">
-        <div className="mx-auto grid w-full grid-cols-1 gap-5 pt-5 lg:w-full">
+        <div className="h-full w-full py-14">
           <Image
-            className="self-center object-cover xl:self-start rounded-lg"
-            src="/images/constructor.jpg"
-            alt="Imagen de arquitecto en obra"
+            src="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/EdificioSanCarlosFlorencia/EdificioFlorencia7.webp"
+            alt="Edificio San Carlos Florencia"
             width={500}
-            height={400}
+            height={600}
+            className="h-full w-full object-cover rounded-lg"
             priority
           />
         </div>

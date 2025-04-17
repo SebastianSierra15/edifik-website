@@ -20,7 +20,7 @@ export async function generateMetadata({
     openGraph: {
       title: project?.name || "Proyecto en EdifiK",
       description: project?.shortDescription || "Proyecto destacado en EdifiK.",
-      url: `http://localhost:3000/proyectos/${params.id}`,
+      url: `http://edifik.co/proyectos/${params.id}`,
       siteName: "EdifiK",
       type: "website",
     },

@@ -34,7 +34,7 @@ export default function ContactDetailsSection() {
             <Mail className="h-6 w-6 text-client-accent" aria-hidden="true" />
           }
           title="Correo Electrónico"
-          info="EdifiK.arquitectos23@gmail.com"
+          info={process.env.NEXT_PUBLIC_COMPANY_EMAIL ?? ""}
           py="10"
         />
       </div>

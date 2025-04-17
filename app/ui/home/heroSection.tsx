@@ -5,6 +5,7 @@ interface HeroSectionProps {
   altImage: string;
   title: string;
   description: string;
+  objectPosition?: "top" | "center" | "bottom";
 }
 
 export default function HeroSection({
@@ -12,7 +13,15 @@ export default function HeroSection({
   altImage,
   title,
   description,
+  objectPosition = "center",
 }: HeroSectionProps) {
+  const objectClass =
+    objectPosition === "top"
+      ? "object-top"
+      : objectPosition === "bottom"
+        ? "object-bottom"
+        : "object-center";
+
   return (
     <section className="w-full">
       <div className="relative w-full h-96">
@@ -20,7 +29,7 @@ export default function HeroSection({
           src={srcImage}
           alt={altImage}
           fill
-          className="object-cover object-bottom"
+          className={`object-cover ${objectClass}`}
           priority
         />
       </div>

@@ -124,6 +124,7 @@ export async function GET(
       },
       ownerId: projectsRows[0].ownerId,
       email: projectsRows[0].email,
+      phoneNumber: projectsRows[0].phoneNumber,
       residentialProjectId: projectsRows[0].residentialProjectId,
       warehouseProjectId: projectsRows[0].warehouseProjectId,
       commonAreas: [],

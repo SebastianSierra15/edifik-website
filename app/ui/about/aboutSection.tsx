@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function AboutSection() {
   return (
-    <section className="p-4 lg:px-10 lg:pb-10 mx-auto grid grid-cols-1 gap-10 lg:grid-cols-2 text-client-text">
+    <section className="p-4 lg:px-10 lg:pb-10 mx-auto grid grid-cols-1 gap-10 lg:grid-cols-2 text-client-text bg-client-background">
       <div className="md:mx-8 text-center lg:text-left">
         <h1 className="mb-10 text-3xl font-bold text-client-text lg:text-5xl">
           Te damos la bienvenida a EdifiK
@@ -26,7 +26,7 @@ export default function AboutSection() {
       <div className="mx-auto grid grid-cols-1 justify-center gap-5 text-center">
         <Image
           className="self-center object-cover rounded-lg"
-          src="/images/services-11.jpg"
+          src="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/about/QuienesSomos.webp"
           alt="Arquitecto trabajando"
           width={400}
           height={300}
