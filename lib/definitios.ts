@@ -1,4 +1,5 @@
 import { DateTime } from "next-auth/providers/kakao";
+import { Permission } from "@/src/shared";
 
 export type ColumnType =
   | "string"
@@ -161,10 +162,10 @@ export interface Membership {
   projectsFeatured: number;
 }
 
-export interface Permission {
-  id: number;
-  name: string;
-}
+// export interface Permission {
+//   id: number;
+//   name: string;
+// }
 
 export interface ImageType {
   id: number;

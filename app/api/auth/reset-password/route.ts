@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import { compare, hash } from "bcrypt";
+import { compare, hash } from "bcryptjs";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { RowDataPacket } from "mysql2";

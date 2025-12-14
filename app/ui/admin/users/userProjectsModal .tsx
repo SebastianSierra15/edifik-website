@@ -96,7 +96,6 @@ export default function UserProjectsModal({
                     bathrooms={project.bathrooms}
                     parkingSpots={project.parkingSpots}
                     isFromMap={false}
-                    showActions={true}
                     url={`/inmobiliario/${project.id}`}
                     urlEdit={`/admin/propiedades/${project.id}`}
                     onDelete={() => handleOpenModal(project.id, project.name)}

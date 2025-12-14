@@ -26,14 +26,14 @@ export default function BasicProjectView({
 
       <div className="space-y-6">
         <FormDisplay
-          label={`Nombre del ${project.propertyType?.id ? "Proyecto" : "Propiedad"}`}
+          label={`Nombre del ${project.propertyType?.id === 1 ? "Proyecto" : "Propiedad"}`}
           value={project.name || "No especificado"}
         />
 
         <div
           className={clsx(
             "grid grid-cols-1 gap-4",
-            project.propertyType?.id && "sm:grid-cols-2"
+            project.propertyType?.id === 1 && "sm:grid-cols-2"
           )}
         >
           <FormDisplay

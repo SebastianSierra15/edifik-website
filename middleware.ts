@@ -1,42 +1,14 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
-import { Permission } from "./lib/definitios";
-import { withPath } from "./lib/middleware/withPath";
+import { Permission, isAdmin, AppJWT } from "./src/shared";
+import { PROTECTED_ROUTES } from "./src/config/protectedRoutes";
+import { withPath } from "@/lib/middleware/withPath";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const protectedRoutes: Record<string, string[] | null> = {
-    "/admin": [
-      "Gestionar proyectos",
-      "Gestionar propiedades",
-      "Gestionar usuarios",
-      "Gestionar roles",
-      "Gestionar membresias",
-      "Gestionar solicitudes",
-    ],
-
-    "/admin/proyectos": ["Gestionar proyectos"],
-    "/admin/propiedades": ["Gestionar propiedades"],
-    "/admin/usuarios": ["Gestionar usuarios"],
-    "/admin/roles": ["Gestionar roles"],
-    "/admin/membresias": ["Gestionar membresias"],
-    "/admin/solicitudes": ["Gestionar solicitudes"],
-
-    "/usuario": null,
-    "/usuario/perfil": null,
-    "/usuario/mis-propiedades": ["Gestionar propiedades propias"],
-    "/usuario/subir-propiedad": ["Gestionar propiedades propias"],
-
-    "/membresias": null,
-
-    "/login": null,
-    "/login/register": null,
-    "/login/forget-password": null,
-  };
-
-  const matchedRoute = Object.keys(protectedRoutes)
+  const matchedRoute = Object.keys(PROTECTED_ROUTES)
     .sort((a, b) => b.length - a.length)
     .find((route) => pathname.startsWith(route));
 
@@ -44,52 +16,25 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const requiredPermissions = protectedRoutes[matchedRoute];
+  const routeConfig = PROTECTED_ROUTES[matchedRoute];
 
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  const token = (await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+  })) as AppJWT | null;
 
-  const userPermissions = token?.permissions as Permission[];
+  const roleId = Number(token?.role);
+  const membershipId = Number(token?.membershipId);
 
-  const adminPermissions = [
-    "Gestionar proyectos",
-    "Gestionar propiedades",
-    "Gestionar usuarios",
-    "Gestionar roles",
-    "Gestionar membresias",
-    "Gestionar solicitudes",
-  ];
-
-  const isAdmin = adminPermissions.some((perm) =>
-    userPermissions?.some((p) => p.name === perm)
+  const userPermissions = (token?.permissions ?? []).map(
+    (p: any) => p.name as Permission
   );
 
-  if (pathname === "/membresias" && token && token.role != 2) {
-    return withPath(
-      NextResponse.redirect(new URL("/unauthorized", req.url)),
-      pathname
-    );
-  }
+  const userIsAdmin = isAdmin(userPermissions);
 
-  if (pathname === "/usuario/subir-propiedad" && token && !token.membershipId) {
-    return withPath(
-      NextResponse.redirect(new URL("/membresias", req.url)),
-      pathname
-    );
-  }
-
-  if (
-    (pathname === "/login" ||
-      pathname === "/login/register" ||
-      pathname === "/login/forget-password") &&
-    token
-  ) {
-    const redirectUrl = isAdmin ? "/admin" : "/";
-    return withPath(
-      NextResponse.redirect(new URL(redirectUrl, req.url)),
-      pathname
-    );
-  }
-
+  /**
+   * NO autenticado
+   */
   if (!token && !pathname.startsWith("/login")) {
     return withPath(
       NextResponse.redirect(new URL("/login", req.url)),
@@ -97,19 +42,55 @@ export async function middleware(req: NextRequest) {
     );
   }
 
-  if (!requiredPermissions) {
-    return withPath(NextResponse.next(), pathname);
+  /**
+   * Usuario logueado intentando ir a login
+   */
+  if (pathname.startsWith("/login") && token) {
+    return withPath(
+      NextResponse.redirect(new URL(userIsAdmin ? "/admin" : "/", req.url)),
+      pathname
+    );
   }
 
-  if (!userPermissions?.length) {
+  /**
+   * Membresías solo para rol específico
+   */
+  if (pathname === "/membresias" && roleId !== 2) {
     return withPath(
       NextResponse.redirect(new URL("/unauthorized", req.url)),
       pathname
     );
   }
 
-  const hasPermission = requiredPermissions.some((perm) =>
-    userPermissions?.some((userPerm) => userPerm.name === perm)
+  /**
+   * Subir propiedad requiere membresía
+   */
+  if (pathname === "/usuario/subir-propiedad" && token && !membershipId) {
+    return withPath(
+      NextResponse.redirect(new URL("/membresias", req.url)),
+      pathname
+    );
+  }
+
+  /**
+   * Ruta sin permisos específicos
+   */
+  if (!routeConfig.permissions) {
+    return withPath(NextResponse.next(), pathname);
+  }
+
+  /**
+   * Sin permisos
+   */
+  if (!userPermissions.length) {
+    return withPath(
+      NextResponse.redirect(new URL("/unauthorized", req.url)),
+      pathname
+    );
+  }
+
+  const hasPermission = routeConfig.permissions.some((perm) =>
+    userPermissions.includes(perm)
   );
 
   if (!hasPermission) {

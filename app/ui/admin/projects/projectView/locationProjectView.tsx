@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { ProjectData } from "@/lib/definitios";
 import LocationMap from "../locationMap";
 import StepNavigationButtons from "../../stepNavigationButtons";
@@ -24,7 +23,7 @@ export default function LocationProjectView({
   return (
     <div className="container mx-auto w-full rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">
       <h2 className="mb-6 text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight">
-        {project.projectType?.id
+        {project.projectType?.id === 1
           ? "Ubicación del Proyecto"
           : "Ubicación de la Propiedad"}
       </h2>

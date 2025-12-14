@@ -94,16 +94,16 @@ export async function PUT(req: Request) {
   try {
     const userId = session.user.id;
 
-    const { id, name, permission } = await req.json();
+    const { id, name, permissions } = await req.json();
 
-    if (!id || !name || !permission) {
+    if (!id || !name || !permissions) {
       return NextResponse.json(
         { error: "Faltan datos obligatorios" },
         { status: 400 }
       );
     }
 
-    const permissionsJson = JSON.stringify(permission);
+    const permissionsJson = JSON.stringify(permissions);
 
     await db.query("CALL update_role(?, ?, ?, ?)", [
       id,
@@ -146,16 +146,16 @@ export async function POST(req: Request) {
   try {
     const userId = session.user.id;
 
-    const { name, permission } = await req.json();
+    const { name, permissions } = await req.json();
 
-    if (!name || !permission) {
+    if (!name || !permissions) {
       return NextResponse.json(
         { error: "Faltan datos obligatorios" },
         { status: 400 }
       );
     }
 
-    const permissionsJson = JSON.stringify(permission);
+    const permissionsJson = JSON.stringify(permissions);
 
     const result = await db.query("CALL create_role(?, ?, ?)", [
       name,

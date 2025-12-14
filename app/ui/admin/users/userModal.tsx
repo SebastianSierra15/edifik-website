@@ -38,7 +38,6 @@ interface UserModalProps {
     phoneNumberError: string;
     genderError: string;
     roleError: string;
-    membershipError: string;
   };
 }
 
@@ -151,7 +150,6 @@ export default function UserModal({
               value={user.membership?.id || ""}
               options={memberships}
               onChange={handleChange}
-              error={errors.membershipError}
               flag={flag}
             />
           </div>

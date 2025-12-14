@@ -35,7 +35,7 @@ export default function ProjectForm({
   hasPermission,
 }: ProjectFormProps) {
   const projectQuery = isEdit
-    ? useProjectById(projectId, isProperty)
+    ? useProjectById(projectId, !isProperty)
     : { project: null, loading: false };
   const { project, loading: loadingProject } = projectQuery;
 
@@ -142,8 +142,12 @@ export default function ProjectForm({
         JSON.stringify({
           type: "success",
           message: isEdit
-            ? "Proyecto editado exitosamente."
-            : "Proyecto creado exitosamente.",
+            ? isProperty
+              ? "Propiedad editada exitosamente."
+              : "Proyecto editado exitosamente."
+            : isProperty
+              ? "Propiedad creada exitosamente."
+              : "Proyecto creado exitosamente.",
         })
       );
     } catch (err) {
