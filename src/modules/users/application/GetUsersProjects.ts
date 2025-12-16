@@ -1,3 +1,4 @@
+import { BadRequestError } from "@/src/shared";
 import {
   UsersProjectsRepository,
   GetUsersProjectsParams,
@@ -11,11 +12,15 @@ export class GetUsersProjects {
     params: GetUsersProjectsParams
   ): Promise<GetUsersProjectsResult> {
     if (!params.userId || params.userId <= 0) {
-      throw new Error("ID de usuario inválido");
+      throw new BadRequestError("ID de usuario inválido");
     }
 
-    if (params.page <= 0 || params.pageSize <= 0) {
-      throw new Error("Parámetros de paginación inválidos");
+    if (params.page <= 0) {
+      throw new BadRequestError("Parámetro page inválido");
+    }
+
+    if (params.pageSize <= 0) {
+      throw new BadRequestError("Parámetro pageSize inválido");
     }
 
     return this.repository.getProjectsByUser(params);

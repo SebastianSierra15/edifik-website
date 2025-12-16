@@ -8,17 +8,5 @@ export async function requireAuth() {
     throw new UnauthorizedError();
   }
 
-  const userId = Number(session.user.id);
-
-  if (!Number.isInteger(userId) || userId <= 0) {
-    throw new UnauthorizedError();
-  }
-
-  return {
-    ...session,
-    user: {
-      ...session.user,
-      id: userId,
-    },
-  };
+  return session;
 }

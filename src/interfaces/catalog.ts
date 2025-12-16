@@ -12,3 +12,15 @@ export interface Membership {
   id: number;
   name: string;
 }
+
+export interface Membership {
+  id: number;
+  name: string;
+  benefits: string;
+  price: number;
+  discountThreeMonths?: number | null;
+  discountSixMonths?: number | null;
+  discountTwelveMonths?: number | null;
+  maxProjects: number;
+  projectsFeatured?: number | null;
+}

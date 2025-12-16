@@ -8,19 +8,26 @@ import {
 
 export async function GET(req: Request) {
   try {
-    const session = await requireAuth(); // ya existe :contentReference[oaicite:1]{index=1}
+    const session = await requireAuth();
 
     const url = new URL(req.url);
-    const page = Number(url.searchParams.get("page") ?? "1");
-    const pageSize = Number(url.searchParams.get("pageSize") ?? "10");
-    const statusProject = Number(url.searchParams.get("statusProject") ?? "2");
+
+    const page = Math.max(Number(url.searchParams.get("page") ?? 1), 1);
+    const pageSize = Math.max(
+      Number(url.searchParams.get("pageSize") ?? 16),
+      1
+    );
+    const statusProject = Math.max(
+      Number(url.searchParams.get("statusProject") ?? 2),
+      0
+    );
 
     const userId = Number(session.user.id);
 
     const result = await getUserProjectsController({
       userId,
-      page: page > 0 ? page : 1,
-      pageSize: pageSize > 0 ? pageSize : 16,
+      page,
+      pageSize,
       statusProject,
     });
 
@@ -33,19 +40,23 @@ export async function GET(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const session = await requireAuth();
-    await requirePermission(Permission.ManageOwnProperties); // enum ya definido :contentReference[oaicite:3]{index=3}
+
+    await requirePermission(Permission.ManageOwnProperties);
 
     const url = new URL(req.url);
-    const projectId = Number(url.searchParams.get("id") ?? "0");
+    const projectId = Number(url.searchParams.get("id"));
 
     const userId = Number(session.user.id);
 
-    const result = await deleteUserProjectController({
+    await deleteUserProjectController({
       userId,
       projectId,
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json(
+      { message: "Proyecto eliminado correctamente." },
+      { status: 200 }
+    );
   } catch (error) {
     return handleHttpError(error);
   }

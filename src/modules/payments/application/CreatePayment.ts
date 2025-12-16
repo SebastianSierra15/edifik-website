@@ -1,3 +1,4 @@
+import { BadRequestError } from "@/src/shared";
 import { PaymentRepository } from "../domain/PaymentRepository";
 import { PaymentStatus } from "../domain/PaymentStatus";
 
@@ -8,25 +9,31 @@ interface CreatePaymentInput {
   idempotencyKey: string;
 }
 
-export class CreatePaymentUseCase {
+export class CreatePayment {
   constructor(private readonly repository: PaymentRepository) {}
 
   async execute(input: CreatePaymentInput) {
-    const existing = await this.repository.findByIdempotencyKey(
-      input.idempotencyKey
-    );
+    const { userId, amount, currency, idempotencyKey } = input;
 
-    if (existing) {
-      return existing;
+    if (!userId || !amount || !currency || !idempotencyKey) {
+      throw new BadRequestError("Datos de pago incompletos");
     }
 
-    return this.repository.create({
-      userId: input.userId,
-      amount: input.amount,
-      currency: input.currency,
+    const existing = await this.repository.findByIdempotencyKey(idempotencyKey);
+
+    if (existing) {
+      return { paymentId: existing.id, status: existing.status };
+    }
+
+    const payment = await this.repository.create({
+      userId,
+      amount,
+      currency,
       status: PaymentStatus.Pending,
       providerRef: "",
-      idempotencyKey: input.idempotencyKey,
+      idempotencyKey,
     });
+
+    return { paymentId: payment.id, status: payment.status };
   }
 }

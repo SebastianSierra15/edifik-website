@@ -1,3 +1,4 @@
+import { BadRequestError } from "@/src/shared";
 import { UserRepository } from "../domain/UserRepository";
 
 interface GetUsersParams {
@@ -12,8 +13,13 @@ export class GetUsersUseCase {
   async execute(params: GetUsersParams) {
     const { page, pageSize } = params;
 
-    if (page < 1) throw new Error("Page inválida");
-    if (pageSize < 1) throw new Error("PageSize inválido");
+    if (page < 1) {
+      throw new BadRequestError("Parámetro page inválido");
+    }
+
+    if (pageSize < 1) {
+      throw new BadRequestError("Parámetro pageSize inválido");
+    }
 
     return this.repository.findPaginated(params);
   }

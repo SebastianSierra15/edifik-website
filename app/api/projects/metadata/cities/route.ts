@@ -1,70 +1,19 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { City, Departament } from "@/lib/definitios";
-import { RowDataPacket } from "mysql2";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-
-function mapResults<T>(
-  result: RowDataPacket[] | undefined,
-  mapper: (row: any) => T
-): T[] {
-  if (!result) return [];
-  return result.map(mapper);
-}
+import { handleHttpError } from "@/src/shared";
+import { requirePermission, Permission } from "@/src/modules/auth";
+import { getProjectsCitiesMetadataController } from "@/src/modules/projects";
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-  }
-
-  const permissions = session?.user?.permissions;
-
-  const hasPermission = permissions?.some(
-    (perm) =>
-      perm.name === "Gestionar proyectos" ||
-      perm.name === "Gestionar propiedades" ||
-      perm.name === "Gestionar propiedades propias"
-  );
-
-  if (!hasPermission) {
-    return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
-  }
-
   try {
-    const [result] = await db.query<RowDataPacket[][]>(
-      "CALL get_cities_departaments()"
+    await requirePermission(
+      Permission.ManageProjects,
+      Permission.ManageProperties,
+      Permission.ManageOwnProperties
     );
 
-    const [departamentsResult, citiesResult] = result;
-
-    const departaments: Departament[] = mapResults(
-      departamentsResult,
-      (row) => ({
-        id: row.departamentId,
-        name: row.departamentName,
-      })
-    );
-
-    const cities: City[] = mapResults(citiesResult, (row) => ({
-      id: row.cityId,
-      name: row.cityName,
-      departament: {
-        id: row.departamentId,
-        name: row.departamentName,
-      },
-    }));
-
-    const response = NextResponse.json({ departaments, cities });
-
-    return response;
+    const metadata = await getProjectsCitiesMetadataController();
+    return NextResponse.json(metadata);
   } catch (error) {
-    console.error("Error en la búsqueda de los datos: ", error);
-    return NextResponse.json(
-      { error: "Error al recuperar los datos" },
-      { status: 500 }
-    );
+    return handleHttpError(error);
   }
 }

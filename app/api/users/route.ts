@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { requirePermission, Permission, handleHttpError } from "@/src/shared";
+import { handleHttpError } from "@/src/shared";
+import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
 import {
   getUsersController,
   updateUserController,
@@ -32,8 +33,13 @@ export async function PUT(req: Request) {
   try {
     await requirePermission(Permission.ManageUsers);
 
+    const session = await requireAuth();
     const body = await req.json();
-    const result = await updateUserController(body);
+
+    const result = await updateUserController({
+      ...body,
+      updatedBy: session.user.id,
+    });
 
     return NextResponse.json(result);
   } catch (error) {
@@ -45,8 +51,13 @@ export async function POST(req: Request) {
   try {
     await requirePermission(Permission.ManageUsers);
 
+    const session = await requireAuth();
     const body = await req.json();
-    const result = await createUserController(body);
+
+    const result = await createUserController({
+      ...body,
+      createdBy: session.user.id,
+    });
 
     return NextResponse.json(result);
   } catch (error) {

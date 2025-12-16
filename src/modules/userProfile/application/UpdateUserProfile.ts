@@ -13,11 +13,7 @@ export class UpdateUserProfile {
       phoneNumber?: string;
       genderId?: number | null;
     }
-  ) {
-    if (!userId || userId <= 0) {
-      throw new Error("Usuario inválido");
-    }
-
+  ): Promise<void> {
     await this.repository.updateProfile(userId, input);
   }
 }

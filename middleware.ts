@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
+import { withPath } from "@/lib/middleware/withPath";
 import { Permission, isAdmin, AppJWT } from "./src/shared";
 import { PROTECTED_ROUTES } from "./src/config/protectedRoutes";
-import { withPath } from "@/lib/middleware/withPath";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

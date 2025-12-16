@@ -4,10 +4,9 @@ export class SearchUserEmails {
   constructor(private readonly repository: UserEmailRepository) {}
 
   async execute(searchTerm: string): Promise<{ id: number; email: string }[]> {
-    if (!searchTerm.trim()) {
-      return [];
-    }
+    const term = searchTerm?.trim();
+    if (!term) return [];
 
-    return this.repository.searchByEmail(searchTerm.trim());
+    return this.repository.searchByEmail(term.toLowerCase());
   }
 }

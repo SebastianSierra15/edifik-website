@@ -1,139 +1,34 @@
-import { NextResponse, NextRequest } from "next/server";
-import { db } from "@/lib/db";
-import { compare, hash } from "bcryptjs";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { RowDataPacket } from "mysql2";
-import { sendEmail } from "@/lib/email/sendEmail";
-import { generateEmailTemplate } from "@/utils/emailTemplates";
+import { NextResponse } from "next/server";
+import { handleHttpError } from "@/src/shared";
+import { requireAuth } from "@/src/modules/auth";
+import {
+  sendRecoveryCodeController,
+  changePasswordController,
+} from "@/src/modules/password";
 
-function generateTempCode(length = 6): string {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let code = "";
-  for (let i = 0; i < length; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return code;
-}
-
-export async function POST(req: NextRequest) {
-  const { email } = await req.json();
-
-  if (!email) {
-    return NextResponse.json(
-      { error: "El correo electrónico es obligatorio" },
-      { status: 400 }
-    );
-  }
-
-  const tempPassword = generateTempCode();
-
+export async function POST(req: Request) {
   try {
-    const hashedPassword = await hash(tempPassword, 10);
-
-    await db.query("CALL set_temporary_password(?, ?)", [
-      email,
-      hashedPassword,
-    ]);
-
-    const html = generateEmailTemplate({
-      title: "Código de recuperación de contraseña",
-      greeting: "Hola,",
-      intro: "Hemos recibido una solicitud para restablecer tu contraseña.",
-      items: [{ label: "Código temporal", value: tempPassword }],
-      body: "Usa este código como contraseña temporal para iniciar sesión. Una vez dentro, podrás cambiar tu contraseña desde tu perfil.",
-      buttonText: "Ir a iniciar sesión",
-      buttonUrl: "https://edifik.co/login",
-    });
-
-    await sendEmail(email, "Recuperación de contraseña - EdifiK", html);
-
-    return NextResponse.json({
-      message: "Código enviado al correo electrónico",
-    });
-  } catch (error: any) {
-    console.error("Error al enviar código de recuperación:", error);
-
-    if (error.code === "ER_SIGNAL_EXCEPTION") {
-      return NextResponse.json(
-        { error: error.sqlMessage || "Error al generar el código" },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 }
-    );
+    const { email } = await req.json();
+    const result = await sendRecoveryCodeController(email);
+    return NextResponse.json(result);
+  } catch (error) {
+    return handleHttpError(error);
   }
 }
 
-export async function PUT(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-  }
-
-  const id = session.user?.id;
-
-  const { currentPassword, newPassword } = await req.json();
-
-  if (!id || !currentPassword || !newPassword) {
-    return NextResponse.json(
-      { error: "Todos los campos son obligatorios" },
-      { status: 400 }
-    );
-  }
-
+export async function PUT(req: Request) {
   try {
-    const [results] = await db.query<RowDataPacket[][]>(
-      "CALL get_user_password(?)",
-      [id]
-    );
+    const session = await requireAuth();
+    const { currentPassword, newPassword } = await req.json();
 
-    const userPasswordRow = results[0]?.[0];
-
-    if (!userPasswordRow) {
-      return NextResponse.json(
-        { error: "Usuario no encontrado" },
-        { status: 404 }
-      );
-    }
-
-    const storedPasswordHash = userPasswordRow.password;
-
-    const isMatch = await compare(currentPassword, storedPasswordHash);
-    if (!isMatch) {
-      return NextResponse.json(
-        { error: "La contraseña actual no es correcta" },
-        { status: 403 }
-      );
-    }
-
-    const newPasswordHash = await hash(newPassword, 10);
-
-    await db.query("CALL changed_password(?, ?)", [id, newPasswordHash]);
-
-    return NextResponse.json({
-      message: "Contraseña actualizada correctamente",
+    const result = await changePasswordController({
+      userId: Number(session.user.id),
+      currentPassword,
+      newPassword,
     });
-  } catch (error: any) {
-    console.error("Error al cambiar la contraseña:", error);
 
-    if (error.code === "ER_SIGNAL_EXCEPTION") {
-      const message = error.sqlMessage || "Error al cambiar la contraseña";
-
-      if (message.includes("La contraseña actual no es correcta")) {
-        return NextResponse.json({ error: message }, { status: 403 });
-      }
-
-      return NextResponse.json({ error: message }, { status: 400 });
-    }
-
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json(result);
+  } catch (error) {
+    return handleHttpError(error);
   }
 }

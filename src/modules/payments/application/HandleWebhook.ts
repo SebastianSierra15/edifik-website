@@ -6,10 +6,12 @@ interface WebhookInput {
   approved: boolean;
 }
 
-export class HandleWebhookUseCase {
+export class HandlePaymentWebhook {
   constructor(private readonly repository: PaymentRepository) {}
 
   async execute(input: WebhookInput): Promise<void> {
+    if (!input?.idempotencyKey) return;
+
     const payment = await this.repository.findByIdempotencyKey(
       input.idempotencyKey
     );

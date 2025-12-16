@@ -14,10 +14,6 @@ export class MysqlUserProfileRepository implements UserProfileRepository {
     const userRow = result[0]?.[0];
     const genderRows = result[1] ?? [];
 
-    if (!userRow) {
-      throw new Error("Usuario no encontrado");
-    }
-
     const user: UserProfile = {
       id: userRow.id,
       identityDocument: userRow.identityDocument,

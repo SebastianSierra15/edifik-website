@@ -1,4 +1,6 @@
 export * from "./access";
 export * from "./catalog";
-export * from "./user";
+export * from "./project-metadata";
 export * from "./project";
+export * from "./request";
+export * from "./user";

@@ -1,28 +1,10 @@
 import { UpdateUser } from "../application/UpdateUser";
 import { MysqlUserRepository } from "../infrastructure/MysqlUserRepository";
-import { getServerSession } from "../../auth";
+import { UpdateUserInput } from "../domain/UpdateUserInput";
 
-export async function updateUserController(body: any) {
-  const session = await getServerSession();
-
-  if (!session || !session.user?.id) {
-    throw new Error("Usuario no autenticado");
-  }
-
+export async function updateUserController(input: UpdateUserInput) {
   const useCase = new UpdateUser(new MysqlUserRepository());
-
-  await useCase.execute({
-    id: body.id,
-    names: body.names,
-    lastnames: body.lastnames,
-    email: body.email,
-    phoneNumber: body.phoneNumber,
-    genderId: body.gender.id,
-    roleId: body.role.id,
-    membershipId: body.membership?.id,
-    state: body.state ?? false,
-    updatedBy: session.user.id,
-  });
+  await useCase.execute(input);
 
   return { message: "Usuario actualizado exitosamente" };
 }

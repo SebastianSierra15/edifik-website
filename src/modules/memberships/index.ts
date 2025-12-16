@@ -1,6 +1,2 @@
-import { UpdateMembershipUseCase } from "./application/UpdateMembership";
-import { MysqlMembershipRepository } from "./infrastructure/MysqlMembershipRepository";
-
-const repository = new MysqlMembershipRepository();
-
-export const updateMembershipUseCase = new UpdateMembershipUseCase(repository);
+export * from "./presentation/getMemberships.controller";
+export * from "./presentation/updateMembership.controller";

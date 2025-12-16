@@ -1,3 +1,4 @@
+import { BadRequestError } from "@/src/shared";
 import { UserEmailCheckerRepository } from "../domain/UserRepository";
 
 export class CheckUserEmail {
@@ -5,9 +6,15 @@ export class CheckUserEmail {
 
   async execute(email: string) {
     if (!email || !email.trim()) {
-      throw new Error("Debe proporcionar un correo electrónico.");
+      throw new BadRequestError("Debe proporcionar un correo electrónico.");
     }
 
-    return this.repository.check(email.trim());
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail.includes("@")) {
+      throw new BadRequestError("El correo electrónico no es válido.");
+    }
+
+    return this.repository.check(normalizedEmail);
   }
 }

@@ -4,8 +4,7 @@ import { MysqlUserProjectsRepository } from "../infrastructure/MysqlUserProjects
 export async function deleteUserProjectController(params: {
   userId: number;
   projectId: number;
-}) {
+}): Promise<void> {
   const useCase = new DeleteUserProject(new MysqlUserProjectsRepository());
   await useCase.execute(params);
-  return { message: "Proyecto eliminado correctamente." };
 }

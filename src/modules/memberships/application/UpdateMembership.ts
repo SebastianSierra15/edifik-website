@@ -1,11 +1,29 @@
-import { MembershipRepository } from "../domain/MembershipRepository";
-import { UpdateMembershipDTO } from "./dto/UpdateMembershipDTO";
+import { BadRequestError } from "@/src/shared";
+import { UpdateMembershipRepository } from "../domain/MembershipRepository";
 
-export class UpdateMembershipUseCase {
-  constructor(private readonly repository: MembershipRepository) {}
+export class UpdateMembership {
+  constructor(private readonly repo: UpdateMembershipRepository) {}
 
-  async execute(dto: UpdateMembershipDTO): Promise<{ success: true }> {
-    await this.repository.update(dto);
-    return { success: true };
+  async execute(input: {
+    id: number;
+    name: string;
+    benefits: string;
+    price: number;
+    maxProjects: number;
+    updatedBy: number;
+    discountThreeMonths?: number | null;
+    discountSixMonths?: number | null;
+    discountTwelveMonths?: number | null;
+    projectsFeatured?: number | null;
+  }) {
+    const { id, name, benefits, price, maxProjects } = input;
+
+    if (!id || !name || !benefits || price == null || maxProjects == null) {
+      throw new BadRequestError("Faltan datos obligatorios");
+    }
+
+    await this.repo.update(input);
+
+    return { message: "Membresía actualizada correctamente" };
   }
 }

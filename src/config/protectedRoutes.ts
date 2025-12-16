@@ -1,4 +1,4 @@
-import { Permission } from "../shared";
+import { Permission } from "../modules/auth";
 
 export type ProtectedRouteConfig = {
   permissions: Permission[] | null;

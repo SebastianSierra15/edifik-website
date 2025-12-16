@@ -1,18 +1,42 @@
-import { NextRequest } from "next/server";
-import { MembershipsController } from "@/src/modules";
+import { NextResponse } from "next/server";
+import { handleHttpError } from "@/src/shared";
+import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
 import {
-  requireAuth,
-  requirePermission,
-  Permission,
-  handleHttpError,
-} from "@/src/shared";
+  getMembershipsController,
+  updateMembershipController,
+} from "@/src/modules/memberships";
 
-export async function PUT(req: NextRequest) {
+export async function GET(req: Request) {
   try {
-    await requireAuth();
     await requirePermission(Permission.ManageMemberships);
 
-    return MembershipsController.update(req);
+    const { searchParams } = new URL(req.url);
+
+    const result = await getMembershipsController({
+      page: Number(searchParams.get("page") ?? 1),
+      pageSize: Number(searchParams.get("pageSize") ?? 10),
+      searchTerm: searchParams.get("searchTerm"),
+    });
+
+    return NextResponse.json(result);
+  } catch (error) {
+    return handleHttpError(error);
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const session = await requireAuth();
+    await requirePermission(Permission.ManageMemberships);
+
+    const body = await req.json();
+
+    const result = await updateMembershipController({
+      ...body,
+      updatedBy: Number(session.user.id),
+    });
+
+    return NextResponse.json(result);
   } catch (error) {
     return handleHttpError(error);
   }

@@ -1,90 +1,42 @@
 import { NextRequest } from "next/server";
-import { db } from "@/lib/db";
-import { RowDataPacket } from "mysql2";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
+import { observePendingRequestsController } from "@/src/modules/requests";
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return new Response("No autenticado", { status: 401 });
-  }
-
-  const permissions = session?.user?.permissions;
-  const hasPermission = permissions?.some(
-    (perm) => perm.name === "Gestionar solicitudes"
-  );
-
-  if (!hasPermission) {
-    return new Response("Acceso denegado", { status: 403 });
-  }
+  await requireAuth();
+  await requirePermission(Permission.ManageRequests);
 
   const encoder = new TextEncoder();
+  const controllerApi = observePendingRequestsController();
+
   const stream = new ReadableStream({
     async start(controller) {
-      const sendEvent = (data: any) => {
-        try {
-          if (controller.desiredSize !== null) {
-            controller.enqueue(
-              encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
-            );
-          }
-        } catch (err) {
-          console.error("⚠️ Error en sendEvent: Stream cerrado", err);
-        }
+      let lastData: string | null = null;
+
+      const send = (data: any) => {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
       };
 
       const heartbeat = setInterval(() => {
-        if (controller.desiredSize !== null) {
-          sendEvent({ type: "heartbeat", message: "Conexión activa" });
-        }
-      }, 10000);
+        send({ type: "heartbeat" });
+      }, 10_000);
 
-      let lastRequests: any[] = [];
+      const poll = async () => {
+        const data = await controllerApi.fetch();
+        const serialized = JSON.stringify(data);
 
-      const checkForNewRequests = async () => {
-        try {
-          const [result] = await db.query<RowDataPacket[][]>(
-            "CALL get_pending_requests()"
-          );
-
-          const requestRows = result[0] || [];
-          const requests = requestRows.map((row: any) => ({
-            id: row.id,
-            date: row.date,
-            operation: row.operation ? "agregar" : "editar",
-            userEmail: row.userEmail,
-            statusRequestName: row.statusRequestName,
-            projectName: row.projectName,
-          }));
-
-          const hasChanged =
-            JSON.stringify(requests) !== JSON.stringify(lastRequests);
-
-          if (hasChanged) {
-            sendEvent({ type: "newRequests", data: requests });
-            lastRequests = requests;
-          }
-        } catch (error) {
-          console.error(
-            "Error al recuperar las solicitudes pendientes:",
-            error
-          );
+        if (serialized !== lastData) {
+          send({ type: "pendingRequests", data });
+          lastData = serialized;
         }
       };
 
-      const interval = setInterval(checkForNewRequests, 10000);
+      const interval = setInterval(poll, 10_000);
 
       req.signal.onabort = () => {
-        console.warn("🔴 Conexión SSE cerrada por el cliente");
         clearInterval(interval);
         clearInterval(heartbeat);
-        try {
-          controller.close();
-        } catch (err) {
-          console.error("⚠️ Error al cerrar el stream:", err);
-        }
+        controller.close();
       };
     },
   });

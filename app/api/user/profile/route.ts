@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { handleHttpError } from "@/src/shared";
+import { handleHttpError, BadRequestError } from "@/src/shared";
 import { requireAuth } from "@/src/modules/auth";
 import {
   getUserProfileController,
@@ -9,9 +9,15 @@ import {
 export async function GET() {
   try {
     const session = await requireAuth();
-    const userId = session.user.id;
+
+    const userId = Number(session.user.id);
+
+    if (!Number.isInteger(userId) || userId <= 0) {
+      throw new BadRequestError("Usuario inválido");
+    }
 
     const result = await getUserProfileController(userId);
+
     return NextResponse.json(result);
   } catch (error) {
     return handleHttpError(error);
@@ -21,12 +27,21 @@ export async function GET() {
 export async function PUT(req: Request) {
   try {
     const session = await requireAuth();
+
     const userId = Number(session.user.id);
 
-    const body = await req.json();
-    const result = await updateUserProfileController(userId, body);
+    if (!Number.isInteger(userId) || userId <= 0) {
+      throw new BadRequestError("Usuario inválido");
+    }
 
-    return NextResponse.json(result);
+    const body = await req.json();
+
+    await updateUserProfileController(userId, body);
+
+    return NextResponse.json(
+      { message: "Perfil actualizado correctamente" },
+      { status: 200 }
+    );
   } catch (error) {
     return handleHttpError(error);
   }
