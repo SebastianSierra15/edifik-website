@@ -1,7 +1,7 @@
-import { Role, Membership, Gender } from "@/src/interfaces/catalog";
+import { Role, MembershipSummary, Gender } from "@/src/interfaces";
 
 export interface UsersMetadata {
   roles: Role[];
   genders: Gender[];
-  memberships: Membership[];
+  memberships: MembershipSummary[];
 }

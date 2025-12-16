@@ -1,10 +1,10 @@
 import { db } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
-import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
+import { User } from "@/src/interfaces";
+import { escapeSearchTerm } from "@/utils";
 import { UserRepository } from "../domain/UserRepository";
 import { CreateUserInput } from "../domain/CreateUserInput";
 import { UpdateUserInput } from "../domain/UpdateUserInput";
-import { User } from "@/src/interfaces";
 
 export class MysqlUserRepository implements UserRepository {
   async findPaginated({

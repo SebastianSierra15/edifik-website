@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { formatDateForMySQL } from "@/utils/formatDateForMySQL";
+import { formatDateForMySQL } from "@/utils";
 import { CreateProjectRepository } from "../domain/ProjectsRepository";
 import { ProjectCreateInput } from "../domain/ProjectCreateInput";
 

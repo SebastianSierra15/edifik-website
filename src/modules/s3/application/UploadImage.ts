@@ -1,7 +1,7 @@
+import { v4 as uuidv4 } from "uuid";
 import { BadRequestError } from "@/src/shared";
 import { ImageStorageRepository } from "../domain/ImageStorageRepository";
 import { ImageProcessor } from "../domain/ImageProcessor";
-import { v4 as uuidv4 } from "uuid";
 
 interface UploadImageInput {
   file: unknown;

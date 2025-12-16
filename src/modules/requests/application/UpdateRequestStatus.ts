@@ -1,9 +1,9 @@
 import { BadRequestError } from "@/src/shared";
-import { RequestRepository } from "../domain/RequestRepository";
+import { UpdateRequestStatusRepository } from "../domain/RequestRepository";
 import { RequestStatus } from "../domain/Request";
 
 export class UpdateRequestStatus {
-  constructor(private readonly repo: RequestRepository) {}
+  constructor(private readonly repo: UpdateRequestStatusRepository) {}
 
   async execute(input: {
     id: number;

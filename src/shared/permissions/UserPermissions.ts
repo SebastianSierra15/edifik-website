@@ -1,4 +1,4 @@
-import { Permission } from "../../modules/auth/domain/Permission";
+import { Permission } from "@/src/modules";
 
 export interface UserPermission {
   id: number;

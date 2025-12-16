@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { AppError } from "./AppError";
-import { BadRequestError } from "./BadRequestError";
 import { InternalServerError } from "./InternalServerError";
 
 export function handleHttpError(error: unknown): NextResponse {

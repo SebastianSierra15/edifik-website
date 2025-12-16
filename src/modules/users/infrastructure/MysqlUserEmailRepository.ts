@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
-import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
-import { UserEmailRepository } from "../domain/UserRepository";
 import { UserEmail } from "@/src/interfaces";
+import { escapeSearchTerm } from "@/utils";
+import { UserEmailRepository } from "../domain/UserRepository";
 
 export class MysqlUserEmailRepository implements UserEmailRepository {
   async searchByEmail(term: string): Promise<UserEmail[]> {

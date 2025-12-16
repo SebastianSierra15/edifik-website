@@ -3,8 +3,8 @@ import { handleHttpError } from "@/src/shared";
 import {
   requirePermission,
   Permission as PermissionEnum,
-} from "@/src/modules/auth";
-import { getPermissionsController } from "@/src/modules/roles";
+  getPermissionsController,
+} from "@/src/modules";
 
 export async function GET() {
   try {

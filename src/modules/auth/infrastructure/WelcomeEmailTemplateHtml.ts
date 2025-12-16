@@ -1,4 +1,4 @@
-import { buildDefaultEmailTemplate } from "@/src/modules/shared";
+import { buildDefaultEmailTemplate } from "@/src/modules";
 import { WelcomeEmailTemplate } from "../domain/WelcomeEmailTemplate";
 
 export class WelcomeEmailTemplateHtml implements WelcomeEmailTemplate {

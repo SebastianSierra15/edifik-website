@@ -1,15 +1,15 @@
 export interface AdminProjectsSearchFilters {
   page: number;
   pageSize: number;
-
   searchTerm?: string | null;
-  projectTypeId: number;
 
   price?: number | null;
-  area?: string | null;
-  bedrooms?: string | null;
-  bathrooms?: string | null;
-  lobbies?: string | null;
+  area?: number | null;
+  bedrooms?: number | null;
+  bathrooms?: number | null;
+  lobbies?: number | null;
+
+  projectTypeId: number;
 
   minLat?: number | null;
   maxLat?: number | null;

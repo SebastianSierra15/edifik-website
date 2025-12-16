@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
-import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
+import { escapeSearchTerm } from "@/utils";
 import { GetRequestsRepository } from "../domain/RequestRepository";
 import { Request } from "../domain/Request";
 

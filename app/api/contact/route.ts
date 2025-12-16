@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { sendContactMessageController } from "@/src/modules/contact";
+import { sendContactMessageController } from "@/src/modules";
 
 export async function POST(req: Request) {
   try {

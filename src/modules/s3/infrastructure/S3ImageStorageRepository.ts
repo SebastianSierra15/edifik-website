@@ -1,5 +1,5 @@
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { s3Client } from "@/src/modules/shared";
+import { s3Client } from "@/src/modules";
 import { ImageStorageRepository } from "../domain/ImageStorageRepository";
 
 export class S3ImageStorageRepository implements ImageStorageRepository {

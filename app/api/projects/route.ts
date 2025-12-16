@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { Permission as PermissionEnum } from "@/src/modules/auth";
-import { requireAuth, requirePermission } from "@/src/modules/auth";
 import {
+  requireAuth,
+  requirePermission,
+  Permission as PermissionEnum,
   searchAdminProjectsController,
   updateProjectController,
   createProjectController,
   deleteProjectStateController,
-} from "@/src/modules/projects";
+} from "@/src/modules";
 
 export async function GET(req: Request) {
   try {
@@ -31,10 +32,17 @@ export async function GET(req: Request) {
       ? Number(searchParams.get("price"))
       : null;
 
-    const area = searchParams.get("area");
-    const bedrooms = searchParams.get("bedrooms");
-    const bathrooms = searchParams.get("bathrooms");
-    const lobbies = searchParams.get("lobbies");
+    const parseOptionalNumber = (value: string | null): number | null => {
+      if (value === null || value.trim() === "") return null;
+
+      const parsed = Number(value);
+      return Number.isNaN(parsed) ? null : parsed;
+    };
+
+    const area = parseOptionalNumber(searchParams.get("area"));
+    const bedrooms = parseOptionalNumber(searchParams.get("bedrooms"));
+    const bathrooms = parseOptionalNumber(searchParams.get("bathrooms"));
+    const lobbies = parseOptionalNumber(searchParams.get("lobbies"));
 
     const projectTypeId = Number(searchParams.get("projectTypeId") ?? 1);
 

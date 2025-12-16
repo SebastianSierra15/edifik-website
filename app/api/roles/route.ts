@@ -4,13 +4,11 @@ import {
   requireAuth,
   requirePermission,
   Permission as PermissionEnum,
-} from "@/src/modules/auth";
-import {
   getRolesController,
   createRoleController,
   updateRoleController,
   deleteRoleController,
-} from "@/src/modules/roles";
+} from "@/src/modules";
 
 export async function GET(req: Request) {
   try {

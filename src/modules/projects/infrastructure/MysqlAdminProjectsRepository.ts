@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
 import { ProjectSummary } from "@/src/interfaces";
-import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
+import { escapeSearchTerm } from "@/utils";
 import { AdminProjectsRepository } from "../domain/ProjectsRepository";
 import { AdminProjectsSearchFilters } from "../domain/AdminProjectsSearchFilters";
 

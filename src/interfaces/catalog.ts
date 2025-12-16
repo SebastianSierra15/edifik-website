@@ -8,7 +8,7 @@ export interface Gender {
   name: string;
 }
 
-export interface Membership {
+export interface MembershipSummary {
   id: number;
   name: string;
 }
@@ -23,4 +23,10 @@ export interface Membership {
   discountTwelveMonths?: number | null;
   maxProjects: number;
   projectsFeatured?: number | null;
+}
+
+export interface RoleWrite {
+  id?: number;
+  name: string;
+  permissions: number[];
 }

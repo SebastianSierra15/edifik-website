@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
 import { Membership } from "@/src/interfaces";
-import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
+import { escapeSearchTerm } from "@/utils";
 import { GetMembershipsRepository } from "../domain/MembershipRepository";
 
 export class MysqlGetMembershipsRepository implements GetMembershipsRepository {

@@ -1,8 +1,8 @@
+import { db } from "@/lib/db";
+import { RowDataPacket, ResultSetHeader } from "mysql2";
 import { PaymentRepository } from "../domain/PaymentRepository";
 import { PaymentStatus } from "../domain/PaymentStatus";
 import { Payment } from "../domain/Payment";
-import { db } from "@/lib/db";
-import { RowDataPacket, ResultSetHeader } from "mysql2";
 
 export class MysqlPaymentRepository implements PaymentRepository {
   async findByIdempotencyKey(key: string): Promise<Payment | null> {

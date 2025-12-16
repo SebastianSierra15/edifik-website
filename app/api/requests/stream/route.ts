@@ -1,6 +1,10 @@
 import { NextRequest } from "next/server";
-import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
-import { observePendingRequestsController } from "@/src/modules/requests";
+import {
+  requireAuth,
+  requirePermission,
+  Permission,
+  observePendingRequestsController,
+} from "@/src/modules";
 
 export async function GET(req: NextRequest) {
   await requireAuth();

@@ -2,6 +2,10 @@ export interface ProjectMedia {
   url: string;
   tag: string;
   projectId: number;
+
+  description?: string;
+  commonArea?: number;
+  imageType?: number;
 }
 
 export interface ProjectCity {

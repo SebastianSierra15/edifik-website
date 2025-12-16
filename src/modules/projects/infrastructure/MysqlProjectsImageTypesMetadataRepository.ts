@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
-import { ProjectsImageTypesMetadataRepository } from "../domain/ProjectsRepository";
 import { ImageType } from "@/src/interfaces";
+import { ProjectsImageTypesMetadataRepository } from "../domain/ProjectsRepository";
 
 export class MysqlProjectsImageTypesMetadataRepository
   implements ProjectsImageTypesMetadataRepository

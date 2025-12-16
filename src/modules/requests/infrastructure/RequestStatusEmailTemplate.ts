@@ -1,4 +1,4 @@
-import { buildDefaultEmailTemplate } from "@/src/modules/shared";
+import { buildDefaultEmailTemplate } from "@/src/modules";
 import { RequestStatus } from "../domain/Request";
 
 export class RequestStatusEmailTemplate {

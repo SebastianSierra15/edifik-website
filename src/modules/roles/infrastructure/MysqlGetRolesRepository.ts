@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
 import { Permission } from "@/src/interfaces";
-import { escapeSearchTerm } from "@/utils/escapeSearchTerm";
+import { escapeSearchTerm } from "@/utils";
 import { GetRolesRepository } from "../domain/RoleRepository";
 
 export class MysqlGetRolesRepository implements GetRolesRepository {

@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
-import { uploadImageController, deleteImageController } from "@/src/modules/s3";
+import {
+  requireAuth,
+  requirePermission,
+  Permission,
+  uploadImageController,
+  deleteImageController,
+} from "@/src/modules";
 
 export async function POST(req: Request) {
   try {

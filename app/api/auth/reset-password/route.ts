@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { requireAuth } from "@/src/modules/auth";
+import { requireAuth } from "@/src/modules";
 import {
   sendRecoveryCodeController,
   changePasswordController,

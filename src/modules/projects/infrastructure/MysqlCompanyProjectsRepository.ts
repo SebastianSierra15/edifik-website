@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
-import { CompanyProjectsRepository } from "../domain/ProjectsRepository";
 import { ProjectView } from "@/src/interfaces";
+import { CompanyProjectsRepository } from "../domain/ProjectsRepository";
 
 export class MysqlCompanyProjectsRepository
   implements CompanyProjectsRepository

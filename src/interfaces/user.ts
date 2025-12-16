@@ -1,4 +1,4 @@
-import { Role, Membership, Gender } from "./catalog";
+import { Role, MembershipSummary, Gender } from "./catalog";
 
 export interface User {
   id: number;
@@ -13,7 +13,7 @@ export interface User {
   provider: string;
   gender: Gender;
   role: Role;
-  membership: Membership;
+  membership: MembershipSummary;
 }
 
 /**
@@ -29,4 +29,15 @@ export interface UserEmail {
  */
 export interface UserEmailCheckResult {
   id: number | null;
+}
+
+export interface UserWrite {
+  id?: number; // requerido solo en edición
+  names: string;
+  lastnames: string;
+  email: string;
+  phoneNumber: string | null;
+  genderId: number;
+  roleId: number;
+  membershipId: number;
 }

@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { RowDataPacket } from "mysql2";
-import { UserEmailCheckerRepository } from "../domain/UserRepository";
 import { UserEmailCheckResult } from "@/src/interfaces";
+import { UserEmailCheckerRepository } from "../domain/UserRepository";
 
 export class MysqlUserEmailCheckerRepository
   implements UserEmailCheckerRepository
