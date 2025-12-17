@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import {
-  requireAuth,
-  requirePermission,
-  Permission,
-  getProjectOwnerController,
-} from "@/src/modules";
+import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
+import { getProjectOwnerController } from "@/src/modules/projectsOwner";
 
 export async function GET(req: Request) {
   try {

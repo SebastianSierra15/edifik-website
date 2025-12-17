@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ProjectService } from "@/src/services";
+import { ProjectService } from "@/src/services/projects";
 
 export function useProjectApi() {
   const [isProcessing, setIsProcessing] = useState(false);

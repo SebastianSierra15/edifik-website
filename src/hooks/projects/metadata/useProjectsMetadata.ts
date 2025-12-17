@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ProjectsMetadata } from "@/src/interfaces";
-import { ProjectMetadataService } from "@/src/services";
+import { ProjectMetadataService } from "@/src/services/projects";
 
 export function useProjectsMetadata() {
   const [metadata, setMetadata] = useState<ProjectsMetadata>({

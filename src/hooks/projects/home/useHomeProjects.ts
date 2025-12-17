@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { ProjectView } from "@/src/interfaces";
-import { ProjectHomeService } from "@/src/services";
+import { ProjectHomeService } from "@/src/services/projects";
 
 export function useHomeProjects(numberProjects: number, isProperty: boolean) {
   const [projects, setProjects] = useState<ProjectView[]>([]);

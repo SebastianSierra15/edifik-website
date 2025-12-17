@@ -1,5 +1,5 @@
 import { apiClient } from "@/src/lib";
-import { extractS3KeyFromUrl } from "@/src/modules";
+import { extractS3KeyFromUrl } from "@/src/modules/shared";
 import { Media, ProjectMedia, S3UploadResult } from "@/src/interfaces";
 
 export class S3Service {

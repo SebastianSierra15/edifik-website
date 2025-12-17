@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { NameValidationTarget } from "@/src/interfaces";
-import { NameValidationService } from "@/src/services";
+import { NameValidationService } from "@/src/services/nameValidation";
 
 export function useCheckName() {
   const [isChecking, setIsChecking] = useState(false);

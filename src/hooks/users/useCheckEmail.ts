@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { UserService } from "@/src/services";
+import { UserService } from "@/src/services/users";
 
 export function useCheckEmail() {
   const [loading, setLoading] = useState<boolean>(false);

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ProjectsBasicMetadata } from "@/src/interfaces";
-import { ProjectMetadataService } from "@/src/services";
+import { ProjectMetadataService } from "@/src/services/projects";
 
 export function useBasicMetadata() {
   const [metadata, setMetadata] = useState<ProjectsBasicMetadata | null>(null);

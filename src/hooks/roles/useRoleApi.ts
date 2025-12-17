@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RoleWrite } from "@/src/interfaces";
-import { RoleService } from "@/src/services";
+import { RoleService } from "@/src/services/roles";
 
 export function useRoleApi() {
   const [isProcessing, setIsProcessing] = useState(false);

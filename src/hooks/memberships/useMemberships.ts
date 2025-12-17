@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Membership } from "@/src/interfaces";
-import { MembershipService } from "@/src/services";
+import { MembershipService } from "@/src/services/memberships";
 
 export function useMemberships(
   currentPage: number,

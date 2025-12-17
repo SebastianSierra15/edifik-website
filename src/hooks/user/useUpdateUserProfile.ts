@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { UserProfileService } from "@/src/services";
+import { UserProfileService } from "@/src/services/user";
 
 interface UpdateProfileInput {
   identityDocument?: string;

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { registerUserController } from "@/src/modules";
+import { registerUserController } from "@/src/modules/auth";
 
 export async function POST(req: Request) {
   try {

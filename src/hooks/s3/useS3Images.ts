@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { Media, ProjectMedia } from "@/src/interfaces";
-import { S3Service } from "@/src/services";
+import { S3Service } from "@/src/services/s3";
 
 export function useS3Images() {
   const [status, setStatus] = useState<string | null>(null);

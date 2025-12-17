@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Membership } from "@/src/interfaces";
-import { MembershipService } from "@/src/services";
+import { MembershipService } from "@/src/services/memberships";
 
 export function useMembershipApi() {
   const [isUpdating, setIsUpdating] = useState(false);

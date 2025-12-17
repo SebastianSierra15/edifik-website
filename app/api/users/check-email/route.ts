@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { checkUserEmailController } from "@/src/modules";
+import { checkUserEmailController } from "@/src/modules/users";
 
 export async function GET(req: Request) {
   try {

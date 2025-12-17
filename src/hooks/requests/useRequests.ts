@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Request } from "@/src/interfaces";
-import { RequestService } from "@/src/services";
+import { RequestService } from "@/src/services/requests";
 
 export function useRequests(
   currentPage: number,

@@ -1,4 +1,4 @@
-import { EmailSender, buildDefaultEmailTemplate } from "@/src/modules";
+import { EmailSender, buildDefaultEmailTemplate } from "@/src/modules/shared";
 
 export class ProjectCreatedNotifier {
   constructor(private readonly emailSender: EmailSender) {}

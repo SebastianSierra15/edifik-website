@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { getProjectsMetadataController } from "@/src/modules";
+import { getProjectsMetadataController } from "@/src/modules/projects";
 
 export async function GET() {
   try {

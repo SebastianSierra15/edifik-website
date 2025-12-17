@@ -4,11 +4,13 @@ import {
   requireAuth,
   requirePermission,
   Permission as PermissionEnum,
+} from "@/src/modules/auth";
+import {
   searchAdminProjectsController,
   updateProjectController,
   createProjectController,
   deleteProjectStateController,
-} from "@/src/modules";
+} from "@/src/modules/projects";
 
 export async function GET(req: Request) {
   try {

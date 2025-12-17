@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RequestService } from "@/src/services";
+import { RequestService } from "@/src/services/requests";
 
 const STATUS_MAP = {
   approve: 2,

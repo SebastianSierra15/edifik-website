@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { ProjectView } from "@/src/interfaces";
-import { RealEstateService } from "@/src/services";
+import { RealEstateService } from "@/src/services/realEstate";
 
 interface UseGetPropertiesOptions {
   entriesPerPage: number;

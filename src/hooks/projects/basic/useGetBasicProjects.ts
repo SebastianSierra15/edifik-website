@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { ProjectView } from "@/src/interfaces";
-import { ProjectPublicService } from "@/src/services";
+import { ProjectPublicService } from "@/src/services/projects";
 
 export function useGetBasicProjects() {
   const [projects, setProjects] = useState<ProjectView[]>([]);

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { ProjectOwner } from "@/src/interfaces";
-import { ProjectOwnerService } from "@/src/services";
+import { ProjectOwnerService } from "@/src/services/projects";
 
 export function useOwner(email: string) {
   const [owner, setOwner] = useState<ProjectOwner | null>(null);

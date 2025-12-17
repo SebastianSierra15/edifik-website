@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AuthService, RegisterUserInput } from "@/src/services";
+import { AuthService, RegisterUserInput } from "@/src/services/auth";
 
 export function useRegisterUser() {
   const [loading, setLoading] = useState(false);

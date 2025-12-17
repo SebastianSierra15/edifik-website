@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ImageType } from "@/src/interfaces";
-import { ProjectMetadataService } from "@/src/services";
+import { ProjectMetadataService } from "@/src/services/projects";
 
 export function useImageTypes() {
   const [imagesTypes, setImagesTypes] = useState<ImageType[]>([]);

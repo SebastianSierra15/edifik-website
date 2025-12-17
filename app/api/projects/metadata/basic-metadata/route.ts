@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import {
-  requirePermission,
-  Permission,
-  getProjectsBasicMetadataController,
-} from "@/src/modules";
+import { requirePermission, Permission } from "@/src/modules/auth";
+import { getProjectsBasicMetadataController } from "@/src/modules/projects";
 
 export async function GET() {
   try {

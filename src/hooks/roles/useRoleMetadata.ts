@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Permission } from "@/src/interfaces";
-import { RoleService } from "@/src/services";
+import { RoleService } from "@/src/services/roles";
 
 export function useRoleMetadata() {
   const [permissions, setPermissions] = useState<Permission[]>([]);

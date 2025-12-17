@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ProjectSummary } from "@/src/interfaces";
-import { UserProjectsService } from "@/src/services";
+import { UserProjectsService } from "@/src/services/user";
 
 interface UseMyProjectsOptions {
   entriesPerPage: number;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { ProjectService } from "@/src/services";
+import { ProjectService } from "@/src/services/projects";
 
 export function useDeleteProject() {
   const [loading, setLoading] = useState<boolean>(false);

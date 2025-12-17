@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import Header from "./header/header";
 import Footer from "./footer/footer";
-import AdminHeader from "./admin/adminHeader";
-import AdminFooter from "./admin/adminFooter";
+import AdminHeader from "../../src/components/layout/admin/AdminHeader";
+import AdminFooter from "../../src/components/layout/admin/AdminFooter";
 
 export default function LayoutWrapper({
   children,

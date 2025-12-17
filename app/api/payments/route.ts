@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { createPaymentController } from "@/src/modules";
+import { createPaymentController } from "@/src/modules/payments";
 
 export async function POST(req: NextRequest) {
   try {

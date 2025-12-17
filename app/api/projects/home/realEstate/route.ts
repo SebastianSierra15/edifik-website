@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { getRealEstateProjectsController } from "@/src/modules";
+import { getRealEstateProjectsController } from "@/src/modules/projects";
 
 export async function GET(req: Request) {
   try {

@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { UserEmail } from "@/src/interfaces";
-import { UserService } from "@/src/services";
+import { UserService } from "@/src/services/users";
 
 export function useSearchEmails() {
   const [emails, setEmails] = useState<UserEmail[]>([]);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AuthService, ChangePasswordInput } from "@/src/services";
+import { AuthService, ChangePasswordInput } from "@/src/services/auth";
 
 export function useChangePassword() {
   const [loading, setLoading] = useState(false);

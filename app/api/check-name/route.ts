@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { checkNameController } from "@/src/modules";
+import { checkNameController } from "@/src/modules/nameValidation";
 
 export async function GET(req: Request) {
   try {

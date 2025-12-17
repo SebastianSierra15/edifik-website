@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProjectDetails } from "@/src/interfaces";
-import { ProjectService } from "@/src/services";
+import { ProjectService } from "@/src/services/projects";
 
 export function useProjectById(
   id?: number,

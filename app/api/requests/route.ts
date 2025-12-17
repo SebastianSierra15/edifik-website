@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
+import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
 import {
-  requireAuth,
-  requirePermission,
-  Permission,
   getRequestsController,
   updateRequestController,
-} from "@/src/modules";
+} from "@/src/modules/requests";
 
 export async function GET(req: Request) {
   try {

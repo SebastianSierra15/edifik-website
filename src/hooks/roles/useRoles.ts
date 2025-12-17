@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Role } from "@/src/interfaces";
-import { RoleService } from "@/src/services";
+import { RoleService } from "@/src/services/roles";
 
 export function useRoles(
   currentPage: number,

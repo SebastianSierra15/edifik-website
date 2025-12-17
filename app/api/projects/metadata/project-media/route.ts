@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
+import { requirePermission, Permission } from "@/src/modules/auth";
 import {
-  requirePermission,
-  Permission,
   createProjectMediaController,
   updateProjectMediaController,
   deleteProjectMediaController,
-} from "@/src/modules";
+} from "@/src/modules/projects";
 
 export async function POST(req: Request) {
   try {

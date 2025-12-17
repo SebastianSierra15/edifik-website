@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import type { ProjectSummary } from "@/src/interfaces";
-import { ProjectService } from "@/src/services";
+import { ProjectService } from "@/src/services/projects";
 
 interface UseProjectsOptions {
   entriesPerPage: number;

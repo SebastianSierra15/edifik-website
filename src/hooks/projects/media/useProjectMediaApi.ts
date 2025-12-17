@@ -5,7 +5,7 @@ import {
   ProjectMediaService,
   CreateProjectMediaInput,
   UpdateProjectMediaInput,
-} from "@/src/services";
+} from "@/src/services/projects";
 
 export function useProjectMediaApi() {
   const [loading, setLoading] = useState<boolean>(false);

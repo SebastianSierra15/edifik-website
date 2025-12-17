@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Role, Gender, MembershipSummary } from "@/src/interfaces";
-import { UserService } from "@/src/services";
+import { UserService } from "@/src/services/users";
 
 export const useUsersMetadata = () => {
   const [roles, setRoles] = useState<Role[]>([]);

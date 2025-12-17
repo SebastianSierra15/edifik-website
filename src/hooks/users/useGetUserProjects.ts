@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { ProjectSummary } from "@/src/interfaces";
-import { UserService } from "@/src/services";
+import { UserService } from "@/src/services/users";
 
 interface UseUserProjectsOptions {
   userId: number;

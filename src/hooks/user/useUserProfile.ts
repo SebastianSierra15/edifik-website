@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { UserProfile, Gender } from "@/src/interfaces";
-import { UserProfileService } from "@/src/services";
+import { UserProfileService } from "@/src/services/user";
 
 export function useUserProfile() {
   const [user, setUser] = useState<UserProfile | null>(null);

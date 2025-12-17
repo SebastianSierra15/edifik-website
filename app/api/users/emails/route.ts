@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import {
-  requirePermission,
-  Permission,
-  searchUserEmailsController,
-} from "@/src/modules";
+import { requirePermission, Permission } from "@/src/modules/auth";
+import { searchUserEmailsController } from "@/src/modules/users";
 
 export async function GET(req: Request) {
   try {

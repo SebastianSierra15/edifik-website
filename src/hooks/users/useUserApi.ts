@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UserWrite } from "@/src/interfaces";
-import { UserService } from "@/src/services";
+import { UserService } from "@/src/services/users";
 
 export const useUserApi = () => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
