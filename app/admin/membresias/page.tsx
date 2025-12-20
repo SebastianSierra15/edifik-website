@@ -8,10 +8,10 @@ import { Membership, Header } from "@/lib/definitios";
 import { useMemberships } from "@/app/hooks/memberships/useMemberships";
 import { useMembershipValidation } from "@/app/hooks/memberships/useMembershipValidation";
 import { useMembershipUpdate } from "@/app/hooks/memberships/useMembershipUpdate";
-import Alert from "@/app/ui/alert";
-import Table from "@/app/ui/admin/table/table";
-import TableSkeleton from "@/app/ui/skeletons/admin/tableSkeleton";
-import ModalConfirmation from "@/app/ui/modals/admin/modalConfirmation";
+import Alert from "@/src/components/shared/alert/ATlert";
+import Table from "@/src/components/shared/admin/table/Table";
+import TableSkeleton from "@/src/components/shared/admin/table/TableSkeleton";
+import ModalConfirmation from "@/src/components/shared/modal/ModalConfirmation";
 
 const MembershipModal = dynamic(
   () => import("@/app/ui/admin/memberships/membershipModal"),

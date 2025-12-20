@@ -1,4 +1,4 @@
-import { Role, Permission } from "@/src/interfaces";
+import { RoleWithPermissions, Permission } from "@/src/interfaces";
 
 export interface GetRolesRepository {
   getAll(params: {
@@ -6,7 +6,7 @@ export interface GetRolesRepository {
     pageSize: number;
     searchTerm?: string | null;
   }): Promise<{
-    roles: (Role & { permissions: Permission[] })[];
+    roles: RoleWithPermissions[];
     total: number;
   }>;
 }
@@ -14,7 +14,7 @@ export interface GetRolesRepository {
 export interface CreateRoleRepository {
   create(data: {
     name: string;
-    permissions: Permission[];
+    permissions: number[];
     createdBy: number;
   }): Promise<void>;
 }
@@ -23,7 +23,7 @@ export interface UpdateRoleRepository {
   update(data: {
     id: number;
     name: string;
-    permissions: Permission[];
+    permissions: number[];
     updatedBy: number;
   }): Promise<void>;
 }

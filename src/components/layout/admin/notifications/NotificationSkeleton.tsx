@@ -1,4 +1,4 @@
-export default function NotificationSkeleton() {
+export function NotificationSkeleton() {
   return (
     <ul className="p-4 space-y-3">
       {Array.from({ length: 5 }).map((_, index) => (

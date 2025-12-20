@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import NotificationSkeleton from "./NotificationSkeleton";
-import NotificationItem from "./NotificationItem";
+import { NotificationSkeleton } from "./NotificationSkeleton";
+import { NotificationItem } from "./NotificationItem";
 import { PendingRequest } from "@/src/interfaces";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function NotificationsPanel({
+export function NotificationsPanel({
   isOpen,
   notifications,
   isLoading,

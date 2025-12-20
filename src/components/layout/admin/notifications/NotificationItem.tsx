@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import clsx from "clsx";
 import { PendingRequest } from "@/src/interfaces";
 
-export default function NotificationItem({
+export function NotificationItem({
   notification,
   onClick,
 }: {

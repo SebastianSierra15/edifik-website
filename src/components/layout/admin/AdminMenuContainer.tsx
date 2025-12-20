@@ -5,18 +5,15 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import clsx from "clsx";
 import { AdminMenuItem } from "@/src/hooks/admin";
-import NotificationsContainer from "./notifications/Notificactions.container";
-import AdminMenuButton from "./AdminMenuButton";
+import { NotificationsContainer } from "./notifications";
+import { AdminMenuButton } from "./AdminMenuButton";
 
 interface Props {
   menuItems: AdminMenuItem[];
   canManageRequests: boolean;
 }
 
-export default function AdminMenuContainer({
-  menuItems,
-  canManageRequests,
-}: Props) {
+export function AdminMenuContainer({ menuItems, canManageRequests }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
 

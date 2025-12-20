@@ -2,11 +2,14 @@ import { useEffect, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { X } from "lucide-react";
 
-const FormInput = dynamic(() => import("@/app/ui/modals/admin/formInput"), {
-  ssr: false,
-});
+const FormInput = dynamic(
+  () => import("@/src/components/shared/form/FormInput"),
+  {
+    ssr: false,
+  }
+);
 const FormTextArea = dynamic(
-  () => import("@/app/ui/modals/admin/formTextArea"),
+  () => import("@/src/components/shared/form/FormTextArea"),
   {
     ssr: false,
   }

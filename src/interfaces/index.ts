@@ -5,5 +5,6 @@ export * from "./project-metadata";
 export * from "./project";
 export * from "./request";
 export * from "./s3";
+export * from "./table";
 export * from "./user-profile";
 export * from "./user";

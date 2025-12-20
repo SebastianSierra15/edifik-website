@@ -1,7 +1,7 @@
 import { ProjectData } from "@/lib/definitios";
 import LocationMap from "../locationMap";
 import StepNavigationButtons from "../../stepNavigationButtons";
-import FormDisplay from "@/app/ui/modals/admin/formDisplay";
+import FormDisplay from "@/src/components/shared/form/FormDisplay";
 
 interface LocationProjectViewProps {
   project: ProjectData;

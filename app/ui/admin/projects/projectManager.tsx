@@ -10,7 +10,7 @@ import { useGetProjects } from "@/app/hooks/projects/useGetProjects";
 import { useProjectApi } from "@/app/hooks/projects/useProjectApi";
 import { useOwner } from "@/app/hooks/projects/owner/useOwner";
 import FilterMapControls from "@/app/ui/admin/projects/filter/filterMapControls";
-import Alert from "@/app/ui/alert";
+import Alert from "@/src/components/shared/alert/ATlert";
 import ProjectSkeletonList from "../../skeletons/projectSkeletonList";
 
 const MapToggleButton = dynamic(() => import("./filter/mapToggleButton"), {
@@ -30,7 +30,7 @@ const OwnerModal = dynamic(
   }
 );
 const ModalConfirmation = dynamic(
-  () => import("@/app/ui/modals/admin/modalConfirmation"),
+  () => import("@/src/components/shared/modal/ModalConfirmation"),
   { ssr: false }
 );
 

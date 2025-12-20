@@ -2,7 +2,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { AdminMenuItem } from "@/src/hooks/admin";
 
-export default function AdminNav({ items }: { items: AdminMenuItem[] }) {
+export function AdminNav({ items }: { items: AdminMenuItem[] }) {
   return (
     <nav
       className="flex-1 justify-center space-x-6 items-center min-h-9 hidden md:flex"

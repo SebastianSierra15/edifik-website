@@ -8,7 +8,7 @@ import { useUpdateUserProfile } from "@/app/hooks/user/useUpdateUserProfile";
 import { useChangePassword } from "@/app/hooks/auth/resetPassword/useChangePassword";
 import ModalConfirmation from "../modals/home/modalConfirmation";
 import ModalChangePassword from "./modalChangePassword";
-import Alert from "../alert";
+import Alert from "../../../src/components/shared/alert/Alert";
 import Loader from "../loader";
 
 const ProfileForm = dynamic(() => import("../../ui/profile/profileForm"), {

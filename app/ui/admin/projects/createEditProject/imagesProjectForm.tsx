@@ -5,7 +5,7 @@ import { ProjectData, ImageType, Media } from "@/lib/definitios";
 import { useImagesProjectValidation } from "@/app/hooks/projects/createEditProject/useImagesProjectValidation";
 import ImageUploadSection from "./imageUploadSection";
 import StepNavigationButtons from "../../stepNavigationButtons";
-import ModalAlert from "../../../modals/admin/modalAlert";
+import ModalAlert from "../../../../../src/components/shared/modal/ModalAlert";
 
 interface UploadImagesFormProps {
   formData: ProjectData;

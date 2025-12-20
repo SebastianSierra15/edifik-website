@@ -6,7 +6,7 @@ import { useGetMyProjects } from "@/app/hooks/user/useGetMyProjects";
 import { useUserProjectApi } from "@/app/hooks/user/useUserProjectApi";
 import PropertiesContainer from "@/app/ui/user/propertiesContainer";
 import StatusFilterTabs from "@/app/ui/user/statusFilterTabs";
-import Alert from "@/app/ui/alert";
+import Alert from "@/src/components/shared/alert/ATlert";
 
 const ModalConfirmation = dynamic(
   () => import("@/app/ui/modals/home/modalConfirmation"),

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { ProjectData } from "@/lib/definitios";
-import FormDisplay from "@/app/ui/modals/admin/formDisplay";
+import FormDisplay from "@/src/components/shared/form/FormDisplay";
 import StepNavigationButtons from "../../stepNavigationButtons";
 
 interface FeaturesProjectViewProps {

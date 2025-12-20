@@ -7,7 +7,7 @@ interface Props {
   onToggle: () => void;
 }
 
-export default function AdminMenuButton({ open, onToggle }: Props) {
+export function AdminMenuButton({ open, onToggle }: Props) {
   return (
     <button
       onClick={onToggle}

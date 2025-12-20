@@ -6,7 +6,7 @@ import {
   HousingType,
 } from "@/lib/definitios";
 import { formatNumber } from "@/utils/formatters";
-import FormDisplay from "@/app/ui/modals/admin/formDisplay";
+import FormDisplay from "@/src/components/shared/form/FormDisplay";
 import StepNavigationButtons from "../../stepNavigationButtons";
 
 interface DetailsProjectViewProps {

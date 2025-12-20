@@ -2,9 +2,9 @@ import { useCallback, useMemo } from "react";
 import { ProjectData } from "@/lib/definitios";
 import { useFeaturesProjectValidation } from "@/app/hooks/projects/createEditProject/useFeaturesProjectValidation";
 import StepNavigationButtons from "../../stepNavigationButtons";
-import FormInput from "@/app/ui/modals/admin/formInput";
-import FormSelect from "@/app/ui/modals/admin/formSelect";
-import FormCheckboxToggle from "@/app/ui/modals/admin/formCheckboxToggle";
+import FormInput from "@/src/components/shared/form/FormInput";
+import FormSelect from "@/src/components/shared/form/FormSelect";
+import FormCheckboxToggle from "@/src/components/shared/form/FormCheckboxToggle";
 
 interface FeaturesProjectFormProps {
   formData: ProjectData;

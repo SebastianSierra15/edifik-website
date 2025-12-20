@@ -9,11 +9,7 @@ interface Props {
   onToggle: () => void;
 }
 
-export default function NotificationBell({
-  unreadCount,
-  isOpen,
-  onToggle,
-}: Props) {
+export function NotificationBell({ unreadCount, isOpen, onToggle }: Props) {
   return (
     <button
       onClick={onToggle}

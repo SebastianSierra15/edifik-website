@@ -1,17 +1,23 @@
 import { useBodyOverflow } from "@/app/hooks/useBodyOverflow ";
 import { UserData, Role, Gender, MembershipSummary } from "@/lib/definitios";
-import ModalHeader from "../../modals/admin/modalHeader";
-import ModalFooter from "../../modals/admin/modalFooter";
+import ModalHeader from "../../../../src/components/shared/modal/ModalHeader";
+import ModalFooter from "../../../../src/components/shared/modal/ModalFooter";
 import dynamic from "next/dynamic";
 
-const FormInput = dynamic(() => import("@/app/ui/modals/admin/formInput"), {
-  ssr: false,
-});
-const FormSelect = dynamic(() => import("@/app/ui/modals/admin/formSelect"), {
-  ssr: false,
-});
+const FormInput = dynamic(
+  () => import("@/src/components/shared/form/FormInput"),
+  {
+    ssr: false,
+  }
+);
+const FormSelect = dynamic(
+  () => import("@/src/components/shared/form/FormSelect"),
+  {
+    ssr: false,
+  }
+);
 const FormCheckbox = dynamic(
-  () => import("@/app/ui/modals/admin/formCheckbox"),
+  () => import("@/src/components/shared/form/FormCheckbox"),
   {
     ssr: false,
   }

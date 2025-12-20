@@ -7,11 +7,11 @@ import { Request, Header } from "@/lib/definitios";
 import { useRequests } from "@/app/hooks/requests/useRequests";
 import { useRequestApi } from "@/app/hooks/requests/useRequestApi";
 import { useRequestValidation } from "@/app/hooks/requests/useRequestValidation";
-import Table from "@/app/ui/admin/table/table";
-import TableSkeleton from "@/app/ui/skeletons/admin/tableSkeleton";
+import Table from "@/src/components/shared/admin/table/Table";
+import TableSkeleton from "@/src/components/shared/admin/table/TableSkeleton";
 import RequestModal from "@/app/ui/admin/requests/requestModal";
-import ModalConfirmation from "@/app/ui/modals/admin/modalConfirmation";
-import Alert from "@/app/ui/alert";
+import ModalConfirmation from "@/src/components/shared/modal/ModalConfirmation";
+import Alert from "@/src/components/shared/alert/ATlert";
 
 export default function RequestsPage() {
   const [currentPage, setCurrentPage] = useState(1);

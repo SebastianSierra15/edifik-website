@@ -17,7 +17,7 @@ import LocationProjectForm from "@/app/ui/admin/projects/createEditProject/locat
 import FeaturesProjectForm from "@/app/ui/admin/projects/createEditProject/featuresProjectForm";
 import DetailsProjectForm from "@/app/ui/admin/projects/createEditProject/detailsProjectForm";
 import ImagesProjectForm from "@/app/ui/admin/projects/createEditProject/imagesProjectForm";
-import ModalConfirmation from "@/app/ui/modals/admin/modalConfirmation";
+import ModalConfirmation from "@/src/components/shared/modal/ModalConfirmation";
 import CreateProjectSkeleton from "@/app/ui/skeletons/admin/createProjectSkeleton";
 import Loader from "@/app/ui/loader";
 

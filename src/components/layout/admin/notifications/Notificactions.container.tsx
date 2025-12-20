@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePendingRequests } from "@/src/hooks/requests";
-import NotificationBell from "./NotificationBell";
-import NotificationsPanel from "./NotificationsPanel";
+import { NotificationBell } from "./NotificationBell";
+import { NotificationsPanel } from "./NotificationsPanel";
 
-export default function NotificationsContainer() {
+export function NotificationsContainer() {
   const [open, setOpen] = useState(false);
   const { requests, isLoadingRequests } = usePendingRequests();
   const ref = useRef<HTMLDivElement>(null);

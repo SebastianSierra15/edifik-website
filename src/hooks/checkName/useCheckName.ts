@@ -1,58 +1,27 @@
-import { useState, useCallback } from "react";
-import { NameValidationTarget } from "@/src/interfaces";
-import { NameValidationService } from "@/src/services/nameValidation";
+import { apiClient } from "@/src/lib";
+import { NameValidationTarget } from "@/src/modules/nameValidation/domain/NameValidationTarget";
 
 export function useCheckName() {
-  const [isChecking, setIsChecking] = useState(false);
-  const [totalMatches, setTotalMatches] = useState<number | null>(null);
-  const [cachedResults, setCachedResults] = useState<Record<string, number>>(
-    {}
-  );
+  const checkName = async (
+    target: NameValidationTarget,
+    name: string,
+    excludeId?: number
+  ): Promise<number> => {
+    const params = new URLSearchParams({
+      target,
+      name,
+    });
 
-  const checkName = useCallback(
-    async (
-      target: NameValidationTarget,
-      name: string,
-      excludeId?: number
-    ): Promise<number> => {
-      if (!target || !name) return 0;
+    if (excludeId !== undefined) {
+      params.set("id", excludeId.toString());
+    }
 
-      const cacheKey = `${target}:${name}:${excludeId ?? "new"}`;
+    const { total } = await apiClient.get<{ total: number }>(
+      `/api/check-name?${params.toString()}`
+    );
 
-      if (cachedResults[cacheKey] !== undefined) {
-        return cachedResults[cacheKey];
-      }
-
-      setIsChecking(true);
-
-      try {
-        const total = await NameValidationService.checkName({
-          target,
-          name,
-          excludeId,
-        });
-
-        setCachedResults((prev) => ({
-          ...prev,
-          [cacheKey]: total,
-        }));
-
-        setTotalMatches(total);
-        return total;
-      } catch (error) {
-        console.error("Error checking name:", error);
-        setTotalMatches(null);
-        return 0;
-      } finally {
-        setIsChecking(false);
-      }
-    },
-    [cachedResults]
-  );
-
-  return {
-    isChecking,
-    totalMatches,
-    checkName,
+    return total;
   };
+
+  return { checkName };
 }

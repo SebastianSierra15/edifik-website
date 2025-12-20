@@ -1,5 +1,5 @@
 import { apiClient } from "@/src/lib";
-import { Role, Permission, RoleWrite } from "@/src/interfaces";
+import { RoleWithPermissions, Permission, RoleWrite } from "@/src/interfaces";
 
 export interface GetRolesParams {
   page: number;
@@ -8,7 +8,7 @@ export interface GetRolesParams {
 }
 
 export interface GetRolesResponse {
-  roles: Role[];
+  roles: RoleWithPermissions[];
   totalEntries: number;
 }
 
@@ -40,8 +40,8 @@ export class RoleService {
   }
 
   static async deleteRole(roleId: number): Promise<void> {
-    await apiClient.delete<void, { roleId: number }>("/api/roles", {
-      roleId,
+    await apiClient.delete<void, { id: number }>("/api/roles", {
+      id: roleId,
     });
   }
 }

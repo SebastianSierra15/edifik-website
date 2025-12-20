@@ -3,10 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useAdminMenu } from "@/src/hooks/admin";
-import AdminNav from "./AdminNav";
-import AdminMenuContainer from "./AdminMenuContainer";
+import { AdminNav } from "./AdminNav";
+import { AdminMenuContainer } from "./AdminMenuContainer";
 
-export default function AdminHeader() {
+export function AdminHeader() {
   const { menuItems, canManageRequests } = useAdminMenu();
 
   return (

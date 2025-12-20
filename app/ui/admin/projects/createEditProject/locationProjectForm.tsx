@@ -3,9 +3,9 @@ import { ProjectData, City, Departament } from "@/lib/definitios";
 import { useLocationProjectValidation } from "@/app/hooks/projects/createEditProject/useLocationProjectValidation";
 import StepNavigationButtons from "../../stepNavigationButtons";
 import LocationMap from "../locationMap";
-import FormSearchAddress from "../../../modals/admin/formSearchAddress";
-import FormSelect from "../../../modals/admin/formSelect";
-import FormInput from "../../../modals/admin/formInput";
+import FormSearchAddress from "../../../../../src/components/shared/form/FormSearchAddress";
+import FormSelect from "../../../../../src/components/shared/form/FormSelect";
+import FormInput from "../../../../../src/components/shared/form/FormInput";
 
 interface LocationProjectFormProps {
   formData: ProjectData;

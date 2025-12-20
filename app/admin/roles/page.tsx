@@ -1,160 +1,185 @@
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import { Role, Header } from "@/lib/definitios";
+import { useMemo, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { Plus } from "lucide-react";
-import { useRoles } from "@/app/hooks/roles/useRoles";
-import { useRoleValidation } from "@/app/hooks/roles/useRoleValidation";
-import { useRoleApi } from "@/app/hooks/roles/useRoleApi";
-import { usePermissions } from "@/app/hooks/roles/usePermissions";
-import Table from "@/app/ui/admin/table/table";
-import TableSkeleton from "@/app/ui/skeletons/admin/tableSkeleton";
-import Alert from "@/app/ui/alert";
-import ModalConfirmation from "@/app/ui/modals/admin/modalConfirmation";
+import dynamic from "next/dynamic";
 
-const RoleModal = dynamic(() => import("@/app/ui/admin/roles/roleModal"), {
-  ssr: false,
-});
+import { useAlert, useConfirmation } from "@/src/providers";
+
+import type {
+  Permission,
+  RoleWithPermissions,
+  RoleWrite,
+} from "@/src/interfaces";
+import {
+  useRoles,
+  useRoleApi,
+  useRoleMetadata,
+  useRoleValidation,
+} from "@/src/hooks/roles";
+
+import { Table, TableSkeleton } from "@/src/components/shared";
+
+const RoleModal = dynamic(
+  () => import("@/src/components/admin/roles").then((mod) => mod.RoleModal),
+  { ssr: false }
+);
+
+type RoleAction = "create" | "edit" | "delete";
+
+function mapRoleToWrite(role: RoleWithPermissions): RoleWrite {
+  return {
+    id: role.id || undefined,
+    name: role.name,
+    permissions: (role.permissions ?? []).map((p) => p.id),
+  };
+}
+
+function createEmptyRole(): RoleWithPermissions {
+  return { id: 0, name: "", permissions: [] };
+}
 
 export default function RolesPage() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [entriesPerPage, setEntriesPerPage] = useState(10);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editRole, setEditRole] = useState<Role | null>(null);
-  const [registerRole, setRegisterRole] = useState<Role>({
-    id: 0,
-    name: "",
-    permissions: [],
-  });
-  const [tempEditRole, setTempEditRole] = useState<Role | null>(null);
-  const [deleteRole, setDeleteRole] = useState<Role | null>(null);
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [confirmationAction, setConfirmationAction] = useState<
-    "register" | "edit" | "delete" | null
-  >(null);
-  const [flag, setFlag] = useState(true);
-  const [alert, setAlert] = useState({
-    type: "" as "success" | "error" | null,
-    message: "",
-    show: false,
-  });
+  // providers
+  const { showAlert } = useAlert();
+  const confirm = useConfirmation();
 
-  const { roles, totalEntries, isLoadingRoles, refetchRoles } = useRoles(
+  // table ux
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [entriesPerPage, setEntriesPerPage] = useState<number>(10);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  // modals & action
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [action, setAction] = useState<RoleAction | null>(null);
+
+  // form state (single source of truth)
+  const [activeRole, setActiveRole] =
+    useState<RoleWithPermissions>(createEmptyRole());
+
+  // ui helpers
+  const [flag, setFlag] = useState<boolean>(true);
+
+  const { roles, totalEntries, loading, refetchRoles } = useRoles(
     currentPage,
     entriesPerPage,
     searchTerm
   );
-  const { permissions } = usePermissions();
 
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
-  const showSkeleton = !hasLoadedOnce && isLoadingRoles;
-  if (!isLoadingRoles && !hasLoadedOnce) {
-    setHasLoadedOnce(true);
-  }
+  const { permissions } = useRoleMetadata();
+  const { submitRole, error } = useRoleApi();
+
+  const roleWrite = useMemo(() => mapRoleToWrite(activeRole), [activeRole]);
 
   const { errors, validateFields } = useRoleValidation(
-    editRole || registerRole,
-    !!editRole
+    roleWrite,
+    action === "edit"
   );
-
-  const { submitRole } = useRoleApi();
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
     setSearchTerm(term);
     setCurrentPage(1);
   }, 500);
 
-  const handleEditClick = (role: Role) => {
-    setEditRole(role);
-    setTempEditRole({ ...role });
+  // ------- handlers -------
+  const openCreate = () => {
+    setActiveRole(createEmptyRole());
+    setAction("create");
     setModalOpen(true);
   };
 
-  const handleRegisterClick = () => {
-    setEditRole(null);
-    setRegisterRole({ id: 0, name: "", permissions: [] });
+  const openEdit = (role: RoleWithPermissions) => {
+    setActiveRole({ ...role, permissions: role.permissions ?? [] });
+    setAction("edit");
     setModalOpen(true);
   };
 
-  const handleDeleteClick = (role: Role) => {
-    setDeleteRole(role);
-    setConfirmationAction("delete");
-    setIsConfirmationModalOpen(true);
+  const openDelete = async (role: RoleWithPermissions) => {
+    setAction("delete");
+
+    const accepted = await confirm({
+      title: "Eliminar rol",
+      message: "¿Estás seguro de que quieres eliminar este rol?",
+      confirmClassName: "bg-red-600 hover:bg-red-700",
+    });
+
+    if (!accepted) return;
+
+    await handleConfirmedAction("delete", role.id);
   };
 
-  const handleConfirmedAction = async () => {
-    let roleData: Role | null = null;
-
-    if (confirmationAction === "delete") {
-      if (!deleteRole || !deleteRole.id) {
-        console.error("Error: No se puede eliminar un rol sin ID.");
-        setAlert({
-          type: "error",
-          message: "Error: No se puede eliminar un rol sin ID.",
-          show: true,
-        });
-        return;
-      }
-      roleData = deleteRole;
-    } else {
-      roleData = confirmationAction === "edit" ? tempEditRole : registerRole;
-    }
-
-    if (!roleData) return;
-
-    const success = await submitRole(roleData, confirmationAction!);
-
-    if (success) {
-      setModalOpen(false);
-      setIsConfirmationModalOpen(false);
-      setFlag(true);
-
-      if (confirmationAction === "edit") {
-        setEditRole(tempEditRole);
-      }
-
-      await refetchRoles();
-
-      setAlert({
-        type: "success",
-        message: `Rol ${
-          confirmationAction === "edit"
-            ? "editado"
-            : confirmationAction === "delete"
-              ? "eliminado"
-              : "registrado"
-        } correctamente.`,
-        show: true,
-      });
-    } else {
-      setIsConfirmationModalOpen(false);
-      setAlert({
-        type: "error",
-        message: "Lo sentimos, algo salió mal, inténtalo más tarde.",
-        show: true,
-      });
-    }
+  const closeModal = () => {
+    setModalOpen(false);
+    setFlag(true);
   };
 
   const handleConfirmSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFlag(false);
 
+    if (!action || action === "delete") return;
+
     const isValid = await validateFields();
-    if (!isValid) {
+    if (!isValid) return;
+
+    const accepted = await confirm({
+      title: "Confirmar acción",
+      message: confirmMessage,
+    });
+
+    if (!accepted) return;
+
+    await handleConfirmedAction();
+  };
+
+  const handleConfirmedAction = async (
+    forcedAction?: RoleAction,
+    roleId?: number
+  ): Promise<void> => {
+    const finalAction = forcedAction ?? action;
+    if (!finalAction) return;
+
+    let success = false;
+
+    if (finalAction === "delete") {
+      const idToDelete = roleId ?? activeRole.id;
+      if (!idToDelete) return;
+
+      success = await submitRole(
+        { id: idToDelete, name: "", permissions: [] },
+        "delete"
+      );
+    } else {
+      success = await submitRole(roleWrite, finalAction);
+    }
+
+    if (!success) {
+      showAlert({
+        type: "error",
+        message: error ?? "Lo sentimos, algo salió mal.",
+      });
       return;
     }
 
-    setConfirmationAction(editRole ? "edit" : "register");
-    setIsConfirmationModalOpen(true);
-  };
-
-  const handleCloseConfirmationModal = () => {
-    setIsConfirmationModalOpen(false);
+    setModalOpen(false);
     setFlag(true);
+
+    await refetchRoles();
+
+    showAlert({
+      type: "success",
+      message: `Rol ${
+        finalAction === "edit"
+          ? "editado"
+          : finalAction === "delete"
+            ? "eliminado"
+            : "registrado"
+      } correctamente.`,
+    });
+
+    setAction(null);
+    setActiveRole(createEmptyRole());
   };
 
   const handleChange = (
@@ -163,64 +188,37 @@ export default function RolesPage() {
     const { name, value } = e.target;
 
     if (name === "addPermission") {
-      const selectedPermission = permissions.find(
-        (perm) => perm.id === Number(value)
+      const selected = permissions.find(
+        (p: Permission) => p.id === Number(value)
       );
-      if (!selectedPermission) return;
+      if (!selected) return;
 
-      if (tempEditRole) {
-        setTempEditRole((prev) => ({
-          ...prev!,
-          permissions: [...(prev!.permissions || []), selectedPermission],
-        }));
-      } else {
-        setRegisterRole((prev) => ({
-          ...prev,
-          permissions: [...(prev.permissions || []), selectedPermission],
-        }));
-      }
-    } else if (name === "deletePermission") {
-      if (tempEditRole) {
-        setTempEditRole((prev) => ({
-          ...prev!,
-          permissions: prev!.permissions?.filter(
-            (perm) => perm.id !== Number(value)
-          ),
-        }));
-      } else {
-        setRegisterRole((prev) => ({
-          ...prev,
-          permissions: prev.permissions?.filter(
-            (perm) => perm.id !== Number(value)
-          ),
-        }));
-      }
-    } else {
-      if (tempEditRole) {
-        setTempEditRole((prev) => ({
-          ...prev!,
-          [name]: value,
-        }));
-      } else {
-        setRegisterRole((prev) => ({
-          ...prev,
-          [name]: value,
-        }));
-      }
+      setActiveRole((prev) => ({
+        ...prev,
+        permissions: [...(prev.permissions ?? []), selected],
+      }));
+      return;
     }
+
+    if (name === "deletePermission") {
+      setActiveRole((prev) => ({
+        ...prev,
+        permissions: (prev.permissions ?? []).filter(
+          (p) => p.id !== Number(value)
+        ),
+      }));
+      return;
+    }
+
+    setActiveRole((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const goToNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-
-  const goToPreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const goToPage = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
+  const goToNextPage = () => setCurrentPage((p) => p + 1);
+  const goToPreviousPage = () => setCurrentPage((p) => Math.max(p - 1, 1));
+  const goToPage = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const handleEntriesPerPageChange = (
     e: React.ChangeEvent<HTMLSelectElement>
@@ -229,21 +227,33 @@ export default function RolesPage() {
     setCurrentPage(1);
   };
 
-  const headers: Header<Role>[] = [
-    { label: "Id", key: "id", type: "number" },
-    { label: "Nombre", key: "name", type: "string" },
-    { label: "Permisos", key: "permissions", type: "array", subKey: "name" },
-  ];
+  // headers (mantengo tu Table actual)
+  const headers = useMemo(
+    () => [
+      { label: "Id", key: "id", type: "number" },
+      { label: "Nombre", key: "name", type: "string" },
+      { label: "Permisos", key: "permissions", type: "array", subKey: "name" },
+    ],
+    []
+  );
+
+  const confirmMessage = useMemo(() => {
+    if (action === "delete")
+      return "¿Estás seguro de que quieres eliminar este rol?";
+    if (action === "edit")
+      return "¿Estás seguro de que quieres editar este rol?";
+    return "¿Estás seguro de que quieres registrar este rol?";
+  }, [action]);
 
   return (
-    <div className="container mx-auto mt-24 pb-10">
+    <div className="container mx-auto pb-10">
       <h1 className="text-3xl font-bold mb-6 text-center text-premium-primary dark:text-premium-primaryLight pb-5">
         Gestión de Roles
       </h1>
 
       <div className="mb-4 flex justify-center px-4 md:justify-end">
         <button
-          onClick={handleRegisterClick}
+          onClick={openCreate}
           className="flex items-center space-x-2 whitespace-nowrap rounded-lg bg-green-600 px-6 py-2 text-white shadow-md transition-colors hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800"
         >
           <Plus className="mr-2 size-6" />
@@ -251,12 +261,12 @@ export default function RolesPage() {
         </button>
       </div>
 
-      {showSkeleton ? (
+      {loading ? (
         <TableSkeleton />
       ) : (
         <Table
           data={roles}
-          headers={headers}
+          headers={headers as any}
           totalEntries={totalEntries}
           entry="roles"
           currentPage={currentPage}
@@ -265,45 +275,30 @@ export default function RolesPage() {
           goToPreviousPage={goToPreviousPage}
           entriesPerPage={entriesPerPage}
           handleEntriesPerPageChange={handleEntriesPerPageChange}
-          handleSearchChange={(e) => debouncedSearch(e.target.value)}
-          onEditClick={handleEditClick}
-          onDeleteClick={handleDeleteClick}
+          searchValue={searchTerm}
+          onSearch={(value) => {
+            setSearchTerm(value);
+            setCurrentPage(1);
+          }}
+          onClearSearch={() => {
+            setSearchTerm("");
+            setCurrentPage(1);
+          }}
+          onEditClick={openEdit}
+          onDeleteClick={openDelete}
         />
       )}
 
       {modalOpen && (
         <RoleModal
           show={modalOpen}
-          onClose={() => {
-            setModalOpen(false);
-            setFlag(true);
-          }}
+          onClose={closeModal}
           onSubmit={handleConfirmSubmit}
           handleChange={handleChange}
-          role={tempEditRole || registerRole}
+          role={activeRole}
           permissions={permissions}
           errors={errors}
           flag={flag}
-        />
-      )}
-
-      {isConfirmationModalOpen && (
-        <ModalConfirmation
-          isOpen={isConfirmationModalOpen}
-          onClose={handleCloseConfirmationModal}
-          onConfirm={handleConfirmedAction}
-          title="Confirmar Acción"
-          message={`¿Estás seguro de que quieres ${confirmationAction === "edit" ? "editar" : "registrar"} este rol?`}
-          confirmLabel="Confirmar"
-          cancelLabel="Cancelar"
-        />
-      )}
-
-      {alert.show && (
-        <Alert
-          type={alert.type!}
-          message={alert.message}
-          onClose={() => setAlert({ type: null, message: "", show: false })}
         />
       )}
     </div>

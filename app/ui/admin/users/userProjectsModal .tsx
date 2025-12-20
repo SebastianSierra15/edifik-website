@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useBodyOverflow } from "@/app/hooks/useBodyOverflow ";
 import { useGetUserProjects } from "@/app/hooks/users/useGetUserProjects";
 import { useProjectApi } from "@/app/hooks/projects/useProjectApi";
-import ModalHeader from "../../modals/admin/modalHeader";
+import ModalHeader from "../../../../src/components/shared/modal/ModalHeader";
 import ProjectCard from "@/app/ui/admin/projects/projectCardAdmin";
-import ModalConfirmation from "../../modals/admin/modalConfirmation";
-import Alert from "../../alert";
+import ModalConfirmation from "../../../../src/components/shared/modal/ModalConfirmation";
+import Alert from "../../../../src/components/shared/alert/Alert";
 import ProjectCardSkeleton from "../../skeletons/projectCardSkeleton";
 
 interface UserProjectsModalProps {

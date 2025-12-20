@@ -4,11 +4,11 @@ import { propertyType, ProjectData } from "@/lib/definitios";
 import { useBasicProjectValidation } from "@/app/hooks/projects/createEditProject/useBasicProjectValidation";
 import { useCheckEmail } from "@/app/hooks/users/useCheckEmail";
 import StepNavigationButtons from "../../stepNavigationButtons";
-import FormInput from "@/app/ui/modals/admin/formInput";
-import FormSelect from "@/app/ui/modals/admin/formSelect";
-import FormCheckbox from "@/app/ui/modals/admin/formCheckbox";
-import FormTextarea from "@/app/ui/modals/admin/formTextArea";
-import FormSearchEmail from "../../../modals/admin/formSearchEmail";
+import FormInput from "@/src/components/shared/form/FormInput";
+import FormSelect from "@/src/components/shared/form/FormSelect";
+import FormCheckbox from "@/src/components/shared/form/FormCheckbox";
+import FormTextarea from "@/src/components/shared/form/FormTextArea";
+import FormSearchEmail from "../../../../../src/components/shared/form/FormSearchEmail";
 
 interface BasicProjectFormProps {
   formData: ProjectData;

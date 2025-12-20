@@ -1,5 +1,4 @@
 import { db } from "@/lib/db";
-import { Permission } from "@/src/interfaces";
 import { UpdateRoleRepository } from "../domain/RoleRepository";
 
 export class MysqlUpdateRoleRepository implements UpdateRoleRepository {
@@ -11,13 +10,15 @@ export class MysqlUpdateRoleRepository implements UpdateRoleRepository {
   }: {
     id: number;
     name: string;
-    permissions: Permission[];
+    permissions: number[];
     updatedBy: number;
   }): Promise<void> {
+    const permissionsPayload = permissions.map((id) => ({ id }));
+
     await db.query("CALL update_role(?, ?, ?, ?)", [
       id,
       name,
-      JSON.stringify(permissions),
+      JSON.stringify(permissionsPayload),
       updatedBy,
     ]);
   }

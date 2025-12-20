@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Role } from "@/src/interfaces";
+import { RoleWithPermissions } from "@/src/interfaces";
 import { RoleService } from "@/src/services/roles";
 
 export function useRoles(
@@ -7,7 +7,7 @@ export function useRoles(
   entriesPerPage: number,
   searchTerm: string
 ) {
-  const [roles, setRoles] = useState<Role[]>([]);
+  const [roles, setRoles] = useState<RoleWithPermissions[]>([]);
   const [totalEntries, setTotalEntries] = useState(0);
   const [loading, setLoading] = useState(true);
 

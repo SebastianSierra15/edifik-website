@@ -1,5 +1,5 @@
-import AdminCard from "./AdminCard";
-import AdminCardSkeleton from "./AdminCardSkeleton";
+import AdminCard from "@/app/ui/admin/adminCard";
+import { AdminCardSkeleton } from "./AdminCardSkeleton";
 
 interface DashboardCard {
   href: string;

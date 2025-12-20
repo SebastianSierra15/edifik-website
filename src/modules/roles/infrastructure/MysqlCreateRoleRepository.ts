@@ -1,5 +1,4 @@
 import { db } from "@/lib/db";
-import { Permission } from "@/src/interfaces";
 import { CreateRoleRepository } from "../domain/RoleRepository";
 
 export class MysqlCreateRoleRepository implements CreateRoleRepository {
@@ -9,12 +8,14 @@ export class MysqlCreateRoleRepository implements CreateRoleRepository {
     createdBy,
   }: {
     name: string;
-    permissions: Permission[];
+    permissions: number[];
     createdBy: number;
   }): Promise<void> {
+    const permissionsPayload = permissions.map((id) => ({ id }));
+
     await db.query("CALL create_role(?, ?, ?)", [
       name,
-      JSON.stringify(permissions),
+      JSON.stringify(permissionsPayload),
       createdBy,
     ]);
   }

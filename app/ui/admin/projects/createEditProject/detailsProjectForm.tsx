@@ -9,10 +9,10 @@ import {
 import { formatNumber } from "@/utils/formatters";
 import { useDetailsProjectValidation } from "@/app/hooks/projects/createEditProject/useDetailsProjectValidation";
 import StepNavigationButtons from "../../stepNavigationButtons";
-import FormInput from "@/app/ui/modals/admin/formInput";
-import FormSelect from "@/app/ui/modals/admin/formSelect";
-import FormMultiSelect from "@/app/ui/modals/admin/formMultiSelect";
-import FormDatePicker from "@/app/ui/modals/admin/formDatePicker";
+import FormInput from "@/src/components/shared/form/FormInput";
+import FormSelect from "@/src/components/shared/form/FormSelect";
+import FormMultiSelect from "@/src/components/shared/form/FormMultiSelect";
+import FormDatePicker from "@/src/components/shared/form/FormDatePicker";
 
 interface DetailsProjectFormProps {
   formData: ProjectData;

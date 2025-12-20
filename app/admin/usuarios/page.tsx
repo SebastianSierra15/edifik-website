@@ -10,11 +10,11 @@ import { useUsers } from "@/app/hooks/users/useUsers";
 import { useUserValidation } from "@/app/hooks/users/useUserValidation";
 import { useUserApi } from "@/app/hooks/users/useUserApi";
 import { useUsersMetadata } from "@/app/hooks/users/useUsersMetadata";
-import Table from "@/app/ui/admin/table/table";
-import TableSkeleton from "@/app/ui/skeletons/admin/tableSkeleton";
+import Table from "@/src/components/shared/admin/table/Table";
+import TableSkeleton from "@/src/components/shared/admin/table/TableSkeleton";
 import UserProjectsModal from "@/app/ui/admin/users/userProjectsModal ";
-import ModalConfirmation from "@/app/ui/modals/admin/modalConfirmation";
-import Alert from "@/app/ui/alert";
+import ModalConfirmation from "@/src/components/shared/modal/ModalConfirmation";
+import Alert from "@/src/components/shared/alert/ATlert";
 
 const UserModal = dynamic(() => import("@/app/ui/admin/users/userModal"), {
   ssr: false,

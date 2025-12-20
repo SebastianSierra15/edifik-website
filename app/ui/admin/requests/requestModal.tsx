@@ -1,17 +1,20 @@
 import { useBodyOverflow } from "@/app/hooks/useBodyOverflow ";
-import ModalHeader from "../../modals/admin/modalHeader";
-import ModalFooter from "../../modals/admin/modalFooter";
+import ModalHeader from "../../../../src/components/shared/modal/ModalHeader";
+import ModalFooter from "../../../../src/components/shared/modal/ModalFooter";
 import dynamic from "next/dynamic";
 
 const FormTextArea = dynamic(
-  () => import("@/app/ui/modals/admin/formTextArea"),
+  () => import("@/src/components/shared/form/FormTextArea"),
   {
     ssr: false,
   }
 );
-const FormSelect = dynamic(() => import("@/app/ui/modals/admin/formSelect"), {
-  ssr: false,
-});
+const FormSelect = dynamic(
+  () => import("@/src/components/shared/form/FormSelect"),
+  {
+    ssr: false,
+  }
+);
 
 interface RequestModalProps {
   show: boolean;
