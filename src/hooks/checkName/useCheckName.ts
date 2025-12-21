@@ -1,5 +1,5 @@
-import { apiClient } from "@/src/lib";
-import { NameValidationTarget } from "@/src/modules/nameValidation/domain/NameValidationTarget";
+import { NameValidationTarget } from "@/src/interfaces";
+import { NameValidationService } from "@/src/services/nameValidation";
 
 export function useCheckName() {
   const checkName = async (
@@ -7,20 +7,11 @@ export function useCheckName() {
     name: string,
     excludeId?: number
   ): Promise<number> => {
-    const params = new URLSearchParams({
+    return NameValidationService.checkName({
       target,
       name,
+      excludeId,
     });
-
-    if (excludeId !== undefined) {
-      params.set("id", excludeId.toString());
-    }
-
-    const { total } = await apiClient.get<{ total: number }>(
-      `/api/check-name?${params.toString()}`
-    );
-
-    return total;
   };
 
   return { checkName };

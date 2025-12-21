@@ -5,7 +5,7 @@ export interface GetMembershipsRepository {
     page: number;
     pageSize: number;
     searchTerm?: string | null;
-  }): Promise<{ memberships: Membership[]; total: number }>;
+  }): Promise<{ memberships: Membership[]; totalEntries: number }>;
 }
 
 export interface UpdateMembershipRepository {

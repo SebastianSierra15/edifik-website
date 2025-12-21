@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { ChevronDown } from "lucide-react";
 import { ImageType } from "@/lib/definitios";
 import ImageWithTag from "./imageWithTag";
-import FormErrorMessage from "../../../modals/formErrorMessage";
+import { FormErrorMessage } from "@/src/components/shared";
 
 interface ImageUploadSectionProps {
   imageType: ImageType;

@@ -1,6 +1,5 @@
 import { inter } from "@/app/fonts/fonts";
 import { Providers } from "./providers";
-import GoogleMapsProvider from "./ui/googleMapsProvider";
 import type { Metadata } from "next";
 import { BRAND } from "@/src/config/brand";
 import "./globals.css";
@@ -24,9 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <body
         className={`${inter.className} min-h-screen bg-client-background antialiased`}
       >
-        <Providers>
-          <GoogleMapsProvider>{children}</GoogleMapsProvider>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

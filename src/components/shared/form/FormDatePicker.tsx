@@ -2,7 +2,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import clsx from "clsx";
 import DatePicker from "react-datepicker";
 import { TooltipIcon } from "./TooltipIcon";
-import FormErrorMessage from "../../../../app/ui/modals/formErrorMessage";
+import { FormErrorMessage } from "./FormErrorMessage";
 
 interface FormDatePickerProps {
   label: string;

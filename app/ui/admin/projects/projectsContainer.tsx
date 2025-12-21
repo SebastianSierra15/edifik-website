@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import { ProjectSummary } from "@/lib/definitios";
+import { ProjectSummary } from "@/src/interfaces";
 import { useProjectsMetadata } from "@/app/hooks/projects/metadata/useProjectsMetadata";
 import ProjectFilter from "@/app/ui/admin/projects/filter/projectFilter";
-import ProjectCardAdmin from "@/app/ui/admin/projects/projectCardAdmin";
+import { ProjectCardAdmin } from "@/src/components/admin/projects";
 import ProjectsMap from "@/app/ui/admin/projects/projectsMap";
 
 interface ProjectsContainerProps {
@@ -47,6 +48,7 @@ const ProjectsContainer = ({
   permission,
   onShowUser,
 }: ProjectsContainerProps) => {
+  const router = useRouter();
   const { metadata, isLoadingMetadata } = useProjectsMetadata();
 
   const projectCards = useMemo(
@@ -75,10 +77,12 @@ const ProjectsContainer = ({
                   ? `/inmobiliaria/${project.id}`
                   : `/proyectos/${project.id}`
               }
-              urlEdit={
-                isProperty
-                  ? `/admin/propiedades/${project.id}`
-                  : `/admin/proyectos/${project.id}`
+              onEdit={(projectId) =>
+                router.push(
+                  isProperty
+                    ? `/admin/propiedades/${projectId}`
+                    : `/admin/proyectos/${projectId}`
+                )
               }
               onDelete={onDelete}
               permission={permission}
@@ -87,7 +91,7 @@ const ProjectsContainer = ({
           </div>
         </div>
       )),
-    [projects, isProperty, onDelete, permission, onShowUser]
+    [projects, isProperty, onDelete, permission, onShowUser, router]
   );
 
   return (

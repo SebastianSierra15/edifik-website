@@ -1,15 +1,11 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
-import clsx from "clsx";
-import { X } from "lucide-react";
-import { ProjectMedia } from "@/lib/definitios";
 import Link from "next/link";
 import Image from "next/image";
-
-const Edit = dynamic(() => import("lucide-react").then((mod) => mod.Edit));
-const Trash2 = dynamic(() => import("lucide-react").then((mod) => mod.Trash2));
-const User = dynamic(() => import("lucide-react").then((mod) => mod.User));
+import clsx from "clsx";
+import { X, Edit, Trash2, User } from "lucide-react";
+import type { ProjectMedia } from "@/src/interfaces";
 
 interface ProjectCardAdminProps {
   id: number;
@@ -25,13 +21,13 @@ interface ProjectCardAdminProps {
   isFromMap: boolean;
   onClose?: (() => void) | null;
   url: string;
-  urlEdit: string;
+  onEdit?: (id: number) => void;
   onDelete: (id: number, name: string) => void;
   permission?: boolean;
   onShowUser?: (name: string) => void;
 }
 
-export default function ProjectCardAdmin({
+export function ProjectCardAdmin({
   id,
   images,
   name,
@@ -45,23 +41,24 @@ export default function ProjectCardAdmin({
   isFromMap,
   onClose,
   url,
-  urlEdit,
+  onEdit,
   onDelete,
   permission,
   onShowUser,
 }: ProjectCardAdminProps) {
-  const router = useRouter();
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    if (isHovered) {
-      const interval = setInterval(
-        () => setCurrentImage((prev) => (prev + 1) % images.length),
-        1000
-      );
-      return () => clearInterval(interval);
+    if (!isHovered || images.length <= 1) {
+      return;
     }
+
+    const interval = setInterval(
+      () => setCurrentImage((prev) => (prev + 1) % images.length),
+      1000
+    );
+    return () => clearInterval(interval);
   }, [isHovered, images.length]);
 
   return (
@@ -170,7 +167,7 @@ export default function ProjectCardAdmin({
           title="Editar"
           onClick={(e) => {
             e.preventDefault();
-            router.push(urlEdit);
+            onEdit?.(id);
           }}
           className="rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600"
         >

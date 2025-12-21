@@ -7,7 +7,7 @@ export interface GetRolesRepository {
     searchTerm?: string | null;
   }): Promise<{
     roles: RoleWithPermissions[];
-    total: number;
+    totalEntries: number;
   }>;
 }
 

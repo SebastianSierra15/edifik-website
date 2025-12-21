@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { TooltipIcon } from "./TooltipIcon";
-import FormErrorMessage from "../../../../app/ui/modals/formErrorMessage";
+import { FormErrorMessage } from "./FormErrorMessage";
 
 interface FormTextareaProps {
   label: string;
@@ -16,7 +16,7 @@ interface FormTextareaProps {
   isEdit?: boolean;
 }
 
-export function FormTextarea({
+export function FormTextArea({
   label,
   name,
   value,

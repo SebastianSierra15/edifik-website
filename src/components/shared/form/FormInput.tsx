@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { formatNumber } from "@/utils/formatters";
 import { TooltipIcon } from "./TooltipIcon";
-import FormErrorMessage from "../../../../app/ui/modals/formErrorMessage";
+import { FormErrorMessage } from "./FormErrorMessage";
 
 interface FormInputProps {
   id?: string;

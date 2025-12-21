@@ -40,4 +40,5 @@ export interface UserWrite {
   genderId: number;
   roleId: number;
   membershipId: number;
+  state: boolean;
 }

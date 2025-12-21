@@ -1,4 +1,4 @@
-export default function ProjectCardSkeleton() {
+export function ProjectCardSkeleton() {
   return (
     <div className="transform rounded-lg bg-transparent transition-transform duration-300">
       <div className="relative h-[370px] max-w-xs cursor-pointer overflow-hidden rounded-lg shadow-md bg-gray-700">

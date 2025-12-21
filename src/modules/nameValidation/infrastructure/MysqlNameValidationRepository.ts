@@ -17,6 +17,7 @@ export class MysqlNameValidationRepository implements NameValidationRepository {
       [NameValidationTarget.Role]: "check_role_name",
       [NameValidationTarget.Project]: "check_project_name",
       [NameValidationTarget.Category]: "check_category_name",
+      [NameValidationTarget.Membership]: "check_membership_name",
     };
 
     const procedure = procedureMap[target];

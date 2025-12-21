@@ -2,6 +2,7 @@ export * from "./FormCheckbox";
 export * from "./FormCheckboxToggle";
 export * from "./FormDatePicker";
 export * from "./FormDisplay";
+export * from "./FormErrorMessage";
 export * from "./FormInput";
 export * from "./FormMultiSelect";
 export * from "./FormSearchAddress";

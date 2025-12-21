@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import TooltipIcon from "./tooltipIcon";
-import FormErrorMessage from "../formErrorMessage";
+import { FormErrorMessage } from "@/src/components/shared";
 
 interface FormTextareaProps {
   label: string;

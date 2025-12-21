@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { Eye, EyeOff } from "lucide-react";
 import { formatNumber } from "@/utils/formatters";
 import TooltipIcon from "./tooltipIcon";
-import FormErrorMessage from "../formErrorMessage";
+import { FormErrorMessage } from "@/src/components/shared";
 
 interface FormInputProps {
   id?: string;

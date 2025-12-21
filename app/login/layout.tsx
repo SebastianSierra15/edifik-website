@@ -1,5 +1,4 @@
 import { inter } from "@/app/fonts/fonts";
-import { Providers } from "../providers";
 
 export default function LoginLayout({
   children,
@@ -10,7 +9,7 @@ export default function LoginLayout({
     <div
       className={`${inter.className} min-h-screen bg-client-background antialiased`}
     >
-      <Providers>{children}</Providers>
+      {children}
     </div>
   );
 }

@@ -31,6 +31,7 @@ type TableProps<T extends Record<string, any>> = {
     redirectUrl?: string | ((item: T) => string);
     openInNewTab?: boolean;
     onClick?: (item: T) => void;
+    shouldRender?: (item: T) => boolean;
   }[];
 };
 

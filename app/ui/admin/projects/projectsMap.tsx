@@ -1,10 +1,11 @@
 "use client";
 
 import { memo, useMemo, useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { GoogleMap } from "@react-google-maps/api";
 import { Plus, Minus, LocateFixed } from "lucide-react";
-import { ProjectSummary } from "@/lib/definitios";
-import ProjectCardAdmin from "./projectCardAdmin";
+import { ProjectSummary } from "@/src/interfaces";
+import { ProjectCardAdmin } from "@/src/components/admin/projects";
 import Loader from "../../loader";
 
 const containerStyle = {
@@ -25,6 +26,7 @@ const ProjectsMap = ({
   showMap: boolean;
   onDelete: (id: number, name: string) => void;
 }) => {
+  const router = useRouter();
   const [selectedProject, setSelectedProject] = useState<ProjectSummary | null>(
     null
   );
@@ -242,7 +244,9 @@ const ProjectsMap = ({
             isFromMap={true}
             onClose={handleCloseCard}
             url={`/inmobiliaria/${selectedProject.id}`}
-            urlEdit={`/admin/propiedades/${selectedProject.id}`}
+            onEdit={(projectId) =>
+              router.push(`/admin/propiedades/${projectId}`)
+            }
             onDelete={onDelete}
           />
         </div>

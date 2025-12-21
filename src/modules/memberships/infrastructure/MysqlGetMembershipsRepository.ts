@@ -17,7 +17,7 @@ export class MysqlGetMembershipsRepository implements GetMembershipsRepository {
 
     return {
       memberships: rows as Membership[],
-      total: totalRow?.totalEntries ?? 0,
+      totalEntries: totalRow?.totalEntries ?? 0,
     };
   }
 }

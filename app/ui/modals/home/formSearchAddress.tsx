@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
 import { MapPin } from "lucide-react";
 import TooltipIcon from "./tooltipIcon";
-import FormErrorMessage from "../formErrorMessage";
+import { FormErrorMessage } from "@/src/components/shared";
 
 interface FormSearchAddressProps {
   label: string;

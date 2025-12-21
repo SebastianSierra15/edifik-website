@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { Mail } from "lucide-react";
 import { useSearchEmails } from "@/app/hooks/users/useSearchEmails";
 import { TooltipIcon } from "./TooltipIcon";
-import FormErrorMessage from "../../../../app/ui/modals/formErrorMessage";
+import { FormErrorMessage } from "./FormErrorMessage";
 
 interface FormSearchEmailProps {
   label: string;

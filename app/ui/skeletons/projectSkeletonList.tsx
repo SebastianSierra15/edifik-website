@@ -1,4 +1,4 @@
-import ProjectCardSkeleton from "./projectCardSkeleton";
+import { ProjectCardSkeleton } from "@/src/components/admin";
 
 export default function ProjectSkeletonList() {
   return (

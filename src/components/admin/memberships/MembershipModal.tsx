@@ -1,21 +1,13 @@
-import dynamic from "next/dynamic";
-import { Membership } from "@/lib/definitios";
-import { useBodyOverflow } from "@/app/hooks/useBodyOverflow ";
-import ModalHeader from "../../../../src/components/shared/modal/ModalHeader";
-import ModalFooter from "../../../../src/components/shared/modal/ModalFooter";
+"use client";
 
-const FormInput = dynamic(
-  () => import("@/src/components/shared/form/FormInput"),
-  {
-    ssr: false,
-  }
-);
-const FormTextArea = dynamic(
-  () => import("@/src/components/shared/form/FormTextArea"),
-  {
-    ssr: false,
-  }
-);
+import type { Membership } from "@/src/interfaces";
+import { useBodyOverflow } from "@/src/hooks/ui";
+import {
+  ModalHeader,
+  ModalFooter,
+  FormInput,
+  FormTextArea,
+} from "@/src/components/shared";
 
 interface MembershipModalProps {
   show: boolean;
@@ -35,7 +27,7 @@ interface MembershipModalProps {
   };
 }
 
-export default function MembershipModal({
+export function MembershipModal({
   show,
   onClose,
   onSubmit,

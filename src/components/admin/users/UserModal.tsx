@@ -1,27 +1,14 @@
-import { useBodyOverflow } from "@/app/hooks/useBodyOverflow ";
-import { UserData, Role, Gender, MembershipSummary } from "@/lib/definitios";
-import ModalHeader from "../../../../src/components/shared/modal/ModalHeader";
-import ModalFooter from "../../../../src/components/shared/modal/ModalFooter";
-import dynamic from "next/dynamic";
+"use client";
 
-const FormInput = dynamic(
-  () => import("@/src/components/shared/form/FormInput"),
-  {
-    ssr: false,
-  }
-);
-const FormSelect = dynamic(
-  () => import("@/src/components/shared/form/FormSelect"),
-  {
-    ssr: false,
-  }
-);
-const FormCheckbox = dynamic(
-  () => import("@/src/components/shared/form/FormCheckbox"),
-  {
-    ssr: false,
-  }
-);
+import type { Gender, MembershipSummary, Role, User } from "@/src/interfaces";
+import { useBodyOverflow } from "@/src/hooks/ui";
+import {
+  ModalFooter,
+  ModalHeader,
+  FormInput,
+  FormSelect,
+  FormCheckbox,
+} from "@/src/components/shared";
 
 interface UserModalProps {
   show: boolean;
@@ -33,7 +20,7 @@ interface UserModalProps {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => void;
-  user: UserData;
+  user: Partial<User>;
   roles: Role[];
   genders: Gender[];
   memberships: MembershipSummary[];
@@ -44,10 +31,11 @@ interface UserModalProps {
     phoneNumberError: string;
     genderError: string;
     roleError: string;
+    membershipError?: string;
   };
 }
 
-export default function UserModal({
+export function UserModal({
   show,
   flag,
   onClose,

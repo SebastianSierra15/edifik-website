@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { TooltipIcon } from "./TooltipIcon";
-import FormErrorMessage from "../../../../app/ui/modals/formErrorMessage";
+import { FormErrorMessage } from "./FormErrorMessage";
 
 interface FormSelectProps {
   label: string;

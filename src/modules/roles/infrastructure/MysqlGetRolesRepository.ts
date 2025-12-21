@@ -41,7 +41,7 @@ export class MysqlGetRolesRepository implements GetRolesRepository {
 
     return {
       roles,
-      total: totalRow?.totalEntries || 0,
+      totalEntries: totalRow?.totalEntries || 0,
     };
   }
 }

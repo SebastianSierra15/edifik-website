@@ -19,6 +19,23 @@ export async function middleware(req: NextRequest) {
 
   const routeConfig = PROTECTED_ROUTES[matchedRoute];
 
+  const hasSessionCookie = Boolean(
+    req.cookies.get("__Secure-next-auth.session-token")?.value ??
+      req.cookies.get("__Host-next-auth.session-token")?.value ??
+      req.cookies.get("next-auth.session-token")?.value
+  );
+
+  if (!hasSessionCookie) {
+    if (pathname.startsWith("/login")) {
+      return withPath(NextResponse.next(), pathname);
+    }
+
+    return withPath(
+      NextResponse.redirect(new URL("/login", req.url)),
+      pathname
+    );
+  }
+
   const token = (await getToken({
     req,
     secret: process.env.AUTH_SECRET,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Membership } from "@/src/interfaces";
+import { Membership, NameValidationTarget } from "@/src/interfaces";
 import { useCheckName } from "../checkName";
 
 type MembershipErrors = {
@@ -60,7 +60,7 @@ export const useMembershipValidation = (
 
     if (fieldName === "nameError" && value) {
       const total = await checkName(
-        "membership",
+        NameValidationTarget.Membership,
         value,
         isEdit ? membership.id : undefined
       );
@@ -100,7 +100,7 @@ export const useMembershipValidation = (
 
     if (membership.name) {
       const total = await checkName(
-        "membership",
+        NameValidationTarget.Membership,
         membership.name,
         isEdit ? membership.id : undefined
       );
