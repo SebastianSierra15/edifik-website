@@ -1,20 +1,12 @@
-import { useBodyOverflow } from "@/app/hooks/useBodyOverflow ";
-import ModalHeader from "../../../../src/components/shared/modal/ModalHeader";
-import ModalFooter from "../../../../src/components/shared/modal/ModalFooter";
-import dynamic from "next/dynamic";
+"use client";
 
-const FormTextArea = dynamic(
-  () => import("@/src/components/shared/form/FormTextArea"),
-  {
-    ssr: false,
-  }
-);
-const FormSelect = dynamic(
-  () => import("@/src/components/shared/form/FormSelect"),
-  {
-    ssr: false,
-  }
-);
+import { useBodyOverflow } from "@/src/hooks/ui";
+import {
+  FormSelect,
+  FormTextArea,
+  ModalFooter,
+  ModalHeader,
+} from "@/src/components/shared";
 
 interface RequestModalProps {
   show: boolean;
@@ -33,7 +25,7 @@ interface RequestModalProps {
   };
 }
 
-export default function RequestModal({
+export function RequestModal({
   show,
   flag,
   onClose,
