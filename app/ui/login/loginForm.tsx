@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import FormInput from "../modals/home/formInput";
-import Loader from "../loader";
+import { Loader } from "@/src/components/shared/Loader";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");

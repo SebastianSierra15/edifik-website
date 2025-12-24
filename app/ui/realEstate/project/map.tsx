@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useMemo } from "react";
 import { GoogleMap } from "@react-google-maps/api";
-import Loader from "../../loader";
+import { Loader } from "@/src/components/shared/Loader";
 
 const mapContainerStyle = {
   width: "100%",

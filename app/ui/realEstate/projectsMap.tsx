@@ -5,7 +5,7 @@ import { GoogleMap } from "@react-google-maps/api";
 import { Plus, Minus, LocateFixed } from "lucide-react";
 import { ProjectView } from "@/lib/definitios";
 import PropertyCard from "./PropertyCard";
-import Loader from "../loader";
+import { Loader } from "@/src/components/shared/Loader";
 
 const containerStyle = {
   width: "100%",

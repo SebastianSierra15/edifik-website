@@ -9,7 +9,7 @@ import { useChangePassword } from "@/app/hooks/auth/resetPassword/useChangePassw
 import ModalConfirmation from "../modals/home/modalConfirmation";
 import ModalChangePassword from "./modalChangePassword";
 import Alert from "../../../src/components/shared/alert/Alert";
-import Loader from "../loader";
+import { Loader } from "@/src/components/shared/Loader";
 
 const ProfileForm = dynamic(() => import("../../ui/profile/profileForm"), {
   ssr: false,

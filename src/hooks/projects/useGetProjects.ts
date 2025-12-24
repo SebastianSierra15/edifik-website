@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import type { ProjectSummary } from "@/src/interfaces";
 import { ProjectService } from "@/src/services/projects";
@@ -23,61 +23,77 @@ export function useGetProjects({
   showMap,
 }: UseProjectsOptions) {
   const [projects, setProjects] = useState<ProjectSummary[]>(currentProjects);
-  const [totalEntries, setTotalEntries] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [totalEntries, setTotalEntries] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [errorProjects, setErrorProjects] = useState<string | null>(null);
 
-  const lastFiltersRef = useRef<string>("");
-
-  const resetProjects = useCallback(() => {
-    setProjects([]);
-    setCurrentPage(1);
-  }, []);
+  const [lastFetchedFilters, setLastFetchedFilters] = useState<{
+    searchTerm: string;
+    selectedButtons: Record<string, number[]>;
+    projectTypeId: number | null;
+    showMap: boolean;
+    bounds: google.maps.LatLngBounds | undefined;
+  }>({
+    searchTerm: "",
+    selectedButtons: {},
+    projectTypeId: null,
+    showMap: false,
+    bounds: undefined,
+  });
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
     setSearchTerm(term);
     resetProjects();
   }, 300);
 
+  const resetProjects = useCallback(() => {
+    setProjects([]);
+    setCurrentPage(1);
+  }, []);
+
   const fetchProjects = useCallback(
-    async (isLoadMore = false, page = 1) => {
+    async (isLoadMore = false, page = 1, mapBounds?: google.maps.LatLngBounds) => {
       if (isLoading) return;
 
-      const filtersSignature = JSON.stringify({
+      const currentFilters = {
         searchTerm,
         selectedButtons,
         projectTypeId,
         showMap,
-        bounds: showMap && bounds ? bounds.toUrlValue() : null,
-      });
+        bounds: mapBounds,
+      };
 
-      if (!isLoadMore && filtersSignature === lastFiltersRef.current) return;
+      if (
+        !isLoadMore &&
+        JSON.stringify(currentFilters) === JSON.stringify(lastFetchedFilters)
+      ) {
+        return;
+      }
 
-      lastFiltersRef.current = filtersSignature;
+      setLastFetchedFilters(currentFilters);
       setIsLoading(true);
-      setErrorProjects(null);
 
       try {
         const { projects: newProjects, totalEntries: total } =
           await ProjectService.search({
             page,
             pageSize: entriesPerPage,
-            searchTerm: searchTerm || null,
-            projectTypeId,
+            searchTerm,
+            projectTypeId: projectTypeId || null,
             ...Object.fromEntries(
               Object.entries(selectedButtons).map(([key, value]) => [
                 key,
-                value.length ? value : null,
+                value,
               ])
             ),
-            ...(showMap && bounds
+            ...(mapBounds
               ? {
-                  minLat: bounds.getSouthWest().lat(),
-                  maxLat: bounds.getNorthEast().lat(),
-                  minLng: bounds.getSouthWest().lng(),
-                  maxLng: bounds.getNorthEast().lng(),
+                  minLat: mapBounds.getSouthWest().lat(),
+                  maxLat: mapBounds.getNorthEast().lat(),
+                  minLng: mapBounds.getSouthWest().lng(),
+                  maxLng: mapBounds.getNorthEast().lng(),
                 }
               : {}),
           });
@@ -86,62 +102,62 @@ export function useGetProjects({
           isLoadMore
             ? [
                 ...prev,
-                ...newProjects.filter((p) => !prev.some((e) => e.id === p.id)),
+                ...newProjects.filter(
+                  (p) => !prev.some((prop) => prop.id === p.id)
+                ),
               ]
             : newProjects
         );
 
         setTotalEntries(total);
-      } catch (error: unknown) {
-        const message =
-          error instanceof Error
-            ? error.message
-            : "Error al cargar los proyectos";
-        setErrorProjects(message);
+      } catch (error: any) {
+        if (error.name !== "AbortError") {
+          setErrorProjects(error.message || "Error desconocido");
+        }
       } finally {
         setIsLoading(false);
       }
     },
     [
       entriesPerPage,
+      isLoading,
       searchTerm,
       selectedButtons,
       projectTypeId,
       showMap,
-      bounds,
-      isLoading,
     ]
   );
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      fetchProjects(false, 1);
+    const timeoutId = setTimeout(() => {
+      fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
     }, 500);
 
-    return () => clearTimeout(timeout);
-  }, [
-    searchTerm,
-    selectedButtons,
-    projectTypeId,
-    showMap,
-    bounds,
-    fetchProjects,
-  ]);
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, selectedButtons, projectTypeId, showMap, bounds, fetchProjects]);
 
   const fetchMoreProjects = useCallback(() => {
     if (isLoading) return;
 
-    setCurrentPage((prev) => {
-      const nextPage = prev + 1;
-      void fetchProjects(true, nextPage);
+    setIsLoading(true);
+    setCurrentPage((prevPage) => {
+      const nextPage = prevPage + 1;
+
+      fetchProjects(
+        true,
+        nextPage,
+        showMap && bounds !== null ? bounds : undefined
+      ).finally(() => setIsLoading(false));
+
       return nextPage;
     });
-  }, [fetchProjects, isLoading]);
+  }, [isLoading, fetchProjects, showMap, bounds]);
 
   const refreshProjects = useCallback(() => {
-    resetProjects();
-    void fetchProjects(false, 1);
-  }, [fetchProjects, resetProjects]);
+    setProjects([]);
+    setCurrentPage(1);
+    fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
+  }, [fetchProjects, showMap, bounds]);
 
   return {
     projects,

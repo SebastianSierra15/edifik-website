@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { extractS3KeyFromUrl } from "@/src/modules/shared";
+import { extractS3KeyFromUrl } from "@/src/shared";
 
 export function useDeleteImagesS3() {
   const [deleteStatus, setDeleteStatus] = useState<string | null>(null);

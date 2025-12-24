@@ -13,7 +13,7 @@ import LocationPropertieView from "./locationPropertieView";
 import FeaturesPropertieView from "./featuresPropertieView";
 import DetailsPropertieView from "./detailsPropertieView";
 import ImagesPropertieView from "./imagesPropertieView";
-import CreateProjectSkeleton from "@/app/ui/skeletons/admin/createProjectSkeleton";
+import { CreateProjectSkeleton } from "@/src/components/admin";
 
 interface PropertieViewProps {
   projectId: number;

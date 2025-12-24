@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import ProjectView from "@/app/ui/admin/projects/projectView/projectView";
+import { ProjectView } from "@/src/components/admin";
 
 export default function ViewPropertyPage() {
   const { data: session, status } = useSession();

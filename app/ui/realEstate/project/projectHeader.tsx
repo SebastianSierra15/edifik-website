@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { Project } from "@/lib/definitios";
 import { formatNumber } from "@/utils/formatters";
-import ShareButton from "@/app/ui/admin/projects/shareButton";
+import { ShareButton } from "@/src/components/admin";
 
 const MapPin = dynamic(() => import("lucide-react").then((mod) => mod.MapPin));
 const CalendarDays = dynamic(() =>

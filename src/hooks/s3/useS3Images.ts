@@ -10,8 +10,8 @@ export function useS3Images() {
   const uploadImages = useCallback(
     async (
       projectId: number,
-      propertyTypeName: string,
-      media: Media[]
+      media: Media[],
+      propertyTypeName: string
     ): Promise<ProjectMedia[]> => {
       setLoading(true);
       setStatus("Procesando y subiendo imágenes...");

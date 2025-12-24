@@ -2,7 +2,7 @@ import { useCallback, useMemo, memo } from "react";
 import { ProjectData, City, Departament } from "@/lib/definitios";
 import { useLocationProjectValidation } from "@/app/hooks/projects/createEditProject/useLocationProjectValidation";
 import StepNavigationButtons from "@/app/ui/user/stepNavigationButtons";
-import LocationMap from "../../admin/projects/locationMap";
+import { LocationMap } from "@/src/components/admin";
 import FormSearchAddress from "../../modals/home/formSearchAddress";
 import FormSelect from "@/app/ui/modals/home/formSelect";
 import FormInput from "@/app/ui/modals/home/formInput";

@@ -1,5 +1,5 @@
 import { ProjectData } from "@/lib/definitios";
-import LocationMap from "../../admin/projects/locationMap";
+import { LocationMap } from "@/src/components/admin";
 import FormDisplay from "../../modals/home/formDisplay";
 import StepNavigationButtons from "../stepNavigationButtons";
 

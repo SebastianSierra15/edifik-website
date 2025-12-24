@@ -18,8 +18,8 @@ import FeaturesPropertieForm from "./featuresPropertieForm";
 import DetailsPropertieForm from "./detailsPropertieForm";
 import ImagesPropertieForm from "./imagesPropertieForm";
 import ModalConfirmation from "../../modals/home/modalConfirmation";
-import CreateProjectSkeleton from "@/app/ui/skeletons/admin/createProjectSkeleton";
-import Loader from "@/app/ui/loader";
+import { CreateProjectSkeleton } from "@/src/components/admin";
+import { Loader } from "@/src/components/shared/Loader";
 
 interface PropertieFormProps {
   isEdit: boolean;

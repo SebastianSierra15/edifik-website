@@ -4,15 +4,15 @@ export interface CreateProjectMediaInput {
   url: string;
   tag: string;
   projectId: number;
-  description?: string;
-  commonArea?: number;
-  imageType?: number;
+  description?: string | null;
+  commonAreaId?: number | null;
+  imageTypeId?: number | null;
 }
 
 export interface UpdateProjectMediaInput {
   id: number;
   tag: string;
-  description?: string;
+  description?: string | null;
 }
 
 export interface DeleteProjectMediaInput {

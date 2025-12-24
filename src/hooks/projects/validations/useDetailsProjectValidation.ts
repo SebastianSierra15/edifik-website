@@ -1,40 +1,42 @@
+"use client";
+
 import { useState } from "react";
-import type { ProjectDetails } from "@/src/interfaces";
+import type { ProjectFormData } from "@/src/interfaces";
 
-interface DetailsErrors {
-  priceError: string;
-  housingTypeError: string;
-}
-
-export function useDetailsProjectValidation(formData: ProjectDetails) {
-  const [errors, setErrors] = useState<DetailsErrors>({
+export function useDetailsProjectValidation(formData: ProjectFormData) {
+  const [errors, setErrors] = useState({
     priceError: "",
     housingTypeError: "",
   });
 
-  const getErrorMessage = (
-    field: keyof DetailsErrors,
-    value: unknown
-  ): string => {
-    switch (field) {
+  const validateField = (fieldName: keyof typeof errors, value: unknown) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [fieldName]: value ? "" : getErrorMessage(fieldName, value),
+    }));
+  };
+
+  const getErrorMessage = (fieldName: keyof typeof errors, value: unknown) => {
+    switch (fieldName) {
       case "priceError":
-        return !value ? "El precio es obligatorio." : "";
+        return (formData.projectType?.id === 2 ||
+          formData.projectType?.id === 3) &&
+          !value
+          ? "El precio es obligatorio y debe ser mayor que 0."
+          : "";
       case "housingTypeError":
-        return !value ? "Seleccione un tipo de vivienda." : "";
+        return (formData.propertyType?.id === 1001 ||
+          formData.propertyType?.id === 1002) &&
+          !value
+          ? "Seleccione un tipo de vivienda."
+          : "";
       default:
         return "";
     }
   };
 
-  const validateField = (field: keyof DetailsErrors, value: unknown) => {
-    setErrors((prev) => ({
-      ...prev,
-      [field]: getErrorMessage(field, value),
-    }));
-  };
-
-  const validateFields = (): boolean => {
-    const newErrors: DetailsErrors = {
+  const validateFields = () => {
+    const newErrors: typeof errors = {
       priceError: getErrorMessage("priceError", formData.price),
       housingTypeError: getErrorMessage(
         "housingTypeError",
@@ -43,8 +45,8 @@ export function useDetailsProjectValidation(formData: ProjectDetails) {
     };
 
     setErrors(newErrors);
-    return Object.values(newErrors).every((e) => e === "");
+    return Object.values(newErrors).every((error) => error === "");
   };
 
-  return { errors, validateField, validateFields };
+  return { errors, validateFields, validateField };
 }

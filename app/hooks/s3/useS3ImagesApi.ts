@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { extractS3KeyFromUrl } from "@/src/modules/shared";
+import { extractS3KeyFromUrl } from "@/src/shared";
 import { Media, ProjectMedia } from "@/lib/definitios";
 
 export function useS3ImagesApi() {

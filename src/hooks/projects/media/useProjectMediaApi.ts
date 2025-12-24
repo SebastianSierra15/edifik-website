@@ -6,6 +6,7 @@ import {
   CreateProjectMediaInput,
   UpdateProjectMediaInput,
 } from "@/src/services/projects";
+import type { ProjectMedia } from "@/src/interfaces";
 
 export function useProjectMediaApi() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -13,15 +14,26 @@ export function useProjectMediaApi() {
   const [success, setSuccess] = useState<boolean>(false);
 
   const insertProjectMedia = useCallback(
-    async (projectMedia: CreateProjectMediaInput[]) => {
+    async (projectMedia: ProjectMedia[]) => {
       if (!projectMedia?.length) return;
+
+      const formattedProjectMedia: CreateProjectMediaInput[] = projectMedia.map(
+        (media) => ({
+          url: media.url,
+          tag: media.tag,
+          description: media.description ?? null,
+          projectId: media.projectId,
+          commonAreaId: media.commonArea ?? null,
+          imageTypeId: media.imageType ?? null,
+        })
+      );
 
       setLoading(true);
       setError(null);
       setSuccess(false);
 
       try {
-        await ProjectMediaService.create(projectMedia);
+        await ProjectMediaService.create(formattedProjectMedia);
         setSuccess(true);
       } catch (err: unknown) {
         setError(

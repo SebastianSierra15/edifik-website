@@ -5,17 +5,16 @@ import dynamic from "next/dynamic";
 import { Eye, CheckCircle } from "lucide-react";
 
 import type { Header, Request, StatusMapping } from "@/src/interfaces";
+import { useRequestsPage } from "@/src/hooks/requests";
 import {
   Alert,
   ModalConfirmation,
   Table,
   TableSkeleton,
 } from "@/src/components/shared";
-import { useRequestsPage } from "@/src/hooks/requests";
 
 const RequestModal = dynamic(
-  () =>
-    import("@/src/components/admin/requests").then((mod) => mod.RequestModal),
+  () => import("@/src/components/admin").then((mod) => mod.RequestModal),
   { ssr: false }
 );
 

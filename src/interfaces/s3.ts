@@ -9,9 +9,11 @@ export interface UploadProjectImagesParams {
 }
 
 export interface Media {
+  id?: string;
   file: File | string;
   tag: string;
   description?: string;
+  type?: string;
   category: "commonArea" | "imageType";
   idType?: number;
 }

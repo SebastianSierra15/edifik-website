@@ -1,48 +1,53 @@
+"use client";
+
 import { useState } from "react";
-import type { ProjectDetails } from "@/src/interfaces";
+import type { ProjectFormData } from "@/src/interfaces";
 
-interface LocationErrors {
-  departamentError: string;
-  cityError: string;
-  addressError: string;
-  mapAddressError: string;
-}
-
-export function useLocationProjectValidation(formData: ProjectDetails) {
-  const [errors, setErrors] = useState<LocationErrors>({
+export function useLocationProjectValidation(formData: ProjectFormData) {
+  const [errors, setErrors] = useState({
     departamentError: "",
     cityError: "",
     addressError: "",
     mapAddressError: "",
   });
 
-  const getErrorMessage = (
-    field: keyof LocationErrors,
-    value: unknown
-  ): string => {
-    switch (field) {
+  const validateField = (fieldName: keyof typeof errors, value: unknown) => {
+    if (fieldName === "mapAddressError" && typeof value === "string") {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        mapAddressError: value.trim()
+          ? ""
+          : getErrorMessage("mapAddressError", value),
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [fieldName]: value ? "" : getErrorMessage(fieldName, value),
+      }));
+    }
+  };
+
+  const getErrorMessage = (fieldName: keyof typeof errors, value: unknown) => {
+    switch (fieldName) {
       case "departamentError":
         return !value ? "El departamento es obligatorio." : "";
       case "cityError":
         return !value ? "La ciudad es obligatoria." : "";
       case "addressError":
-        return !value ? "La dirección pública es obligatoria." : "";
+        return !value || !String(value).trim()
+          ? "La dirección pública es obligatoria."
+          : "";
       case "mapAddressError":
-        return !value ? "La ubicación en el mapa es obligatoria." : "";
+        return !value || !String(value).trim()
+          ? "La ubicación en el mapa es obligatoria."
+          : "";
       default:
         return "";
     }
   };
 
-  const validateField = (field: keyof LocationErrors, value: unknown) => {
-    setErrors((prev) => ({
-      ...prev,
-      [field]: getErrorMessage(field, value),
-    }));
-  };
-
-  const validateFields = (mapAddress: string): boolean => {
-    const newErrors: LocationErrors = {
+  const validateFields = (mapAddress: string) => {
+    const newErrors: typeof errors = {
       departamentError: getErrorMessage(
         "departamentError",
         formData.city?.departament?.id
@@ -53,8 +58,8 @@ export function useLocationProjectValidation(formData: ProjectDetails) {
     };
 
     setErrors(newErrors);
-    return Object.values(newErrors).every((e) => e === "");
+    return Object.values(newErrors).every((error) => error === "");
   };
 
-  return { errors, validateField, validateFields };
+  return { errors, validateFields, validateField };
 }

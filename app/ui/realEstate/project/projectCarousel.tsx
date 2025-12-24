@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProjectMedia } from "@/lib/definitios";
-import ImageModal from "./imageModal";
+import { ImageModal } from "@/src/components/realEstate/project";
 
 interface ProjectCarouselProps {
   projectMedia: ProjectMedia[];

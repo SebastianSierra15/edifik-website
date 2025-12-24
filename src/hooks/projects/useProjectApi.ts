@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { ProjectService } from "@/src/services/projects";
 

@@ -1,9 +1,5 @@
-import GoogleMapsProvider from "@/app/ui/googleMapsProvider";
+import { GoogleMapsProvider } from "@/src/providers";
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return <GoogleMapsProvider>{children}</GoogleMapsProvider>;
 }

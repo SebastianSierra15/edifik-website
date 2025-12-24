@@ -1,4 +1,5 @@
 export interface ProjectMedia {
+  id?: number;
   url: string;
   tag: string;
   projectId: number;
@@ -6,6 +7,7 @@ export interface ProjectMedia {
   description?: string;
   commonArea?: number;
   imageType?: number;
+  type?: string;
 }
 
 export interface ProjectCity {
@@ -77,7 +79,7 @@ export interface ProjectDetails {
 
   parkingSpots?: number | null;
   elevator?: boolean | null;
-  heavyParking?: boolean | null;
+  heavyParking?: number | null;
   availableUnits?: number | null;
 
   bathrooms?: number | null;
@@ -122,7 +124,7 @@ export interface ProjectDetails {
 
   city: ProjectCity;
 
-  membership: string;
+  membership: number | string;
 
   statusProject: {
     id: number;
@@ -148,3 +150,9 @@ export interface ProjectDetails {
 
   projectMedia: ProjectMedia[];
 }
+
+export type ProjectFormData = Partial<Omit<ProjectDetails, "membership">> & {
+  membership?: number | string;
+  media?: Media[];
+};
+import type { Media } from "./s3";

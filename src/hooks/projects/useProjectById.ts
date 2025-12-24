@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { ProjectDetails } from "@/src/interfaces";
 import { ProjectService } from "@/src/services/projects";

@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import type { ProjectDetails } from "@/src/interfaces";
+import type { ProjectFormData } from "@/src/interfaces";
 import { useCheckName } from "../../checkName";
 
 interface BasicProjectErrors {
@@ -12,7 +14,7 @@ interface BasicProjectErrors {
 }
 
 export function useBasicProjectValidation(
-  formData: ProjectDetails,
+  formData: ProjectFormData,
   isProperty: boolean,
   isEdit: boolean
 ) {
@@ -28,10 +30,10 @@ export function useBasicProjectValidation(
   const { checkName } = useCheckName();
 
   const getErrorMessage = (
-    field: keyof BasicProjectErrors,
+    fieldName: keyof BasicProjectErrors,
     value: unknown
-  ): string => {
-    switch (field) {
+  ) => {
+    switch (fieldName) {
       case "emailError":
         if (
           isProperty &&
@@ -41,49 +43,48 @@ export function useBasicProjectValidation(
           return "Ingrese un correo electrónico válido.";
         }
         return "";
-
       case "shortDescriptionError":
         return !value ? "El resumen breve es obligatorio." : "";
-
       case "detailedDescriptionError":
         return !value ? "La descripción completa es obligatoria." : "";
-
       case "propertyTypeError":
         return !value ? "Seleccione el tipo de propiedad." : "";
-
       case "projectTypeError":
         return isProperty && !value
           ? "Seleccione la finalidad de la propiedad."
           : "";
-
       default:
         return "";
     }
   };
 
   const validateField = async (
-    field: keyof BasicProjectErrors,
+    fieldName: keyof BasicProjectErrors,
     value: unknown
   ) => {
-    let errorMessage = getErrorMessage(field, value);
+    let errorMessage = getErrorMessage(fieldName, value);
 
-    if (!isProperty && field === "nameError" && typeof value === "string") {
+    if (!isProperty && fieldName === "nameError" && value) {
       const total = await checkName(
         "project",
-        value,
+        String(value),
         isEdit ? formData.id : undefined
       );
+
       if (total) {
-        errorMessage = "El nombre del proyecto ya está en uso.";
+        errorMessage = "El nombre del proyecto ya está en uso, elige otro.";
       }
     }
 
-    setErrors((prev) => ({ ...prev, [field]: errorMessage }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [fieldName]: errorMessage,
+    }));
   };
 
-  const validateFields = async (): Promise<boolean> => {
+  const validateFields = async () => {
     const newErrors: BasicProjectErrors = {
-      nameError: "",
+      nameError: getErrorMessage("nameError", formData.name),
       emailError: getErrorMessage("emailError", formData.email),
       shortDescriptionError: getErrorMessage(
         "shortDescriptionError",
@@ -103,18 +104,30 @@ export function useBasicProjectValidation(
       ),
     };
 
+    if (formData.email && !formData.ownerId) {
+      const foundUser = await checkName("user", formData.email);
+      if (!foundUser) {
+        newErrors.emailError =
+          "El correo ingresado no pertenece a un usuario registrado.";
+      }
+    }
+
     if (!isProperty && formData.name) {
       const total = await checkName(
         "project",
         formData.name,
         isEdit ? formData.id : undefined
       );
-      if (total) newErrors.nameError = "El nombre del proyecto ya está en uso.";
+
+      if (total) {
+        newErrors.nameError =
+          "El nombre del proyecto ya está en uso, elige otro.";
+      }
     }
 
     setErrors(newErrors);
-    return Object.values(newErrors).every((e) => e === "");
+    return Object.values(newErrors).every((error) => error === "");
   };
 
-  return { errors, validateField, validateFields };
+  return { errors, validateFields, validateField };
 }

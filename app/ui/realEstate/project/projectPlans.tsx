@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ProjectMedia } from "@/lib/definitios";
-import ImageModal from "./imageModal";
+import { ImageModal } from "@/src/components/realEstate/project";
 
 interface ProjectPlansProps {
   projectMedia: ProjectMedia[];

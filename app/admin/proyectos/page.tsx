@@ -1,4 +1,4 @@
-import ProjectManager from "@/app/ui/admin/projects/projectManager";
+import { ProjectManager } from "@/src/components/admin";
 
 export default function ProjectPage() {
   return <ProjectManager isProperty={false} projectTypeId={1} />;

@@ -1,6 +1,7 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
+import { LoadingProvider, ModalAlertProvider } from "@/src/providers";
 
 export function Providers({
   children,
@@ -9,5 +10,11 @@ export function Providers({
   children: React.ReactNode;
   session?: Session | null;
 }) {
-  return <SessionProvider session={session}>{children}</SessionProvider>;
+  return (
+    <SessionProvider session={session}>
+      <LoadingProvider>
+        <ModalAlertProvider>{children}</ModalAlertProvider>
+      </LoadingProvider>
+    </SessionProvider>
+  );
 }

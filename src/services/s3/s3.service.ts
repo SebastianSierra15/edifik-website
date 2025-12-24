@@ -1,5 +1,5 @@
 import { apiClient } from "@/src/lib";
-import { extractS3KeyFromUrl } from "@/src/modules/shared";
+import { extractS3KeyFromUrl } from "@/src/shared";
 import { Media, ProjectMedia, S3UploadResult } from "@/src/interfaces";
 
 export class S3Service {
@@ -76,9 +76,10 @@ export class S3Service {
 
       const formData = new FormData();
       formData.append("file", processed);
+      const mediaPath = item.type ?? item.tag;
       formData.append(
         "path",
-        `projects/images/${propertyTypeName}/${projectId}/${item.tag}/`
+        `projects/images/${propertyTypeName}/${projectId}/${mediaPath}/`
       );
 
       const { url } = await apiClient.post<S3UploadResult, FormData>(

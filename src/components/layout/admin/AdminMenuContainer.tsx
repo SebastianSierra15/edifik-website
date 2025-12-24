@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import clsx from "clsx";
+import { Home } from "lucide-react";
 import { AdminMenuItem } from "@/src/hooks/admin";
 import { NotificationsContainer } from "./notifications";
 import { AdminMenuButton } from "./AdminMenuButton";
@@ -67,6 +68,19 @@ export function AdminMenuContainer({ menuItems, canManageRequests }: Props) {
           role="menu"
         >
           <ul className="py-2 space-y-2">
+            <li>
+              <Link
+                href="/"
+                onClick={close}
+                className="flex items-center gap-3 px-6 py-3
+                       text-premium-textPrimary dark:text-premium-textSecondary
+                       hover:bg-premium-backgroundDark dark:hover:bg-premium-secondaryLight
+                       transition-all"
+              >
+                <Home className="w-5 h-5 text-premium-primary dark:text-premium-primaryLight" />
+                Inicio
+              </Link>
+            </li>
             {menuItems.map(({ path, label, icon: Icon }) => (
               <li key={path}>
                 <Link
@@ -93,8 +107,7 @@ export function AdminMenuContainer({ menuItems, canManageRequests }: Props) {
               className="block w-full text-left px-6 py-3
                    text-red-500 hover:bg-red-600 hover:text-white transition-all"
             >
-              Cerrar Sesión
-            </button>
+              Cerrar Sesión</button>
           </div>
         </div>
       )}
@@ -121,6 +134,19 @@ export function AdminMenuContainer({ menuItems, canManageRequests }: Props) {
         </div>
 
         <ul className="py-2 space-y-2">
+          <li>
+            <Link
+              href="/"
+              onClick={close}
+              className="flex items-center gap-3 px-6 py-3
+                   text-premium-textPrimary dark:text-premium-textSecondary
+                   hover:bg-premium-backgroundDark dark:hover:bg-premium-secondaryLight
+                   transition-all"
+            >
+              <Home className="w-5 h-5 text-premium-primary dark:text-premium-primaryLight" />
+              Inicio
+            </Link>
+          </li>
           {menuItems.map(({ path, label, icon: Icon }) => (
             <li key={path}>
               <Link
@@ -147,10 +173,14 @@ export function AdminMenuContainer({ menuItems, canManageRequests }: Props) {
             className="block w-full text-left px-6 py-3
                  text-red-500 hover:bg-red-600 hover:text-white transition-all"
           >
-            Cerrar Sesión
-          </button>
+            Cerrar Sesión</button>
         </div>
       </div>
     </div>
   );
 }
+
+
+
+
+

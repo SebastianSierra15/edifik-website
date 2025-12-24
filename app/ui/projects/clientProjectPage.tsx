@@ -3,7 +3,7 @@
 import { useGetBasicProjects } from "@/app/hooks/projects/basic/useGetBasicProjects";
 import HeroSection from "@/app/ui/home/heroSection";
 import ProjectsShowcase from "@/app/ui/projects/projectsShowcase";
-import ProjectSkeletonList from "@/app/ui/skeletons/projectSkeletonList";
+import { ProjectSkeletonList } from "@/src/components/admin";
 
 export default function ClientProjectsPage() {
   const { projects, isLoading } = useGetBasicProjects();
