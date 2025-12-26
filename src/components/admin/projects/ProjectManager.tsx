@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import type { LatLngBounds } from "leaflet";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import clsx from "clsx";
@@ -9,7 +10,7 @@ import { ProjectManagerHeader } from "./ProjectManagerHeader";
 import { ProjectSearchAndCreate } from "./ProjectSearchAndCreate";
 import { ProjectTypeToggle } from "./ProjectTypeToggle";
 import { useGetProjects, useProjectApi, useOwner } from "@/src/hooks/projects";
-import { useAlert, useConfirmation } from "@/src/providers";
+import { useAlert, useConfirmation, useLoading } from "@/src/providers";
 import { FilterMapControls } from "./filter/FilterMapControls";
 import { MapToggleButton } from "./filter";
 import { ProjectSkeletonList } from "./ProjectSkeletonList";
@@ -56,6 +57,7 @@ export function ProjectManager({
   const { submitProject, isProcessing } = useProjectApi();
   const { showAlert } = useAlert();
   const confirm = useConfirmation();
+  const { showLoader, hideLoader, setLoaderMessage } = useLoading();
   const [selectedOwner, setSelectedOwner] = useState<string | null>(null);
   const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
 
@@ -67,7 +69,7 @@ export function ProjectManager({
   const [entriesPerPage] = useState(16);
   const [filterOpen, setFilterOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
-  const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
+  const [bounds, setBounds] = useState<LatLngBounds | null>(null);
 
   const {
     projects,
@@ -84,6 +86,17 @@ export function ProjectManager({
     bounds: showMap ? bounds : null,
     showMap: showMap,
   });
+
+  useEffect(() => {
+    if (!isLoading || showMap) {
+      return;
+    }
+
+    showLoader();
+    setLoaderMessage(`Cargando ${isProperty ? "propiedades" : "proyectos"}...`);
+
+    return () => hideLoader();
+  }, [hideLoader, isLoading, isProperty, setLoaderMessage, showLoader, showMap]);
 
   useEffect(() => {
     if (selectedOwner) {
@@ -115,8 +128,7 @@ export function ProjectManager({
         title: isProperty ? "Eliminar Propiedad" : "Eliminar Proyecto",
         message: `¿Estás seguro de que deseas eliminar ${isProperty ? "la propiedad" : "el proyecto"} "${name}"?`,
         confirmLabel: isProcessing ? "Eliminando..." : "Eliminar",
-        cancelLabel: "Cancelar",
-        confirmClassName: "bg-red-600 hover:bg-red-700 disabled:opacity-50",
+        action: "delete",
       });
 
       if (!shouldDelete) return;
@@ -218,4 +230,3 @@ export function ProjectManager({
     </>
   );
 }
-

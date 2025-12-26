@@ -110,7 +110,11 @@ export class MysqlGetProjectByIdRepo implements GetProjectByIdRepository {
         id: r.id,
         url: r.url,
         tag: r.tag,
+        description: r.description ?? undefined,
         projectId: row.id,
+        commonArea: r.commonAreaId ?? undefined,
+        imageType: r.imageTypeId ?? undefined,
+        type: r.imageTypeName ?? r.commonAreaName ?? undefined,
       })),
     };
   }

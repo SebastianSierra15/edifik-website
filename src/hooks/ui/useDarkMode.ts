@@ -6,6 +6,7 @@ export type Theme = "light" | "dark" | "auto";
 
 export function useDarkMode() {
   const [theme, setTheme] = useState<Theme>("auto");
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     const savedTheme = (localStorage.getItem("theme") as Theme) || "auto";
@@ -37,6 +38,7 @@ export function useDarkMode() {
 
     document.documentElement.classList.remove("light", "dark");
     document.documentElement.classList.add(themeToApply);
+    setResolvedTheme(themeToApply);
   };
 
   const toggleTheme = (newTheme: Theme) => {
@@ -45,5 +47,5 @@ export function useDarkMode() {
     applyTheme(newTheme);
   };
 
-  return { theme, toggleTheme };
+  return { theme, resolvedTheme, toggleTheme };
 }

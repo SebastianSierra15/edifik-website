@@ -1,7 +1,9 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
-import { LoadingProvider, ModalAlertProvider } from "@/src/providers";
+import { useDarkMode } from "@/src/hooks/ui";
+import { LoadingProvider } from "./LoadingProvider";
+import { ModalAlertProvider } from "./ModalAlertProvider";
 
 export function Providers({
   children,
@@ -10,6 +12,8 @@ export function Providers({
   children: React.ReactNode;
   session?: Session | null;
 }) {
+  useDarkMode();
+
   return (
     <SessionProvider session={session}>
       <LoadingProvider>

@@ -324,6 +324,7 @@ export function FeaturesProjectForm({
             <h3 className="mb-4 text-center text-lg font-semibold text-premium-primary dark:text-premium-primaryLight">
               Características Adicionales
             </h3>
+
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {shouldShowField("elevator") && (
                 <FormCheckboxToggle

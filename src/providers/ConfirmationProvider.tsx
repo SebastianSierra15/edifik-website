@@ -1,11 +1,12 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { ModalConfirmation } from "@/src/components/shared";
+import { ModalConfirmation, type ConfirmationAction } from "@/src/components/shared";
 
 interface ConfirmationPayload {
   title: string;
   message: string;
+  action?: ConfirmationAction;
   confirmLabel?: string;
   cancelLabel?: string;
   confirmClassName?: string;
@@ -55,6 +56,7 @@ export function ConfirmationProvider({ children }: { children: ReactNode }) {
           isOpen
           title={payload.title}
           message={payload.message}
+          action={payload.action}
           confirmLabel={payload.confirmLabel}
           cancelLabel={payload.cancelLabel}
           confirmClassName={payload.confirmClassName}

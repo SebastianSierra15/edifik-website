@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import type { LatLngBounds } from "leaflet";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { ProjectSummary } from "@/src/interfaces";
@@ -24,7 +25,7 @@ interface ProjectsContainerProps {
     React.SetStateAction<Record<string, number[]>>
   >;
   isProperty: boolean;
-  setBounds: (bounds: google.maps.LatLngBounds | null) => void;
+  setBounds: (bounds: LatLngBounds | null) => void;
   onDelete: (id: number, name: string) => void;
   permission?: boolean;
   onShowUser?: (name: string) => void;
@@ -122,7 +123,7 @@ export function ProjectsContainer({
       )}
 
       {showMap ? (
-        <div className="relative h-screen w-full transition-transform duration-300">
+        <div className="relative z-0 h-screen w-full transition-transform duration-300">
           <ProjectsMap
             projects={projects}
             setBounds={setBounds}

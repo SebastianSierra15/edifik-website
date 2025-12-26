@@ -7,7 +7,12 @@ interface LocationMapSectionProps {
   mapAddress: string;
   isMapsReady: boolean;
   onMapAddressChange: (value: string) => void;
-  onAddressSelect: (placeId: string, description: string) => void;
+  onAddressSelect: (suggestion: {
+    placeId: string;
+    description: string;
+    lat: number;
+    lng: number;
+  }) => void;
   onLocationSelect: (coords: {
     lat: number;
     lng: number;
@@ -46,7 +51,7 @@ export function LocationMapSection({
         />
       </div>
 
-      <div className="relative h-64 w-full">
+      <div className="relative z-0 h-64 w-full">
         <LocationMap
           isLoaded={isMapsReady}
           coordinates={coordinates}

@@ -1,5 +1,5 @@
 import { inter } from "@/app/fonts/fonts";
-import { Providers } from "./providers";
+import { Providers } from "@/src/providers";
 import type { Metadata } from "next";
 import { BRAND } from "@/src/config/brand";
 import "./globals.css";

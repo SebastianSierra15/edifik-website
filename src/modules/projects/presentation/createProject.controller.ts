@@ -15,6 +15,7 @@ export async function createProjectController(
     housingTypeId: body.housingType?.id,
     cityId: body.city?.id,
     membershipId: body.membership,
+    projectTypeId: body.projectType?.id,
     commonAreaIds: body.commonAreas?.map((a: { id: number }) => a.id),
     nearbyServiceIds: body.nearbyServices?.map((s: { id: number }) => s.id),
   };

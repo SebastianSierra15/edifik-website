@@ -21,7 +21,7 @@ export function NotificationsContainer() {
   }, [open]);
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative flex items-center justify-center">
       <NotificationBell
         unreadCount={requests.length}
         isOpen={open}

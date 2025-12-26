@@ -1,19 +1,61 @@
 "use client";
 
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { GoogleMap } from "@react-google-maps/api";
+import type { LatLngBounds, Map as LeafletMap } from "leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import { Plus, Minus, LocateFixed } from "lucide-react";
 import { ProjectSummary } from "@/src/interfaces";
 import { ProjectCardAdmin } from "./ProjectCardAdmin";
-import { useLoading } from "@/src/providers";
+
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 const containerStyle = {
   width: "100%",
-  height: "100vh",
+  height: "100%",
 };
 
 const DEFAULT_CENTER = { lat: 4.5709, lng: -74.2973 };
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x.src ?? markerIcon2x,
+  iconUrl: markerIcon.src ?? markerIcon,
+  shadowUrl: markerShadow.src ?? markerShadow,
+});
+
+const createPriceMarkerIcon = (price?: number | null) =>
+  L.divIcon({
+    className: "bg-transparent border-0 overflow-visible",
+    html: `
+      <div class="inline-flex w-max items-center justify-center whitespace-nowrap rounded-full bg-premium-primary px-3 py-1 text-sm font-semibold text-white transition-all duration-300 ease-in-out hover:bg-premium-primaryDark">
+        $${price?.toLocaleString()}
+      </div>
+    `,
+  });
+
+function MapEventHandler({
+  onBoundsChange,
+  onMapReady,
+}: {
+  onBoundsChange: (bounds: LatLngBounds) => void;
+  onMapReady: (map: LeafletMap) => void;
+}) {
+  const map = useMapEvents({
+    moveend: () => onBoundsChange(map.getBounds()),
+    zoomend: () => onBoundsChange(map.getBounds()),
+  });
+
+  useEffect(() => {
+    onMapReady(map);
+    onBoundsChange(map.getBounds());
+  }, [map, onBoundsChange, onMapReady]);
+
+  return null;
+}
 
 export function ProjectsMap({
   projects,
@@ -22,7 +64,7 @@ export function ProjectsMap({
   onDelete,
 }: {
   projects: ProjectSummary[];
-  setBounds: (bounds: google.maps.LatLngBounds | null) => void;
+  setBounds: (bounds: LatLngBounds | null) => void;
   showMap: boolean;
   onDelete: (id: number, name: string) => void;
 }) {
@@ -35,40 +77,7 @@ export function ProjectsMap({
     lat: number;
     lng: number;
   } | null>(null);
-  const mapRef = useRef<google.maps.Map | null>(null);
-  let [markers, setMarkers] = useState<
-    google.maps.marker.AdvancedMarkerElement[]
-  >([]);
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
-  const { showLoader, hideLoader } = useLoading();
-
-  const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
-
-  useEffect(() => {
-    if (!isMapsReady) {
-      showLoader();
-      return () => hideLoader();
-    }
-
-    return;
-  }, [isMapsReady, showLoader, hideLoader]);
-
-  const handleBoundsChanged = () => {
-    if (!showMap) {
-      return;
-    }
-
-    if (mapRef.current) {
-      const newBounds = mapRef.current.getBounds();
-      if (newBounds) {
-        setBounds(newBounds);
-      }
-    }
-  };
-
-  const handleCloseCard = () => {
-    setSelectedProject(null);
-  };
+  const mapRef = useRef<LeafletMap | null>(null);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -80,7 +89,7 @@ export function ProjectsMap({
       },
       (error) => {
         console.error(
-          "Error obteniendo la ubicación del usuario:",
+          "Error obteniendo la ubicacion del usuario:",
           error.message
         );
         setCurrentCenter(DEFAULT_CENTER);
@@ -96,126 +105,74 @@ export function ProjectsMap({
     }));
   }, [projects]);
 
-  useEffect(() => {
-    if (mapRef.current && isMapsReady) {
-      clearMarkers();
-      addMarkers(mapRef.current);
-    }
-  }, [validProjects, userLocation, isMapsReady, isMapLoaded]);
+  const handleBoundsChanged = useCallback(
+    (bounds: LatLngBounds) => {
+      if (!showMap) {
+        return;
+      }
+      setBounds(bounds);
+    },
+    [setBounds, showMap]
+  );
 
-  const clearMarkers = () => {
-    markers.forEach((marker) => {
-      marker.map = null;
-      marker.element?.remove();
-    });
-    setMarkers([]);
-  };
+  const handleMapReady = useCallback((map: LeafletMap) => {
+    mapRef.current = map;
+  }, []);
 
-  const addMarkers = (map: google.maps.Map) => {
-    clearMarkers();
-    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
-
-    validProjects.forEach((project) => {
-      const contentDiv = document.createElement("div");
-      contentDiv.innerHTML = `
-      <div class="bg-premium-primary hover:bg-premium-primaryDark hover:scale-105 focus:scale-105 focus:bg-premium-primaryDark text-white font-semibold py-1 px-3 rounded-full text-sm transition-all duration-300 ease-in-out">
-        $${project.price?.toLocaleString()}
-      </div>
-    `;
-
-      const marker = new google.maps.marker.AdvancedMarkerElement({
-        position: { lat: project.latitude, lng: project.longitude },
-        map,
-        content: contentDiv,
-      });
-
-      marker.addListener("click", () => {
-        setSelectedProject(project);
-      });
-
-      newMarkers.push(marker);
-    });
-
-    if (userLocation) {
-      const { AdvancedMarkerElement } = google.maps.marker;
-
-      markers.forEach((marker) => {
-        const markerLat =
-          typeof marker.position?.lat === "function"
-            ? marker.position.lat()
-            : marker.position?.lat;
-        const markerLng =
-          typeof marker.position?.lng === "function"
-            ? marker.position.lng()
-            : marker.position?.lng;
-
-        if (markerLat === userLocation.lat && markerLng === userLocation.lng) {
-          marker.map = null;
-        }
-      });
-
-      const userMarker = new AdvancedMarkerElement({
-        position: userLocation,
-        map,
-      });
-
-      newMarkers.push(userMarker);
-    }
-
-    setMarkers((prev) => [...prev, ...newMarkers]);
+  const handleCloseCard = () => {
+    setSelectedProject(null);
   };
 
   const handleZoomIn = () => {
     const map = mapRef.current;
     if (map) {
-      map.setZoom(map.getZoom()! + 1);
+      map.setZoom(map.getZoom() + 1);
     }
   };
 
   const handleZoomOut = () => {
     const map = mapRef.current;
     if (map) {
-      map.setZoom(map.getZoom()! - 1);
+      map.setZoom(map.getZoom() - 1);
     }
   };
 
   const handleGoToUserLocation = () => {
     const map = mapRef.current;
     if (userLocation && map) {
-      map.panTo(userLocation);
-      map.setZoom(14);
+      map.setView(userLocation, 14);
     } else {
-      console.warn("No se pudo obtener la ubicación del usuario.");
+      console.warn("No se pudo obtener la ubicacion del usuario.");
     }
   };
 
-  if (!isMapsReady) {
-    return null;
-  }
-
   return (
     <>
-      <GoogleMap
-        mapContainerStyle={containerStyle}
+      <MapContainer
         center={currentCenter}
         zoom={12}
-        onLoad={(map) => {
-          mapRef.current = map;
-          setIsMapLoaded(true);
-          setTimeout(() => handleBoundsChanged(), 500);
-        }}
-        onBoundsChanged={handleBoundsChanged}
-        options={{
-          zoomControl: false,
-          streetViewControl: false,
-          mapTypeControl: false,
-          fullscreenControl: false,
-          mapTypeId: "roadmap",
-          mapId: "78a223abe416be2b",
-        }}
-      />
+        zoomControl={false}
+        style={containerStyle}
+      >
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <MapEventHandler
+          onBoundsChange={handleBoundsChanged}
+          onMapReady={handleMapReady}
+        />
+        {validProjects.map((project) => (
+          <Marker
+            key={project.id}
+            position={{ lat: project.latitude, lng: project.longitude }}
+            icon={createPriceMarkerIcon(project.price)}
+            eventHandlers={{
+              click: () => setSelectedProject(project),
+            }}
+          />
+        ))}
+        {userLocation && <Marker position={userLocation} />}
+      </MapContainer>
 
-      <div className="absolute top-4 left-4 z-10 flex flex-col space-y-2">
+      <div className="absolute top-4 left-4 z-[700] flex flex-col space-y-2">
         <button
           className="flex items-center justify-center w-12 h-12 bg-white text-black border-b border-gray-200 hover:bg-gray-100"
           onClick={handleZoomIn}
@@ -239,7 +196,7 @@ export function ProjectsMap({
       </div>
 
       {selectedProject && (
-        <div className="absolute left-1/2 top-1/3 sm:top-4 z-20 w-72 -translate-x-1/2 transform rounded-lg bg-premium-backgroundLight shadow-lg sm:left-auto sm:right-4 sm:translate-x-0 dark:bg-premium-backgroundDark">
+        <div className="absolute left-1/2 top-1/3 sm:top-4 z-[650] w-72 -translate-x-1/2 transform rounded-lg bg-premium-backgroundLight shadow-lg sm:left-auto sm:right-4 sm:translate-x-0 dark:bg-premium-backgroundDark">
           <ProjectCardAdmin
             id={selectedProject.id}
             images={selectedProject.projectMedia}

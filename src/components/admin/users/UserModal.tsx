@@ -144,6 +144,7 @@ export function UserModal({
               value={user.membership?.id || ""}
               options={memberships}
               onChange={handleChange}
+              showPlaceholder={false}
               flag={flag}
             />
           </div>

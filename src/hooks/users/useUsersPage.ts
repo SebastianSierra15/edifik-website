@@ -40,8 +40,7 @@ export function useUsersPage() {
   const [tempUser, setTempUser] = useState<UserFormState | null>(null);
   const [flag, setFlag] = useState(true);
 
-  const [isUserProjectsModalOpen, setIsUserProjectsModalOpen] =
-    useState(false);
+  const [isUserProjectsModalOpen, setIsUserProjectsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
   const { users, totalEntries, isLoadingUsers, refetchUsers } = useUsers(
@@ -72,8 +71,19 @@ export function useUsersPage() {
     [memberships]
   );
 
-  const { submitProject, isProcessing: isProjectProcessing } =
-    useProjectApi();
+  useEffect(() => {
+    if (!modalOpen) return;
+    if (!tempUser) return;
+    if (tempUser.membership?.id) return;
+    if (filteredMemberships.length === 0) return;
+
+    setTempUser((prev) => ({
+      ...(prev || {}),
+      membership: filteredMemberships[0],
+    }));
+  }, [filteredMemberships, modalOpen, tempUser]);
+
+  const { submitProject, isProcessing: isProjectProcessing } = useProjectApi();
 
   const {
     projects: userProjects,
@@ -123,6 +133,7 @@ export function useUsersPage() {
         message: `¿Estás seguro de que quieres ${
           action === "edit" ? "editar" : "registrar"
         } este usuario?`,
+        action: action === "edit" ? "edit" : "create",
       });
 
       if (!accepted) {
@@ -170,9 +181,7 @@ export function useUsersPage() {
 
   const handleChange = useCallback(
     (
-      e: ChangeEvent<
-        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-      >
+      e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
       const { name, value, type } = e.target;
       const newValue =
@@ -246,7 +255,7 @@ export function useUsersPage() {
       const accepted = await confirm({
         title: "Eliminar Propiedad",
         message: `¿Estás seguro de que deseas eliminar la propiedad "${projectName}"?`,
-        confirmClassName: "bg-red-600 hover:bg-red-700",
+        action: "delete",
       });
 
       if (!accepted) {

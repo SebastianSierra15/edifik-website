@@ -10,14 +10,12 @@ interface ImageUploadSectionProps {
   category: string;
   expanded: boolean;
   images: (File | string)[];
-  tags: string[];
   descriptions: string[];
   error: string | null;
   errors: Record<string, string>;
   onToggleExpand: () => void;
   onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveImage: (index: number) => void;
-  onTagChange: (index: number, tag: string) => void;
   onDescriptionChange: (index: number, description: string) => void;
 }
 
@@ -26,26 +24,17 @@ export function ImageUploadSection({
   category,
   expanded,
   images,
-  tags,
   descriptions,
   error,
   errors,
   onToggleExpand,
   onImageChange,
   onRemoveImage,
-  onTagChange,
   onDescriptionChange,
 }: ImageUploadSectionProps) {
   const handleRemoveImage = useCallback(
     (index: number) => onRemoveImage(index),
     [onRemoveImage]
-  );
-
-  const handleTagChange = useCallback(
-    (index: number, newTag: string) => {
-      onTagChange(index, newTag);
-    },
-    [onTagChange]
   );
 
   const handleDescriptionChange = useCallback(
@@ -59,28 +48,22 @@ export function ImageUploadSection({
     return images.map((file, index) => (
       <ImageWithTag
         key={`${imageType.name}-${index}`}
-        id={`${imageType.name}-${index}`}
-        file={typeof file === "string" ? file : URL.createObjectURL(file)}
-        tag={tags[index] || ""}
+        file={file}
         description={descriptions[index] || ""}
         imageTypeId={imageType.id}
         category={category}
         onRemove={() => handleRemoveImage(index)}
-        onTagChange={(newTag) => handleTagChange(index, newTag)}
         onDescriptionChange={(newDescription) =>
           handleDescriptionChange(index, newDescription)
         }
-        error={errors[`${imageType.name}-tag-${index}`]}
         descriptionError={errors[`${imageType.name}-description-${index}`]}
       />
     ));
   }, [
     images,
-    tags,
     descriptions,
     errors,
     handleRemoveImage,
-    handleTagChange,
     handleDescriptionChange,
   ]);
 

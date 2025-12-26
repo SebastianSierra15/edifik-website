@@ -13,10 +13,10 @@ export function AdminNav({ items }: { items: AdminMenuItem[] }) {
           key={path}
           href={path}
           className={clsx(
-            "group relative transition-colors duration-300",
+            "group relative transition-colors duration-300 hover:text-premium-primary dark:hover:text-premium-primaryLight",
             isActive
               ? "text-premium-primary dark:text-premium-primaryLight font-semibold"
-              : "text-premium-textPrimary dark:text-premium-textSecondary hover:text-premium-primary dark:hover:text-premium-primaryLight"
+              : "text-premium-textPrimary dark:text-premium-textSecondary"
           )}
         >
           {label}

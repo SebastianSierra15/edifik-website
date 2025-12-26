@@ -20,7 +20,7 @@ export function ModalFooter({
       <button
         type="button"
         onClick={onClose}
-        className="mr-2 transform rounded-lg bg-premium-textPlaceholder px-4 py-2 text-white transition duration-300 hover:scale-105 hover:bg-premium-borderColor dark:bg-premium-secondary dark:hover:bg-premium-secondaryDark"
+        className="mr-2 transform rounded-lg bg-gray-500 px-4 py-2 text-white transition duration-300 hover:scale-105 hover:bg-gray-600 dark:bg-premium-secondary dark:hover:bg-premium-secondaryDark"
       >
         {cancelLabel}
       </button>

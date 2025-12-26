@@ -35,7 +35,6 @@ export function ImagesProjectForm({
     toggleSection,
     handleImageChange,
     handleRemoveImage,
-    handleTagChange,
     handleDescriptionChange,
     handleSubmit,
   } = useImagesProjectForm({
@@ -61,14 +60,7 @@ export function ImagesProjectForm({
           imageType={type}
           category="imageType"
           expanded={expandedSections[type.name]}
-          images={
-            imagesByCategory[type.name]?.map((media) =>
-              typeof media.file === "string"
-                ? media.file
-                : URL.createObjectURL(media.file)
-            ) || []
-          }
-          tags={imagesByCategory[type.name]?.map((img) => img.tag) || []}
+          images={imagesByCategory[type.name]?.map((media) => media.file) || []}
           descriptions={
             imagesByCategory[type.name]?.map((img) => img.description || "") ||
             []
@@ -78,9 +70,6 @@ export function ImagesProjectForm({
           onToggleExpand={() => toggleSection(type.name)}
           onImageChange={(e) => handleImageChange(type.name, type.id, true, e)}
           onRemoveImage={(index) => handleRemoveImage(type.name, index)}
-          onTagChange={(index, newTag) =>
-            handleTagChange(type.name, index, newTag)
-          }
           onDescriptionChange={(index, newDescription) =>
             handleDescriptionChange(type.name, index, newDescription)
           }
@@ -106,7 +95,6 @@ export function ImagesProjectForm({
           category="commonArea"
           expanded={expandedSections[area.name] || false}
           images={imagesByCategory[area.name]?.map((media) => media.file) || []}
-          tags={imagesByCategory[area.name]?.map((media) => media.tag) || []}
           descriptions={
             imagesByCategory[area.name]?.map(
               (media) => media.description || ""
@@ -117,9 +105,6 @@ export function ImagesProjectForm({
           onToggleExpand={() => toggleSection(area.name)}
           onImageChange={(e) => handleImageChange(area.name, area.id, false, e)}
           onRemoveImage={(index) => handleRemoveImage(area.name, index)}
-          onTagChange={(index, newTag) =>
-            handleTagChange(area.name, index, newTag)
-          }
           onDescriptionChange={(index, newDescription) =>
             handleDescriptionChange(area.name, index, newDescription)
           }

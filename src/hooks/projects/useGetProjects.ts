@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import type { LatLngBounds } from "leaflet";
 import { useDebouncedCallback } from "use-debounce";
 import type { ProjectSummary } from "@/src/interfaces";
 import { ProjectService } from "@/src/services/projects";
@@ -10,7 +11,7 @@ interface UseProjectsOptions {
   selectedButtons: Record<string, number[]>;
   currentProjects: ProjectSummary[];
   projectTypeId: number | null;
-  bounds?: google.maps.LatLngBounds | null;
+  bounds?: LatLngBounds | null;
   showMap: boolean;
 }
 
@@ -34,13 +35,13 @@ export function useGetProjects({
     selectedButtons: Record<string, number[]>;
     projectTypeId: number | null;
     showMap: boolean;
-    bounds: google.maps.LatLngBounds | undefined;
+    boundsKey: string | null;
   }>({
     searchTerm: "",
     selectedButtons: {},
     projectTypeId: null,
     showMap: false,
-    bounds: undefined,
+    boundsKey: null,
   });
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
@@ -54,19 +55,21 @@ export function useGetProjects({
   }, []);
 
   const fetchProjects = useCallback(
-    async (isLoadMore = false, page = 1, mapBounds?: google.maps.LatLngBounds) => {
+    async (isLoadMore = false, page = 1, mapBounds?: LatLngBounds, force = false) => {
       if (isLoading) return;
 
+      const boundsKey = mapBounds ? mapBounds.toBBoxString() : null;
       const currentFilters = {
         searchTerm,
         selectedButtons,
         projectTypeId,
         showMap,
-        bounds: mapBounds,
+        boundsKey,
       };
 
       if (
         !isLoadMore &&
+        !force &&
         JSON.stringify(currentFilters) === JSON.stringify(lastFetchedFilters)
       ) {
         return;
@@ -90,10 +93,10 @@ export function useGetProjects({
             ),
             ...(mapBounds
               ? {
-                  minLat: mapBounds.getSouthWest().lat(),
-                  maxLat: mapBounds.getNorthEast().lat(),
-                  minLng: mapBounds.getSouthWest().lng(),
-                  maxLng: mapBounds.getNorthEast().lng(),
+                  minLat: mapBounds.getSouthWest().lat,
+                  maxLat: mapBounds.getNorthEast().lat,
+                  minLng: mapBounds.getSouthWest().lng,
+                  maxLng: mapBounds.getNorthEast().lng,
                 }
               : {}),
           });
@@ -156,7 +159,12 @@ export function useGetProjects({
   const refreshProjects = useCallback(() => {
     setProjects([]);
     setCurrentPage(1);
-    fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
+    fetchProjects(
+      false,
+      1,
+      showMap && bounds !== null ? bounds : undefined,
+      true
+    );
   }, [fetchProjects, showMap, bounds]);
 
   return {

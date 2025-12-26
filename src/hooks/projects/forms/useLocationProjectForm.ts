@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import type { City, Departament, ProjectFormData } from "@/src/interfaces";
 import { useLocationProjectValidation } from "../validations";
+import { useLocationGeocoder } from "./useLocationGeocoder";
 
 interface UseLocationProjectFormOptions {
   formData: ProjectFormData;
@@ -39,7 +40,15 @@ export function useLocationProjectForm({
     [cities, formData.city?.departament?.id]
   );
 
-  const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
+  const isMapsReady = true;
+  const { resolveLocation } = useLocationGeocoder();
+  const normalizeText = useCallback((value: string) => {
+    return value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }, []);
 
   const handleDepartamentChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -54,9 +63,6 @@ export function useLocationProjectForm({
       ) {
         onChange({
           city: { id: 0, name: "", departament: selectedDepartament },
-          address: "",
-          latitude: undefined,
-          longitude: undefined,
         });
         validateField("departamentError", departamentId);
       }
@@ -72,9 +78,6 @@ export function useLocationProjectForm({
       if (selectedCity && selectedCity.id !== formData.city?.id) {
         onChange({
           city: selectedCity,
-          address: "",
-          latitude: undefined,
-          longitude: undefined,
         });
         validateField("cityError", cityId);
       }
@@ -83,76 +86,65 @@ export function useLocationProjectForm({
   );
 
   const handleAddressSelect = useCallback(
-    async (placeId: string, description: string) => {
-      const placesService = new google.maps.places.PlacesService(
-        document.createElement("div")
+    async (suggestion: {
+      placeId: string;
+      description: string;
+      lat: number;
+      lng: number;
+    }) => {
+      const { lat, lng, description } = suggestion;
+      const result = await resolveLocation({ lat, lng });
+      const formattedAddress = result?.address || description;
+      const cityName = result?.city || "";
+      const departmentName = result?.department || "";
+
+      setMapAddress(formattedAddress);
+
+      const selectedCity = cities.find(
+        (city) => normalizeText(city.name) === normalizeText(cityName)
+      );
+      const selectedDepartment = departaments.find(
+        (department) =>
+          normalizeText(department.name) === normalizeText(departmentName)
       );
 
-      placesService.getDetails({ placeId }, (place, status) => {
+      if (selectedCity && selectedDepartment) {
         if (
-          status === google.maps.places.PlacesServiceStatus.OK &&
-          place?.geometry?.location
+          selectedCity.id !== formData.city?.id ||
+          selectedDepartment.id !== formData.city?.departament?.id
         ) {
-          const lat = place.geometry.location.lat();
-          const lng = place.geometry.location.lng();
-
-          const geocoder = new google.maps.Geocoder();
-          geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-            if (status === google.maps.GeocoderStatus.OK && results?.length) {
-              const formattedAddress = results[0].formatted_address;
-              const foundCity = results.find((result) =>
-                result.types.includes("locality")
-              );
-              const foundDepartment = results.find((result) =>
-                result.types.includes("administrative_area_level_1")
-              );
-
-              const cityName =
-                foundCity?.formatted_address.split(",")[0].trim() || "";
-              const departmentName =
-                foundDepartment?.formatted_address.split(",")[0].trim() || "";
-
-              const selectedCity = cities.find(
-                (city) => city.name.toLowerCase() === cityName.toLowerCase()
-              );
-              const selectedDepartment = departaments.find(
-                (department) =>
-                  department.name.toLowerCase() === departmentName.toLowerCase()
-              );
-
-              if (
-                selectedCity?.id !== formData.city?.id ||
-                selectedDepartment?.id !== formData.city?.departament?.id
-              ) {
-                onChange({
-                  address: formattedAddress,
-                  latitude: lat,
-                  longitude: lng,
-                  city: selectedCity || {
-                    id: 0,
-                    name: "Ciudad desconocida",
-                    departament: selectedDepartment || {
-                      id: 0,
-                      name: "Departamento desconocido",
-                    },
-                  },
-                });
-              } else {
-                onChange({ address: formattedAddress });
-              }
-
-              validateField("addressError", formattedAddress);
-            }
+          onChange({
+            address: formattedAddress,
+            latitude: lat,
+            longitude: lng,
+            city: selectedCity,
+          });
+        } else {
+          onChange({
+            address: formattedAddress,
+            latitude: lat,
+            longitude: lng,
           });
         }
-      });
+      } else {
+        onChange({
+          address: formattedAddress,
+          latitude: lat,
+          longitude: lng,
+        });
+      }
+
+      validateField("addressError", formattedAddress);
     },
     [
       cities,
       departaments,
       formData.city?.departament?.id,
       formData.city?.id,
+      normalizeText,
       onChange,
+      resolveLocation,
+      setMapAddress,
       validateField,
     ]
   );
@@ -214,30 +206,34 @@ export function useLocationProjectForm({
     }) => {
       setMapAddress(coords.address ?? "");
 
-      const selectedCity = cities.find((city) => city.name === coords.city);
+      const selectedCity = cities.find(
+        (city) => normalizeText(city.name) === normalizeText(coords.city ?? "")
+      );
       const selectedDepartment = departaments.find(
-        (department) => department.name === coords.department
+        (department) =>
+          normalizeText(department.name) ===
+          normalizeText(coords.department ?? "")
       );
 
       const currentCityId = formData.city?.id || 0;
       const currentDepartmentId = formData.city?.departament?.id || 0;
 
-      if (
-        selectedCity?.id !== currentCityId ||
-        selectedDepartment?.id !== currentDepartmentId
-      ) {
-        onChange({
-          latitude: coords.lat,
-          longitude: coords.lng,
-          city: selectedCity || {
-            id: 0,
-            name: "Ciudad desconocida",
-            departament: selectedDepartment || {
-              id: 0,
-              name: "Departamento desconocido",
-            },
-          },
-        });
+      if (selectedCity && selectedDepartment) {
+        if (
+          selectedCity.id !== currentCityId ||
+          selectedDepartment.id !== currentDepartmentId
+        ) {
+          onChange({
+            latitude: coords.lat,
+            longitude: coords.lng,
+            city: selectedCity,
+          });
+        } else {
+          onChange({
+            latitude: coords.lat,
+            longitude: coords.lng,
+          });
+        }
       } else {
         onChange({
           latitude: coords.lat,
@@ -245,7 +241,15 @@ export function useLocationProjectForm({
         });
       }
     },
-    [cities, departaments, formData.city?.departament?.id, formData.city?.id, onChange, setMapAddress]
+    [
+      cities,
+      departaments,
+      formData.city?.departament?.id,
+      formData.city?.id,
+      normalizeText,
+      onChange,
+      setMapAddress,
+    ]
   );
 
   return {

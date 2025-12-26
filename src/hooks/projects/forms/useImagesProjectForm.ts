@@ -128,32 +128,6 @@ export function useImagesProjectForm({
     [formData.media, imagesByCategory, onChange]
   );
 
-  const handleTagChange = useCallback(
-    (category: string, index: number, tag: string) => {
-      if (!formData.media) return;
-
-      const imageToUpdate = imagesByCategory[category]?.[index];
-      if (!imageToUpdate) {
-        console.error(
-          `No se encontro la imagen en ${category} con indice ${index}`
-        );
-        return;
-      }
-
-      const updatedMedia = formData.media.map((mediaItem) =>
-        mediaItem.file === imageToUpdate.file
-          ? { ...mediaItem, tag }
-          : mediaItem
-      );
-      onChange({ media: updatedMedia });
-
-      setTimeout(() => {
-        validateField(`${category}-tag-${index}`, tag);
-      }, 100);
-    },
-    [formData.media, imagesByCategory, onChange, validateField]
-  );
-
   const handleDescriptionChange = useCallback(
     (category: string, index: number, description: string) => {
       if (!formData.media) return;
@@ -190,9 +164,10 @@ export function useImagesProjectForm({
       return;
     }
 
+    const baseName = formData.name?.trim() || "Proyecto";
     const mediaData: Media[] =
-      formData.media?.map((mediaItem) => ({
-        tag: mediaItem.tag || "",
+      formData.media?.map((mediaItem, index) => ({
+        tag: `${baseName}-${index + 1}`,
         file: mediaItem.file,
         description: mediaItem.description || "",
         idType: mediaItem.idType || 0,
@@ -211,7 +186,6 @@ export function useImagesProjectForm({
     toggleSection,
     handleImageChange,
     handleRemoveImage,
-    handleTagChange,
     handleDescriptionChange,
     handleSubmit,
   };

@@ -6,6 +6,7 @@ import { useProjectApi } from "../useProjectApi";
 import { useDeleteProject } from "../useDeleteProject";
 import { useProjectMediaApi } from "../media";
 import { useS3Images } from "@/src/hooks/s3";
+import { UploadImagesError } from "@/src/services/s3";
 
 interface UseProjectSubmissionOptions {
   isEdit: boolean;
@@ -18,8 +19,25 @@ interface ProjectSubmissionResult {
   success: boolean;
 }
 
+type SubmissionPhase = "idle" | "saving-project" | "saving-images";
+
 const getRedirectPath = (isProperty: boolean) =>
   isProperty ? "/admin/propiedades" : "/admin/proyectos";
+
+const getUploadedUrlsFromError = (error: unknown): string[] => {
+  if (error instanceof UploadImagesError) {
+    return error.uploadedUrls;
+  }
+
+  if (error && typeof error === "object" && "uploadedUrls" in error) {
+    const maybeUrls = (error as { uploadedUrls?: unknown }).uploadedUrls;
+    if (Array.isArray(maybeUrls)) {
+      return maybeUrls.filter((item): item is string => typeof item === "string");
+    }
+  }
+
+  return [];
+};
 
 export function useProjectSubmission({
   isEdit,
@@ -32,6 +50,8 @@ export function useProjectSubmission({
   const { insertProjectMedia, updateProjectMedia, deleteProjectMedia } =
     useProjectMediaApi();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionPhase, setSubmissionPhase] =
+    useState<SubmissionPhase>("idle");
 
   const createOrUpdateProject = useCallback(
     async (data: ProjectFormData) => {
@@ -100,17 +120,30 @@ export function useProjectSubmission({
 
   const uploadAndInsertMedia = useCallback(
     async (projectId: number, media: Media[], propertyTypeName: string) => {
-      const uploadResult = await uploadImages(
-        projectId,
-        media,
-        propertyTypeName
-      );
+      let uploadResult: ProjectMedia[] = [];
+
+      try {
+        uploadResult = await uploadImages(projectId, media, propertyTypeName);
+      } catch (error) {
+        const uploadedUrls = getUploadedUrlsFromError(error);
+        if (uploadedUrls.length > 0) {
+          await deleteImages(uploadedUrls);
+        }
+
+        if (!isEdit) {
+          await deleteProject(projectId);
+        }
+
+        throw error;
+      }
 
       if (!uploadResult || uploadResult.length === 0) {
         console.error(
           "No se pudieron subir imagenes. Eliminando el proyecto..."
         );
-        await deleteProject(projectId);
+        if (!isEdit) {
+          await deleteProject(projectId);
+        }
         throw new Error("Error al subir las imagenes. Proyecto eliminado.");
       }
 
@@ -120,13 +153,16 @@ export function useProjectSubmission({
         console.error(
           "Error al insertar imagenes en la base de datos. Eliminando el proyecto..."
         );
-        await deleteProject(projectId);
+        await deleteImages(uploadResult.map((item) => item.url));
+        if (!isEdit) {
+          await deleteProject(projectId);
+        }
         throw new Error(
           "Error al insertar imagenes en la BD. Proyecto eliminado."
         );
       }
     },
-    [deleteProject, insertProjectMedia, uploadImages]
+    [deleteImages, deleteProject, insertProjectMedia, isEdit, uploadImages]
   );
 
   const updateExistingMedia = useCallback(
@@ -202,6 +238,7 @@ export function useProjectSubmission({
     async (media: Media[]): Promise<ProjectSubmissionResult> => {
       const redirectPath = getRedirectPath(isProperty);
       setIsSubmitting(true);
+      setSubmissionPhase("saving-project");
 
       try {
         const finalProjectData = { ...projectData, media };
@@ -217,6 +254,9 @@ export function useProjectSubmission({
         const existingMedia = projectData.projectMedia;
 
         if (isEdit) {
+          if (media.some((item) => item.file instanceof File)) {
+            setSubmissionPhase("saving-images");
+          }
           await handleEditMedia(
             projectId,
             media,
@@ -224,6 +264,9 @@ export function useProjectSubmission({
             propertyTypeName
           );
         } else {
+          if (media.length > 0) {
+            setSubmissionPhase("saving-images");
+          }
           await handleNewMedia(projectId, media, propertyTypeName);
         }
 
@@ -254,6 +297,7 @@ export function useProjectSubmission({
         return { success: false, redirectPath };
       } finally {
         setIsSubmitting(false);
+        setSubmissionPhase("idle");
       }
     },
     [
@@ -266,5 +310,5 @@ export function useProjectSubmission({
     ]
   );
 
-  return { submitProjectForm, isSubmitting };
+  return { submitProjectForm, isSubmitting, submissionPhase };
 }

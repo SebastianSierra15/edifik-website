@@ -10,7 +10,7 @@ export interface AlertProps {
   onClose?: () => void;
 }
 
-export function Alert({ type, message, duration = 3000, onClose }: AlertProps) {
+export function Alert({ type, message, duration = 5000, onClose }: AlertProps) {
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
   useEffect(() => {

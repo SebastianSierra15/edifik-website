@@ -8,7 +8,7 @@ import {
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAuth();
@@ -23,8 +23,9 @@ export async function GET(
 
     const { searchParams } = new URL(req.url);
 
+    const { id } = await params;
     const result = await getProjectByIdController({
-      projectId: Number(params.id),
+      projectId: Number(id),
       isProject: Number(searchParams.get("isProject")),
       isAdmin: Number(searchParams.get("isAdmin") ?? 0),
       canSeeMembership,
@@ -38,7 +39,7 @@ export async function GET(
 
 export async function DELETE(
   _req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await requireAuth();
@@ -49,7 +50,8 @@ export async function DELETE(
       Permission.ManageOwnProperties
     );
 
-    await deleteProjectPermanentlyController(Number(params.id), {
+    const { id } = await params;
+    await deleteProjectPermanentlyController(Number(id), {
       userId: Number(session.user.id),
       canManageAll: true,
     });

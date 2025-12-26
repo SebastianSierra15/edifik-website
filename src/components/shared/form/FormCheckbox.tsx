@@ -17,7 +17,7 @@ export function FormCheckbox({
     <div>
       <label
         htmlFor={name}
-        className="flex items-center gap-2 text-sm font-medium text-premium-textPrimary dark:text-premium-textPrimary"
+        className="flex items-center gap-2 text-sm font-medium text-premium-textPrimary dark:text-premium-textPrimary cursor-pointer"
       >
         <input
           id={name}

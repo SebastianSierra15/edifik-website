@@ -11,9 +11,7 @@ export default function AdminLayout({
       <ConfirmationProvider>
         <div className="min-h-screen bg-premium-background antialiased flex flex-col">
           <AdminHeader />
-          <main className="flex-grow pt-16 flex flex-col gap-12">
-            {children}
-          </main>
+          <main className="flex-grow pt-20 flex flex-col">{children}</main>
           <AdminFooter />
         </div>
       </ConfirmationProvider>

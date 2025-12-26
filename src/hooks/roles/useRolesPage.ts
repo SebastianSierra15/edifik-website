@@ -66,10 +66,10 @@ export function useRolesPage() {
 
   const confirmMessage = useMemo(() => {
     if (action === "delete")
-      return "?Est?s seguro de que quieres eliminar este rol?";
+      return "¿Estás seguro de que quieres eliminar este rol?";
     if (action === "edit")
-      return "?Est?s seguro de que quieres editar este rol?";
-    return "?Est?s seguro de que quieres registrar este rol?";
+      return "¿Estás seguro de que quieres editar este rol?";
+    return "¿Estás seguro de que quieres registrar este rol?";
   }, [action]);
 
   // ------- handlers -------
@@ -91,7 +91,7 @@ export function useRolesPage() {
     const accepted = await confirm({
       title: "Eliminar rol",
       message: "?Est?s seguro de que quieres eliminar este rol?",
-      confirmClassName: "bg-red-600 hover:bg-red-700",
+      action: "delete",
     });
 
     if (!accepted) return;
@@ -116,6 +116,7 @@ export function useRolesPage() {
     const accepted = await confirm({
       title: "Confirmar acción",
       message: confirmMessage,
+      action: action === "edit" ? "edit" : "create",
     });
 
     if (!accepted) return;
@@ -147,7 +148,7 @@ export function useRolesPage() {
     if (!success) {
       showAlert({
         type: "error",
-        message: error ?? "Lo sentimos, algo sali? mal.",
+        message: error ?? "Lo sentimos, algo salió mal.",
       });
       return;
     }

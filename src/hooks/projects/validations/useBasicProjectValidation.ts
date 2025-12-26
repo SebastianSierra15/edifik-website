@@ -34,6 +34,18 @@ export function useBasicProjectValidation(
     value: unknown
   ) => {
     switch (fieldName) {
+      case "nameError":
+        if (isProperty) return "";
+        if (!value) return "El nombre es obligatorio.";
+        if (typeof value === "string") {
+          if (value.length < 5) {
+            return "El nombre debe tener al menos 5 caracteres.";
+          }
+          if (value.length > 100) {
+            return "El nombre no puede superar 100 caracteres.";
+          }
+        }
+        return "";
       case "emailError":
         if (
           isProperty &&
@@ -44,9 +56,27 @@ export function useBasicProjectValidation(
         }
         return "";
       case "shortDescriptionError":
-        return !value ? "El resumen breve es obligatorio." : "";
+        if (!value) return "El resumen breve es obligatorio.";
+        if (typeof value === "string") {
+          if (value.length < 50) {
+            return "El resumen breve debe tener al menos 50 caracteres.";
+          }
+          if (value.length > 150) {
+            return "El resumen breve no puede superar 150 caracteres.";
+          }
+        }
+        return "";
       case "detailedDescriptionError":
-        return !value ? "La descripción completa es obligatoria." : "";
+        if (!value) return "La descripcion completa es obligatoria.";
+        if (typeof value === "string") {
+          if (value.length < 100) {
+            return "La descripcion completa debe tener al menos 100 caracteres.";
+          }
+          if (value.length > 1500) {
+            return "La descripcion completa no puede superar 1500 caracteres.";
+          }
+        }
+        return "";
       case "propertyTypeError":
         return !value ? "Seleccione el tipo de propiedad." : "";
       case "projectTypeError":
@@ -84,7 +114,7 @@ export function useBasicProjectValidation(
 
   const validateFields = async () => {
     const newErrors: BasicProjectErrors = {
-      nameError: getErrorMessage("nameError", formData.name),
+      nameError: isProperty ? "" : getErrorMessage("nameError", formData.name),
       emailError: getErrorMessage("emailError", formData.email),
       shortDescriptionError: getErrorMessage(
         "shortDescriptionError",

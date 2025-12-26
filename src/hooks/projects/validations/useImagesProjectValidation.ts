@@ -9,7 +9,6 @@ export function useImagesProjectValidation(
 ) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const imagesByCategory: Record<string, Media[]> = {};
-  const imageTagsByCategory: Record<string, string[]> = {};
   const imageDescriptionsByCategory: Record<string, string[]> = {};
 
   (formData.media || []).forEach((media) => {
@@ -17,19 +16,14 @@ export function useImagesProjectValidation(
 
     if (!imagesByCategory[media.type]) {
       imagesByCategory[media.type] = [];
-      imageTagsByCategory[media.type] = [];
       imageDescriptionsByCategory[media.type] = [];
     }
 
     imagesByCategory[media.type].push(media);
-    imageTagsByCategory[media.type].push(media.tag);
     imageDescriptionsByCategory[media.type].push(media.description || "");
   });
 
   const getErrorMessage = (fieldName: string) => {
-    if (fieldName.includes("-tag-")) {
-      return "El nombre de la imagen es obligatorio.";
-    }
     if (fieldName.includes("-description-")) {
       return "La descripción es obligatoria.";
     }
@@ -78,11 +72,6 @@ export function useImagesProjectValidation(
 
     Object.entries(imagesByCategory).forEach(([category, files]) => {
       files.forEach((_, index) => {
-        if (!imageTagsByCategory[category]?.[index]) {
-          newErrors[`${category}-tag-${index}`] =
-            "El nombre de la imagen es obligatorio.";
-        }
-
         if (
           imagesTypes.find((type) => type.name === category)?.id === 1005 &&
           !imageDescriptionsByCategory[category]?.[index]
@@ -100,3 +89,4 @@ export function useImagesProjectValidation(
 
   return { errors, validateFields, validateField };
 }
+

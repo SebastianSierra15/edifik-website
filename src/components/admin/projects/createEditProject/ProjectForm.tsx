@@ -48,16 +48,15 @@ export function ProjectForm({
   const { locations } = useLocations();
   const { metadata } = useBasicMetadata();
   const { imagesTypes } = useImageTypes();
-  const { submitProjectForm, isSubmitting } = useProjectSubmission({
-    isEdit,
-    isProperty,
-    projectData,
-  });
-  const { showLoader, hideLoader } = useLoading();
+  const { submitProjectForm, isSubmitting, submissionPhase } =
+    useProjectSubmission({
+      isEdit,
+      isProperty,
+      projectData,
+    });
+  const { showLoader, hideLoader, setLoaderMessage } = useLoading();
   const confirm = useConfirmation();
-  const [mapAddress, _setMapAddress] = useState(
-    isEdit ? "Deseas guardar los cambios?" : ""
-  );
+  const [mapAddress, _setMapAddress] = useState("");
   const mapAddressRef = useRef(mapAddress);
 
   const setMapAddress = (value: string) => {
@@ -90,12 +89,28 @@ export function ProjectForm({
 
   useEffect(() => {
     if (!isSubmitting) {
+      hideLoader();
+      setLoaderMessage(undefined);
       return;
     }
 
     showLoader();
     return () => hideLoader();
-  }, [hideLoader, isSubmitting, showLoader]);
+  }, [hideLoader, isSubmitting, setLoaderMessage, showLoader]);
+
+  useEffect(() => {
+    if (!isSubmitting) return;
+
+    const entityLabel = isProperty ? "propiedad" : "proyecto";
+    const message =
+      submissionPhase === "saving-images"
+        ? `Guardando imagenes de ${entityLabel}...`
+        : isEdit
+          ? `Editando ${entityLabel}...`
+          : `Creando ${entityLabel}...`;
+
+    setLoaderMessage(message);
+  }, [isEdit, isProperty, isSubmitting, setLoaderMessage, submissionPhase]);
 
   const handleUpdateProject = useCallback(
     (updatedData: Partial<ProjectFormData>) => {
@@ -143,8 +158,7 @@ export function ProjectForm({
         message: isEdit
           ? "Deseas guardar los cambios?"
           : "Estas seguro de que quieres subir este proyecto?",
-        confirmLabel: "Confirmar",
-        cancelLabel: "Cancelar",
+        action: isEdit ? "edit" : "create",
       }).then((confirmed) => {
         if (!confirmed) return;
 
@@ -238,10 +252,10 @@ export function ProjectForm({
   }, [currentStep, metadata, locations, projectData]);
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="mb-10 mt-24 text-center text-3xl font-semibold text-premium-primary lg:mt-20 dark:text-premium-primaryLight">
-        {isEdit ? "Deseas guardar los cambios?" : "Agregar "}
-        {isProperty ? "Deseas guardar los cambios?" : "Proyecto"}
+    <div className="container mx-auto px-6 pb-6">
+      <h1 className="mb-10 text-center text-3xl font-semibold text-premium-primary dark:text-premium-primaryLight">
+        {isEdit ? "Editar " : "Agregar "}
+        {isProperty ? "Propiedad" : "Proyecto"}
       </h1>
 
       <div className="mx-auto mb-10 text-center">
@@ -255,7 +269,7 @@ export function ProjectForm({
           className="rounded-md bg-premium-secondary px-4 py-2 text-white transition-colors hover:bg-premium-secondaryLight dark:bg-premium-secondaryDark dark:hover:bg-premium-secondaryLight"
           onClick={() =>
             router.push(
-              isProperty ? "Deseas guardar los cambios?" : "/admin/proyectos"
+              isProperty ? "/admin/propiedades" : "/admin/proyectos"
             )
           }
         >
@@ -265,3 +279,4 @@ export function ProjectForm({
     </div>
   );
 }
+

@@ -14,6 +14,11 @@ export async function updateProjectController(
     propertyTypeId: body.propertyType?.id,
     housingTypeId: body.housingType?.id,
     cityId: body.city?.id,
+    projectTypeId: body.projectType?.id,
+    commonAreaIds: body.commonAreas?.map((area: { id: number }) => area.id),
+    nearbyServiceIds: body.nearbyServices?.map(
+      (service: { id: number }) => service.id
+    ),
   };
 
   const useCase = new UpdateProject(

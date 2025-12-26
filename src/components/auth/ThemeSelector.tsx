@@ -1,34 +1,17 @@
-import { useEffect, useState } from "react";
-import { Sun, Moon, SunMoon } from "lucide-react";
+"use client";
 
-export default function ThemeSelector({
-  closeMenu,
-}: {
+import { Moon, Sun, SunMoon } from "lucide-react";
+import { useDarkMode } from "@/src/hooks/ui";
+
+interface ThemeSelectorProps {
   closeMenu: () => void;
-}) {
-  const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
+}
 
-  useEffect(() => {
-    const savedTheme =
-      (localStorage.getItem("theme") as "light" | "dark" | "auto") || "auto";
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    const initialTheme =
-      savedTheme === "auto" ? (prefersDark ? "dark" : "light") : savedTheme;
-    setTheme(initialTheme);
-    document.documentElement.setAttribute("data-theme", initialTheme);
-  }, []);
+export function ThemeSelector({ closeMenu }: ThemeSelectorProps) {
+  const { theme, toggleTheme } = useDarkMode();
 
   const handleThemeChange = (newTheme: "light" | "dark" | "auto") => {
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    const appliedTheme =
-      newTheme === "auto" ? (prefersDark ? "dark" : "light") : newTheme;
-    document.documentElement.setAttribute("data-theme", appliedTheme);
+    toggleTheme(newTheme);
     closeMenu();
   };
 

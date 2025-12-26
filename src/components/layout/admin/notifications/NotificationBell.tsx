@@ -11,27 +11,27 @@ interface Props {
 
 export function NotificationBell({ unreadCount, isOpen, onToggle }: Props) {
   return (
-    <button
-      onClick={onToggle}
-      aria-expanded={isOpen}
-      className={clsx(
-        "p-2 rounded-md cursor-pointer transition-all",
-        "text-premium-secondary dark:text-premium-textPrimary",
-        "hover:text-premium-primary dark:hover:text-premium-primaryLight"
-      )}
-    >
-      <span className="relative inline-flex">
-        <Bell className="h-6 w-6" />
-
-        {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center pointer-events-none">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75 animate-ping" />
-            <span className="relative inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow">
-              {unreadCount}
-            </span>
-          </span>
+    <>
+      <button
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className={clsx(
+          "p-2 rounded-md cursor-pointer transition-all",
+          "text-premium-secondary dark:text-premium-textPrimary",
+          "hover:text-premium-primary dark:hover:text-premium-primaryLight"
         )}
-      </span>
-    </button>
+      >
+        <Bell className="h-6 w-6" />
+      </button>
+
+      {unreadCount > 0 && (
+        <div className="absolute -top-1 -right-1 flex items-center justify-center">
+          <span className="absolute w-5 h-5 rounded-full bg-red-500 opacity-75 animate-ping" />
+          <span className="relative w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md transition-all duration-500">
+            {unreadCount}
+          </span>
+        </div>
+      )}
+    </>
   );
 }

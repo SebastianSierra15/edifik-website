@@ -2,37 +2,28 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { X } from "lucide-react";
-import { FormInput, FormTextArea } from "@/src/components/shared";
+import { FormTextArea } from "@/src/components/shared";
 
 interface ImageWithTagProps {
-  id?: string;
   file: File | string;
-  tag: string;
   description: string;
   imageTypeId: number;
   category: string;
   onRemove: () => void;
-  onTagChange: (newTag: string) => void;
   onDescriptionChange: (newDescription: string) => void;
-  error?: string;
   descriptionError?: string;
 }
 
 export function ImageWithTag({
-  id,
   file,
-  tag,
   description,
   imageTypeId,
   category,
   onRemove,
-  onTagChange,
   onDescriptionChange,
-  error,
   descriptionError,
 }: ImageWithTagProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [localTag, setLocalTag] = useState(tag);
   const [localDescription, setLocalDescription] = useState(description);
 
   useEffect(() => {
@@ -52,17 +43,8 @@ export function ImageWithTag({
   }, [file]);
 
   useEffect(() => {
-    setLocalTag(tag);
-  }, [tag]);
-
-  useEffect(() => {
     setLocalDescription(description);
   }, [description]);
-
-  const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalTag(e.target.value);
-    onTagChange(e.target.value);
-  };
 
   const handleDescriptionChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -89,19 +71,6 @@ export function ImageWithTag({
           </button>
         </div>
       )}
-
-      <FormInput
-        id={id}
-        label="Nombre"
-        type="text"
-        name="tag"
-        value={localTag}
-        onChange={handleTagChange}
-        placeholder="Nombre"
-        maxLength={100}
-        error={error}
-        tooltipText="Ingrese un nombre para la imagen."
-      />
 
       {imageTypeId === 1005 && category === "imageType" && (
         <FormTextArea

@@ -26,8 +26,8 @@ export function NotificationsPanel({
   return (
     <div
       className={clsx(
-        "fixed top-14 right-4 md:right-4 z-50",
-        "h-auto max-h-[80vh] w-[90vw] max-w-[400px]",
+        "fixed top-14 right-4 md:right-4",
+        "h-auto max-h-[80vh] w-[90vw] max-w-[300px]",
         "bg-premium-background dark:bg-premium-secondary",
         "shadow-lg border border-premium-borderColor dark:border-premium-borderColorHover rounded-md",
         "overflow-y-auto transition-transform duration-300 ease-in-out",
@@ -40,9 +40,9 @@ export function NotificationsPanel({
         </span>
         <button
           onClick={onClose}
-          className="text-premium-textPrimary dark:text-premium-textSecondary hover:text-premium-primary"
+          className="text-premium-textPrimary dark:text-premium-textSecondary hover:text-premium-primary dark:hover:text-premium-primaryLight"
         >
-          ✕
+          {"\u2715"}
         </button>
       </div>
 

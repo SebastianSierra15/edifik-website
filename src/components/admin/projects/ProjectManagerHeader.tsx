@@ -13,7 +13,7 @@ export function ProjectManagerHeader({
   children,
 }: ProjectManagerHeaderProps) {
   return (
-    <div className="bg-premium-backgroundDark px-6 pb-2 pt-6 dark:bg-premium-background">
+    <div className="-mt-10 bg-premium-backgroundDark px-6 pb-2 pt-8 dark:bg-premium-backgroundLight">
       <h1
         className={clsx(
           "text-center text-3xl font-semibold text-premium-primary dark:text-premium-primaryLight",

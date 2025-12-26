@@ -107,7 +107,9 @@ const LocationProjectForm = memo(function LocationProjectForm({
           tooltipText="Busca la direccion en el mapa para obtener la ubicacion exacta."
           coordinates={{
             lat:
-              typeof formData.latitude === "number" ? formData.latitude : 4.5709,
+              typeof formData.latitude === "number"
+                ? formData.latitude
+                : 4.5709,
             lng:
               typeof formData.longitude === "number"
                 ? formData.longitude

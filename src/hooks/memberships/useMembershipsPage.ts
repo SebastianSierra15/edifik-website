@@ -84,6 +84,7 @@ export function useMembershipsPage() {
       const accepted = await confirm({
         title: "Confirmar Acción",
         message: "¿Estás seguro de que quieres actualizar esta membresía?",
+        action: "edit",
       });
 
       if (!accepted) {

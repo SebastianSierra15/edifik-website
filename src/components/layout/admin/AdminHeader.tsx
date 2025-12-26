@@ -10,10 +10,10 @@ export function AdminHeader() {
   const { menuItems, canManageRequests } = useAdminMenu();
 
   return (
-    <header className="fixed space-x-3 left-0 top-0 z-50 min-h-16 w-full bg-premium-background bg-opacity-90 text-premium-textPrimary shadow-md dark:bg-premium-secondaryDark dark:text-premium-textPrimary flex items-center justify-between py-1 px-4">
+    <header className="fixed space-x-3 left-0 top-0 z-50 min-h-16 w-full bg-premium-background bg-opacity-90 text-premium-textPrimary shadow-md dark:bg-premium-secondaryDark dark:text-premium-textPrimary flex items-center justify-between px-4">
       <div className="flex flex-col items-center text-center transition-colors duration-300">
         <Link href="/">
-          <div className="flex items-center justify-start w-[100px] h-[40px]">
+          <div className="flex items-center justify-start w-[100px] h-[38px]">
             <Image
               src="/images/logo.webp"
               alt="Logo de EdifiK"
@@ -25,8 +25,11 @@ export function AdminHeader() {
             />
           </div>
         </Link>
+
         <Link href="/admin">
-          <span>Admin Panel</span>
+          <span className="transition-colors hover:text-premium-primary dark:hover:text-premium-primaryLight">
+            Admin Panel
+          </span>
         </Link>
       </div>
 

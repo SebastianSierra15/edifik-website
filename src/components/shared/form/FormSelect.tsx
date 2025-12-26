@@ -11,6 +11,7 @@ interface FormSelectProps {
   error?: string;
   flag?: boolean;
   tooltipText?: string;
+  showPlaceholder?: boolean;
 }
 
 export function FormSelect({
@@ -22,6 +23,7 @@ export function FormSelect({
   error,
   flag,
   tooltipText,
+  showPlaceholder = true,
 }: FormSelectProps) {
   return (
     <div>
@@ -45,7 +47,9 @@ export function FormSelect({
             : "border-premium-borderColor dark:border-premium-borderColorHover"
         )}
       >
-        <option value="">Seleccione {label.toLowerCase()}</option>
+        {showPlaceholder && (
+          <option value="">Seleccione {label.toLowerCase()}</option>
+        )}
         {options.map((option) => (
           <option key={option.id} value={option.id.toString()}>
             {option.name}

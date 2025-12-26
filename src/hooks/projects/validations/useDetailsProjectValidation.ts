@@ -12,18 +12,27 @@ export function useDetailsProjectValidation(formData: ProjectFormData) {
   const validateField = (fieldName: keyof typeof errors, value: unknown) => {
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [fieldName]: value ? "" : getErrorMessage(fieldName, value),
+      [fieldName]: getErrorMessage(fieldName, value),
     }));
+  };
+
+  const parsePrice = (value: unknown) => {
+    if (typeof value === "number") return value;
+    if (typeof value === "string") {
+      const normalized = value.replace(/[^0-9]/g, "");
+      return normalized ? Number(normalized) : 0;
+    }
+    return 0;
   };
 
   const getErrorMessage = (fieldName: keyof typeof errors, value: unknown) => {
     switch (fieldName) {
       case "priceError":
-        return (formData.projectType?.id === 2 ||
-          formData.projectType?.id === 3) &&
-          !value
-          ? "El precio es obligatorio y debe ser mayor que 0."
-          : "";
+        const numericPrice = parsePrice(value);
+        if (!numericPrice || numericPrice <= 0) {
+          return "El precio es obligatorio y debe ser mayor que 0.";
+        }
+        return "";
       case "housingTypeError":
         return (formData.propertyType?.id === 1001 ||
           formData.propertyType?.id === 1002) &&

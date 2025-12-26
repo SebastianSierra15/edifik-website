@@ -2,6 +2,22 @@ import { apiClient } from "@/src/lib";
 import { extractS3KeyFromUrl } from "@/src/shared";
 import { Media, ProjectMedia, S3UploadResult } from "@/src/interfaces";
 
+export class UploadImagesError extends Error {
+  readonly uploadedUrls: string[];
+  readonly originalError?: unknown;
+
+  constructor(
+    message: string,
+    uploadedUrls: string[],
+    originalError?: unknown
+  ) {
+    super(message);
+    this.name = "UploadImagesError";
+    this.uploadedUrls = uploadedUrls;
+    this.originalError = originalError;
+  }
+}
+
 export class S3Service {
   static async processImage(file: File): Promise<File> {
     return new Promise((resolve, reject) => {
@@ -67,36 +83,44 @@ export class S3Service {
   ): Promise<ProjectMedia[]> {
     const results: ProjectMedia[] = [];
 
-    for (let i = 0; i < media.length; i++) {
-      const item = media[i];
+    try {
+      for (let i = 0; i < media.length; i++) {
+        const item = media[i];
 
-      if (typeof item.file === "string") continue;
+        if (typeof item.file === "string") continue;
 
-      const processed = await this.processImage(item.file);
+        const processed = await this.processImage(item.file);
 
-      const formData = new FormData();
-      formData.append("file", processed);
-      const mediaPath = item.type ?? item.tag;
-      formData.append(
-        "path",
-        `projects/images/${propertyTypeName}/${projectId}/${mediaPath}/`
+        const formData = new FormData();
+        formData.append("file", processed);
+        const mediaPath = item.type ?? item.tag;
+        formData.append(
+          "path",
+          `projects/images/${propertyTypeName}/${projectId}/${mediaPath}/`
+        );
+
+        const { url } = await apiClient.post<S3UploadResult, FormData>(
+          "/api/s3",
+          formData
+        );
+
+        results.push({
+          url,
+          tag: item.tag,
+          description: item.description,
+          projectId,
+          commonArea: item.category === "commonArea" ? item.idType : undefined,
+          imageType: item.category === "imageType" ? item.idType : undefined,
+        });
+
+        onProgress?.(Math.round(((i + 1) / media.length) * 100));
+      }
+    } catch (error) {
+      throw new UploadImagesError(
+        "Error al subir imagenes.",
+        results.map((item) => item.url),
+        error
       );
-
-      const { url } = await apiClient.post<S3UploadResult, FormData>(
-        "/api/s3",
-        formData
-      );
-
-      results.push({
-        url,
-        tag: item.tag,
-        description: item.description,
-        projectId,
-        commonArea: item.category === "commonArea" ? item.idType : undefined,
-        imageType: item.category === "imageType" ? item.idType : undefined,
-      });
-
-      onProgress?.(Math.round(((i + 1) / media.length) * 100));
     }
 
     return results;

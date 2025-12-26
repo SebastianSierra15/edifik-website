@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import clsx from "clsx";
-import { Home } from "lucide-react";
+import { Home, Moon, Sun } from "lucide-react";
 import { AdminMenuItem } from "@/src/hooks/admin";
+import { useDarkMode } from "@/src/hooks/ui";
 import { NotificationsContainer } from "./notifications";
 import { AdminMenuButton } from "./AdminMenuButton";
 
@@ -17,9 +18,15 @@ interface Props {
 export function AdminMenuContainer({ menuItems, canManageRequests }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { resolvedTheme, toggleTheme } = useDarkMode();
+  const isDarkMode = resolvedTheme === "dark";
 
   const toggle = () => setOpen((prev) => !prev);
   const close = () => setOpen(false);
+  const handleThemeToggle = () => {
+    toggleTheme(isDarkMode ? "light" : "dark");
+    close();
+  };
 
   // click (NO mousedown)
   useEffect(() => {
@@ -81,6 +88,23 @@ export function AdminMenuContainer({ menuItems, canManageRequests }: Props) {
                 Inicio
               </Link>
             </li>
+            <li>
+              <button
+                type="button"
+                onClick={handleThemeToggle}
+                className="flex w-full items-center gap-3 px-6 py-3 text-left
+                       text-premium-textPrimary dark:text-premium-textSecondary
+                       hover:bg-premium-backgroundDark dark:hover:bg-premium-secondaryLight
+                       transition-all"
+              >
+                {isDarkMode ? (
+                  <Sun className="w-5 h-5 text-premium-primary dark:text-premium-primaryLight" />
+                ) : (
+                  <Moon className="w-5 h-5 text-premium-primary dark:text-premium-primaryLight" />
+                )}
+                {isDarkMode ? "Modo claro" : "Modo oscuro"}
+              </button>
+            </li>
             {menuItems.map(({ path, label, icon: Icon }) => (
               <li key={path}>
                 <Link
@@ -107,7 +131,8 @@ export function AdminMenuContainer({ menuItems, canManageRequests }: Props) {
               className="block w-full text-left px-6 py-3
                    text-red-500 hover:bg-red-600 hover:text-white transition-all"
             >
-              Cerrar Sesión</button>
+              Cerrar Sesión
+            </button>
           </div>
         </div>
       )}
@@ -147,6 +172,23 @@ export function AdminMenuContainer({ menuItems, canManageRequests }: Props) {
               Inicio
             </Link>
           </li>
+          <li className="w-full">
+            <button
+              type="button"
+              onClick={handleThemeToggle}
+              className="flex w-full items-center gap-3 px-6 py-3 text-left
+                   text-premium-textPrimary dark:text-premium-textSecondary
+                   hover:bg-premium-backgroundDark dark:hover:bg-premium-secondaryLight
+                   transition-all"
+            >
+              {isDarkMode ? (
+                <Sun className="w-5 h-5 text-premium-primary dark:text-premium-primaryLight" />
+              ) : (
+                <Moon className="w-5 h-5 text-premium-primary dark:text-premium-primaryLight" />
+              )}
+              {isDarkMode ? "Modo claro" : "Modo oscuro"}
+            </button>
+          </li>
           {menuItems.map(({ path, label, icon: Icon }) => (
             <li key={path}>
               <Link
@@ -173,14 +215,10 @@ export function AdminMenuContainer({ menuItems, canManageRequests }: Props) {
             className="block w-full text-left px-6 py-3
                  text-red-500 hover:bg-red-600 hover:text-white transition-all"
           >
-            Cerrar Sesión</button>
+            Cerrar Sesión
+          </button>
         </div>
       </div>
     </div>
   );
 }
-
-
-
-
-

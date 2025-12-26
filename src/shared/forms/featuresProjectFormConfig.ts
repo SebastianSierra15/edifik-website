@@ -42,47 +42,47 @@ export function getFeaturesTooltipTexts(projectTypeId: number | undefined) {
   return {
     totalArea:
       projectTypeId === 2 || projectTypeId === 3
-        ? "Ingrese el Ç­rea total de la propiedad en metros cuadrados."
-        : "Ingrese el Ç­rea total del proyecto en metros cuadrados.",
+        ? "Ingrese el área total de la propiedad en metros cuadrados."
+        : "Ingrese el área total del proyecto en metros cuadrados.",
     builtArea:
       projectTypeId === 2 || projectTypeId === 3
-        ? "Ingrese el Ç­rea construida de la propiedad en metros cuadrados, considerando Ç§nicamente las Ç­reas cubiertas."
-        : "Ingrese el Ç­rea construida del proyecto en metros cuadrados, considerando Ç§nicamente las Ç­reas cubiertas.",
+        ? "Ingrese el área construida de la propiedad en metros cuadrados, considerando únicamente las áreas cubiertas."
+        : "Ingrese el área construida del proyecto en metros cuadrados, considerando únicamente las áreas cubiertas.",
     socioeconomicLevel:
-      "Seleccione el nivel socioeconÇümico asignado a la propiedad segÇ§n la clasificaciÇün oficial del sector.",
+      "Seleccione el nivel socioeconómico asignado a la propiedad según la clasificación oficial del sector.",
     yearBuilt:
-      "Seleccione el aÇño en que la propiedad fue construida o su estructura original terminada.",
+      "Seleccione el año en que la propiedad fue construida o su estructura original terminada.",
     bedrooms:
       projectTypeId === 2 || projectTypeId === 3
-        ? "Especifique cuÇ­ntas habitaciones tiene la propiedad."
-        : "Especifique cuÇ­ntas habitaciones tendrÇ­ el proyecto.",
+        ? "Especifique cuántas habitaciones tiene la propiedad."
+        : "Especifique cuántas habitaciones tendrá el proyecto.",
     bathrooms:
       projectTypeId === 2 || projectTypeId === 3
-        ? "Indique la cantidad total de baÇños que tiene la propiedad."
-        : "Indique la cantidad total de baÇños que estarÇ­n incluidos en el proyecto.",
+        ? "Indique la cantidad total de baños que tiene la propiedad."
+        : "Indique la cantidad total de baños que estarán incluidos en el proyecto.",
     lobbies:
       projectTypeId === 2 || projectTypeId === 3
-        ? "Ingrese el nÇ§mero de salas de estar (salones o lobbies) que tiene la propiedad."
-        : "Ingrese el nÇ§mero de salas de estar (salones o lobbies) que tendrÇ­ el proyecto.",
+        ? "Ingrese el número de salas de estar (salones o lobbies) que tiene la propiedad."
+        : "Ingrese el número de salas de estar (salones o lobbies) que tendrá el proyecto.",
     freeHeight:
       "Especifique la altura libre del proyecto en metros, considerando el espacio disponible entre el suelo y el techo.",
     width:
-      "Indique el frente total del proyecto en metros. Este valor corresponde a la dimensiÇün horizontal.",
+      "Indique el frente total del proyecto en metros. Este valor corresponde a la dimensión horizontal.",
     length:
-      "Especifique el fondo total del proyecto en metros. Este valor corresponde a la dimensiÇün vertical.",
+      "Especifique el fondo total del proyecto en metros. Este valor corresponde a la dimensión vertical.",
     heavyParking:
-      "Indique cuÇ­ntos espacios de parqueo estarÇ­n disponibles para vehÇðculos pesados.",
+      "Indique cuántos espacios de parqueo estarán disponibles para vehículos pesados.",
     towers:
       projectTypeId === 2 || projectTypeId === 3
         ? "Indique la torre en la que se encuentra la propiedad (si aplica)."
-        : "Ingrese la cantidad de torres que tendrÇ­ el proyecto, si corresponde.",
+        : "Ingrese la cantidad de torres que tendrá el proyecto, si corresponde.",
     floorNumber:
-      "Ingrese el nÇ§mero de piso donde se encuentra el apartamento. Por ejemplo, '3' para el tercer piso.",
+      "Ingrese el número de piso donde se encuentra el apartamento. Por ejemplo, '3' para el tercer piso.",
     storageUnits:
       projectTypeId === 2 || projectTypeId === 3
-        ? "Especifique el nÇ§mero total de depÇüsitos (bodegas o cuartos de almacenamiento) disponibles para la propiedad."
-        : "Especifique el nÇ§mero total de depÇüsitos (bodegas o cuartos de almacenamiento) disponibles en el proyecto.",
+        ? "Especifique el número total de depósitos (bodegas o cuartos de almacenamiento) disponibles para la propiedad."
+        : "Especifique el número total de depósitos (bodegas o cuartos de almacenamiento) disponibles en el proyecto.",
     parkingSpots:
-      "Especifique el nÇ§mero total de espacios de parqueo que estarÇ­n disponibles.",
+      "Especifique el número total de espacios de parqueo que estarán disponibles.",
   };
 }
