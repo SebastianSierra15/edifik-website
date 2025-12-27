@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { LatLngBounds } from "leaflet";
 import { useDebouncedCallback } from "use-debounce";
 import type { ProjectSummary } from "@/src/interfaces";
@@ -30,19 +30,14 @@ export function useGetProjects({
   const [isLoading, setIsLoading] = useState(false);
   const [errorProjects, setErrorProjects] = useState<string | null>(null);
 
-  const [lastFetchedFilters, setLastFetchedFilters] = useState<{
-    searchTerm: string;
-    selectedButtons: Record<string, number[]>;
-    projectTypeId: number | null;
-    showMap: boolean;
-    boundsKey: string | null;
-  }>({
-    searchTerm: "",
-    selectedButtons: {},
-    projectTypeId: null,
-    showMap: false,
-    boundsKey: null,
-  });
+  const lastFetchedKeyRef = useRef<string | null>(null);
+  const requestControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => {
+      requestControllerRef.current?.abort();
+    };
+  }, []);
 
   const debouncedSearch = useDebouncedCallback((term: string) => {
     setSearchTerm(term);
@@ -55,8 +50,13 @@ export function useGetProjects({
   }, []);
 
   const fetchProjects = useCallback(
-    async (isLoadMore = false, page = 1, mapBounds?: LatLngBounds, force = false) => {
-      if (isLoading) return;
+    async (
+      isLoadMore = false,
+      page = 1,
+      mapBounds?: LatLngBounds,
+      force = false
+    ) => {
+      if (isLoadMore && isLoading) return;
 
       const boundsKey = mapBounds ? mapBounds.toBBoxString() : null;
       const currentFilters = {
@@ -67,39 +67,49 @@ export function useGetProjects({
         boundsKey,
       };
 
-      if (
-        !isLoadMore &&
-        !force &&
-        JSON.stringify(currentFilters) === JSON.stringify(lastFetchedFilters)
-      ) {
+      const currentKey = JSON.stringify(currentFilters);
+      if (!isLoadMore && !force && currentKey === lastFetchedKeyRef.current) {
         return;
       }
 
-      setLastFetchedFilters(currentFilters);
+      lastFetchedKeyRef.current = currentKey;
+
+      requestControllerRef.current?.abort();
+      const controller = new AbortController();
+      requestControllerRef.current = controller;
+
       setIsLoading(true);
+      setErrorProjects(null);
 
       try {
         const { projects: newProjects, totalEntries: total } =
-          await ProjectService.search({
-            page,
-            pageSize: entriesPerPage,
-            searchTerm,
-            projectTypeId: projectTypeId || null,
-            ...Object.fromEntries(
-              Object.entries(selectedButtons).map(([key, value]) => [
-                key,
-                value,
-              ])
-            ),
-            ...(mapBounds
-              ? {
-                  minLat: mapBounds.getSouthWest().lat,
-                  maxLat: mapBounds.getNorthEast().lat,
-                  minLng: mapBounds.getSouthWest().lng,
-                  maxLng: mapBounds.getNorthEast().lng,
-                }
-              : {}),
-          });
+          await ProjectService.search(
+            {
+              page,
+              pageSize: entriesPerPage,
+              searchTerm,
+              projectTypeId: projectTypeId || null,
+              ...Object.fromEntries(
+                Object.entries(selectedButtons).map(([key, value]) => [
+                  key,
+                  value,
+                ])
+              ),
+              ...(mapBounds
+                ? {
+                    minLat: mapBounds.getSouthWest().lat,
+                    maxLat: mapBounds.getNorthEast().lat,
+                    minLng: mapBounds.getSouthWest().lng,
+                    maxLng: mapBounds.getNorthEast().lng,
+                  }
+                : {}),
+            },
+            { signal: controller.signal }
+          );
+
+        if (requestControllerRef.current !== controller) {
+          return;
+        }
 
         setProjects((prev) =>
           isLoadMore
@@ -115,10 +125,16 @@ export function useGetProjects({
         setTotalEntries(total);
       } catch (error: any) {
         if (error.name !== "AbortError") {
+          if (requestControllerRef.current !== controller) {
+            return;
+          }
           setErrorProjects(error.message || "Error desconocido");
         }
       } finally {
-        setIsLoading(false);
+        if (requestControllerRef.current === controller) {
+          requestControllerRef.current = null;
+          setIsLoading(false);
+        }
       }
     },
     [
@@ -132,17 +148,12 @@ export function useGetProjects({
   );
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
+    fetchProjects(false, 1, showMap && bounds !== null ? bounds : undefined);
   }, [searchTerm, selectedButtons, projectTypeId, showMap, bounds, fetchProjects]);
 
   const fetchMoreProjects = useCallback(() => {
     if (isLoading) return;
 
-    setIsLoading(true);
     setCurrentPage((prevPage) => {
       const nextPage = prevPage + 1;
 
@@ -150,7 +161,7 @@ export function useGetProjects({
         true,
         nextPage,
         showMap && bounds !== null ? bounds : undefined
-      ).finally(() => setIsLoading(false));
+      );
 
       return nextPage;
     });

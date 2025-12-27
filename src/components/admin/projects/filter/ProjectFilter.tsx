@@ -87,7 +87,7 @@ export function ProjectFilter({
   useEffect(() => {
     const handleScroll = () => {
       const rect = filterRef.current?.getBoundingClientRect();
-      const filterTop = rect ? rect.top + window.scrollY : 0;
+      const filterTop = rect ? rect.top : 0;
       const scrollY = window.scrollY;
       const bottomOffset = 30;
 

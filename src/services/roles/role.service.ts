@@ -13,14 +13,20 @@ export interface GetRolesResponse {
 }
 
 export class RoleService {
-  static async getRoles(params: GetRolesParams): Promise<GetRolesResponse> {
+  static async getRoles(
+    params: GetRolesParams,
+    options?: RequestInit
+  ): Promise<GetRolesResponse> {
     const query = new URLSearchParams({
       page: params.page.toString(),
       pageSize: params.pageSize.toString(),
       ...(params.searchTerm ? { searchTerm: params.searchTerm } : {}),
     });
 
-    return apiClient.get<GetRolesResponse>(`/api/roles?${query.toString()}`);
+    return apiClient.get<GetRolesResponse>(
+      `/api/roles?${query.toString()}`,
+      options
+    );
   }
 
   static async getPermissions(): Promise<Permission[]> {

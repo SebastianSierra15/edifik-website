@@ -58,14 +58,20 @@ export class UserService {
     return apiClient.get<UsersMetadata>("/api/users/metadata");
   }
 
-  static async getUsers(params: GetUsersParams): Promise<GetUsersResponse> {
+  static async getUsers(
+    params: GetUsersParams,
+    options?: RequestInit
+  ): Promise<GetUsersResponse> {
     const query = new URLSearchParams({
       page: params.page.toString(),
       pageSize: params.pageSize.toString(),
       ...(params.searchTerm ? { searchTerm: params.searchTerm } : {}),
     });
 
-    return apiClient.get<GetUsersResponse>(`/api/users?${query.toString()}`);
+    return apiClient.get<GetUsersResponse>(
+      `/api/users?${query.toString()}`,
+      options
+    );
   }
 
   static async createUser(payload: UserWrite): Promise<void> {
@@ -77,7 +83,8 @@ export class UserService {
   }
 
   static async getUserProjects(
-    params: GetUserProjectsParams
+    params: GetUserProjectsParams,
+    options?: RequestInit
   ): Promise<GetUserProjectsResponse> {
     const query = new URLSearchParams({
       userId: params.userId.toString(),
@@ -87,7 +94,8 @@ export class UserService {
     });
 
     return apiClient.get<GetUserProjectsResponse>(
-      `/api/users/projects?${query.toString()}`
+      `/api/users/projects?${query.toString()}`,
+      options
     );
   }
 }

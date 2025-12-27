@@ -14,7 +14,8 @@ export interface GetMembershipsResponse {
 
 export class MembershipService {
   static async getMemberships(
-    params: GetMembershipsParams
+    params: GetMembershipsParams,
+    options?: RequestInit
   ): Promise<GetMembershipsResponse> {
     const query = new URLSearchParams({
       page: params.page.toString(),
@@ -26,7 +27,8 @@ export class MembershipService {
     }
 
     return apiClient.get<GetMembershipsResponse>(
-      `/api/memberships?${query.toString()}`
+      `/api/memberships?${query.toString()}`,
+      options
     );
   }
 

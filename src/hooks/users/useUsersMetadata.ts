@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Role, Gender, MembershipSummary } from "@/src/interfaces";
-import { UserService } from "@/src/services/users";
+import {
+  fetchUsersMetadata,
+  getCachedUsersMetadata,
+} from "@/src/hooks/admin/metadata/adminMetadataCache";
 
 export const useUsersMetadata = () => {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -9,23 +12,40 @@ export const useUsersMetadata = () => {
   const [isLoadingUsersMetadata, setIsLoadingUsersMetadata] = useState(true);
 
   useEffect(() => {
-    const fetchMetadata = async () => {
-      setIsLoadingUsersMetadata(true);
-      try {
-        const { roles, genders, memberships } =
-          await UserService.getUsersMetadata();
+    let isMounted = true;
+    const cached = getCachedUsersMetadata();
 
+    if (cached) {
+      setRoles(cached.roles);
+      setGenders(cached.genders);
+      setMemberships(cached.memberships);
+      setIsLoadingUsersMetadata(false);
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    setIsLoadingUsersMetadata(true);
+
+    fetchUsersMetadata()
+      .then(({ roles, genders, memberships }) => {
+        if (!isMounted) return;
         setRoles(roles);
         setGenders(genders);
         setMemberships(memberships);
-      } catch (error) {
+      })
+      .catch((error) => {
+        if (!isMounted) return;
         console.error("Error cargando metadata de usuarios:", error);
-      } finally {
+      })
+      .finally(() => {
+        if (!isMounted) return;
         setIsLoadingUsersMetadata(false);
-      }
-    };
+      });
 
-    fetchMetadata();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return {

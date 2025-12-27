@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import dynamic from "next/dynamic";
 import type { LatLngBounds } from "leaflet";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
@@ -8,7 +9,10 @@ import { ProjectSummary } from "@/src/interfaces";
 import { useProjectsMetadata } from "@/src/hooks/projects";
 import { ProjectFilter } from "./filter/ProjectFilter";
 import { ProjectCardAdmin } from "./ProjectCardAdmin";
-import { ProjectsMap } from "./ProjectsMap";
+const ProjectsMap = dynamic(
+  () => import("./ProjectsMap").then((mod) => mod.ProjectsMap),
+  { ssr: false }
+);
 
 interface ProjectsContainerProps {
   projects: ProjectSummary[];

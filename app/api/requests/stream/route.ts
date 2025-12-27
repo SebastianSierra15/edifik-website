@@ -34,6 +34,7 @@ export async function GET(req: NextRequest) {
       };
 
       const interval = setInterval(poll, 10_000);
+      void poll();
 
       req.signal.onabort = () => {
         clearInterval(interval);

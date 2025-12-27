@@ -21,7 +21,8 @@ export interface ProcessRequestPayload {
 
 export class RequestService {
   static async getRequests(
-    params: GetRequestsParams
+    params: GetRequestsParams,
+    options?: RequestInit
   ): Promise<GetRequestsResponse> {
     const query = new URLSearchParams({
       page: params.page.toString(),
@@ -30,7 +31,8 @@ export class RequestService {
     });
 
     return apiClient.get<GetRequestsResponse>(
-      `/api/requests?${query.toString()}`
+      `/api/requests?${query.toString()}`,
+      options
     );
   }
 

@@ -7,7 +7,7 @@ import { NotificationsPanel } from "./NotificationsPanel";
 
 export function NotificationsContainer() {
   const [open, setOpen] = useState(false);
-  const { requests, isLoadingRequests } = usePendingRequests();
+  const { requests, isLoadingRequests } = usePendingRequests(open);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

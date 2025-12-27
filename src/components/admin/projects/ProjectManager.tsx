@@ -51,6 +51,7 @@ export function ProjectManager({
     bedrooms: [0],
     bathrooms: [0],
     lobbies: [0],
+    price: [],
     area: [1],
   });
 
@@ -61,7 +62,7 @@ export function ProjectManager({
   const [selectedOwner, setSelectedOwner] = useState<string | null>(null);
   const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
 
-  const { owner, refetchUser } = useOwner(selectedOwner ?? "");
+  const { owner } = useOwner(selectedOwner ?? "");
 
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
   const [areaRange, setAreaRange] = useState({ min: 0, max: 0 });
@@ -99,12 +100,6 @@ export function ProjectManager({
   }, [hideLoader, isLoading, isProperty, setLoaderMessage, showLoader, showMap]);
 
   useEffect(() => {
-    if (selectedOwner) {
-      refetchUser();
-    }
-  }, [selectedOwner]);
-
-  useEffect(() => {
     const message = sessionStorage.getItem("projectMessage");
     if (message) {
       showAlert(JSON.parse(message));
@@ -113,7 +108,6 @@ export function ProjectManager({
 
     setPriceRange({ min: 0, max: 2500000000 });
     setAreaRange({ min: 0, max: 5000 });
-    setSelectedButtons((prev) => ({ ...prev, price: [], area: [] }));
   }, []);
 
   useEffect(() => {
@@ -161,7 +155,6 @@ export function ProjectManager({
 
   const handleShowUserDetails = (email: string) => {
     setSelectedOwner(email);
-    refetchUser();
     setIsOwnerModalOpen(true);
   };
 

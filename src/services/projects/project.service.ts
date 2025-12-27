@@ -30,7 +30,8 @@ export interface SearchProjectsResponse {
 
 export class ProjectService {
   static async search(
-    params: SearchProjectsParams
+    params: SearchProjectsParams,
+    options?: RequestInit
   ): Promise<SearchProjectsResponse> {
     const query = new URLSearchParams();
 
@@ -45,7 +46,8 @@ export class ProjectService {
     });
 
     return apiClient.get<SearchProjectsResponse>(
-      `/api/projects?${query.toString()}`
+      `/api/projects?${query.toString()}`,
+      options
     );
   }
 

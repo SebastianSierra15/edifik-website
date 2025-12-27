@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { ProjectSummary } from "@/src/interfaces";
 import { UserService } from "@/src/services/users";
@@ -20,6 +20,13 @@ export function useGetUserProjects({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorProjects, setErrorProjects] = useState<string | null>(null);
+  const requestControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => {
+      requestControllerRef.current?.abort();
+    };
+  }, []);
 
   const resetProjects = useCallback(() => {
     setProjects([]);
@@ -33,19 +40,31 @@ export function useGetUserProjects({
 
   const fetchUserProjects = useCallback(
     async (isLoadMore = false, page = 1) => {
-      if (isLoading || userId <= 0) return;
+      if (userId <= 0) return;
+      if (isLoadMore && isLoading) return;
+
+      requestControllerRef.current?.abort();
+      const controller = new AbortController();
+      requestControllerRef.current = controller;
 
       setIsLoading(true);
       setErrorProjects(null);
 
       try {
         const { projects: newProjects, totalEntries } =
-          await UserService.getUserProjects({
-            userId,
-            page,
-            pageSize: entriesPerPage,
-            searchTerm,
-          });
+          await UserService.getUserProjects(
+            {
+              userId,
+              page,
+              pageSize: entriesPerPage,
+              searchTerm,
+            },
+            { signal: controller.signal }
+          );
+
+        if (requestControllerRef.current !== controller) {
+          return;
+        }
 
         setProjects((prev) =>
           isLoadMore
@@ -60,9 +79,17 @@ export function useGetUserProjects({
 
         setTotalEntries(totalEntries);
       } catch (error: any) {
-        setErrorProjects(error.message || "Error al cargar proyectos");
+        if (error.name !== "AbortError") {
+          if (requestControllerRef.current !== controller) {
+            return;
+          }
+          setErrorProjects(error.message || "Error al cargar proyectos");
+        }
       } finally {
-        setIsLoading(false);
+        if (requestControllerRef.current === controller) {
+          requestControllerRef.current = null;
+          setIsLoading(false);
+        }
       }
     },
     [entriesPerPage, isLoading, searchTerm, userId]

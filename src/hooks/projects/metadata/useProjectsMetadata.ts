@@ -1,8 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ProjectsMetadata } from "@/src/interfaces";
-import { ProjectMetadataService } from "@/src/services/projects";
+import {
+  fetchProjectsMetadata,
+  getCachedProjectsMetadata,
+} from "./metadataCache";
 
 export function useProjectsMetadata() {
   const [metadata, setMetadata] = useState<ProjectsMetadata>({
@@ -17,25 +20,39 @@ export function useProjectsMetadata() {
   const [isLoadingMetadata, setIsLoadingMetadata] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMetadata = useCallback(async () => {
-    if (metadata.cities.length > 0) return;
+  useEffect(() => {
+    let isMounted = true;
+    const cached = getCachedProjectsMetadata();
+
+    if (cached) {
+      setMetadata(cached);
+      setIsLoadingMetadata(false);
+      return () => {
+        isMounted = false;
+      };
+    }
 
     setIsLoadingMetadata(true);
     setError(null);
 
-    try {
-      const data = await ProjectMetadataService.getAll();
-      setMetadata(data);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Error desconocido");
-    } finally {
-      setIsLoadingMetadata(false);
-    }
-  }, [metadata.cities.length]);
+    fetchProjectsMetadata()
+      .then((data) => {
+        if (!isMounted) return;
+        setMetadata(data);
+      })
+      .catch((err: unknown) => {
+        if (!isMounted) return;
+        setError(err instanceof Error ? err.message : "Error desconocido");
+      })
+      .finally(() => {
+        if (!isMounted) return;
+        setIsLoadingMetadata(false);
+      });
 
-  useEffect(() => {
-    void fetchMetadata();
-  }, [fetchMetadata]);
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const memoizedMetadata = useMemo(() => metadata, [metadata]);
 

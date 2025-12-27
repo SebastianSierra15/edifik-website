@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Request } from "@/src/interfaces";
 import { RequestService } from "@/src/services/requests";
 
@@ -11,22 +11,48 @@ export function useRequests(
   const [requests, setRequests] = useState<Request[]>([]);
   const [totalEntries, setTotalEntries] = useState(0);
   const [isLoadingRequests, setIsLoadingRequests] = useState(true);
+  const requestControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => {
+      requestControllerRef.current?.abort();
+    };
+  }, []);
 
   const fetchRequests = useCallback(async () => {
+    requestControllerRef.current?.abort();
+    const controller = new AbortController();
+    requestControllerRef.current = controller;
+
     setIsLoadingRequests(true);
     try {
-      const { requests, totalEntries } = await RequestService.getRequests({
-        page: currentPage,
-        pageSize: entriesPerPage,
-        searchTerm,
-      });
+      const { requests, totalEntries } = await RequestService.getRequests(
+        {
+          page: currentPage,
+          pageSize: entriesPerPage,
+          searchTerm,
+        },
+        { signal: controller.signal }
+      );
+
+      if (requestControllerRef.current !== controller) {
+        return;
+      }
 
       setRequests(requests);
       setTotalEntries(totalEntries);
-    } catch (error) {
-      console.error("Error fetching requests:", error);
+    } catch (error: any) {
+      if (error.name !== "AbortError") {
+        if (requestControllerRef.current !== controller) {
+          return;
+        }
+        console.error("Error fetching requests:", error);
+      }
     } finally {
-      setIsLoadingRequests(false);
+      if (requestControllerRef.current === controller) {
+        requestControllerRef.current = null;
+        setIsLoadingRequests(false);
+      }
     }
   }, [currentPage, entriesPerPage, searchTerm]);
 

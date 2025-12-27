@@ -57,7 +57,7 @@ async function request<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
 }
 
 export const apiClient = {
-  get: <T>(url: string) => request<T>(url),
+  get: <T>(url: string, init?: RequestInit) => request<T>(url, init),
   post: <T, B>(url: string, body: B) =>
     request<T>(url, {
       method: "POST",
