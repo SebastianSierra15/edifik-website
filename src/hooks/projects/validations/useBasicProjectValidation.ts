@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { ProjectFormData } from "@/src/interfaces";
+import { getBasicProjectSchema as getProjectBasicProjectSchema } from "@/src/schemas/admin/proyectos/basic-project.schema";
+import { getBasicProjectSchema as getPropertyBasicProjectSchema } from "@/src/schemas/admin/propiedades/basic-project.schema";
 import { useCheckName } from "../../checkName";
 
 interface BasicProjectErrors {
@@ -12,6 +14,31 @@ interface BasicProjectErrors {
   propertyTypeError: string;
   projectTypeError: string;
 }
+
+const fieldSchemaMap: Record<keyof BasicProjectErrors, string> = {
+  nameError: "name",
+  emailError: "email",
+  shortDescriptionError: "shortDescription",
+  detailedDescriptionError: "detailedDescription",
+  propertyTypeError: "propertyTypeId",
+  projectTypeError: "projectTypeId",
+};
+
+const issueToErrorMap: Record<string, keyof BasicProjectErrors> = {
+  name: "nameError",
+  email: "emailError",
+  shortDescription: "shortDescriptionError",
+  detailedDescription: "detailedDescriptionError",
+  propertyTypeId: "propertyTypeError",
+  projectTypeId: "projectTypeError",
+};
+
+const resolveIdValue = (value: unknown) => {
+  if (value && typeof value === "object" && "id" in value) {
+    return (value as { id?: number }).id;
+  }
+  return value;
+};
 
 export function useBasicProjectValidation(
   formData: ProjectFormData,
@@ -28,71 +55,53 @@ export function useBasicProjectValidation(
   });
 
   const { checkName } = useCheckName();
+  const schema = useMemo(() => {
+    const getSchema = isProperty
+      ? getPropertyBasicProjectSchema
+      : getProjectBasicProjectSchema;
+    return getSchema({ isProperty });
+  }, [isProperty]);
 
-  const getErrorMessage = (
-    fieldName: keyof BasicProjectErrors,
-    value: unknown
-  ) => {
-    switch (fieldName) {
-      case "nameError":
-        if (isProperty) return "";
-        if (!value) return "El nombre es obligatorio.";
-        if (typeof value === "string") {
-          if (value.length < 5) {
-            return "El nombre debe tener al menos 5 caracteres.";
-          }
-          if (value.length > 100) {
-            return "El nombre no puede superar 100 caracteres.";
-          }
-        }
-        return "";
-      case "emailError":
-        if (
-          isProperty &&
-          typeof value === "string" &&
-          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-        ) {
-          return "Ingrese un correo electrónico válido.";
-        }
-        return "";
-      case "shortDescriptionError":
-        if (!value) return "El resumen breve es obligatorio.";
-        if (typeof value === "string") {
-          if (value.length < 50) {
-            return "El resumen breve debe tener al menos 50 caracteres.";
-          }
-          if (value.length > 150) {
-            return "El resumen breve no puede superar 150 caracteres.";
-          }
-        }
-        return "";
-      case "detailedDescriptionError":
-        if (!value) return "La descripcion completa es obligatoria.";
-        if (typeof value === "string") {
-          if (value.length < 100) {
-            return "La descripcion completa debe tener al menos 100 caracteres.";
-          }
-          if (value.length > 1500) {
-            return "La descripcion completa no puede superar 1500 caracteres.";
-          }
-        }
-        return "";
-      case "propertyTypeError":
-        return !value ? "Seleccione el tipo de propiedad." : "";
-      case "projectTypeError":
-        return isProperty && !value
-          ? "Seleccione la finalidad de la propiedad."
-          : "";
-      default:
-        return "";
+  const buildSchemaData = (overrides?: Partial<Record<string, unknown>>) => ({
+    name: overrides?.name ?? formData.name,
+    email: overrides?.email ?? formData.email,
+    shortDescription:
+      overrides?.shortDescription ?? formData.shortDescription ?? "",
+    detailedDescription:
+      overrides?.detailedDescription ?? formData.detailedDescription ?? "",
+    propertyTypeId: overrides?.propertyTypeId ?? formData.propertyType?.id,
+    projectTypeId: overrides?.projectTypeId ?? formData.projectType?.id,
+  });
+
+  const getFieldError = (fieldName: keyof BasicProjectErrors, data: object) => {
+    const result = schema.safeParse(data);
+
+    if (result.success) {
+      return "";
     }
+
+    const issue = result.error.issues.find(
+      (item) => item.path[0] === fieldSchemaMap[fieldName]
+    );
+
+    return issue?.message ?? "";
   };
 
   const validateField = async (
     fieldName: keyof BasicProjectErrors,
     value: unknown
   ) => {
-    let errorMessage = getErrorMessage(fieldName, value);
+    const schemaKey = fieldSchemaMap[fieldName];
+    const normalizedValue = ["propertyTypeId", "projectTypeId"].includes(
+      schemaKey
+    )
+      ? resolveIdValue(value)
+      : value;
+
+    let errorMessage = getFieldError(
+      fieldName,
+      buildSchemaData({ [schemaKey]: normalizedValue })
+    );
 
     if (!isProperty && fieldName === "nameError" && value) {
       const total = await checkName(
@@ -113,26 +122,32 @@ export function useBasicProjectValidation(
   };
 
   const validateFields = async () => {
+    const result = schema.safeParse(buildSchemaData());
+
     const newErrors: BasicProjectErrors = {
-      nameError: isProperty ? "" : getErrorMessage("nameError", formData.name),
-      emailError: getErrorMessage("emailError", formData.email),
-      shortDescriptionError: getErrorMessage(
-        "shortDescriptionError",
-        formData.shortDescription
-      ),
-      detailedDescriptionError: getErrorMessage(
-        "detailedDescriptionError",
-        formData.detailedDescription
-      ),
-      propertyTypeError: getErrorMessage(
-        "propertyTypeError",
-        formData.propertyType
-      ),
-      projectTypeError: getErrorMessage(
-        "projectTypeError",
-        formData.projectType
-      ),
+      nameError: "",
+      emailError: "",
+      shortDescriptionError: "",
+      detailedDescriptionError: "",
+      propertyTypeError: "",
+      projectTypeError: "",
     };
+
+    if (!result.success) {
+      for (const issue of result.error.issues) {
+        const field = issue.path[0];
+        if (typeof field !== "string") {
+          continue;
+        }
+
+        const errorKey =
+          issueToErrorMap[field as keyof typeof issueToErrorMap];
+
+        if (errorKey && !newErrors[errorKey]) {
+          newErrors[errorKey] = issue.message;
+        }
+      }
+    }
 
     if (formData.email && !formData.ownerId) {
       const foundUser = await checkName("user", formData.email);

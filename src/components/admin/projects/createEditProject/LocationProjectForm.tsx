@@ -17,6 +17,7 @@ interface LocationProjectFormProps {
   cities: City[];
   mapAddress: string;
   setMapAddress: (value: string) => void;
+  isProperty: boolean;
 }
 
 const LocationProjectForm = memo(function LocationProjectForm({
@@ -30,6 +31,7 @@ const LocationProjectForm = memo(function LocationProjectForm({
   cities,
   mapAddress,
   setMapAddress,
+  isProperty,
 }: LocationProjectFormProps) {
   const {
     errors,
@@ -51,6 +53,7 @@ const LocationProjectForm = memo(function LocationProjectForm({
     setMapAddress,
     onChange,
     onNext,
+    isProperty,
   });
 
   return (

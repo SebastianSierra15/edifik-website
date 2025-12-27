@@ -17,6 +17,7 @@ interface UseImagesProjectFormOptions {
   onSubmit: (media: Media[], validateFields: () => boolean) => void;
   onNext: () => void;
   showModalAlert: (payload: { title: string; message: string }) => void;
+  isProperty: boolean;
 }
 
 export function useImagesProjectForm({
@@ -26,6 +27,7 @@ export function useImagesProjectForm({
   onSubmit,
   onNext,
   showModalAlert,
+  isProperty,
 }: UseImagesProjectFormOptions) {
   const [initialized, setInitialized] = useState(false);
   const [expandedSections, setExpandedSections] = useState<
@@ -34,7 +36,8 @@ export function useImagesProjectForm({
 
   const { errors, validateFields, validateField } = useImagesProjectValidation(
     formData,
-    imagesTypes
+    imagesTypes,
+    isProperty
   );
 
   const imagesByCategory = useMemo(() => {

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
+import {
+  requireAuthWithPermissions,
+  requirePermission,
+  Permission,
+} from "@/src/modules/auth";
 import {
   getUsersController,
   updateUserController,
@@ -31,9 +35,10 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    await requirePermission(Permission.ManageUsers);
-
-    const session = await requireAuth();
+    const session = await requireAuthWithPermissions(
+      [Permission.ManageUsers],
+      { missingSessionError: "forbidden" }
+    );
     const body = await req.json();
 
     const result = await updateUserController({
@@ -49,9 +54,10 @@ export async function PUT(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    await requirePermission(Permission.ManageUsers);
-
-    const session = await requireAuth();
+    const session = await requireAuthWithPermissions(
+      [Permission.ManageUsers],
+      { missingSessionError: "forbidden" }
+    );
     const body = await req.json();
 
     const result = await createUserController({

@@ -11,6 +11,7 @@ interface UseLocationProjectFormOptions {
   setMapAddress: (value: string) => void;
   onChange: (updatedData: Partial<ProjectFormData>) => void;
   onNext: () => void;
+  isProperty: boolean;
 }
 
 export function useLocationProjectForm({
@@ -21,9 +22,10 @@ export function useLocationProjectForm({
   setMapAddress,
   onChange,
   onNext,
+  isProperty,
 }: UseLocationProjectFormOptions) {
   const { errors, validateFields, validateField } =
-    useLocationProjectValidation(formData);
+    useLocationProjectValidation(formData, isProperty);
 
   const propertyOptions = useMemo(
     () => departaments.map((dep) => ({ id: dep.id, name: dep.name })),

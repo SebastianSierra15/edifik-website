@@ -1,9 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { ProjectFormData } from "@/src/interfaces";
+import { featuresProjectSchema as projectFeaturesProjectSchema } from "@/src/schemas/admin/proyectos/features-project.schema";
+import { featuresProjectSchema as propertyFeaturesProjectSchema } from "@/src/schemas/admin/propiedades/features-project.schema";
 
-export function useFeaturesProjectValidation(formData: ProjectFormData) {
+const fieldSchemaMap = {
+  builtAreaError: "builtArea",
+  totalAreaError: "totalArea",
+  bathroomsError: "bathrooms",
+  bedroomsError: "bedrooms",
+  lobbiesError: "lobbies",
+  freeHeightError: "freeHeight",
+  widthError: "width",
+  lengthError: "length",
+  towersError: "towers",
+  socioeconomicLevelError: "socioeconomicLevel",
+  yearBuiltError: "yearBuilt",
+} as const;
+
+const issueToErrorMap = {
+  builtArea: "builtAreaError",
+  totalArea: "totalAreaError",
+  bathrooms: "bathroomsError",
+  bedrooms: "bedroomsError",
+  lobbies: "lobbiesError",
+  freeHeight: "freeHeightError",
+  width: "widthError",
+  length: "lengthError",
+  towers: "towersError",
+  socioeconomicLevel: "socioeconomicLevelError",
+  yearBuilt: "yearBuiltError",
+} as const;
+
+export function useFeaturesProjectValidation(
+  formData: ProjectFormData,
+  isProperty: boolean
+) {
   const [errors, setErrors] = useState({
     builtAreaError: "",
     totalAreaError: "",
@@ -17,133 +50,83 @@ export function useFeaturesProjectValidation(formData: ProjectFormData) {
     socioeconomicLevelError: "",
     yearBuiltError: "",
   });
+  const schema = useMemo(
+    () =>
+      isProperty ? propertyFeaturesProjectSchema : projectFeaturesProjectSchema,
+    [isProperty]
+  );
 
-  const shouldShowField = (field: string) => {
-    const propertyTypeId = formData.propertyType?.id;
+  const buildSchemaData = (overrides?: Partial<Record<string, unknown>>) => ({
+    builtArea: overrides?.builtArea ?? formData.builtArea,
+    totalArea: overrides?.totalArea ?? formData.totalArea,
+    bathrooms: overrides?.bathrooms ?? formData.bathrooms,
+    bedrooms: overrides?.bedrooms ?? formData.bedrooms,
+    lobbies: overrides?.lobbies ?? formData.lobbies,
+    freeHeight: overrides?.freeHeight ?? formData.freeHeight,
+    width: overrides?.width ?? formData.width,
+    length: overrides?.length ?? formData.length,
+    towers: overrides?.towers ?? formData.towers,
+    socioeconomicLevel:
+      overrides?.socioeconomicLevel ?? formData.socioeconomicLevel,
+    yearBuilt: overrides?.yearBuilt ?? formData.yearBuilt,
+    propertyTypeId: formData.propertyType?.id,
+    projectTypeId: formData.projectType?.id,
+  });
 
-    const fieldsFor1001And1002 = [
-      "socioeconomicLevel",
-      "yearBuilt",
-      "bedrooms",
-      "storageUnits",
-      "balcony",
-      "laundryArea",
-      "customizationOptions",
-    ];
+  const getFieldError = (fieldName: keyof typeof errors, data: object) => {
+    const result = schema.safeParse(data);
 
-    const fieldsFor1001 = ["terrace", "garden"];
-    const fieldsFor1001_1002_1004 = ["bathrooms", "lobbies"];
-    const fieldsFor1002_1003_1004 = ["elevator"];
-    const fieldsFor1002 = ["towers", "floorNumber"];
-    const fieldsFor1004_1003_1005 = ["freeHeight"];
-    const fieldsFor1005_1006_1007 = ["width", "length"];
-    const fieldsFor1005 = ["heavyParking"];
-
-    if (fieldsFor1001And1002.includes(field)) {
-      return propertyTypeId === 1001 || propertyTypeId === 1002;
-    }
-    if (fieldsFor1001.includes(field)) {
-      return propertyTypeId === 1001;
-    }
-    if (fieldsFor1001_1002_1004.includes(field)) {
-      return (
-        propertyTypeId === 1001 ||
-        propertyTypeId === 1002 ||
-        propertyTypeId === 1004
-      );
-    }
-    if (fieldsFor1002_1003_1004.includes(field)) {
-      return (
-        propertyTypeId === 1002 ||
-        propertyTypeId === 1003 ||
-        propertyTypeId === 1004
-      );
-    }
-    if (fieldsFor1002.includes(field)) {
-      return propertyTypeId === 1002;
-    }
-    if (fieldsFor1004_1003_1005.includes(field)) {
-      return (
-        propertyTypeId === 1004 ||
-        propertyTypeId === 1003 ||
-        propertyTypeId === 1005
-      );
-    }
-    if (fieldsFor1005_1006_1007.includes(field)) {
-      return (
-        propertyTypeId === 1005 ||
-        propertyTypeId === 1006 ||
-        propertyTypeId === 1007
-      );
-    }
-    if (fieldsFor1005.includes(field)) {
-      return propertyTypeId === 1005;
+    if (result.success) {
+      return "";
     }
 
-    return true;
-  };
+    const issue = result.error.issues.find(
+      (item) => item.path[0] === fieldSchemaMap[fieldName]
+    );
 
-  const getErrorMessage = (fieldName: keyof typeof errors, value: unknown) => {
-    switch (fieldName) {
-      case "builtAreaError":
-        return !value ? "El área construida es obligatoria." : "";
-      case "totalAreaError":
-        return !value ? "El área total es obligatoria." : "";
-      case "bathroomsError":
-        return !value ? "El número de baños es obligatorio." : "";
-      case "bedroomsError":
-        return !value ? "El número de habitaciones es obligatorio." : "";
-      case "lobbiesError":
-        return !value ? "El número de salas de estar es obligatorio." : "";
-      case "freeHeightError":
-        return !value ? "La altura libre es obligatoria." : "";
-      case "widthError":
-        return !value ? "El ancho es obligatorio." : "";
-      case "lengthError":
-        return !value ? "El largo es obligatorio." : "";
-      case "towersError":
-        return formData.projectType?.id === 1 && !value
-          ? "El número de torres es obligatorio."
-          : "";
-      case "socioeconomicLevelError":
-        return (formData.projectType?.id === 2 ||
-          formData.projectType?.id === 3) &&
-          !value
-          ? "El estrato es obligatorio."
-          : "";
-      case "yearBuiltError":
-        return (formData.projectType?.id === 2 ||
-          formData.projectType?.id === 3) &&
-          !value
-          ? "El año de construcción es obligatorio."
-          : "";
-      default:
-        return "";
-    }
+    return issue?.message ?? "";
   };
 
   const validateField = (fieldName: keyof typeof errors, value: unknown) => {
-    const field = fieldName.replace("Error", "");
+    const schemaKey = fieldSchemaMap[fieldName];
+    if (!schemaKey) {
+      return;
+    }
+    const errorMessage = getFieldError(fieldName, {
+      ...buildSchemaData(),
+      [schemaKey]: value,
+    });
+
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [fieldName]: shouldShowField(field)
-        ? getErrorMessage(fieldName, value)
-        : "",
+      [fieldName]: errorMessage,
     }));
   };
 
   const validateFields = () => {
+    const result = schema.safeParse(buildSchemaData());
+
     const newErrors: Partial<typeof errors> = {};
 
-    Object.keys(errors).forEach((errorKey) => {
-      const fieldName = errorKey.replace("Error", "");
-      if (shouldShowField(fieldName)) {
-        newErrors[errorKey as keyof typeof errors] = getErrorMessage(
-          errorKey as keyof typeof errors,
-          formData[fieldName as keyof ProjectFormData]
-        );
-      } else {
-        newErrors[errorKey as keyof typeof errors] = "";
+    if (!result.success) {
+      for (const issue of result.error.issues) {
+        const field = issue.path[0];
+        if (typeof field !== "string") {
+          continue;
+        }
+
+        const errorKey =
+          issueToErrorMap[field as keyof typeof issueToErrorMap];
+
+        if (errorKey && !newErrors[errorKey]) {
+          newErrors[errorKey] = issue.message;
+        }
+      }
+    }
+
+    Object.keys(errors).forEach((key) => {
+      if (!newErrors[key as keyof typeof errors]) {
+        newErrors[key as keyof typeof errors] = "";
       }
     });
 

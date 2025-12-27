@@ -205,6 +205,7 @@ export function ProjectForm({
             cities={locations.cities}
             mapAddress={mapAddressRef.current}
             setMapAddress={setMapAddress}
+            isProperty={isProperty}
           />
         )}
 
@@ -217,6 +218,7 @@ export function ProjectForm({
             onNext={handleNextStep}
             currentStep={currentStep}
             totalSteps={totalSteps}
+            isProperty={isProperty}
           />
         )}
 
@@ -232,6 +234,7 @@ export function ProjectForm({
             commonAreas={metadata.commonAreas}
             nearbyServices={metadata.nearbyServices}
             housingTypes={metadata.housingTypes}
+            isProperty={isProperty}
           />
         )}
 
@@ -245,6 +248,7 @@ export function ProjectForm({
             currentStep={currentStep}
             totalSteps={totalSteps}
             imagesTypes={imagesTypes}
+            isProperty={isProperty}
           />
         )}
       </>

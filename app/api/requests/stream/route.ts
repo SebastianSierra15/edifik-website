@@ -1,10 +1,12 @@
 import { NextRequest } from "next/server";
-import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
+import {
+  requireAuthWithPermissions,
+  Permission,
+} from "@/src/modules/auth";
 import { observePendingRequestsController } from "@/src/modules/requests";
 
 export async function GET(req: NextRequest) {
-  await requireAuth();
-  await requirePermission(Permission.ManageRequests);
+  await requireAuthWithPermissions([Permission.ManageRequests]);
 
   const encoder = new TextEncoder();
   const controllerApi = observePendingRequestsController();

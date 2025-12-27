@@ -115,10 +115,32 @@ export function useMembershipsPage() {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
+      const numericFields = new Set([
+        "price",
+        "maxProjects",
+        "projectsFeatured",
+        "discountThreeMonths",
+        "discountSixMonths",
+        "discountTwelveMonths",
+      ]);
+      const nullableNumericFields = new Set([
+        "projectsFeatured",
+        "discountThreeMonths",
+        "discountSixMonths",
+        "discountTwelveMonths",
+      ]);
+
+      const nextValue = numericFields.has(name)
+        ? value === ""
+          ? nullableNumericFields.has(name)
+            ? null
+            : 0
+          : Number(value) || 0
+        : value;
 
       setMembership((prev) => ({
         ...prev,
-        [name]: name === "price" ? Number(value) || 0 : value,
+        [name]: nextValue,
       }));
     },
     []

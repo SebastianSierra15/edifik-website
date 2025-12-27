@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
+import {
+  requireAuth,
+  requireAuthWithPermissions,
+  Permission,
+} from "@/src/modules/auth";
 import {
   deleteUserProjectController,
   getUserProjectsController,
@@ -39,9 +43,9 @@ export async function GET(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    const session = await requireAuth();
-
-    await requirePermission(Permission.ManageOwnProperties);
+    const session = await requireAuthWithPermissions([
+      Permission.ManageOwnProperties,
+    ]);
 
     const url = new URL(req.url);
     const projectId = Number(url.searchParams.get("id"));

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { processRequestSchema } from "@/src/schemas/admin";
 
 export const useRequestValidation = () => {
   const [errors, setErrors] = useState<{
@@ -9,33 +10,52 @@ export const useRequestValidation = () => {
     actionTypeError: "",
   });
 
-  const getErrorMessage = (fieldName: keyof typeof errors, value: string) => {
-    switch (fieldName) {
-      case "messageError":
-        return value.trim() ? "" : "El mensaje de respuesta es obligatorio.";
-      case "actionTypeError":
-        return ["approve", "reject", "revision"].includes(value)
-          ? ""
-          : "Debe seleccionar un estado válido.";
-      default:
-        return "";
-    }
-  };
-
   const validateField = (fieldName: keyof typeof errors, value: string) => {
-    const errorMessage = getErrorMessage(fieldName, value);
+    if (fieldName === "messageError") {
+      const result = processRequestSchema.shape.message.safeParse(value);
+      const errorMessage = result.success
+        ? ""
+        : (result.error.issues[0]?.message ?? "");
+
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        messageError: errorMessage,
+      }));
+      return;
+    }
+
+    const result = processRequestSchema.shape.actionType.safeParse(value);
+    const errorMessage = result.success
+      ? ""
+      : (result.error.issues[0]?.message ?? "");
 
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [fieldName]: errorMessage,
+      actionTypeError: errorMessage,
     }));
   };
 
   const validateFields = (message: string, actionType: string) => {
+    const result = processRequestSchema.safeParse({ message, actionType });
+
     const newErrors = {
-      messageError: getErrorMessage("messageError", message),
-      actionTypeError: getErrorMessage("actionTypeError", actionType),
+      messageError: "",
+      actionTypeError: "",
     };
+
+    if (!result.success) {
+      for (const issue of result.error.issues) {
+        const field = issue.path[0];
+
+        if (field === "message" && !newErrors.messageError) {
+          newErrors.messageError = issue.message;
+        }
+
+        if (field === "actionType" && !newErrors.actionTypeError) {
+          newErrors.actionTypeError = issue.message;
+        }
+      }
+    }
 
     setErrors(newErrors);
 

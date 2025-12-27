@@ -1,4 +1,5 @@
 export * from "./application/requireAuth";
+export * from "./application/requireAuthWithPermissions";
 export * from "./application/requirePermission";
 export * from "./domain/Permission";
 export * from "./domain/SesionUser";

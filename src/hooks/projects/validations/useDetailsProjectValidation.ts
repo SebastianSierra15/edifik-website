@@ -1,57 +1,93 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { ProjectFormData } from "@/src/interfaces";
+import { detailsProjectSchema as projectDetailsProjectSchema } from "@/src/schemas/admin/proyectos/details-project.schema";
+import { detailsProjectSchema as propertyDetailsProjectSchema } from "@/src/schemas/admin/propiedades/details-project.schema";
 
-export function useDetailsProjectValidation(formData: ProjectFormData) {
+const fieldSchemaMap = {
+  priceError: "price",
+  housingTypeError: "housingTypeId",
+} as const;
+
+const issueToErrorMap = {
+  price: "priceError",
+  housingTypeId: "housingTypeError",
+} as const;
+
+export function useDetailsProjectValidation(
+  formData: ProjectFormData,
+  isProperty: boolean
+) {
   const [errors, setErrors] = useState({
     priceError: "",
     housingTypeError: "",
   });
+  const schema = useMemo(
+    () =>
+      isProperty ? propertyDetailsProjectSchema : projectDetailsProjectSchema,
+    [isProperty]
+  );
+
+  const buildSchemaData = (overrides?: Partial<Record<string, unknown>>) => ({
+    price: overrides?.price ?? formData.price,
+    propertyTypeId: formData.propertyType?.id,
+    housingTypeId: overrides?.housingTypeId ?? formData.housingType?.id,
+  });
+
+  const getFieldError = (fieldName: keyof typeof errors, data: object) => {
+    const result = schema.safeParse(data);
+
+    if (result.success) {
+      return "";
+    }
+
+    const issue = result.error.issues.find(
+      (item) => item.path[0] === fieldSchemaMap[fieldName]
+    );
+
+    return issue?.message ?? "";
+  };
 
   const validateField = (fieldName: keyof typeof errors, value: unknown) => {
+    const schemaKey = fieldSchemaMap[fieldName];
+    if (!schemaKey) {
+      return;
+    }
+    const errorMessage = getFieldError(fieldName, {
+      ...buildSchemaData(),
+      [schemaKey]: value,
+    });
+
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [fieldName]: getErrorMessage(fieldName, value),
+      [fieldName]: errorMessage,
     }));
   };
 
-  const parsePrice = (value: unknown) => {
-    if (typeof value === "number") return value;
-    if (typeof value === "string") {
-      const normalized = value.replace(/[^0-9]/g, "");
-      return normalized ? Number(normalized) : 0;
-    }
-    return 0;
-  };
-
-  const getErrorMessage = (fieldName: keyof typeof errors, value: unknown) => {
-    switch (fieldName) {
-      case "priceError":
-        const numericPrice = parsePrice(value);
-        if (!numericPrice || numericPrice <= 0) {
-          return "El precio es obligatorio y debe ser mayor que 0.";
-        }
-        return "";
-      case "housingTypeError":
-        return (formData.propertyType?.id === 1001 ||
-          formData.propertyType?.id === 1002) &&
-          !value
-          ? "Seleccione un tipo de vivienda."
-          : "";
-      default:
-        return "";
-    }
-  };
-
   const validateFields = () => {
+    const result = schema.safeParse(buildSchemaData());
+
     const newErrors: typeof errors = {
-      priceError: getErrorMessage("priceError", formData.price),
-      housingTypeError: getErrorMessage(
-        "housingTypeError",
-        formData.housingType
-      ),
+      priceError: "",
+      housingTypeError: "",
     };
+
+    if (!result.success) {
+      for (const issue of result.error.issues) {
+        const field = issue.path[0];
+        if (typeof field !== "string") {
+          continue;
+        }
+
+        const errorKey =
+          issueToErrorMap[field as keyof typeof issueToErrorMap];
+
+        if (errorKey && !newErrors[errorKey]) {
+          newErrors[errorKey] = issue.message;
+        }
+      }
+    }
 
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
 import {
   requireAuth,
-  requirePermission,
+  requireAuthWithPermissions,
   Permission as PermissionEnum,
 } from "@/src/modules/auth";
 import {
@@ -97,12 +97,10 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const session = await requireAuth();
-
-    await requirePermission(
+    const session = await requireAuthWithPermissions([
       PermissionEnum.ManageProjects,
-      PermissionEnum.ManageOwnProperties
-    );
+      PermissionEnum.ManageOwnProperties,
+    ]);
 
     const permissions = session.user.permissions ?? [];
 
@@ -131,13 +129,11 @@ export async function PUT(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const session = await requireAuth();
-
-    await requirePermission(
+    const session = await requireAuthWithPermissions([
       PermissionEnum.ManageProjects,
       PermissionEnum.ManageProperties,
-      PermissionEnum.ManageOwnProperties
-    );
+      PermissionEnum.ManageOwnProperties,
+    ]);
 
     const permissions = session.user.permissions ?? [];
 
@@ -166,13 +162,11 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    const session = await requireAuth();
-
-    await requirePermission(
+    const session = await requireAuthWithPermissions([
       PermissionEnum.ManageProjects,
       PermissionEnum.ManageProperties,
-      PermissionEnum.ManageOwnProperties
-    );
+      PermissionEnum.ManageOwnProperties,
+    ]);
 
     const projectId = Number(new URL(req.url).searchParams.get("id"));
 

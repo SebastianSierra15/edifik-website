@@ -22,6 +22,7 @@ interface DetailsProjectFormProps {
   commonAreas: SimpleCatalog[];
   nearbyServices: SimpleCatalog[];
   housingTypes: SimpleCatalog[];
+  isProperty: boolean;
 }
 
 export function DetailsProjectForm({
@@ -34,9 +35,10 @@ export function DetailsProjectForm({
   commonAreas,
   nearbyServices,
   housingTypes,
+  isProperty,
 }: DetailsProjectFormProps) {
   const { errors, validateFields, validateField } =
-    useDetailsProjectValidation(formData);
+    useDetailsProjectValidation(formData, isProperty);
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
@@ -125,14 +127,14 @@ export function DetailsProjectForm({
   };
 
   const isProject = formData.projectType?.id === 1;
-  const isProperty =
+  const isPropertyType =
     formData.projectType?.id === 2 || formData.projectType?.id === 3;
   const isApartmentOrHouse =
     formData.propertyType?.id === 1001 || formData.propertyType?.id === 1002;
 
   const tooltipTexts = useMemo(
     () => ({
-      price: isProperty
+      price: isPropertyType
         ? "Indique el precio de la propiedad."
         : "Indique el precio por unidad del proyecto.",
       availableUnits:
@@ -141,10 +143,10 @@ export function DetailsProjectForm({
       availableDate:
         "Seleccione la fecha estimada para la entrega del proyecto (mes/año).",
       complexName: "Nombre del conjunto residencial (si aplica).",
-      commonAreas: isProperty
+      commonAreas: isPropertyType
         ? "Seleccione las áreas comunes disponibles en la propiedad."
         : "Seleccione las áreas comunes disponibles en el proyecto.",
-      nearbyServices: isProperty
+      nearbyServices: isPropertyType
         ? "Seleccione los servicios cercanos a la propiedad."
         : "Seleccione los servicios cercanos al proyecto.",
     }),
@@ -161,7 +163,7 @@ export function DetailsProjectForm({
         <div
           className={clsx(
             "grid gap-4",
-            isProperty ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"
+            isPropertyType ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"
           )}
         >
           <FormInput
@@ -220,7 +222,7 @@ export function DetailsProjectForm({
           </div>
         )}
 
-        {formData.propertyType?.id === 1002 && isProperty && (
+        {formData.propertyType?.id === 1002 && isPropertyType && (
           <FormInput
             label="Nombre del conjunto"
             type="text"

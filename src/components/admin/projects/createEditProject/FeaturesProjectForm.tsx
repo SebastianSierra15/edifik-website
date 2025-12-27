@@ -17,6 +17,7 @@ interface FeaturesProjectFormProps {
   onNext: () => void;
   currentStep: number;
   totalSteps: number;
+  isProperty: boolean;
 }
 
 export function FeaturesProjectForm({
@@ -26,9 +27,10 @@ export function FeaturesProjectForm({
   onNext,
   currentStep,
   totalSteps,
+  isProperty,
 }: FeaturesProjectFormProps) {
   const { errors, validateFields, validateField } =
-    useFeaturesProjectValidation(formData);
+    useFeaturesProjectValidation(formData, isProperty);
 
   const featureVisibility = useMemo(
     () => getFeatureVisibility(formData.propertyType?.id),

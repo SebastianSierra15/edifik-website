@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
+import {
+  requireAuthWithPermissions,
+  Permission,
+} from "@/src/modules/auth";
 import {
   getProjectByIdController,
   deleteProjectPermanentlyController,
@@ -11,13 +14,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requireAuth();
-
-    await requirePermission(
+    await requireAuthWithPermissions([
       Permission.ManageProjects,
       Permission.ManageProperties,
-      Permission.ManageOwnProperties
-    );
+      Permission.ManageOwnProperties,
+    ]);
 
     const canSeeMembership = true;
 
@@ -42,13 +43,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await requireAuth();
-
-    await requirePermission(
+    const session = await requireAuthWithPermissions([
       Permission.ManageProjects,
       Permission.ManageProperties,
-      Permission.ManageOwnProperties
-    );
+      Permission.ManageOwnProperties,
+    ]);
 
     const { id } = await params;
     await deleteProjectPermanentlyController(Number(id), {

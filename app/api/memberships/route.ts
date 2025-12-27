@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
+import {
+  requireAuthWithPermissions,
+  requirePermission,
+  Permission,
+} from "@/src/modules/auth";
 import {
   getMembershipsController,
   updateMembershipController,
@@ -26,8 +30,9 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const session = await requireAuth();
-    await requirePermission(Permission.ManageMemberships);
+    const session = await requireAuthWithPermissions([
+      Permission.ManageMemberships,
+    ]);
 
     const body = await req.json();
 

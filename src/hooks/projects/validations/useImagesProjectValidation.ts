@@ -1,15 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { ImageType, Media, ProjectFormData } from "@/src/interfaces";
+import { getImagesProjectSchema as getProjectImagesProjectSchema } from "@/src/schemas/admin/proyectos/images-project.schema";
+import { getImagesProjectSchema as getPropertyImagesProjectSchema } from "@/src/schemas/admin/propiedades/images-project.schema";
 
 export function useImagesProjectValidation(
   formData: ProjectFormData,
-  imagesTypes: ImageType[]
+  imagesTypes: ImageType[],
+  isProperty: boolean
 ) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const imagesByCategory: Record<string, Media[]> = {};
   const imageDescriptionsByCategory: Record<string, string[]> = {};
+  const schema = useMemo(() => {
+    const getSchema = isProperty
+      ? getPropertyImagesProjectSchema
+      : getProjectImagesProjectSchema;
+    return getSchema({ imagesTypes });
+  }, [imagesTypes, isProperty]);
 
   (formData.media || []).forEach((media) => {
     if (!media.type) return;
@@ -48,39 +57,19 @@ export function useImagesProjectValidation(
 
   const validateFields = () => {
     const newErrors: Record<string, string> = {};
-
-    imagesTypes.forEach((type) => {
-      if (
-        type.isRequired &&
-        (!imagesByCategory[type.name] ||
-          imagesByCategory[type.name].length === 0)
-      ) {
-        newErrors[type.name] =
-          `Debe subir al menos una imagen para ${type.name}.`;
-      }
+    const result = schema.safeParse({
+      media: formData.media ?? [],
+      commonAreas: formData.commonAreas ?? [],
     });
 
-    formData.commonAreas?.forEach((area) => {
-      if (
-        !imagesByCategory[area.name] ||
-        imagesByCategory[area.name].length === 0
-      ) {
-        newErrors[area.name] =
-          `Debe subir al menos una imagen para ${area.name}.`;
-      }
-    });
-
-    Object.entries(imagesByCategory).forEach(([category, files]) => {
-      files.forEach((_, index) => {
-        if (
-          imagesTypes.find((type) => type.name === category)?.id === 1005 &&
-          !imageDescriptionsByCategory[category]?.[index]
-        ) {
-          newErrors[`${category}-description-${index}`] =
-            "La descripción es obligatoria.";
+    if (!result.success) {
+      for (const issue of result.error.issues) {
+        const key = issue.path[0];
+        if (typeof key === "string" && !newErrors[key]) {
+          newErrors[key] = issue.message;
         }
-      });
-    });
+      }
+    }
 
     setErrors({ ...newErrors });
 
@@ -89,4 +78,3 @@ export function useImagesProjectValidation(
 
   return { errors, validateFields, validateField };
 }
-

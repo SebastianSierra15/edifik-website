@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
-import { requireAuth, requirePermission, Permission } from "@/src/modules/auth";
+import { requireAuthWithPermissions, Permission } from "@/src/modules/auth";
 import { uploadImageController, deleteImageController } from "@/src/modules/s3";
 
 export async function POST(req: Request) {
   try {
-    await requirePermission(
-      Permission.ManageUsers,
-      Permission.ManageProjects,
-      Permission.ManageOwnProperties
+    await requireAuthWithPermissions(
+      [
+        Permission.ManageUsers,
+        Permission.ManageProjects,
+        Permission.ManageOwnProperties,
+      ],
+      { missingSessionError: "forbidden" }
     );
-
-    await requireAuth();
 
     const formData = await req.formData();
     const file = formData.get("file");
@@ -30,13 +31,14 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    await requirePermission(
-      Permission.ManageUsers,
-      Permission.ManageProjects,
-      Permission.ManageOwnProperties
+    await requireAuthWithPermissions(
+      [
+        Permission.ManageUsers,
+        Permission.ManageProjects,
+        Permission.ManageOwnProperties,
+      ],
+      { missingSessionError: "forbidden" }
     );
-
-    await requireAuth();
 
     const body = await req.json();
 

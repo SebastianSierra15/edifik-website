@@ -15,6 +15,7 @@ interface UploadImagesFormProps {
   totalSteps: number;
   imagesTypes: ImageType[];
   onSubmit: (media: Media[], validateFields: () => boolean) => void;
+  isProperty: boolean;
 }
 
 export function ImagesProjectForm({
@@ -26,6 +27,7 @@ export function ImagesProjectForm({
   totalSteps,
   imagesTypes,
   onSubmit,
+  isProperty,
 }: UploadImagesFormProps) {
   const { showModalAlert } = useModalAlert();
   const {
@@ -44,6 +46,7 @@ export function ImagesProjectForm({
     onSubmit,
     onNext,
     showModalAlert,
+    isProperty,
   });
 
   return (
