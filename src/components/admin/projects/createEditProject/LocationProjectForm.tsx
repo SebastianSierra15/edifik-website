@@ -1,7 +1,7 @@
 import { memo } from "react";
 import type { City, Departament, ProjectFormData } from "@/src/interfaces";
 import { useLocationProjectForm } from "@/src/hooks/projects";
-import { FormSelect, FormInput } from "@/src/components/shared";
+import { AdminFormSelect, AdminFormInput } from "@/src/components/shared";
 import { StepNavigationButtons } from "../StepNavigationButtons";
 import { LocationMapSection } from "./LocationMapSection";
 
@@ -66,7 +66,7 @@ const LocationProjectForm = memo(function LocationProjectForm({
 
       <form className="space-y-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormSelect
+          <AdminFormSelect
             label="Departamento"
             name="departament"
             value={formData.city?.departament?.id || ""}
@@ -76,7 +76,7 @@ const LocationProjectForm = memo(function LocationProjectForm({
             tooltipText={tooltipTexts.departament}
           />
 
-          <FormSelect
+          <AdminFormSelect
             label="Ciudad"
             name="city"
             value={formData.city?.id || ""}
@@ -88,7 +88,7 @@ const LocationProjectForm = memo(function LocationProjectForm({
         </div>
 
         <div className="relative z-20 space-y-4">
-          <FormInput
+          <AdminFormInput
             label="Direccion Publica"
             name="address"
             type="text"

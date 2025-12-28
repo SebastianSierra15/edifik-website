@@ -1,9 +1,11 @@
 import { useBodyOverflow } from "@/src/hooks/ui";
 import type { Permission, RoleWithPermissions } from "@/src/interfaces";
-import { ModalHeader } from "../../shared";
-import { ModalFooter } from "../../shared";
-import { FormInput } from "../../shared";
-import { FormSelect } from "../../shared";
+import {
+  ModalHeader,
+  ModalFooter,
+  AdminFormInput,
+  AdminFormSelect,
+} from "@/src/components/shared";
 
 interface RoleModalProps {
   show: boolean;
@@ -49,7 +51,7 @@ export function RoleModal({
           noValidate
           className="h-[50vh] space-y-4 overflow-y-auto px-6 py-4"
         >
-          <FormInput
+          <AdminFormInput
             label="Nombre del rol"
             type="text"
             name="name"
@@ -81,7 +83,7 @@ export function RoleModal({
             </ul>
           </div>
 
-          <FormSelect
+          <AdminFormSelect
             label="Asignar permiso"
             name="addPermission"
             value=""
@@ -98,7 +100,7 @@ export function RoleModal({
             flag={flag}
           />
 
-          <FormSelect
+          <AdminFormSelect
             label="Eliminar permiso"
             name="deletePermission"
             value=""

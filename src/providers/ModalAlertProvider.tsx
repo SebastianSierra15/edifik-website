@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { ModalAlert } from "@/src/components/shared/modal/ModalAlert";
+import { ModalAlert } from "@/src/components/shared";
 
 interface ModalAlertPayload {
   title: string;
@@ -43,7 +43,9 @@ export function ModalAlertProvider({ children }: { children: ReactNode }) {
 export function useModalAlert(): ModalAlertContextValue {
   const context = useContext(ModalAlertContext);
   if (!context) {
-    throw new Error("useModalAlert debe utilizarse dentro de ModalAlertProvider");
+    throw new Error(
+      "useModalAlert debe utilizarse dentro de ModalAlertProvider"
+    );
   }
   return context;
 }

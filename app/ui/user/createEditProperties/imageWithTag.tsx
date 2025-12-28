@@ -2,14 +2,19 @@ import { useEffect, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { X } from "lucide-react";
 
-const FormInput = dynamic(() => import("@/app/ui/modals/home/formInput"), {
-  ssr: false,
-});
-const FormTextArea = dynamic(
-  () => import("@/app/ui/modals/home/formTextArea"),
-  {
-    ssr: false,
-  }
+const ClientFormInput = dynamic(
+  () =>
+    import("@/src/components/shared/form/client/ClientFormInput").then(
+      (mod) => mod.ClientFormInput
+    ),
+  { ssr: false }
+);
+const ClientFormTextArea = dynamic(
+  () =>
+    import("@/src/components/shared/form/client/ClientFormTextArea").then(
+      (mod) => mod.ClientFormTextArea
+    ),
+  { ssr: false }
 );
 
 interface ImageWithTagProps {
@@ -98,7 +103,7 @@ export default function ImageWithTag({
         </div>
       )}
 
-      <FormInput
+      <ClientFormInput
         id={id}
         label="Nombre"
         type="text"
@@ -113,7 +118,7 @@ export default function ImageWithTag({
       />
 
       {imageTypeId === 1005 && category === "imageType" && (
-        <FormTextArea
+        <ClientFormTextArea
           label="Descripción"
           name="description"
           value={localDescription}

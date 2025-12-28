@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { X } from "lucide-react";
-import { FormTextArea } from "@/src/components/shared";
+import { AdminFormTextArea } from "@/src/components/shared";
 
 interface ImageWithTagProps {
   file: File | string;
@@ -73,7 +73,7 @@ export function ImageWithTag({
       )}
 
       {imageTypeId === 1005 && category === "imageType" && (
-        <FormTextArea
+        <AdminFormTextArea
           label="Descripción"
           name="description"
           value={localDescription}

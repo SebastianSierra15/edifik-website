@@ -7,11 +7,11 @@ import type { ProjectFormData, SimpleCatalog } from "@/src/interfaces";
 import { useBasicProjectValidation } from "@/src/hooks/projects";
 import { useCheckEmail } from "@/src/hooks/users";
 import {
-  FormInput,
-  FormSelect,
-  FormCheckbox,
-  FormTextArea,
-  FormSearchEmail,
+  AdminFormInput,
+  AdminFormSelect,
+  AdminFormCheckbox,
+  AdminFormTextArea,
+  AdminFormSearchEmail,
 } from "@/src/components/shared";
 import { StepNavigationButtons } from "../StepNavigationButtons";
 
@@ -175,7 +175,7 @@ export function BasicProjectForm({
       </h2>
       <form onSubmit={handleNext} className="space-y-6">
         {!isProperty && (
-          <FormInput
+          <AdminFormInput
             label={
               isProperty ? "Nombre de la propiedad" : "Nombre del proyecto"
             }
@@ -200,7 +200,7 @@ export function BasicProjectForm({
             isProperty && "sm:grid-cols-2"
           )}
         >
-          <FormSelect
+          <AdminFormSelect
             label="Tipo de propiedad"
             name="propertyType"
             value={formData.propertyType?.id || ""}
@@ -211,7 +211,7 @@ export function BasicProjectForm({
           />
 
           {isProperty && (
-            <FormSelect
+            <AdminFormSelect
               label="Finalidad de la propiedad"
               name="projectType"
               value={formData.projectType?.id || ""}
@@ -227,7 +227,7 @@ export function BasicProjectForm({
         </div>
 
         {isProperty && hasPermission && (
-          <FormSearchEmail
+          <AdminFormSearchEmail
             label="Correo del Propietario"
             value={ownerEmail}
             onChange={setOwnerEmail}
@@ -237,7 +237,7 @@ export function BasicProjectForm({
           />
         )}
 
-        <FormTextArea
+        <AdminFormTextArea
           label="Resumen breve"
           name="shortDescription"
           value={formData.shortDescription || ""}
@@ -249,7 +249,7 @@ export function BasicProjectForm({
           maxLength={150}
         />
 
-        <FormTextArea
+        <AdminFormTextArea
           label="Descripción completa"
           name="detailedDescription"
           value={formData.detailedDescription || ""}
@@ -261,7 +261,7 @@ export function BasicProjectForm({
           maxLength={1500}
         />
 
-        <FormCheckbox
+        <AdminFormCheckbox
           label="Propio de la empresa"
           name="membership"
           checked={formData.membership === 1004}

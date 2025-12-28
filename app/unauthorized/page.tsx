@@ -39,7 +39,7 @@ export default function UnauthorizedPage() {
         </Link>
 
         <Link
-          href="/login"
+          href="/auth/login"
           className="px-6 py-3 rounded-lg bg-client-backgroundLight text-white font-semibold shadow-lg hover:bg-client-backgroundAlt transition-colors"
         >
           Iniciar Sesión

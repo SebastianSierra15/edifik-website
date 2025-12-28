@@ -6,10 +6,13 @@ import { useGetMyProjects } from "@/app/hooks/user/useGetMyProjects";
 import { useUserProjectApi } from "@/app/hooks/user/useUserProjectApi";
 import PropertiesContainer from "@/app/ui/user/propertiesContainer";
 import StatusFilterTabs from "@/app/ui/user/statusFilterTabs";
-import Alert from "@/src/components/shared/alert/ATlert";
+import { Alert } from "@/src/components/shared";
 
-const ModalConfirmation = dynamic(
-  () => import("@/app/ui/modals/home/modalConfirmation"),
+const ClientModalConfirmation = dynamic(
+  () =>
+    import("@/src/components/shared/form/client/ClientModalConfirmation").then(
+      (mod) => mod.ClientModalConfirmation
+    ),
   { ssr: false }
 );
 
@@ -76,7 +79,7 @@ export default function ClientMyPropertiesPage() {
         )}
 
         {isModalOpen && (
-          <ModalConfirmation
+          <ClientModalConfirmation
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onConfirm={handleDeleteProject}

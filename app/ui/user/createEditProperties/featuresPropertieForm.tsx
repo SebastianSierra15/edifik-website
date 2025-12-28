@@ -2,9 +2,11 @@ import { useCallback, useMemo } from "react";
 import { ProjectData } from "@/lib/definitios";
 import { useFeaturesProjectValidation } from "@/app/hooks/projects/createEditProject/useFeaturesProjectValidation";
 import StepNavigationButtons from "../stepNavigationButtons";
-import FormInput from "../../modals/home/formInput";
-import FormSelect from "../../modals/home/formSelect";
-import FormCheckboxToggle from "../../modals/home/formCheckboxToggle";
+import {
+  ClientFormInput,
+  ClientFormSelect,
+  ClientFormCheckboxToggle,
+} from "@/src/components/shared";
 
 interface FeaturesPropertieFormProps {
   formData: ProjectData;
@@ -147,7 +149,7 @@ export default function FeaturesPropertieForm({
 
       <form onSubmit={handleNext} className="space-y-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormInput
+          <ClientFormInput
             label="Área Total (m²)"
             type="number"
             name="totalArea"
@@ -160,7 +162,7 @@ export default function FeaturesPropertieForm({
             isAccent={true}
           />
 
-          <FormInput
+          <ClientFormInput
             label="Área Construida (m²)"
             type="number"
             name="builtArea"
@@ -174,7 +176,7 @@ export default function FeaturesPropertieForm({
           />
 
           {shouldShowField("socioeconomicLevel") && (
-            <FormSelect
+            <ClientFormSelect
               label="Nivel Socioeconómico"
               name="socioeconomicLevel"
               value={formData.socioeconomicLevel || ""}
@@ -190,7 +192,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("yearBuilt") && (
-            <FormSelect
+            <ClientFormSelect
               label="Año de Construcción"
               name="yearBuilt"
               value={formData.yearBuilt || ""}
@@ -209,7 +211,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("bedrooms") && (
-            <FormInput
+            <ClientFormInput
               label="Número de Habitaciones"
               type="number"
               name="bedrooms"
@@ -224,7 +226,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("bathrooms") && (
-            <FormInput
+            <ClientFormInput
               label="Número de Baños"
               type="number"
               name="bathrooms"
@@ -239,7 +241,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("lobbies") && (
-            <FormInput
+            <ClientFormInput
               label="Número de Salas de Estar"
               type="number"
               name="lobbies"
@@ -254,7 +256,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("freeHeight") && (
-            <FormInput
+            <ClientFormInput
               label="Altura Libre (m)"
               type="number"
               name="freeHeight"
@@ -269,7 +271,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("width") && (
-            <FormInput
+            <ClientFormInput
               label="Frente (m)"
               type="number"
               name="width"
@@ -284,7 +286,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("length") && (
-            <FormInput
+            <ClientFormInput
               label="Fondo (m)"
               type="number"
               name="length"
@@ -299,7 +301,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("heavyParking") && (
-            <FormInput
+            <ClientFormInput
               label={
                 formData.propertyType?.id === 1005
                   ? "Espacios de Parqueo Privado"
@@ -317,7 +319,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("towers") && (
-            <FormInput
+            <ClientFormInput
               label={
                 formData.projectType?.id === 2 || formData.projectType?.id === 3
                   ? "Número de Torre"
@@ -335,7 +337,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("floorNumber") && (
-            <FormInput
+            <ClientFormInput
               label="Número de Piso"
               type="number"
               name="floorNumber"
@@ -349,7 +351,7 @@ export default function FeaturesPropertieForm({
           )}
 
           {shouldShowField("storageUnits") && (
-            <FormInput
+            <ClientFormInput
               label="Depósitos"
               type="number"
               name="storageUnits"
@@ -362,7 +364,7 @@ export default function FeaturesPropertieForm({
             />
           )}
 
-          <FormInput
+          <ClientFormInput
             label={
               formData.propertyType?.id === 1005
                 ? "Espacios de Parqueo Sociales"
@@ -388,7 +390,7 @@ export default function FeaturesPropertieForm({
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {shouldShowField("elevator") && (
-                <FormCheckboxToggle
+                <ClientFormCheckboxToggle
                   label="Elevador"
                   name="elevator"
                   checked={formData.elevator || false}
@@ -397,7 +399,7 @@ export default function FeaturesPropertieForm({
               )}
 
               {shouldShowField("terrace") && (
-                <FormCheckboxToggle
+                <ClientFormCheckboxToggle
                   label="Terraza"
                   name="terrace"
                   checked={formData.terrace || false}
@@ -406,7 +408,7 @@ export default function FeaturesPropertieForm({
               )}
 
               {shouldShowField("balcony") && (
-                <FormCheckboxToggle
+                <ClientFormCheckboxToggle
                   label="Balcón"
                   name="balcony"
                   checked={formData.balcony || false}
@@ -415,7 +417,7 @@ export default function FeaturesPropertieForm({
               )}
 
               {shouldShowField("garden") && (
-                <FormCheckboxToggle
+                <ClientFormCheckboxToggle
                   label="Jardín"
                   name="garden"
                   checked={formData.garden || false}
@@ -424,7 +426,7 @@ export default function FeaturesPropertieForm({
               )}
 
               {shouldShowField("laundryArea") && (
-                <FormCheckboxToggle
+                <ClientFormCheckboxToggle
                   label="Área de Lavado"
                   name="laundryArea"
                   checked={formData.laundryArea || false}
@@ -433,7 +435,7 @@ export default function FeaturesPropertieForm({
               )}
 
               {shouldShowField("customizationOptions") && (
-                <FormCheckboxToggle
+                <ClientFormCheckboxToggle
                   label="Opciones de Personalización"
                   name="customizationOptions"
                   checked={formData.customizationOptions || false}

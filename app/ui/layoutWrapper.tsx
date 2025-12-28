@@ -13,18 +13,19 @@ export default function LayoutWrapper({
 }) {
   const pathname = usePathname();
 
-  const isLogin = pathname.startsWith("/login");
+  const isAuthRoute =
+    pathname.startsWith("/auth") || pathname.startsWith("/login");
   const isAdmin = pathname.startsWith("/admin");
 
   return (
     <>
-      {!isLogin && isAdmin && <AdminHeader />}
-      {!isLogin && !isAdmin && <Header />}
+      {!isAuthRoute && isAdmin && <AdminHeader />}
+      {!isAuthRoute && !isAdmin && <Header />}
 
       {children}
 
-      {!isLogin && isAdmin && <AdminFooter />}
-      {!isLogin && !isAdmin && <Footer />}
+      {!isAuthRoute && isAdmin && <AdminFooter />}
+      {!isAuthRoute && !isAdmin && <Footer />}
     </>
   );
 }

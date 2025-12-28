@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { ProjectData } from "@/lib/definitios";
-import FormDisplay from "../../modals/home/formDisplay";
+import { ClientFormDisplay } from "@/src/components/shared";
 import StepNavigationButtons from "../stepNavigationButtons";
 
 interface FeaturesPropertieViewProps {
@@ -67,87 +67,87 @@ export default function FeaturesPropertieView({
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <FormDisplay
+        <ClientFormDisplay
           label="Área Total (m²)"
           value={String(project.totalArea ?? "No especificado")}
         />
-        <FormDisplay
+        <ClientFormDisplay
           label="Área Construida (m²)"
           value={String(project.builtArea ?? "No especificado")}
         />
         {shouldShowField.socioeconomicLevel && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Nivel Socioeconómico"
             value={String(project.socioeconomicLevel ?? "No especificado")}
           />
         )}
         {shouldShowField.yearBuilt && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Año de Construcción"
             value={String(project.yearBuilt ?? "No especificado")}
           />
         )}
         {shouldShowField.bedrooms && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Número de Habitaciones"
             value={String(project.bedrooms ?? "No especificado")}
           />
         )}
         {shouldShowField.bathrooms && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Número de Baños"
             value={String(project.bathrooms ?? "No especificado")}
           />
         )}
         {shouldShowField.lobbies && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Número de Salas de Estar"
             value={String(project.lobbies ?? "No especificado")}
           />
         )}
         {shouldShowField.freeHeight && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Altura Libre (m)"
             value={String(project.freeHeight ?? "No especificado")}
           />
         )}
         {shouldShowField.width && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Frente (m)"
             value={String(project.width ?? "No especificado")}
           />
         )}
         {shouldShowField.length && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Fondo (m)"
             value={String(project.length ?? "No especificado")}
           />
         )}
         {shouldShowField.heavyParking && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Espacios de Parqueo Pesado"
             value={String(project.heavyParking ?? "No especificado")}
           />
         )}
         {shouldShowField.towers && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Número de Torres"
             value={String(project.towers ?? "No especificado")}
           />
         )}
         {shouldShowField.floorNumber && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Número de Piso"
             value={String(project.floorNumber ?? "No especificado")}
           />
         )}
         {shouldShowField.storageUnits && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Número de Depósitos"
             value={String(project.storageUnits ?? "No especificado")}
           />
         )}
-        <FormDisplay
+        <ClientFormDisplay
           label="Espacios de Parqueo"
           value={String(project.parkingSpots ?? "No especificado")}
         />
@@ -162,37 +162,37 @@ export default function FeaturesPropertieView({
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {shouldShowField.elevator && (
-              <FormDisplay
+              <ClientFormDisplay
                 label="Elevador"
                 value={project.elevator ? "Sí" : "No"}
               />
             )}
             {shouldShowField.terrace && (
-              <FormDisplay
+              <ClientFormDisplay
                 label="Terraza"
                 value={project.terrace ? "Sí" : "No"}
               />
             )}
             {shouldShowField.balcony && (
-              <FormDisplay
+              <ClientFormDisplay
                 label="Balcón"
                 value={project.balcony ? "Sí" : "No"}
               />
             )}
             {shouldShowField.garden && (
-              <FormDisplay
+              <ClientFormDisplay
                 label="Jardín"
                 value={project.garden ? "Sí" : "No"}
               />
             )}
             {shouldShowField.laundryArea && (
-              <FormDisplay
+              <ClientFormDisplay
                 label="Área de Lavado"
                 value={project.laundryArea ? "Sí" : "No"}
               />
             )}
             {shouldShowField.customizationOptions && (
-              <FormDisplay
+              <ClientFormDisplay
                 label="Opciones de Personalización"
                 value={project.customizationOptions ? "Sí" : "No"}
               />

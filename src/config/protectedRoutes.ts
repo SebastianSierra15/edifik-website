@@ -34,7 +34,7 @@ export const PROTECTED_ROUTES: Record<string, ProtectedRouteConfig> = {
 
   "/membresias": { permissions: null },
 
-  "/login": { permissions: null },
-  "/login/register": { permissions: null },
-  "/login/forget-password": { permissions: null },
+  "/auth/login": { permissions: null },
+  "/auth/register": { permissions: null },
+  "/auth/forgot-password": { permissions: null },
 };

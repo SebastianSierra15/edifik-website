@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import FormInput from "../modals/home/formInput";
+import { ClientFormInput } from "@/src/components/shared";
 
 interface ModalChangePasswordProps {
   isOpen: boolean;
@@ -68,7 +68,7 @@ export default function ModalChangePassword({
           </h2>
 
           <div className="space-y-4">
-            <FormInput
+            <ClientFormInput
               label="Contraseña actual"
               name="currentPassword"
               type="password"
@@ -79,7 +79,7 @@ export default function ModalChangePassword({
               isAccent
             />
 
-            <FormInput
+            <ClientFormInput
               label="Nueva contraseña"
               name="newPassword"
               type="password"
@@ -91,7 +91,7 @@ export default function ModalChangePassword({
               isEdit={!!currentPassword}
             />
 
-            <FormInput
+            <ClientFormInput
               label="Confirmar nueva contraseña"
               name="confirmPassword"
               type="password"

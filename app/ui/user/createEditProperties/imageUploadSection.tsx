@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { ChevronDown } from "lucide-react";
 import { ImageType } from "@/lib/definitios";
 import ImageWithTag from "./imageWithTag";
-import { FormErrorMessage } from "@/src/components/shared";
+import { ClientFormErrorMessage } from "@/src/components/shared";
 
 interface ImageUploadSectionProps {
   imageType: ImageType;
@@ -158,7 +158,7 @@ export default function ImageUploadSection({
             {images.length} archivo(s) subido(s)
           </p>
 
-          {error && <FormErrorMessage error={error} />}
+          {error && <ClientFormErrorMessage error={error} />}
 
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {imageList}

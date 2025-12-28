@@ -9,6 +9,22 @@ import { PROTECTED_ROUTES } from "./src/config";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  if (pathname.startsWith("/login")) {
+    const redirectUrl = req.nextUrl.clone();
+    let targetPath = pathname.replace(/^\/login/, "/auth");
+
+    if (targetPath === "/auth") {
+      targetPath = "/auth/login";
+    }
+
+    if (targetPath.startsWith("/auth/forget-password")) {
+      targetPath = "/auth/forgot-password";
+    }
+
+    redirectUrl.pathname = targetPath;
+    return withPath(NextResponse.redirect(redirectUrl), pathname);
+  }
+
   const matchedRoute = Object.keys(PROTECTED_ROUTES)
     .sort((a, b) => b.length - a.length)
     .find((route) => pathname.startsWith(route));
@@ -26,12 +42,12 @@ export async function middleware(req: NextRequest) {
   );
 
   if (!hasSessionCookie) {
-    if (pathname.startsWith("/login")) {
+    if (pathname.startsWith("/auth")) {
       return withPath(NextResponse.next(), pathname);
     }
 
     return withPath(
-      NextResponse.redirect(new URL("/login", req.url)),
+      NextResponse.redirect(new URL("/auth/login", req.url)),
       pathname
     );
   }
@@ -53,9 +69,9 @@ export async function middleware(req: NextRequest) {
   /**
    * NO autenticado
    */
-  if (!token && !pathname.startsWith("/login")) {
+  if (!token && !pathname.startsWith("/auth")) {
     return withPath(
-      NextResponse.redirect(new URL("/login", req.url)),
+      NextResponse.redirect(new URL("/auth/login", req.url)),
       pathname
     );
   }
@@ -63,7 +79,7 @@ export async function middleware(req: NextRequest) {
   /**
    * Usuario logueado intentando ir a login
    */
-  if (pathname.startsWith("/login") && token) {
+  if (pathname.startsWith("/auth") && token) {
     return withPath(
       NextResponse.redirect(new URL(userIsAdmin ? "/admin" : "/", req.url)),
       pathname
@@ -122,5 +138,11 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/usuario/:path*", "/login/:path*", "/membresias"],
+  matcher: [
+    "/admin/:path*",
+    "/usuario/:path*",
+    "/auth/:path*",
+    "/login/:path*",
+    "/membresias",
+  ],
 };

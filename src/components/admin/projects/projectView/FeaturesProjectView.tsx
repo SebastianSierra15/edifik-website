@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { ProjectFormData } from "@/src/interfaces";
-import { FormDisplay } from "@/src/components/shared";
+import { AdminFormDisplay } from "@/src/components/shared";
 import { StepNavigationButtons } from "../StepNavigationButtons";
 
 interface FeaturesProjectViewProps {
@@ -67,87 +67,87 @@ export function FeaturesProjectView({
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <FormDisplay
+        <AdminFormDisplay
           label="Área Total (m²)"
           value={String(project.totalArea ?? "No especificado")}
         />
-        <FormDisplay
+        <AdminFormDisplay
           label="Área Construida (m²)"
           value={String(project.builtArea ?? "No especificado")}
         />
         {shouldShowField.socioeconomicLevel && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Nivel Socioeconómico"
             value={String(project.socioeconomicLevel ?? "No especificado")}
           />
         )}
         {shouldShowField.yearBuilt && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Año de Construcción"
             value={String(project.yearBuilt ?? "No especificado")}
           />
         )}
         {shouldShowField.bedrooms && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Número de Habitaciones"
             value={String(project.bedrooms ?? "No especificado")}
           />
         )}
         {shouldShowField.bathrooms && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Número de Baños"
             value={String(project.bathrooms ?? "No especificado")}
           />
         )}
         {shouldShowField.lobbies && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Número de Salas de Estar"
             value={String(project.lobbies ?? "No especificado")}
           />
         )}
         {shouldShowField.freeHeight && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Altura Libre (m)"
             value={String(project.freeHeight ?? "No especificado")}
           />
         )}
         {shouldShowField.width && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Frente (m)"
             value={String(project.width ?? "No especificado")}
           />
         )}
         {shouldShowField.length && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Fondo (m)"
             value={String(project.length ?? "No especificado")}
           />
         )}
         {shouldShowField.heavyParking && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Espacios de Parqueo Pesado"
             value={String(project.heavyParking ?? "No especificado")}
           />
         )}
         {shouldShowField.towers && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Número de Torres"
             value={String(project.towers ?? "No especificado")}
           />
         )}
         {shouldShowField.floorNumber && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Número de Piso"
             value={String(project.floorNumber ?? "No especificado")}
           />
         )}
         {shouldShowField.storageUnits && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Número de Depósitos"
             value={String(project.storageUnits ?? "No especificado")}
           />
         )}
-        <FormDisplay
+        <AdminFormDisplay
           label="Espacios de Parqueo"
           value={String(project.parkingSpots ?? "No especificado")}
         />
@@ -162,37 +162,37 @@ export function FeaturesProjectView({
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {shouldShowField.elevator && (
-              <FormDisplay
+              <AdminFormDisplay
                 label="Elevador"
                 value={project.elevator ? "Sí" : "No"}
               />
             )}
             {shouldShowField.terrace && (
-              <FormDisplay
+              <AdminFormDisplay
                 label="Terraza"
                 value={project.terrace ? "Sí" : "No"}
               />
             )}
             {shouldShowField.balcony && (
-              <FormDisplay
+              <AdminFormDisplay
                 label="Balcón"
                 value={project.balcony ? "Sí" : "No"}
               />
             )}
             {shouldShowField.garden && (
-              <FormDisplay
+              <AdminFormDisplay
                 label="Jardín"
                 value={project.garden ? "Sí" : "No"}
               />
             )}
             {shouldShowField.laundryArea && (
-              <FormDisplay
+              <AdminFormDisplay
                 label="Área de Lavado"
                 value={project.laundryArea ? "Sí" : "No"}
               />
             )}
             {shouldShowField.customizationOptions && (
-              <FormDisplay
+              <AdminFormDisplay
                 label="Opciones de Personalización"
                 value={project.customizationOptions ? "Sí" : "No"}
               />

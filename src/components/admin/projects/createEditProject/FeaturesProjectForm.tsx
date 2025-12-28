@@ -3,9 +3,9 @@ import type { ProjectFormData } from "@/src/interfaces";
 import { useFeaturesProjectValidation } from "@/src/hooks/projects";
 import { getFeaturesTooltipTexts, getFeatureVisibility } from "@/src/shared";
 import {
-  FormCheckboxToggle,
-  FormInput,
-  FormSelect,
+  AdminFormCheckboxToggle,
+  AdminFormInput,
+  AdminFormSelect,
 } from "@/src/components/shared";
 import { StepNavigationButtons } from "../StepNavigationButtons";
 
@@ -90,7 +90,7 @@ export function FeaturesProjectForm({
 
       <form onSubmit={handleNext} className="space-y-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormInput
+          <AdminFormInput
             label="Área Total (m²)"
             type="number"
             name="totalArea"
@@ -102,7 +102,7 @@ export function FeaturesProjectForm({
             tooltipText={tooltipTexts.totalArea}
           />
 
-          <FormInput
+          <AdminFormInput
             label="Área Construida (m²)"
             type="number"
             name="builtArea"
@@ -117,7 +117,7 @@ export function FeaturesProjectForm({
           {shouldShowField("socioeconomicLevel") &&
             (formData.projectType?.id === 2 ||
               formData.projectType?.id === 3) && (
-              <FormSelect
+              <AdminFormSelect
                 label="Nivel Socioeconómico"
                 name="socioeconomicLevel"
                 value={formData.socioeconomicLevel || ""}
@@ -134,7 +134,7 @@ export function FeaturesProjectForm({
           {shouldShowField("yearBuilt") &&
             (formData.projectType?.id === 2 ||
               formData.projectType?.id === 3) && (
-              <FormSelect
+              <AdminFormSelect
                 label="Año de Construcción"
                 name="yearBuilt"
                 value={formData.yearBuilt || ""}
@@ -152,7 +152,7 @@ export function FeaturesProjectForm({
             )}
 
           {shouldShowField("bedrooms") && (
-            <FormInput
+            <AdminFormInput
               label="Número de Habitaciones"
               type="number"
               name="bedrooms"
@@ -166,7 +166,7 @@ export function FeaturesProjectForm({
           )}
 
           {shouldShowField("bathrooms") && (
-            <FormInput
+            <AdminFormInput
               label="Número de Baños"
               type="number"
               name="bathrooms"
@@ -180,7 +180,7 @@ export function FeaturesProjectForm({
           )}
 
           {shouldShowField("lobbies") && (
-            <FormInput
+            <AdminFormInput
               label="Número de Salas de Estar"
               type="number"
               name="lobbies"
@@ -194,7 +194,7 @@ export function FeaturesProjectForm({
           )}
 
           {shouldShowField("freeHeight") && (
-            <FormInput
+            <AdminFormInput
               label="Altura Libre (m)"
               type="number"
               name="freeHeight"
@@ -208,7 +208,7 @@ export function FeaturesProjectForm({
           )}
 
           {shouldShowField("width") && (
-            <FormInput
+            <AdminFormInput
               label="Frente (m)"
               type="number"
               name="width"
@@ -222,7 +222,7 @@ export function FeaturesProjectForm({
           )}
 
           {shouldShowField("length") && (
-            <FormInput
+            <AdminFormInput
               label="Fondo (m)"
               type="number"
               name="length"
@@ -236,7 +236,7 @@ export function FeaturesProjectForm({
           )}
 
           {shouldShowField("heavyParking") && (
-            <FormInput
+            <AdminFormInput
               label={
                 formData.propertyType?.id === 1005
                   ? "Espacios de Parqueo Privado"
@@ -253,7 +253,7 @@ export function FeaturesProjectForm({
           )}
 
           {shouldShowField("towers") && (
-            <FormInput
+            <AdminFormInput
               label={
                 formData.projectType?.id === 2 || formData.projectType?.id === 3
                   ? "Número de Torre"
@@ -279,7 +279,7 @@ export function FeaturesProjectForm({
           {shouldShowField("floorNumber") &&
             (formData.projectType?.id === 2 ||
               formData.projectType?.id === 3) && (
-              <FormInput
+              <AdminFormInput
                 label="Número de Piso"
                 type="number"
                 name="floorNumber"
@@ -292,7 +292,7 @@ export function FeaturesProjectForm({
             )}
 
           {shouldShowField("storageUnits") && (
-            <FormInput
+            <AdminFormInput
               label="Depósitos"
               type="number"
               name="storageUnits"
@@ -304,7 +304,7 @@ export function FeaturesProjectForm({
             />
           )}
 
-          <FormInput
+          <AdminFormInput
             label={
               formData.propertyType?.id === 1005
                 ? "Espacios de Parqueo Sociales"
@@ -329,7 +329,7 @@ export function FeaturesProjectForm({
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {shouldShowField("elevator") && (
-                <FormCheckboxToggle
+                <AdminFormCheckboxToggle
                   label="Elevador"
                   name="elevator"
                   checked={formData.elevator || false}
@@ -338,7 +338,7 @@ export function FeaturesProjectForm({
               )}
 
               {shouldShowField("terrace") && (
-                <FormCheckboxToggle
+                <AdminFormCheckboxToggle
                   label="Terraza"
                   name="terrace"
                   checked={formData.terrace || false}
@@ -347,7 +347,7 @@ export function FeaturesProjectForm({
               )}
 
               {shouldShowField("balcony") && (
-                <FormCheckboxToggle
+                <AdminFormCheckboxToggle
                   label="Balcón"
                   name="balcony"
                   checked={formData.balcony || false}
@@ -356,7 +356,7 @@ export function FeaturesProjectForm({
               )}
 
               {shouldShowField("garden") && (
-                <FormCheckboxToggle
+                <AdminFormCheckboxToggle
                   label="Jardín"
                   name="garden"
                   checked={formData.garden || false}
@@ -365,7 +365,7 @@ export function FeaturesProjectForm({
               )}
 
               {shouldShowField("laundryArea") && (
-                <FormCheckboxToggle
+                <AdminFormCheckboxToggle
                   label="Área de Lavado"
                   name="laundryArea"
                   checked={formData.laundryArea || false}
@@ -376,7 +376,7 @@ export function FeaturesProjectForm({
               {shouldShowField("customizationOptions") &&
                 (formData.projectType?.id === 2 ||
                   formData.projectType?.id === 3) && (
-                  <FormCheckboxToggle
+                  <AdminFormCheckboxToggle
                     label="Opciones de Personalización"
                     name="customizationOptions"
                     checked={formData.customizationOptions || false}

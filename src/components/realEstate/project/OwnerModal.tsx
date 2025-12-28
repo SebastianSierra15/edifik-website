@@ -1,6 +1,6 @@
 import { useBodyOverflow } from "@/src/hooks/ui";
 import type { User } from "@/src/interfaces";
-import { ModalHeader, FormInput } from "@/src/components/shared";
+import { ModalHeader, AdminFormInput } from "@/src/components/shared";
 
 interface OwnerModalProps {
   show: boolean;
@@ -40,7 +40,7 @@ export function OwnerModal({
           noValidate
           className="h-[60vh] space-y-4 overflow-y-auto px-6 py-4"
         >
-          <FormInput
+          <AdminFormInput
             label="Email"
             type="email"
             name="email"
@@ -52,7 +52,7 @@ export function OwnerModal({
             isEdit={false}
           />
 
-          <FormInput
+          <AdminFormInput
             label="Nombres"
             type="text"
             name="names"
@@ -64,7 +64,7 @@ export function OwnerModal({
             isEdit={false}
           />
 
-          <FormInput
+          <AdminFormInput
             label="Apellidos"
             type="text"
             name="lastnames"
@@ -76,7 +76,7 @@ export function OwnerModal({
             isEdit={false}
           />
 
-          <FormInput
+          <AdminFormInput
             label="Teléfono"
             type="text"
             name="phoneNumber"

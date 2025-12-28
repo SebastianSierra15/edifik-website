@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { ProjectFormData, SimpleCatalog } from "@/src/interfaces";
 import { formatNumber } from "@/utils/formatters";
-import { FormDisplay } from "@/src/components/shared";
+import { AdminFormDisplay } from "@/src/components/shared";
 import { StepNavigationButtons } from "../StepNavigationButtons";
 
 interface DetailsProjectViewProps {
@@ -47,28 +47,28 @@ export function DetailsProjectView({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {shouldShowField.price && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Precio"
             value={formatNumber(project.price ?? 0)}
           />
         )}
 
         {shouldShowField.availableUnits && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Unidades Disponibles"
             value={String(project.availableUnits ?? "No especificado")}
           />
         )}
 
         {shouldShowField.housingType && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Tipo de Vivienda"
             value={project.housingType?.name ?? "No especificado"}
           />
         )}
 
         {shouldShowField.availableDate && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Fecha Estimada de Entrega"
             value={
               project.availableDate
@@ -82,7 +82,7 @@ export function DetailsProjectView({
         )}
 
         {shouldShowField.complexName && (
-          <FormDisplay
+          <AdminFormDisplay
             label="Nombre del Conjunto"
             value={project.complexName ?? "No especificado"}
           />

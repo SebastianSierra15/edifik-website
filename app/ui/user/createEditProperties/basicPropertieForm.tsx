@@ -2,8 +2,7 @@ import { useCallback, useMemo } from "react";
 import { propertyType, ProjectData } from "@/lib/definitios";
 import { useBasicProjectValidation } from "@/app/hooks/projects/createEditProject/useBasicProjectValidation";
 import StepNavigationButtons from "@/app/ui/user/stepNavigationButtons";
-import FormSelect from "@/app/ui/modals/home/formSelect";
-import FormTextarea from "@/app/ui/modals/home/formTextArea";
+import { ClientFormSelect, ClientFormTextArea } from "@/src/components/shared";
 
 interface BasicPropertieFormProps {
   formData: ProjectData;
@@ -112,7 +111,7 @@ export default function BasicPropertieForm({
 
       <form onSubmit={handleNext} className="space-y-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormSelect
+          <ClientFormSelect
             label="Tipo de propiedad"
             name="propertyType"
             value={formData.propertyType?.id || ""}
@@ -123,7 +122,7 @@ export default function BasicPropertieForm({
             isAccent={true}
           />
 
-          <FormSelect
+          <ClientFormSelect
             label="Finalidad de la propiedad"
             name="projectType"
             value={formData.projectType?.id || ""}
@@ -138,7 +137,7 @@ export default function BasicPropertieForm({
           />
         </div>
 
-        <FormTextarea
+        <ClientFormTextArea
           label="Resumen breve"
           name="shortDescription"
           value={formData.shortDescription || ""}
@@ -151,7 +150,7 @@ export default function BasicPropertieForm({
           isAccent={true}
         />
 
-        <FormTextarea
+        <ClientFormTextArea
           label="Descripción completa"
           name="detailedDescription"
           value={formData.detailedDescription || ""}

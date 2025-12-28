@@ -1,6 +1,6 @@
 import { ProjectData } from "@/lib/definitios";
 import { LocationMap } from "@/src/components/admin";
-import FormDisplay from "../../modals/home/formDisplay";
+import { ClientFormDisplay } from "@/src/components/shared";
 import StepNavigationButtons from "../stepNavigationButtons";
 
 interface LocationPropertieViewProps {
@@ -29,17 +29,17 @@ export default function LocationPropertieView({
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        <FormDisplay
+        <ClientFormDisplay
           label="Departamento"
           value={project.city?.departament?.name || "No especificado"}
         />
-        <FormDisplay
+        <ClientFormDisplay
           label="Ciudad"
           value={project.city?.name || "No especificado"}
         />
       </div>
 
-      <FormDisplay
+      <ClientFormDisplay
         label="Dirección"
         value={project.address || "No especificado"}
       />

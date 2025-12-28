@@ -5,9 +5,9 @@ import { useBodyOverflow } from "@/src/hooks/ui";
 import {
   ModalFooter,
   ModalHeader,
-  FormInput,
-  FormSelect,
-  FormCheckbox,
+  AdminFormInput,
+  AdminFormSelect,
+  AdminFormCheckbox,
 } from "@/src/components/shared";
 
 interface UserModalProps {
@@ -67,7 +67,7 @@ export function UserModal({
           noValidate
           className="h-[60vh] space-y-4 overflow-y-auto px-6 py-4"
         >
-          <FormInput
+          <AdminFormInput
             label="Nombres"
             type="text"
             name="names"
@@ -79,7 +79,7 @@ export function UserModal({
             flag={flag}
           />
 
-          <FormInput
+          <AdminFormInput
             label="Apellidos"
             type="text"
             name="lastnames"
@@ -91,7 +91,7 @@ export function UserModal({
             flag={flag}
           />
 
-          <FormInput
+          <AdminFormInput
             label="Email"
             type="email"
             name="email"
@@ -104,7 +104,7 @@ export function UserModal({
           />
 
           <div className="grid grid-cols-2 gap-4">
-            <FormInput
+            <AdminFormInput
               label="Teléfono"
               type="text"
               name="phoneNumber"
@@ -116,7 +116,7 @@ export function UserModal({
               flag={flag}
             />
 
-            <FormSelect
+            <AdminFormSelect
               label="Género"
               name="gender.id"
               value={user.gender?.id || ""}
@@ -128,7 +128,7 @@ export function UserModal({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <FormSelect
+            <AdminFormSelect
               label="Rol"
               name="role.id"
               value={user.role?.id || ""}
@@ -138,7 +138,7 @@ export function UserModal({
               flag={flag}
             />
 
-            <FormSelect
+            <AdminFormSelect
               label="Membresía"
               name="membership.id"
               value={user.membership?.id || ""}
@@ -149,7 +149,7 @@ export function UserModal({
             />
           </div>
 
-          <FormCheckbox
+          <AdminFormCheckbox
             label="Activo"
             name="state"
             checked={user.state || false}

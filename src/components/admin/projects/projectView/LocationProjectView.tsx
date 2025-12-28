@@ -1,5 +1,5 @@
 import type { ProjectFormData } from "@/src/interfaces";
-import { FormDisplay } from "@/src/components/shared";
+import { AdminFormDisplay } from "@/src/components/shared";
 import { LocationMap } from "../LocationMap";
 import { StepNavigationButtons } from "../StepNavigationButtons";
 
@@ -29,17 +29,17 @@ export function LocationProjectView({
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        <FormDisplay
+        <AdminFormDisplay
           label="Departamento"
           value={project.city?.departament?.name || "No especificado"}
         />
-        <FormDisplay
+        <AdminFormDisplay
           label="Ciudad"
           value={project.city?.name || "No especificado"}
         />
       </div>
 
-      <FormDisplay
+      <AdminFormDisplay
         label="Dirección"
         value={project.address || "No especificado"}
       />

@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import type { ProjectFormData } from "@/src/interfaces";
-import { FormDisplay } from "@/src/components/shared";
+import { AdminFormDisplay } from "@/src/components/shared";
 import { StepNavigationButtons } from "../StepNavigationButtons";
 
 interface BasicProjectViewProps {
@@ -25,7 +25,7 @@ export function BasicProjectView({
       </h2>
 
       <div className="space-y-6">
-        <FormDisplay
+        <AdminFormDisplay
           label={`Nombre del ${project.propertyType?.id === 1 ? "Proyecto" : "Propiedad"}`}
           value={project.name || "No especificado"}
         />
@@ -36,37 +36,37 @@ export function BasicProjectView({
             project.propertyType?.id === 1 && "sm:grid-cols-2"
           )}
         >
-          <FormDisplay
+          <AdminFormDisplay
             label="Tipo de Propiedad"
             value={project.propertyType?.name || "No especificado"}
           />
 
           {project.projectType?.id && (
-            <FormDisplay
+            <AdminFormDisplay
               label="Finalidad"
               value={project.projectType?.name || "No especificado"}
             />
           )}
         </div>
 
-        <FormDisplay
+        <AdminFormDisplay
           label="Correo del Propietario"
           value={project?.email || "No especificado"}
         />
 
-        <FormDisplay
+        <AdminFormDisplay
           label="Resumen breve"
           value={project.shortDescription || "No especificado"}
           rows={3}
         />
 
-        <FormDisplay
+        <AdminFormDisplay
           label="Descripción Completa"
           value={project.detailedDescription || "No especificado"}
           rows={6}
         />
 
-        <FormDisplay
+        <AdminFormDisplay
           label="Propio de la empresa"
           value={project.membership === 1004 ? "Sí" : "No"}
         />

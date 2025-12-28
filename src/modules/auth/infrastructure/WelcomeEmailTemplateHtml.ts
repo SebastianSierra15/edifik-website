@@ -22,7 +22,7 @@ export class WelcomeEmailTemplateHtml implements WelcomeEmailTemplate {
       ],
       body: "Ahora puedes acceder a tu cuenta y empezar a explorar nuestras funcionalidades.",
       buttonText: "Iniciar sesión",
-      buttonUrl: "https://edifik.co/login",
+      buttonUrl: "https://edifik.co/auth/login",
     });
   }
 }

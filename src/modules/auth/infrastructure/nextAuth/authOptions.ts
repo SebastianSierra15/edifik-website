@@ -45,8 +45,22 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = userRows[0];
+        const hashedPassword =
+          typeof user.password === "string"
+            ? user.password
+            : user.password?.toString?.();
 
-        const ispasswordValid = await compare(password, user.password);
+        if (!hashedPassword) {
+          return null;
+        }
+
+        let ispasswordValid = false;
+
+        try {
+          ispasswordValid = await compare(password, hashedPassword);
+        } catch {
+          return null;
+        }
 
         if (!ispasswordValid) {
           return null;
@@ -69,7 +83,7 @@ export const authOptions: NextAuthOptions = {
   ],
   secret: process.env.AUTH_SECRET,
   pages: {
-    signIn: "/login",
+    signIn: "/auth/login",
   },
   session: {
     strategy: "jwt",

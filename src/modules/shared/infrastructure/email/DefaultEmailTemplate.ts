@@ -16,7 +16,7 @@ export function buildDefaultEmailTemplate(options: EmailTemplateOptions) {
     items = [],
     body,
     buttonText = "Ir a EdifiK",
-    buttonUrl = "https://edifik.co/login",
+    buttonUrl = "https://edifik.co/auth/login",
   } = options;
 
   const itemsHtml = items

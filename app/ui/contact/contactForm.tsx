@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import FormInput from "../modals/home/formInput";
-import FormTextarea from "../modals/home/formTextArea";
+import { ClientFormInput, ClientFormTextArea } from "@/src/components/shared";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -89,7 +88,7 @@ export default function ContactForm() {
       aria-label="Formulario de contacto"
       onSubmit={handleSubmit}
     >
-      <FormInput
+      <ClientFormInput
         label="Nombre completo"
         name="name"
         type="text"
@@ -100,7 +99,7 @@ export default function ContactForm() {
         error={errors.name}
       />
 
-      <FormInput
+      <ClientFormInput
         label="Número de teléfono"
         name="phone"
         type="tel"
@@ -111,7 +110,7 @@ export default function ContactForm() {
         error={errors.phone}
       />
 
-      <FormInput
+      <ClientFormInput
         label="Correo electrónico"
         name="email"
         type="email"
@@ -122,7 +121,7 @@ export default function ContactForm() {
         error={errors.email}
       />
 
-      <FormTextarea
+      <ClientFormTextArea
         label="Mensaje"
         name="message"
         value={formData.message}

@@ -1,6 +1,6 @@
 "use client";
 
-import Logo from "./logo";
+import { Logo } from "@/src/components/auth";
 import NavBar from "./navBar";
 import AuthOrMenu from "./authOrMenu";
 

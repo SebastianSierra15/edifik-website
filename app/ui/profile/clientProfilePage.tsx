@@ -6,10 +6,9 @@ import { User } from "@/lib/definitios";
 import { useUserProfile } from "@/app/hooks/user/useUserProfile";
 import { useUpdateUserProfile } from "@/app/hooks/user/useUpdateUserProfile";
 import { useChangePassword } from "@/app/hooks/auth/resetPassword/useChangePassword";
-import ModalConfirmation from "../modals/home/modalConfirmation";
+import { ClientModalConfirmation } from "@/src/components/shared";
 import ModalChangePassword from "./modalChangePassword";
-import Alert from "../../../src/components/shared/alert/Alert";
-import { Loader } from "@/src/components/shared/Loader";
+import { Alert, Loader } from "@/src/components/shared";
 
 const ProfileForm = dynamic(() => import("../../ui/profile/profileForm"), {
   ssr: false,
@@ -158,7 +157,7 @@ export default function ClientProfilePage() {
         onConfirmRequest={handlePasswordChange}
       />
 
-      <ModalConfirmation
+      <ClientModalConfirmation
         isOpen={showConfirmModal}
         onClose={handleCancel}
         onConfirm={handleConfirm}

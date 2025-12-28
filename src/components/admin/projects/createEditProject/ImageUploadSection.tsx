@@ -2,7 +2,7 @@ import { useMemo, useCallback } from "react";
 import clsx from "clsx";
 import { ChevronDown } from "lucide-react";
 import type { ImageType } from "@/src/interfaces";
-import { FormErrorMessage } from "@/src/components/shared";
+import { AdminFormErrorMessage } from "@/src/components/shared";
 import { ImageWithTag } from "./ImageWithTag";
 
 interface ImageUploadSectionProps {
@@ -137,7 +137,7 @@ export function ImageUploadSection({
             {images.length} archivo(s) subido(s)
           </p>
 
-          {error && <FormErrorMessage error={error} />}
+          {error && <AdminFormErrorMessage error={error} />}
 
           <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {imageList}

@@ -6,7 +6,7 @@ import {
   HousingType,
 } from "@/lib/definitios";
 import { formatNumber } from "@/utils/formatters";
-import FormDisplay from "../../modals/home/formDisplay";
+import { ClientFormDisplay } from "@/src/components/shared";
 import StepNavigationButtons from "../stepNavigationButtons";
 
 interface DetailsPropertieViewProps {
@@ -52,28 +52,28 @@ export default function DetailsPropertieView({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {shouldShowField.price && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Precio"
             value={formatNumber(project.price ?? 0)}
           />
         )}
 
         {shouldShowField.availableUnits && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Unidades Disponibles"
             value={String(project.availableUnits ?? "No especificado")}
           />
         )}
 
         {shouldShowField.housingType && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Tipo de Vivienda"
             value={project.housingType?.name ?? "No especificado"}
           />
         )}
 
         {shouldShowField.availableDate && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Fecha Estimada de Entrega"
             value={
               project.availableDate
@@ -87,7 +87,7 @@ export default function DetailsPropertieView({
         )}
 
         {shouldShowField.complexName && (
-          <FormDisplay
+          <ClientFormDisplay
             label="Nombre del Conjunto"
             value={project.complexName ?? "No especificado"}
           />

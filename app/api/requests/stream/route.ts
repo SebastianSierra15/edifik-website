@@ -10,37 +10,80 @@ export async function GET(req: NextRequest) {
 
   const encoder = new TextEncoder();
   const controllerApi = observePendingRequestsController();
+  let isClosed = false;
+  let interval: ReturnType<typeof setInterval> | null = null;
+  let heartbeat: ReturnType<typeof setInterval> | null = null;
 
   const stream = new ReadableStream({
     async start(controller) {
       let lastData: string | null = null;
 
-      const send = (data: any) => {
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+      const closeStream = () => {
+        if (isClosed) return;
+        isClosed = true;
+
+        if (interval) {
+          clearInterval(interval);
+        }
+
+        if (heartbeat) {
+          clearInterval(heartbeat);
+        }
+
+        try {
+          controller.close();
+        } catch {
+          // Ignore close errors from already closed controller.
+        }
       };
 
-      const heartbeat = setInterval(() => {
+      const send = (data: any) => {
+        if (isClosed || req.signal.aborted) return;
+
+        try {
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
+          );
+        } catch {
+          closeStream();
+        }
+      };
+
+      heartbeat = setInterval(() => {
         send({ type: "heartbeat" });
       }, 10_000);
 
       const poll = async () => {
-        const data = await controllerApi.fetch();
-        const serialized = JSON.stringify(data);
+        if (isClosed || req.signal.aborted) return;
 
-        if (serialized !== lastData) {
-          send({ type: "pendingRequests", data });
-          lastData = serialized;
+        try {
+          const data = await controllerApi.fetch();
+          const serialized = JSON.stringify(data);
+
+          if (serialized !== lastData) {
+            send({ type: "pendingRequests", data });
+            lastData = serialized;
+          }
+        } catch {
+          // Avoid unhandled rejections during streaming errors.
         }
       };
 
-      const interval = setInterval(poll, 10_000);
+      interval = setInterval(poll, 10_000);
       void poll();
 
-      req.signal.onabort = () => {
+      req.signal.addEventListener("abort", closeStream);
+    },
+    cancel() {
+      isClosed = true;
+
+      if (interval) {
         clearInterval(interval);
+      }
+
+      if (heartbeat) {
         clearInterval(heartbeat);
-        controller.close();
-      };
+      }
     },
   });
 

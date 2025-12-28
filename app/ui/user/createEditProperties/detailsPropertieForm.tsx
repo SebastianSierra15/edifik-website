@@ -9,9 +9,11 @@ import {
 import { formatNumber } from "@/utils/formatters";
 import { useDetailsProjectValidation } from "@/app/hooks/projects/createEditProject/useDetailsProjectValidation";
 import StepNavigationButtons from "../stepNavigationButtons";
-import FormInput from "../../modals/home/formInput";
-import FormSelect from "../../modals/home/formSelect";
-import FormMultiSelect from "../../modals/home/formMultiSelect";
+import {
+  ClientFormInput,
+  ClientFormSelect,
+  ClientFormMultiSelect,
+} from "@/src/components/shared";
 
 interface DetailsPropertieFormProps {
   formData: ProjectData;
@@ -129,7 +131,7 @@ export default function DetailsPropertieForm({
 
       <form onSubmit={handleNext} className="space-y-6">
         <div className="grid gap-4 grid-cols-1">
-          <FormInput
+          <ClientFormInput
             label="Precio"
             type="text"
             name="price"
@@ -150,7 +152,7 @@ export default function DetailsPropertieForm({
             )}
           >
             {isApartmentOrHouse && (
-              <FormSelect
+              <ClientFormSelect
                 label="Tipo de Vivienda"
                 name="housingType"
                 value={formData.housingType?.id || ""}
@@ -165,7 +167,7 @@ export default function DetailsPropertieForm({
         )}
 
         {formData.propertyType?.id === 1002 && (
-          <FormInput
+          <ClientFormInput
             label="Nombre del conjunto"
             type="text"
             name="complexName"
@@ -178,7 +180,7 @@ export default function DetailsPropertieForm({
           />
         )}
 
-        <FormMultiSelect
+        <ClientFormMultiSelect
           label="Áreas Comunes"
           name="commonAreas"
           selectedItems={formData.commonAreas || []}
@@ -188,7 +190,7 @@ export default function DetailsPropertieForm({
           tooltipText={tooltipTexts.commonAreas}
         />
 
-        <FormMultiSelect
+        <ClientFormMultiSelect
           label="Servicios Cercanos"
           name="nearbyServices"
           selectedItems={formData.nearbyServices || []}

@@ -17,9 +17,9 @@ import LocationPropertieForm from "./locationPropertieForm";
 import FeaturesPropertieForm from "./featuresPropertieForm";
 import DetailsPropertieForm from "./detailsPropertieForm";
 import ImagesPropertieForm from "./imagesPropertieForm";
-import ModalConfirmation from "../../modals/home/modalConfirmation";
+import { ClientModalConfirmation } from "@/src/components/shared";
 import { CreateProjectSkeleton } from "@/src/components/admin";
-import { Loader } from "@/src/components/shared/Loader";
+import { Loader } from "@/src/components/shared";
 
 interface PropertieFormProps {
   isEdit: boolean;
@@ -434,7 +434,7 @@ export default function PropertieForm({
 
       <div className="mt-6 mx-auto max-w-3xl">{currentForm}</div>
 
-      <ModalConfirmation
+      <ClientModalConfirmation
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onConfirm={handleConfirmSubmit}

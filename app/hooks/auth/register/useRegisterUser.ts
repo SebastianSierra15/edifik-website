@@ -1,15 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-interface RegisterUserInput {
-  names: string;
-  lastnames: string;
-  birthdate: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-}
+import { registerUserSchema, RegisterUserInput } from "@/src/schemas/auth";
 
 interface UseRegisterUserResult {
   registerUser: (data: RegisterUserInput) => Promise<boolean>;
@@ -29,12 +21,21 @@ export function useRegisterUser(): UseRegisterUserResult {
     setSuccess(false);
 
     try {
+      const validationResult = registerUserSchema.safeParse(data);
+
+      if (!validationResult.success) {
+        setError(
+          validationResult.error.issues[0]?.message ?? "Datos inválidos."
+        );
+        return false;
+      }
+
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(validationResult.data),
       });
 
       if (!res.ok) {

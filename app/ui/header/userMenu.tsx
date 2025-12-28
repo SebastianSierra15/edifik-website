@@ -40,21 +40,21 @@ export default function UserMenu({
       ) : (
         <>
           <Link
-            href="/login"
+            href="/auth/login"
             className="hidden lg:block text-client-text px-2 py-2 rounded-full hover:bg-gray-800 transition"
           >
             Iniciar Sesión
           </Link>
 
           <Link
-            href="/login/register"
+            href="/auth/register"
             className="bg-white text-black px-2 py-2 rounded-full shadow-md hover:bg-gray-200 transition"
           >
             Registrarse ↗
           </Link>
 
           <Link
-            href="/login"
+            href="/auth/login"
             title="Iniciar Sesión"
             className="block lg:hidden text-client-text px-2 py-2 rounded-full hover:bg-gray-800 transition"
           >

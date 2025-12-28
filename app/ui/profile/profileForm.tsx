@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { User, Gender } from "@/lib/definitios";
-import FormInput from "../modals/home/formInput";
-import FormDatePicker from "../modals/home/formDatePicker";
-import FormSelect from "../modals/home/formSelect";
+import {
+  ClientFormInput,
+  ClientFormDatePicker,
+  ClientFormSelect,
+} from "@/src/components/shared";
 
 interface ProfileFormProps {
   user: User;
@@ -75,7 +77,7 @@ export default function ProfileForm({
 
   return (
     <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <FormInput
+      <ClientFormInput
         label="Correo electrónico"
         name="email"
         value={form.email}
@@ -86,7 +88,7 @@ export default function ProfileForm({
         isAccent={true}
       />
 
-      <FormInput
+      <ClientFormInput
         label="Número de documento"
         name="identityDocument"
         value={form.identityDocument ?? ""}
@@ -98,7 +100,7 @@ export default function ProfileForm({
         isAccent={true}
       />
 
-      <FormInput
+      <ClientFormInput
         label="Nombres"
         name="names"
         value={form.names ?? ""}
@@ -109,7 +111,7 @@ export default function ProfileForm({
         isAccent={true}
       />
 
-      <FormInput
+      <ClientFormInput
         label="Apellidos"
         name="lastnames"
         value={form.lastnames ?? ""}
@@ -120,7 +122,7 @@ export default function ProfileForm({
         isAccent={true}
       />
 
-      <FormDatePicker
+      <ClientFormDatePicker
         label="Fecha de nacimiento"
         name="birthDate"
         value={form.birthdate ? new Date(form.birthdate) : null}
@@ -137,7 +139,7 @@ export default function ProfileForm({
         isAccent={true}
       />
 
-      <FormInput
+      <ClientFormInput
         label="Número de teléfono"
         name="phoneNumber"
         value={form.phoneNumber ?? ""}
@@ -148,7 +150,7 @@ export default function ProfileForm({
         isAccent={true}
       />
 
-      <FormSelect
+      <ClientFormSelect
         label="Género"
         name="gender"
         value={form.gender?.id ?? ""}

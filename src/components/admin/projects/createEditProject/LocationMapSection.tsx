@@ -1,6 +1,6 @@
 "use client";
 
-import { FormSearchAddress } from "@/src/components/shared";
+import { AdminFormSearchAddress } from "@/src/components/shared";
 import { LocationMap } from "../LocationMap";
 
 interface LocationMapSectionProps {
@@ -40,7 +40,7 @@ export function LocationMapSection({
   return (
     <>
       <div className="relative z-20 space-y-4">
-        <FormSearchAddress
+        <AdminFormSearchAddress
           label={label}
           value={mapAddress || ""}
           onChange={onMapAddressChange}

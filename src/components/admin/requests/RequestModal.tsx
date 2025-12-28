@@ -2,8 +2,8 @@
 
 import { useBodyOverflow } from "@/src/hooks/ui";
 import {
-  FormSelect,
-  FormTextArea,
+  AdminFormSelect,
+  AdminFormTextArea,
   ModalFooter,
   ModalHeader,
 } from "@/src/components/shared";
@@ -53,7 +53,7 @@ export function RequestModal({
           noValidate
           className="h-[50vh] space-y-4 overflow-y-auto px-6 py-4"
         >
-          <FormSelect
+          <AdminFormSelect
             label="Estado de la Solicitud"
             name="requestStatus"
             value={actionType}
@@ -71,7 +71,7 @@ export function RequestModal({
             flag={flag}
           />
 
-          <FormTextArea
+          <AdminFormTextArea
             label="Mensaje de respuesta"
             name="responseMessage"
             value={message}

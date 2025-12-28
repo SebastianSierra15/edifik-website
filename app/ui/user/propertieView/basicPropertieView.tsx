@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { ProjectData } from "@/lib/definitios";
-import FormDisplay from "../../modals/home/formDisplay";
+import { ClientFormDisplay } from "@/src/components/shared";
 import StepNavigationButtons from "../stepNavigationButtons";
 
 interface BasicPropertieViewProps {
@@ -25,7 +25,7 @@ export default function BasicPropertieView({
       </h2>
 
       <div className="space-y-6">
-        <FormDisplay
+        <ClientFormDisplay
           label={`Nombre del ${project.propertyType?.id ? "Proyecto" : "Propiedad"}`}
           value={project.name || "No especificado"}
         />
@@ -36,37 +36,37 @@ export default function BasicPropertieView({
             project.propertyType?.id && "sm:grid-cols-2"
           )}
         >
-          <FormDisplay
+          <ClientFormDisplay
             label="Tipo de Propiedad"
             value={project.propertyType?.name || "No especificado"}
           />
 
           {project.projectType?.id && (
-            <FormDisplay
+            <ClientFormDisplay
               label="Finalidad"
               value={project.projectType?.name || "No especificado"}
             />
           )}
         </div>
 
-        <FormDisplay
+        <ClientFormDisplay
           label="Correo del Propietario"
           value={project?.email || "No especificado"}
         />
 
-        <FormDisplay
+        <ClientFormDisplay
           label="Resumen breve"
           value={project.shortDescription || "No especificado"}
           rows={3}
         />
 
-        <FormDisplay
+        <ClientFormDisplay
           label="Descripción Completa"
           value={project.detailedDescription || "No especificado"}
           rows={6}
         />
 
-        <FormDisplay
+        <ClientFormDisplay
           label="Propio de la empresa"
           value={project.membership === 1004 ? "Sí" : "No"}
         />

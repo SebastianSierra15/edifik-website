@@ -5,8 +5,8 @@ import { useBodyOverflow } from "@/src/hooks/ui";
 import {
   ModalHeader,
   ModalFooter,
-  FormInput,
-  FormTextArea,
+  AdminFormInput,
+  AdminFormTextArea,
 } from "@/src/components/shared";
 
 interface MembershipModalProps {
@@ -52,7 +52,7 @@ export function MembershipModal({
           noValidate
           className="h-[60vh] space-y-4 overflow-y-auto px-6 py-4"
         >
-          <FormInput
+          <AdminFormInput
             label="Nombre"
             type="text"
             name="name"
@@ -63,7 +63,7 @@ export function MembershipModal({
             error={errors.nameError}
           />
 
-          <FormTextArea
+          <AdminFormTextArea
             label="Descripción"
             name="benefits"
             value={membership.benefits || ""}
@@ -75,7 +75,7 @@ export function MembershipModal({
           />
 
           <div className="grid grid-cols-2 gap-4">
-            <FormInput
+            <AdminFormInput
               label="Precio"
               type="text"
               name="price"
@@ -85,7 +85,7 @@ export function MembershipModal({
               min={0}
             />
 
-            <FormInput
+            <AdminFormInput
               label="Propiedades destacados"
               type="number"
               name="projectsFeatured"
@@ -97,7 +97,7 @@ export function MembershipModal({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <FormInput
+            <AdminFormInput
               label="Cantidad máxima de propiedades"
               type="number"
               name="maxProjects"
@@ -107,7 +107,7 @@ export function MembershipModal({
               min={0}
             />
 
-            <FormInput
+            <AdminFormInput
               label="Descuento 3 meses (%)"
               type="number"
               name="discountThreeMonths"
@@ -118,7 +118,7 @@ export function MembershipModal({
               max={100}
             />
 
-            <FormInput
+            <AdminFormInput
               label="Descuento 6 meses (%)"
               type="number"
               name="discountSixMonths"
@@ -129,7 +129,7 @@ export function MembershipModal({
               max={100}
             />
 
-            <FormInput
+            <AdminFormInput
               label="Descuento 12 meses (%)"
               type="number"
               name="discountTwelveMonths"

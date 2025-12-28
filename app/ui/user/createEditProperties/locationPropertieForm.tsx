@@ -3,9 +3,11 @@ import { ProjectData, City, Departament } from "@/lib/definitios";
 import { useLocationProjectValidation } from "@/app/hooks/projects/createEditProject/useLocationProjectValidation";
 import StepNavigationButtons from "@/app/ui/user/stepNavigationButtons";
 import { LocationMap } from "@/src/components/admin";
-import FormSearchAddress from "../../modals/home/formSearchAddress";
-import FormSelect from "@/app/ui/modals/home/formSelect";
-import FormInput from "@/app/ui/modals/home/formInput";
+import {
+  ClientFormSearchAddress,
+  ClientFormSelect,
+  ClientFormInput,
+} from "@/src/components/shared";
 
 interface LocationPropertieFormProps {
   formData: ProjectData;
@@ -207,7 +209,7 @@ function LocationPropertieForm({
 
       <form className="space-y-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormSelect
+          <ClientFormSelect
             label="Departamento"
             name="departament"
             value={formData.city?.departament?.id || ""}
@@ -218,7 +220,7 @@ function LocationPropertieForm({
             isAccent={true}
           />
 
-          <FormSelect
+          <ClientFormSelect
             label="Ciudad"
             name="city"
             value={formData.city?.id || ""}
@@ -231,7 +233,7 @@ function LocationPropertieForm({
         </div>
 
         <div className="relative z-20 space-y-4">
-          <FormInput
+          <ClientFormInput
             label="Dirección Pública"
             name="address"
             type="text"
@@ -243,7 +245,7 @@ function LocationPropertieForm({
             isAccent={true}
           />
 
-          <FormSearchAddress
+          <ClientFormSearchAddress
             label="Ubicación en el Mapa"
             value={mapAddress || ""}
             onChange={handleMapAddressChange}

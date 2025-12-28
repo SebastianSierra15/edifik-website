@@ -4,10 +4,10 @@ import type { ProjectFormData, SimpleCatalog } from "@/src/interfaces";
 import { formatNumber } from "@/utils/formatters";
 import { useDetailsProjectValidation } from "@/src/hooks/projects";
 import {
-  FormInput,
-  FormSelect,
-  FormMultiSelect,
-  FormDatePicker,
+  AdminFormInput,
+  AdminFormSelect,
+  AdminFormMultiSelect,
+  AdminFormDatePicker,
 } from "@/src/components/shared";
 import { StepNavigationButtons } from "../StepNavigationButtons";
 
@@ -166,7 +166,7 @@ export function DetailsProjectForm({
             isPropertyType ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"
           )}
         >
-          <FormInput
+          <AdminFormInput
             label="Precio"
             type="text"
             name="price"
@@ -178,7 +178,7 @@ export function DetailsProjectForm({
           />
 
           {isProject && (
-            <FormInput
+            <AdminFormInput
               label="Unidades Disponibles"
               type="number"
               name="availableUnits"
@@ -199,7 +199,7 @@ export function DetailsProjectForm({
             )}
           >
             {isApartmentOrHouse && (
-              <FormSelect
+              <AdminFormSelect
                 label="Tipo de Vivienda"
                 name="housingType"
                 value={formData.housingType?.id || ""}
@@ -211,7 +211,7 @@ export function DetailsProjectForm({
             )}
 
             {isProject && (
-              <FormDatePicker
+              <AdminFormDatePicker
                 label="Fecha Estimada de Entrega"
                 name="availableDate"
                 value={formData.availableDate ?? null}
@@ -223,7 +223,7 @@ export function DetailsProjectForm({
         )}
 
         {formData.propertyType?.id === 1002 && isPropertyType && (
-          <FormInput
+          <AdminFormInput
             label="Nombre del conjunto"
             type="text"
             name="complexName"
@@ -235,7 +235,7 @@ export function DetailsProjectForm({
           />
         )}
 
-        <FormMultiSelect
+        <AdminFormMultiSelect
           label="Áreas Comunes"
           name="commonAreas"
           selectedItems={formData.commonAreas || []}
@@ -245,7 +245,7 @@ export function DetailsProjectForm({
           tooltipText={tooltipTexts.commonAreas}
         />
 
-        <FormMultiSelect
+        <AdminFormMultiSelect
           label="Servicios Cercanos"
           name="nearbyServices"
           selectedItems={formData.nearbyServices || []}
