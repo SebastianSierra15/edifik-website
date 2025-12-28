@@ -1,20 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { Membership } from "@/lib/definitios";
-import { useMemberships } from "@/app/hooks/memberships/useMemberships";
-import { useIsLgUp } from "@/app/hooks/useIsLgUp";
-import MembershipCard from "@/app/ui/memberships/membershipCard";
-import MembershipPaymentModal from "./membershipPaymentModal";
-import MembershipCardSkeleton from "@/app/ui/skeletons/membershipCardSkeleton";
+import { useRouter } from "next/navigation";
+import type { Membership } from "@/src/interfaces";
+import { usePublicMemberships } from "@/src/hooks/memberships";
+import { useAuth } from "@/src/hooks/auth";
+import { useIsLgUp } from "@/src/hooks/ui";
+import {
+  MembershipCard,
+  MembershipPaymentModal,
+  MembershipCardSkeleton,
+} from "@/src/components/memberships";
 
-export default function ClientMembershipsPage() {
-  const [refresh, setRefresh] = useState(0);
+const TAX_RATE = 1.19;
+
+const calculateThreeMonthPrice = (
+  price: number,
+  discountThreeMonths?: number | null
+) => {
+  const priceWithTax = price * TAX_RATE;
+  return (
+    priceWithTax * 3 -
+    (priceWithTax * (discountThreeMonths ?? 0) * 3) / 100
+  );
+};
+
+export function ClientMembershipsPage() {
   const [selectedMembership, setSelectedMembership] =
     useState<Membership | null>(null);
+  const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
   const isLgUp = useIsLgUp();
-  const { memberships, isLoading } = useMemberships(1, 4, "", refresh);
+  const { memberships, isLoading: isMembershipsLoading } =
+    usePublicMemberships(1, 4, "", 0);
 
   const membershipStyles: Record<
     number,
@@ -53,18 +72,32 @@ export default function ClientMembershipsPage() {
     },
   };
 
+  const handleBuyMembership = (membership: Membership) => {
+    if (isAuthLoading) return;
+    if (!isAuthenticated) {
+      router.push("/auth/login");
+      return;
+    }
+    setSelectedMembership(membership);
+  };
+
   return (
     <>
-      <section className="w-full py-10">
+      <section className="w-full py-10 mb-14">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl my-12 font-bold text-center text-client-text">
             Elige tu membresía
           </h2>
 
-          {isLoading ? (
+          {isMembershipsLoading ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <MembershipCardSkeleton key={i} />
+              {[1001, 1002, 1003].map((id) => (
+                <MembershipCardSkeleton
+                  key={id}
+                  backgroundClassName={
+                    membershipStyles[id]?.bg ?? "bg-gray-100"
+                  }
+                />
               ))}
             </div>
           ) : (
@@ -86,16 +119,16 @@ export default function ClientMembershipsPage() {
                       key={m.id}
                       name={m.name}
                       benefits={m.benefits}
-                      price={m.price * 1.19}
-                      threeMounthPrice={
-                        m.price * 1.19 * 3 -
-                        (m.price * 1.19 * m.discountThreeMonths * 3) / 100
-                      }
-                      featured={m.projectsFeatured}
+                      price={m.price * TAX_RATE}
+                      threeMounthPrice={calculateThreeMonthPrice(
+                        m.price,
+                        m.discountThreeMonths
+                      )}
+                      featured={m.projectsFeatured ?? 0}
                       maxProperties={m.maxProjects}
                       isMain={isLgUp && m.id === 1002}
                       colorScheme={colorScheme}
-                      onBuy={() => setSelectedMembership(m)}
+                      onBuy={() => handleBuyMembership(m)}
                     />
                   );
                 })}

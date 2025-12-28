@@ -57,7 +57,6 @@ export async function middleware(req: NextRequest) {
     secret: process.env.AUTH_SECRET,
   })) as AppJWT | null;
 
-  const roleId = Number(token?.role);
   const membershipId = Number(token?.membershipId);
 
   const userPermissions = (token?.permissions ?? []).map(
@@ -82,16 +81,6 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/auth") && token) {
     return withPath(
       NextResponse.redirect(new URL(userIsAdmin ? "/admin" : "/", req.url)),
-      pathname
-    );
-  }
-
-  /**
-   * Membresías solo para rol específico
-   */
-  if (pathname === "/membresias" && roleId !== 2) {
-    return withPath(
-      NextResponse.redirect(new URL("/unauthorized", req.url)),
       pathname
     );
   }
@@ -143,6 +132,5 @@ export const config = {
     "/usuario/:path*",
     "/auth/:path*",
     "/login/:path*",
-    "/membresias",
   ],
 };

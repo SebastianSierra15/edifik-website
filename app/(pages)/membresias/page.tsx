@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import ClientMembershipsPage from "@/app/ui/memberships/clientMembershipsPage";
+import { ClientMembershipsPage } from "@/src/components/memberships";
 
 export const metadata: Metadata = {
   title: "Membresías | EdifiK",

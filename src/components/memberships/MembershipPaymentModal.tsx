@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Membership } from "@/lib/definitios";
-import EpaycoButton from "./epaycoButton";
-import MembershipCard from "./membershipCard";
+import type { Membership } from "@/src/interfaces";
+import { EpaycoButton } from "@/src/components/memberships";
 
 interface MembershipPaymentModalProps {
   membership: Membership;
@@ -11,7 +10,7 @@ interface MembershipPaymentModalProps {
   onClose: () => void;
 }
 
-export default function MembershipPaymentModal({
+export function MembershipPaymentModal({
   membership,
   isOpen,
   onClose,
@@ -29,9 +28,9 @@ export default function MembershipPaymentModal({
     const subtotal = membership.price * months;
 
     let discount = 0;
-    if (months === 3) discount = membership.discountThreeMonths;
-    else if (months === 6) discount = membership.discountSixMonths;
-    else if (months === 12) discount = membership.discountTwelveMonths;
+    if (months === 3) discount = membership.discountThreeMonths ?? 0;
+    else if (months === 6) discount = membership.discountSixMonths ?? 0;
+    else if (months === 12) discount = membership.discountTwelveMonths ?? 0;
 
     const totalWithDiscount = subtotal - (subtotal * discount) / 100;
 

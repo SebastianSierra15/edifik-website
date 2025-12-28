@@ -10,7 +10,7 @@ interface EpaycoButtonProps {
   description: string;
 }
 
-export default function EpaycoButton({
+export function EpaycoButton({
   amount,
   tax,
   taxBase,
@@ -46,7 +46,7 @@ export default function EpaycoButton({
     );
 
     formRef.current?.appendChild(script);
-  }, [amount, tax, taxBase, name, description]);
+  }, [amount, tax, taxBase, name, description, publicKey]);
 
   return <form ref={formRef}></form>;
 }

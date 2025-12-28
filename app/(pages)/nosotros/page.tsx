@@ -23,7 +23,7 @@ export default function AboutUsPage() {
         description="Conoce más sobre EdifiK y nuestro compromiso con la calidad y la innovación."
       />
 
-      <div className="flex flex-col flex-grow bg-client-backgroundAlt">
+      <div className="flex flex-col flex-grow bg-client-backgroundAlt mt-8">
         <div className="mb-12">
           <AboutSection />
         </div>

@@ -23,7 +23,7 @@ interface MembershipCardProps {
   onBuy: () => void;
 }
 
-export default function MembershipCard({
+export function MembershipCard({
   name,
   benefits,
   price,

@@ -8,6 +8,8 @@ import {
 } from "@/src/components/shared";
 
 export function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="bg-client-backgroundAlt text-client-textPlaceholder pt-10 pb-4">
       <div className="max-w-7xl mx-auto grid grid-cols-2 gap-8 px-10 md:grid-cols-4">
@@ -32,6 +34,15 @@ export function Footer() {
                 className="hover:text-client-text transition"
               >
                 Portafolio
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                href="/membresias"
+                className="hover:text-client-text transition"
+              >
+                Nuestros planes
               </Link>
             </li>
 
@@ -111,7 +122,9 @@ export function Footer() {
       <hr className="border-client-textPlaceholder mx-10 my-4" />
 
       <div className="flex justify-between items-center text-sm mx-10">
-        <span>&copy; 2025 Edifik - Todos los derechos reservados.</span>
+        <span>
+          &copy; {currentYear} Edifik - Todos los derechos reservados.
+        </span>
 
         <div className="flex space-x-4">
           <Link

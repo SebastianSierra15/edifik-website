@@ -32,6 +32,25 @@ export class MembershipService {
     );
   }
 
+  static async getPublicMemberships(
+    params: GetMembershipsParams,
+    options?: RequestInit
+  ): Promise<GetMembershipsResponse> {
+    const query = new URLSearchParams({
+      page: params.page.toString(),
+      pageSize: params.pageSize.toString(),
+    });
+
+    if (params.searchTerm) {
+      query.append("searchTerm", params.searchTerm);
+    }
+
+    return apiClient.get<GetMembershipsResponse>(
+      `/api/memberships/public?${query.toString()}`,
+      options
+    );
+  }
+
   static async updateMembership(membership: Membership): Promise<Membership> {
     return apiClient.put<Membership, Membership>(
       "/api/memberships",
