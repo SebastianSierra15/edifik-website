@@ -10,3 +10,4 @@ export * from "./useDeleteProject";
 export * from "./useGetProjects";
 export * from "./useProjectApi";
 export * from "./useProjectById";
+export * from "./getProjectByIdServer";

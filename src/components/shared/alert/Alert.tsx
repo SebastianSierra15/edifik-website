@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { CircleCheck, TriangleAlert, CircleX, Info, X } from "lucide-react";
 
@@ -55,7 +56,11 @@ export function Alert({ type, message, duration = 5000, onClose }: AlertProps) {
 
   return (
     <div
-      className={`fixed top-5 left-1/2 z-50 -translate-x-1/2 rounded-lg px-4 py-3 shadow-lg flex items-center space-x-3 ${styles.bg} ${styles.text}`}
+      className={clsx(
+        "fixed top-5 left-1/2 z-50 -translate-x-1/2 rounded-lg px-4 py-3 shadow-lg flex items-center space-x-3",
+        styles.bg,
+        styles.text
+      )}
     >
       {styles.icon}
       <span className="text-sm font-medium">{message}</span>

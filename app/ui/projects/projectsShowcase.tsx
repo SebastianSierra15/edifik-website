@@ -1,8 +1,8 @@
 "use client";
 
 import clsx from "clsx";
-import { ProjectView } from "@/lib/definitios";
-import ImageCarousel from "../home/imagesCarousel";
+import { ProjectView } from "@/src/interfaces";
+import { ImageCarousel } from "@/src/components/home";
 import ProjectInfoCard from "./projectInfoCard";
 
 interface ProjectsShowcaseProps {

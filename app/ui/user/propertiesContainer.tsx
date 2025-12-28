@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { ProjectSummary } from "@/lib/definitios";
-import PropertyCard from "@/app/ui/realEstate/PropertyCard";
+import { ProjectSummary } from "@/src/interfaces";
+import { PropertyCard } from "@/src/components/realEstate";
 
 interface PropertiesContainerProps {
   projects: ProjectSummary[];

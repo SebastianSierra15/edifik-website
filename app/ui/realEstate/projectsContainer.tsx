@@ -3,9 +3,9 @@
 import React, { useMemo } from "react";
 import dynamic from "next/dynamic";
 import clsx from "clsx";
-import { ProjectView } from "@/lib/definitios";
-import { useProjectsMetadata } from "@/app/hooks/projects/metadata/useProjectsMetadata";
-import PropertyCard from "./PropertyCard";
+import { ProjectView } from "@/src/interfaces";
+import { useProjectsMetadata } from "@/src/hooks/projects/metadata";
+import { PropertyCard } from "@/src/components/realEstate";
 import ProjectsMap from "./projectsMap";
 
 const ProjectFilter = dynamic(

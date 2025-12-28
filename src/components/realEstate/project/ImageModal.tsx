@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
@@ -79,9 +80,10 @@ export function ImageModal({
 
         <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg bg-black bg-opacity-50">
           <div
-            className={`absolute inset-0 transition-opacity duration-500 ${
+            className={clsx(
+              "absolute inset-0 transition-opacity duration-500",
               isTransitioning ? "opacity-0" : "opacity-100"
-            }`}
+            )}
           >
             <Image
               src={media[currentIndex]?.url}
@@ -110,11 +112,12 @@ export function ImageModal({
               prevImage();
             }}
             disabled={media.length === 1}
-            className={`flex p-2 items-center justify-center rounded-full font-bold transition-all  ${
+            className={clsx(
+              "flex p-2 items-center justify-center rounded-full font-bold transition-all translate-x-4",
               media.length === 1
                 ? "bg-gray-400"
                 : "bg-client-accent hover:bg-client-accentHover"
-            } translate-x-4`}
+            )}
             aria-label="Previous Image in Modal"
           >
             <ChevronLeft className="w-6 h-6 text-client-text" />
@@ -126,11 +129,12 @@ export function ImageModal({
               nextImage();
             }}
             disabled={media.length === 1}
-            className={`flex p-2 items-center justify-center rounded-full font-bold transition-all  ${
+            className={clsx(
+              "flex p-2 items-center justify-center rounded-full font-bold transition-all -translate-x-4",
               media.length === 1
                 ? "bg-gray-400"
                 : "bg-client-accent hover:bg-client-accentHover"
-            } -translate-x-4`}
+            )}
             aria-label="Next Image in Modal"
           >
             <ChevronRight className="w-6 h-6 text-client-text" />

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { CircleCheck, X } from "lucide-react";

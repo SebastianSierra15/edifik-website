@@ -4,12 +4,24 @@ import { useEffect, useState } from "react";
 import type { ProjectView } from "@/src/interfaces";
 import { ProjectHomeService } from "@/src/services/projects";
 
-export function useHomeProjects(numberProjects: number, isProperty: boolean) {
-  const [projects, setProjects] = useState<ProjectView[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+interface UseHomeProjectsOptions {
+  initialProjects?: ProjectView[] | null;
+}
+
+export function useHomeProjects(
+  numberProjects: number,
+  isProperty: boolean,
+  options?: UseHomeProjectsOptions
+) {
+  const hasInitialProjects = Array.isArray(options?.initialProjects);
+  const [projects, setProjects] = useState<ProjectView[]>(
+    options?.initialProjects ?? []
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(!hasInitialProjects);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (hasInitialProjects) return;
     let isMounted = true;
 
     const run = async () => {
@@ -39,7 +51,7 @@ export function useHomeProjects(numberProjects: number, isProperty: boolean) {
     return () => {
       isMounted = false;
     };
-  }, [numberProjects, isProperty]);
+  }, [numberProjects, isProperty, hasInitialProjects]);
 
   return { projects, isLoading, error };
 }

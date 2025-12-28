@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -71,13 +72,14 @@ export function ForgotPasswordPage() {
 
           {formMessage && (
             <p
-              className={`text-sm text-center ${
+              className={clsx(
+                "text-sm text-center",
                 success
                   ? "text-green-500"
                   : error
                     ? "text-red-500"
                     : "text-yellow-500"
-              }`}
+              )}
             >
               {formMessage}
             </p>

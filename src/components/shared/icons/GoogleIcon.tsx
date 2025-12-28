@@ -1,12 +1,8 @@
-﻿import React from "react";
-
 interface GoogleIconProps {
   className?: string;
 }
 
-export const GoogleIcon = React.memo(function GoogleIcon({
-  className,
-}: GoogleIconProps) {
+export function GoogleIcon({ className }: GoogleIconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -39,4 +35,4 @@ export const GoogleIcon = React.memo(function GoogleIcon({
       />
     </svg>
   );
-});
+}

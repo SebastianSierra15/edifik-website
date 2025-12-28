@@ -66,6 +66,26 @@ export class ProjectService {
     );
   }
 
+  static async getByIdServer(
+    id: number,
+    isProject?: boolean,
+    isAdmin?: boolean
+  ): Promise<{ project: ProjectDetails }> {
+    const query = new URLSearchParams({
+      isProject: isProject ? "1" : "0",
+      isAdmin: isAdmin ? "1" : "0",
+    });
+
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+    const url = baseUrl
+      ? `${baseUrl}/api/projects/${id}?${query.toString()}`
+      : `/api/projects/${id}?${query.toString()}`;
+
+    return apiClient.get<{ project: ProjectDetails }>(url, {
+      cache: "no-store",
+    });
+  }
+
   static async create(data: unknown): Promise<number> {
     const result = await apiClient.post<{ projectId: number }, unknown>(
       "/api/projects",

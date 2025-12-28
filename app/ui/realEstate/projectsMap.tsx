@@ -3,8 +3,8 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { Plus, Minus, LocateFixed } from "lucide-react";
-import { ProjectView } from "@/lib/definitios";
-import PropertyCard from "./PropertyCard";
+import { ProjectView } from "@/src/interfaces";
+import { PropertyCard } from "@/src/components/realEstate";
 import { Loader } from "@/src/components/shared/Loader";
 
 const containerStyle = {

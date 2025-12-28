@@ -1,7 +1,7 @@
 "use client";
 
-import { useGetBasicProjects } from "@/app/hooks/projects/basic/useGetBasicProjects";
-import HeroSection from "@/app/ui/home/heroSection";
+import { useGetBasicProjects } from "@/src/hooks/projects/basic";
+import { HeroSection } from "@/src/components/home";
 import ProjectsShowcase from "@/app/ui/projects/projectsShowcase";
 import { ProjectSkeletonList } from "@/src/components/admin";
 
