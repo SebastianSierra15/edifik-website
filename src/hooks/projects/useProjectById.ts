@@ -7,14 +7,23 @@ import { ProjectService } from "@/src/services/projects";
 export function useProjectById(
   id?: number,
   isProject?: boolean,
-  isAdmin?: boolean
+  isAdmin?: boolean,
+  initialProject?: ProjectDetails
 ) {
-  const [project, setProject] = useState<ProjectDetails | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [project, setProject] = useState<ProjectDetails | null>(
+    initialProject ?? null
+  );
+  const [loading, setLoading] = useState(!initialProject);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
+
+    if (initialProject?.id === id) {
+      setProject(initialProject);
+      setLoading(false);
+      return;
+    }
 
     const fetchProject = async () => {
       try {
@@ -33,7 +42,7 @@ export function useProjectById(
     };
 
     fetchProject();
-  }, [id, isProject, isAdmin]);
+  }, [id, isProject, isAdmin, initialProject]);
 
   return { project, loading, error };
 }

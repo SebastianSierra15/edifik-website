@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ProjectMedia } from "@/lib/definitios";
-import { ImageModal } from "@/src/components/realEstate/project";
+import type { ProjectMedia } from "@/src/interfaces";
+import { ImageModal } from "@/src/components/realEstate";
 
 interface ProjectPlansProps {
   projectMedia: ProjectMedia[];
 }
 
-export default function ProjectPlans({ projectMedia }: ProjectPlansProps) {
+export function ProjectPlans({ projectMedia }: ProjectPlansProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 

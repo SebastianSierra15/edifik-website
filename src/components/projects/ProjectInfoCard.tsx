@@ -10,7 +10,7 @@ interface ProjectInfoCardProps {
   bathrooms: number;
 }
 
-export default function ProjectInfoCard({
+export function ProjectInfoCard({
   id,
   name,
   location,

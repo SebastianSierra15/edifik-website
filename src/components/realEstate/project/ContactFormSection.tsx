@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
 import Link from "next/link";
-import ContactForm from "./contactForm";
+import { ContactForm } from "./ContactForm";
+import { useProjectContactForm } from "@/src/hooks/contact";
 
 interface ContactFormSectionProps {
   locationRef: React.RefObject<HTMLDivElement>;
@@ -14,7 +15,7 @@ interface ContactFormSectionProps {
   phoneNumber: string;
 }
 
-export default function ContactFormSection({
+export function ContactFormSection({
   locationRef,
   wrapperRef,
   propertyId,
@@ -22,101 +23,20 @@ export default function ContactFormSection({
   toEmail,
   phoneNumber,
 }: ContactFormSectionProps) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  // const [checked, setChecked] = useState(false);
+  const { name, email, phone, setName, setEmail, setPhone, isSubmitting, handleSubmit } =
+    useProjectContactForm({
+      propertyId,
+      propertyName,
+      toEmail,
+    });
+
   const [formState, setFormState] = useState<"fixed" | "bottom" | "default">(
     "default"
   );
   const [formHeight, setFormHeight] = useState<number>(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const formRef = useRef<HTMLDivElement>(null);
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const phoneRegex = /^3\d{9}$/;
-    const isPhoneValid = phoneRegex.test(phone.replace(/\s+/g, ""));
-
-    const errors = {
-      name: name.trim() ? "" : "El nombre es obligatorio.",
-      phone: phone.trim()
-        ? isPhoneValid
-          ? ""
-          : "Número de teléfono no válido."
-        : "El teléfono es obligatorio.",
-      email: email.trim()
-        ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-          ? ""
-          : "El correo no es válido."
-        : "El correo es obligatorio.",
-    };
-
-    if (Object.values(errors).some((e) => e !== "")) {
-      alert(
-        Object.values(errors)
-          .filter((e) => e !== "")
-          .join("\n")
-      );
-      return;
-    }
-
-    const message = `Hola, estoy interesado en la propiedad "${propertyName}" con ID: ${propertyId}.\n\nMe pueden contactar al correo: ${email}.`;
-    const payload = { name, email, phone, message };
-
-    try {
-      setIsSubmitting(true);
-
-      const res1 = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...payload, toEmail }),
-      });
-
-      if (!res1.ok) {
-        throw new Error("No se pudo enviar al destinatario principal.");
-      }
-
-      let enviadoEmpresa = true;
-
-      if (toEmail !== process.env.NEXT_PUBLIC_COMPANY_EMAIL) {
-        const res2 = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...payload,
-            toEmail: process.env.NEXT_PUBLIC_COMPANY_EMAIL!,
-          }),
-        });
-
-        enviadoEmpresa = res2.ok;
-
-        if (!enviadoEmpresa) {
-          console.warn("⚠️ No se pudo enviar el correo a la empresa.");
-        }
-      }
-
-      setIsSubmitting(false);
-      setName("");
-      setEmail("");
-      setPhone("");
-
-      if (enviadoEmpresa) {
-        alert("✅ Mensaje enviado correctamente.");
-      } else {
-        alert(
-          "✅ Mensaje enviado al destinatario, pero no se pudo notificar a la empresa."
-        );
-      }
-    } catch (error) {
-      console.error(error);
-      setIsSubmitting(false);
-      alert("❌ Hubo un error al enviar el mensaje.");
-    }
-  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -176,12 +96,12 @@ export default function ContactFormSection({
     };
 
     const onScroll = () => window.requestAnimationFrame(handleScroll);
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [formState, isLargeScreen]);
+  }, [formState, isLargeScreen, locationRef, wrapperRef]);
 
   const formStyles = {
     fixed: "fixed top-32 right-11 w-96 z-10",
@@ -245,3 +165,4 @@ export default function ContactFormSection({
     </>
   );
 }
+

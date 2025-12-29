@@ -1,4 +1,4 @@
-export default function ProjectDetailsSkeleton() {
+export function ProjectDetailsSkeleton() {
   const skeletonGroups = Array(3).fill(0);
 
   return (

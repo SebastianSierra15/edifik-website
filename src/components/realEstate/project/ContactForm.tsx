@@ -12,7 +12,7 @@ interface ContactFormProps {
   setPhone: (v: string) => void;
 }
 
-export default function ContactForm({
+export function ContactForm({
   name,
   email,
   phone,

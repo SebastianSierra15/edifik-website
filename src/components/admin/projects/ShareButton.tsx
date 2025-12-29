@@ -69,16 +69,16 @@ export function ShareButton({ message }: ShareButtonProps) {
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-64 rounded-lg bg-client-backgroundAlt px-4 pb-4 pt-2">
+          <div className="relative w-64 rounded-lg bg-gray-200 px-4 pb-4 pt-2">
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute right-3 top-3 text-white transition duration-200 hover:text-gray-200"
+              className="absolute right-3 top-3 text-client-primary transition duration-200 hover:text-client-primaryLight"
               aria-label="Cerrar modal"
             >
               <X size={20} />
             </button>
 
-            <h2 className="mb-4 text-center text-xl font-semibold text-white">
+            <h2 className="mb-4 text-center text-xl font-semibold text-client-primary">
               Compartir en:
             </h2>
 

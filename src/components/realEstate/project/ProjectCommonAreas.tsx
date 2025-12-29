@@ -1,21 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
-import { CommonArea, ProjectMedia } from "@/lib/definitios";
-import { ImageModal } from "@/src/components/realEstate/project";
-
-const ChevronDown = dynamic(() =>
-  import("lucide-react").then((mod) => mod.ChevronDown)
-);
+import { ChevronDown } from "lucide-react";
+import type { ProjectDetails, ProjectMedia } from "@/src/interfaces";
+import { ImageModal } from "@/src/components/realEstate";
 
 interface ProjectCommonAreasProps {
-  areas: CommonArea[];
+  areas: ProjectDetails["commonAreas"];
   projectMedia: ProjectMedia[];
 }
 
-export default function ProjectCommonAreas({
+export function ProjectCommonAreas({
   areas,
   projectMedia,
 }: ProjectCommonAreasProps) {

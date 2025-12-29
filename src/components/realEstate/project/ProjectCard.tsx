@@ -1,8 +1,10 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import Image from "next/image";
-import { ProjectMedia } from "@/lib/definitios";
+import type { ProjectMedia } from "@/src/interfaces";
 
 interface ProjectCardProps {
   id: number;
@@ -16,7 +18,7 @@ interface ProjectCardProps {
   parkingSpots?: number;
 }
 
-export default function ProjectCard({
+export function ProjectCard({
   id,
   images,
   name,

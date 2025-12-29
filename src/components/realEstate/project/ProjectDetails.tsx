@@ -1,54 +1,37 @@
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import { Project } from "@/lib/definitios";
-import DetailCard from "./detailCard";
-
-const Ruler = dynamic(() => import("lucide-react").then((mod) => mod.Ruler));
-const Bed = dynamic(() => import("lucide-react").then((mod) => mod.Bed));
-const Toilet = dynamic(() => import("lucide-react").then((mod) => mod.Toilet));
-const Armchair = dynamic(() =>
-  import("lucide-react").then((mod) => mod.Armchair)
-);
-const House = dynamic(() => import("lucide-react").then((mod) => mod.House));
-const Building = dynamic(() =>
-  import("lucide-react").then((mod) => mod.Building)
-);
-const Warehouse = dynamic(() =>
-  import("lucide-react").then((mod) => mod.Warehouse)
-);
-const Car = dynamic(() => import("lucide-react").then((mod) => mod.Car));
-const Truck = dynamic(() => import("lucide-react").then((mod) => mod.Truck));
-const Sprout = dynamic(() => import("lucide-react").then((mod) => mod.Sprout));
-const Wrench = dynamic(() => import("lucide-react").then((mod) => mod.Wrench));
-const MoveVertical = dynamic(() =>
-  import("lucide-react").then((mod) => mod.MoveVertical)
-);
-const Shirt = dynamic(() => import("lucide-react").then((mod) => mod.Shirt));
-const CalendarDays = dynamic(() =>
-  import("lucide-react").then((mod) => mod.CalendarDays)
-);
-const ArrowUp10 = dynamic(() =>
-  import("lucide-react").then((mod) => mod.ArrowUp10)
-);
-const CircleDollarSign = dynamic(() =>
-  import("lucide-react").then((mod) => mod.CircleDollarSign)
-);
-const Sun = dynamic(() => import("lucide-react").then((mod) => mod.Sun));
-const CheckCircle = dynamic(() =>
-  import("lucide-react").then((mod) => mod.CheckCircle)
-);
-const DoorOpen = dynamic(() =>
-  import("lucide-react").then((mod) => mod.DoorOpen)
-);
+import { useEffect, useMemo, useState } from "react";
+import {
+  Armchair,
+  ArrowUp10,
+  Bed,
+  Building,
+  CalendarDays,
+  Car,
+  CheckCircle,
+  CircleDollarSign,
+  DoorOpen,
+  House,
+  MoveVertical,
+  Ruler,
+  Shirt,
+  Sprout,
+  Sun,
+  Toilet,
+  Truck,
+  Warehouse,
+  Wrench,
+} from "lucide-react";
+import type { ProjectDetails as ProjectDetailsType } from "@/src/interfaces";
+import { DetailCard } from "./DetailCard";
 
 interface ProjectDetailsProps {
-  project: Project;
+  project: ProjectDetailsType;
 }
 
-export default function ProjectDetails({ project }: ProjectDetailsProps) {
-  const details = [
+export function ProjectDetails({ project }: ProjectDetailsProps) {
+  const details = useMemo(
+    () => [
     {
       group: "Características generales",
       items: [
@@ -246,11 +229,17 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
           },
         ]
       : []),
-  ];
+    ],
+    [project]
+  );
 
   const [openGroups, setOpenGroups] = useState<boolean[]>(
     new Array(details.length).fill(true)
   );
+
+  useEffect(() => {
+    setOpenGroups(new Array(details.length).fill(true));
+  }, [details.length]);
 
   const toggleGroup = (index: number) => {
     setOpenGroups((prev) =>

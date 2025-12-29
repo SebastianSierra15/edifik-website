@@ -14,21 +14,25 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requireAuthWithPermissions([
-      Permission.ManageProjects,
-      Permission.ManageProperties,
-      Permission.ManageOwnProperties,
-    ]);
-
-    const canSeeMembership = true;
-
-    const { searchParams } = new URL(req.url);
-
     const { id } = await params;
+    const { searchParams } = new URL(req.url);
+    const isAdmin = Number(searchParams.get("isAdmin") ?? 0);
+    const isProject = Number(searchParams.get("isProject") ?? 0);
+
+    let canSeeMembership = false;
+
+    if (isAdmin) {
+      await requireAuthWithPermissions([
+        Permission.ManageProjects,
+        Permission.ManageProperties,
+        Permission.ManageOwnProperties,
+      ]);
+      canSeeMembership = true;
+    }
     const result = await getProjectByIdController({
       projectId: Number(id),
-      isProject: Number(searchParams.get("isProject")),
-      isAdmin: Number(searchParams.get("isAdmin") ?? 0),
+      isProject,
+      isAdmin,
       canSeeMembership,
     });
 

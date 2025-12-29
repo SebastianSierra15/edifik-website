@@ -1,18 +1,13 @@
-import dynamic from "next/dynamic";
-import { Project } from "@/lib/definitios";
+import { CalendarDays, MapPin } from "lucide-react";
+import type { ProjectDetails } from "@/src/interfaces";
 import { formatNumber } from "@/utils/formatters";
 import { ShareButton } from "@/src/components/admin";
 
-const MapPin = dynamic(() => import("lucide-react").then((mod) => mod.MapPin));
-const CalendarDays = dynamic(() =>
-  import("lucide-react").then((mod) => mod.CalendarDays)
-);
-
 interface ProjectHeaderProps {
-  project: Project;
+  project: ProjectDetails;
 }
 
-export default function ProjectHeader({ project }: ProjectHeaderProps) {
+export function ProjectHeader({ project }: ProjectHeaderProps) {
   const formattedPrice = formatNumber(project.price ?? 0);
 
   return (

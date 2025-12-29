@@ -7,7 +7,8 @@ export function useIsLgUp(): boolean {
 
   useEffect(() => {
     const checkScreen = () => {
-      setIsLgUp(window.innerWidth >= 1024);
+      const nextValue = window.innerWidth >= 1024;
+      setIsLgUp((prev) => (prev === nextValue ? prev : nextValue));
     };
 
     checkScreen();

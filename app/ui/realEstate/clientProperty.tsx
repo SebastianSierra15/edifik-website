@@ -1,7 +1,7 @@
 "use client";
 
-import { useProjectById } from "@/app/hooks/projects/useProjectById";
-import ProjectView from "@/app/ui/realEstate/project/projectView";
+import { useProjectById } from "@/src/hooks/projects";
+import { ProjectView } from "@/src/components/realEstate/project";
 
 export default function ClientProperty({ id }: { id: string }) {
   const projectId = decodeURIComponent(id);

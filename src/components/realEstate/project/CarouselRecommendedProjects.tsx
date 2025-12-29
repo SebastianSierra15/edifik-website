@@ -1,22 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { ProjectSummary } from "@/lib/definitios";
-import ProjectCard from "./projectCard";
-
-const ChevronLeft = dynamic(() =>
-  import("lucide-react").then((mod) => mod.ChevronLeft)
-);
-const ChevronRight = dynamic(() =>
-  import("lucide-react").then((mod) => mod.ChevronRight)
-);
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { ProjectSummary } from "@/src/interfaces";
+import { ProjectCard } from "./ProjectCard";
 
 interface CarouselRecommendedProjectsProps {
   projects: ProjectSummary[];
 }
 
-export default function CarouselRecommendedProjects({
+export function CarouselRecommendedProjects({
   projects,
 }: CarouselRecommendedProjectsProps) {
   const [currentIndex, setCurrentIndex] = useState(0);

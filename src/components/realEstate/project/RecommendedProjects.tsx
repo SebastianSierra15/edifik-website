@@ -15,7 +15,7 @@ interface RecommendedProjectsProps {
   projects: Project[];
 }
 
-export default function RecommendedProjects({
+export function RecommendedProjects({
   projects,
 }: RecommendedProjectsProps) {
   return (

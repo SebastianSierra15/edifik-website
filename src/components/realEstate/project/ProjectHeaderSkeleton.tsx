@@ -1,4 +1,4 @@
-export default function ProjectHeaderSkeleton() {
+export function ProjectHeaderSkeleton() {
   return (
     <div className="w-full animate-pulse px-4 pt-28 sm:px-6 lg:px-12 lg:pt-24">
       <div className="flex flex-col gap-2">

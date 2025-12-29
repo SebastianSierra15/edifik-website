@@ -8,7 +8,7 @@ export default function PagesLayout({
   return (
     <>
       <Header />
-      {children}
+      <main>{children}</main>
       <Footer />
     </>
   );

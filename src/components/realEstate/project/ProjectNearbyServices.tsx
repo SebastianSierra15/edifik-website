@@ -1,16 +1,9 @@
-import dynamic from "next/dynamic";
-import { NearbyService } from "@/lib/definitios";
-import DetailCard from "./detailCard";
-
-const School = dynamic(() => import("lucide-react").then((mod) => mod.School));
-const Store = dynamic(() => import("lucide-react").then((mod) => mod.Store));
-const Hospital = dynamic(() =>
-  import("lucide-react").then((mod) => mod.Hospital)
-);
-const Smile = dynamic(() => import("lucide-react").then((mod) => mod.Smile));
+import { Hospital, School, Smile, Store } from "lucide-react";
+import type { ProjectDetails } from "@/src/interfaces";
+import { DetailCard } from "./DetailCard";
 
 interface ProjectNearbyServicesProps {
-  services: NearbyService[];
+  services: ProjectDetails["nearbyServices"];
 }
 
 const serviceIcons: { [key: string]: JSX.Element } = {
@@ -20,7 +13,7 @@ const serviceIcons: { [key: string]: JSX.Element } = {
   "Parque de Juegos": <Smile className="text-client-accent" />,
 };
 
-export default function ProjectNearbyServices({
+export function ProjectNearbyServices({
   services,
 }: ProjectNearbyServicesProps) {
   return (

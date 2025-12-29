@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ClientProject from "@/app/ui/projects/clientProject";
+import { ClientProject } from "@/src/components/projects";
 import { getProjectById } from "@/src/hooks/projects";
 
 export const dynamic = "force-dynamic";
@@ -7,10 +7,11 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const id = Number(params.id);
-  const project = await getProjectById(id, true, false);
+  const { id } = await params;
+  const projectId = Number(id);
+  const project = await getProjectById(projectId, true, false);
 
   return {
     title: project?.name ? `${project.name} | EdifiK` : "Proyecto | EdifiK",
@@ -20,13 +21,21 @@ export async function generateMetadata({
     openGraph: {
       title: project?.name || "Proyecto en EdifiK",
       description: project?.shortDescription || "Proyecto destacado en EdifiK.",
-      url: `http://edifik.co/proyectos/${params.id}`,
+      url: `http://edifik.co/proyectos/${id}`,
       siteName: "EdifiK",
       type: "website",
     },
   };
 }
 
-export default function ProjectPage({ params }: { params: { id: string } }) {
-  return <ClientProject id={params.id} />;
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const projectId = Number(id);
+  const project = await getProjectById(projectId, true, false);
+
+  return <ClientProject id={id} initialProject={project ?? undefined} />;
 }
