@@ -48,7 +48,10 @@ export async function GET(req: Request) {
         : null,
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json({
+      ...result,
+      totalEntries: result.total,
+    });
   } catch (error) {
     return handleHttpError(error);
   }

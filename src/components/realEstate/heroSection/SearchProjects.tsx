@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MapPin, X } from "lucide-react";
+import { useAddressAutocomplete } from "@/src/hooks/realEstate";
 
 interface SearchProjectsProps {
   onSelectLocation: (
@@ -10,30 +11,26 @@ interface SearchProjectsProps {
   clearInput?: boolean;
 }
 
-export default function SearchProjects({
+export function SearchProjects({
   onSelectLocation,
   clearInput = false,
 }: SearchProjectsProps) {
   const [searchInput, setSearchInput] = useState("");
-  const [suggestions, setSuggestions] = useState<
-    { place_id: string; description: string }[]
-  >([]);
   const [isListVisible, setIsListVisible] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
-  const autocompleteServiceRef =
-    useRef<google.maps.places.AutocompleteService | null>(null);
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
+  const { results, searchAddress, clearResults } = useAddressAutocomplete();
 
   useEffect(() => {
     if (clearInput) {
       setSearchInput("");
-      setSuggestions([]);
+      clearResults();
       setIsListVisible(false);
     }
-  }, [clearInput]);
+  }, [clearInput, clearResults]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -52,66 +49,52 @@ export default function SearchProjects({
   }, []);
 
   useEffect(() => {
-    if (
-      isMapsReady &&
-      typeof window !== "undefined" &&
-      typeof window.google !== "undefined" &&
-      window.google.maps?.places &&
-      !autocompleteServiceRef.current
-    ) {
-      autocompleteServiceRef.current =
-        new window.google.maps.places.AutocompleteService();
-    }
-  }, [isMapsReady]);
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setSearchInput(newValue);
 
-    if (newValue.trim() && autocompleteServiceRef.current) {
-      autocompleteServiceRef.current.getPlacePredictions(
-        {
-          input: newValue,
-          componentRestrictions: { country: "CO" },
-        },
-        (predictions) => {
-          if (predictions) {
-            setSuggestions(
-              predictions.map((p) => ({
-                place_id: p.place_id,
-                description: p.description,
-              }))
-            );
-            setIsListVisible(true);
-          }
-        }
-      );
-    } else {
-      setSuggestions([]);
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
     }
+
+    if (!newValue.trim()) {
+      clearResults();
+      setIsListVisible(false);
+      return;
+    }
+
+    clearResults();
+    searchTimeoutRef.current = setTimeout(() => {
+      searchAddress(newValue);
+      setIsListVisible(true);
+    }, 300);
   };
 
-  const handleSelectPlace = (placeId: string, description: string) => {
-    const service = new google.maps.places.PlacesService(
-      document.createElement("div")
-    );
+  const handleSelectPlace = (place: {
+    display_name: string;
+    lat: string;
+    lon: string;
+  }) => {
+    const latitude = Number.parseFloat(place.lat);
+    const longitude = Number.parseFloat(place.lon);
 
-    service.getDetails({ placeId }, (place, status) => {
-      if (
-        status === google.maps.places.PlacesServiceStatus.OK &&
-        place?.geometry?.location
-      ) {
-        const location = place.geometry.location;
+    if (!Number.isNaN(latitude) && !Number.isNaN(longitude)) {
+      onSelectLocation({
+        latitude,
+        longitude,
+      });
+    }
 
-        onSelectLocation({
-          latitude: location.lat(),
-          longitude: location.lng(),
-        });
-
-        setSearchInput(description);
-        setIsListVisible(false);
-      }
-    });
+    setSearchInput(place.display_name);
+    setIsListVisible(false);
+    clearResults();
   };
 
   return (
@@ -131,6 +114,7 @@ export default function SearchProjects({
           onClick={() => {
             setSearchInput("");
             setIsListVisible(false);
+            clearResults();
             onSelectLocation(null);
           }}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-client-text-placeholder hover:text-black"
@@ -140,21 +124,21 @@ export default function SearchProjects({
         </button>
       )}
 
-      {isListVisible && suggestions.length > 0 && (
+      {isListVisible && results.length > 0 && (
         <ul
           ref={listRef}
           className="absolute z-10 mt-1 w-full bg-white border border-client-accent rounded-md shadow-lg max-h-64 overflow-y-auto"
         >
-          {suggestions.map((s) => (
+          {results.map((s) => (
             <li
-              key={s.place_id}
+              key={String(s.place_id)}
               onClick={() => {
-                handleSelectPlace(s.place_id, s.description);
+                handleSelectPlace(s);
               }}
               className="cursor-pointer flex items-center gap-2 p-2 hover:bg-client-secondary transition-colors"
             >
               <MapPin size={16} className="text-client-accent" />
-              {s.description}
+              {s.display_name}
             </li>
           ))}
         </ul>

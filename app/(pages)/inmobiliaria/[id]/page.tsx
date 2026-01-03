@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 import { getProjectById } from "@/src/hooks/projects";
-import ClientProperty from "@/app/ui/realEstate/clientProperty";
+import { ClientProperty } from "@/src/components/realEstate";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const id = Number(params.id);
-  const project = await getProjectById(id, false, false);
+  const { id } = await params;
+  const numericId = Number(id);
+  const project = await getProjectById(numericId, false, false);
 
   return {
     title: project?.name ? `${project.name} | EdifiK` : "Propiedad | EdifiK",
@@ -21,13 +22,18 @@ export async function generateMetadata({
       title: project?.name || "Propiedad en EdifiK",
       description:
         project?.shortDescription || "Propiedad destacada en EdifiK.",
-      url: `http://edifik.co/inmobiliaria/${params.id}`,
+      url: `http://edifik.co/inmobiliaria/${id}`,
       siteName: "EdifiK",
       type: "website",
     },
   };
 }
 
-export default function PropertyPage({ params }: { params: { id: string } }) {
-  return <ClientProperty id={params.id} />;
+export default async function PropertyPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  return <ClientProperty id={id} />;
 }

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { ImageType, Media, ProjectFormData } from "@/src/interfaces";
 import { getImagesProjectSchema as getProjectImagesProjectSchema } from "@/src/schemas/admin/proyectos/images-project.schema";
-import { getImagesProjectSchema as getPropertyImagesProjectSchema } from "@/src/schemas/admin/propiedades/images-project.schema";
+import { getImagesProjectSchema as getPropertyImagesProjectSchema } from "@/src/schemas/admin/inmobiliaria/images-project.schema";
 
 export function useImagesProjectValidation(
   formData: ProjectFormData,

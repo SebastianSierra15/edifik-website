@@ -109,7 +109,7 @@ export function ProjectView({ projectId, isProperty }: ProjectViewProps) {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="mb-10 mt-24 text-center text-3xl font-semibold text-premium-primary lg:mt-20 dark:text-premium-primaryLight">
+      <h1 className="mb-10 text-center text-3xl font-semibold text-premium-primary dark:text-premium-primaryLight">
         Visualizar{" "}
         {projectData.projectType?.id === 1 ? "Proyecto" : "Propiedad"}
       </h1>

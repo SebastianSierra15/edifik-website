@@ -17,7 +17,7 @@ export const PROTECTED_ROUTES: Record<string, ProtectedRouteConfig> = {
   },
 
   "/admin/proyectos": { permissions: [Permission.ManageProjects] },
-  "/admin/propiedades": { permissions: [Permission.ManageProperties] },
+  "/admin/inmobiliaria": { permissions: [Permission.ManageProperties] },
   "/admin/usuarios": { permissions: [Permission.ManageUsers] },
   "/admin/roles": { permissions: [Permission.ManageRoles] },
   "/admin/membresias": { permissions: [Permission.ManageMemberships] },

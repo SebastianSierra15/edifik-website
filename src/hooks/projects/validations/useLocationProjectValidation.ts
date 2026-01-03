@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { ProjectFormData } from "@/src/interfaces";
 import { locationProjectSchema as projectLocationProjectSchema } from "@/src/schemas/admin/proyectos/location-project.schema";
-import { locationProjectSchema as propertyLocationProjectSchema } from "@/src/schemas/admin/propiedades/location-project.schema";
+import { locationProjectSchema as propertyLocationProjectSchema } from "@/src/schemas/admin/inmobiliaria/location-project.schema";
 
 const fieldSchemaMap = {
   departamentError: "departamentId",

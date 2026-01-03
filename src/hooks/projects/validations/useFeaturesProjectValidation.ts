@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { ProjectFormData } from "@/src/interfaces";
 import { featuresProjectSchema as projectFeaturesProjectSchema } from "@/src/schemas/admin/proyectos/features-project.schema";
-import { featuresProjectSchema as propertyFeaturesProjectSchema } from "@/src/schemas/admin/propiedades/features-project.schema";
+import { featuresProjectSchema as propertyFeaturesProjectSchema } from "@/src/schemas/admin/inmobiliaria/features-project.schema";
 
 const fieldSchemaMap = {
   builtAreaError: "builtArea",

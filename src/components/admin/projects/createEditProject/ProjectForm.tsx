@@ -273,7 +273,7 @@ export function ProjectForm({
           className="rounded-md bg-premium-secondary px-4 py-2 text-white transition-colors hover:bg-premium-secondaryLight dark:bg-premium-secondaryDark dark:hover:bg-premium-secondaryLight"
           onClick={() =>
             router.push(
-              isProperty ? "/admin/propiedades" : "/admin/proyectos"
+              isProperty ? "/admin/inmobiliaria" : "/admin/proyectos"
             )
           }
         >

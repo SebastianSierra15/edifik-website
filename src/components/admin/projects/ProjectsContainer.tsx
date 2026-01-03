@@ -85,7 +85,7 @@ export function ProjectsContainer({
               onEdit={(projectId) =>
                 router.push(
                   isProperty
-                    ? `/admin/propiedades/${projectId}`
+                    ? `/admin/inmobiliaria/${projectId}`
                     : `/admin/proyectos/${projectId}`
                 )
               }

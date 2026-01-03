@@ -29,7 +29,7 @@ export function ProjectSearchAndCreate({
       <Link
         href={
           isProperty
-            ? "/admin/propiedades/crear-propiedad"
+            ? "/admin/inmobiliaria/crear-propiedad"
             : "/admin/proyectos/crear-proyecto"
         }
         className="flex items-center space-x-2 whitespace-nowrap rounded-lg bg-green-600 px-6 py-2 text-white shadow-md transition-colors hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800"

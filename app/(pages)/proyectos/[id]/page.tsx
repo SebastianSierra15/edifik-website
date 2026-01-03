@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { ClientProject } from "@/src/components/projects";
 import { getProjectById } from "@/src/hooks/projects";
+import { ClientProject } from "@/src/components/projects";
 
 export const dynamic = "force-dynamic";
 

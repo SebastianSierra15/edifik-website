@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { ProjectFormData } from "@/src/interfaces";
 import { detailsProjectSchema as projectDetailsProjectSchema } from "@/src/schemas/admin/proyectos/details-project.schema";
-import { detailsProjectSchema as propertyDetailsProjectSchema } from "@/src/schemas/admin/propiedades/details-project.schema";
+import { detailsProjectSchema as propertyDetailsProjectSchema } from "@/src/schemas/admin/inmobiliaria/details-project.schema";
 
 const fieldSchemaMap = {
   priceError: "price",

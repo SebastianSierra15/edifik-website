@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 import clsx from "clsx";
 import Image from "next/image";
 import { Search, ShoppingCart, KeySquare, Building2 } from "lucide-react";
-import SearchProjects from "./searchProjects";
+import { SearchProjects } from "./SearchProjects";
 
 interface HeroSearchProps {
   projectTypeId: number;
@@ -15,7 +15,7 @@ interface HeroSearchProps {
   clearSearchInputSignal?: boolean;
 }
 
-export default function HeroSearch({
+export function HeroSearch({
   projectTypeId,
   setProjectTypeId,
   setSearchCoords,

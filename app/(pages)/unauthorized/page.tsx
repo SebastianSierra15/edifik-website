@@ -35,13 +35,6 @@ export default function UnauthorizedPage() {
         >
           Ir a Inicio
         </Link>
-
-        <Link
-          href="/auth/login"
-          className="px-6 py-3 rounded-lg bg-client-backgroundLight text-white font-semibold shadow-lg hover:bg-client-backgroundAlt transition-colors"
-        >
-          Iniciar Sesión
-        </Link>
       </div>
     </div>
   );

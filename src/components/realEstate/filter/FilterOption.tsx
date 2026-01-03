@@ -1,9 +1,5 @@
-import dynamic from "next/dynamic";
 import clsx from "clsx";
-
-const ChevronDown = dynamic(() =>
-  import("lucide-react").then((mod) => mod.ChevronDown)
-);
+import { ChevronDown } from "lucide-react";
 
 interface FilterOptionProps {
   label: string;
@@ -15,7 +11,7 @@ interface FilterOptionProps {
   onToggleOpen: () => void;
 }
 
-export default function FilterOption({
+export function FilterOption({
   label,
   icon,
   items,

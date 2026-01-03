@@ -3,20 +3,22 @@
 import { useState, useEffect } from "react";
 import clsx from "clsx";
 import dynamic from "next/dynamic";
-import { useGetProperties } from "@/app/hooks/realEstate/useGetProperties";
-import HeroSearch from "@/app/ui/realEstate/heroSection/heroSearch";
-import FilterMapControls from "@/app/ui/realEstate/filter/filterMapControls";
+import type { LatLngBounds } from "leaflet";
+import { useGetProperties } from "@/src/hooks/realEstate";
+import { HeroSearch, FilterMapControls } from "@/src/components/realEstate";
 
 const MapToggleButton = dynamic(
-  () => import("@/app/ui/realEstate/filter/mapToggleButton"),
+  () =>
+    import("@/src/components/realEstate").then((mod) => mod.MapToggleButton),
   { ssr: false }
 );
 const ProjectsContainer = dynamic(
-  () => import("@/app/ui/realEstate/projectsContainer"),
+  () =>
+    import("@/src/components/realEstate").then((mod) => mod.ProjectsContainer),
   { ssr: false, loading: () => null }
 );
 
-export default function ClientRealEstatePage() {
+export function ClientRealEstatePage() {
   const [selectedButtons, setSelectedButtons] = useState<
     Record<string, number[]>
   >({
@@ -33,10 +35,10 @@ export default function ClientRealEstatePage() {
 
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
   const [areaRange, setAreaRange] = useState({ min: 0, max: 0 });
-  const [entriesPerPage] = useState(2);
+  const [entriesPerPage] = useState(16);
   const [filterOpen, setFilterOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
-  const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
+  const [bounds, setBounds] = useState<LatLngBounds | null>(null);
   const [projectTypeId, setProjectTypeId] = useState(2);
   const [searchCoords, setSearchCoords] = useState<{
     latitude: number;

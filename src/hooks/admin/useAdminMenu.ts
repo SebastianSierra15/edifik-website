@@ -31,8 +31,8 @@ export function useAdminMenu() {
       permission: "Gestionar proyectos",
     },
     {
-      path: "/admin/propiedades",
-      label: "Propiedades",
+      path: "/admin/inmobiliaria",
+      label: "Inmobiliaria",
       icon: House,
       permission: "Gestionar propiedades",
     },

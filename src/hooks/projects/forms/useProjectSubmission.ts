@@ -22,7 +22,7 @@ interface ProjectSubmissionResult {
 type SubmissionPhase = "idle" | "saving-project" | "saving-images";
 
 const getRedirectPath = (isProperty: boolean) =>
-  isProperty ? "/admin/propiedades" : "/admin/proyectos";
+  isProperty ? "/admin/inmobiliaria" : "/admin/proyectos";
 
 const getUploadedUrlsFromError = (error: unknown): string[] => {
   if (error instanceof UploadImagesError) {

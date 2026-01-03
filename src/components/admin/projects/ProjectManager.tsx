@@ -5,12 +5,12 @@ import type { LatLngBounds } from "leaflet";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import clsx from "clsx";
+import { useGetProjects, useProjectApi, useOwner } from "@/src/hooks/projects";
+import { useAlert, useConfirmation, useLoading } from "@/src/providers";
 import { OwnerModalWrapper } from "./OwnerModalWrapper";
 import { ProjectManagerHeader } from "./ProjectManagerHeader";
 import { ProjectSearchAndCreate } from "./ProjectSearchAndCreate";
 import { ProjectTypeToggle } from "./ProjectTypeToggle";
-import { useGetProjects, useProjectApi, useOwner } from "@/src/hooks/projects";
-import { useAlert, useConfirmation, useLoading } from "@/src/providers";
 import { FilterMapControls } from "./filter/FilterMapControls";
 import { MapToggleButton } from "./filter";
 import { ProjectSkeletonList } from "./ProjectSkeletonList";
@@ -97,7 +97,14 @@ export function ProjectManager({
     setLoaderMessage(`Cargando ${isProperty ? "propiedades" : "proyectos"}...`);
 
     return () => hideLoader();
-  }, [hideLoader, isLoading, isProperty, setLoaderMessage, showLoader, showMap]);
+  }, [
+    hideLoader,
+    isLoading,
+    isProperty,
+    setLoaderMessage,
+    showLoader,
+    showMap,
+  ]);
 
   useEffect(() => {
     const message = sessionStorage.getItem("projectMessage");

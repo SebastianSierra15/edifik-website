@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 
-export default function FilterSkeleton() {
+export function FilterSkeleton() {
   return (
     <div className="w-full rounded-lg bg-client-backgroundAlt text-white py-4 px-4 shadow-md sm:w-72 md:w-80 animate-pulse">
       <div className="flex items-center justify-between mb-4 px-1">

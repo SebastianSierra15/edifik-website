@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import clsx from "clsx";
+"use client";
 
-const ChevronDown = dynamic(() =>
-  import("lucide-react").then((mod) => mod.ChevronDown)
-);
+import { useState, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
+import clsx from "clsx";
 
 interface FilterOptionSliderProps {
   label: string;
@@ -21,7 +19,7 @@ interface FilterOptionSliderProps {
   suffixText: string;
 }
 
-export default function FilterOptionSlider({
+export function FilterOptionSlider({
   label,
   icon,
   value,

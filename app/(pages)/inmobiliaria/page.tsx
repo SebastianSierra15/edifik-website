@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ClientRealEstatePage from "@/app/ui/realEstate/clientRealStatePage";
+import { ClientRealEstatePage } from "@/src/components/realEstate";
 
 export const metadata: Metadata = {
   title: "Inmobiliaria | EdifiK",

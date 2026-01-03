@@ -290,7 +290,7 @@ export function useUsersPage() {
 
   const handleEditUserProject = useCallback(
     (projectId: number) => {
-      router.push(`/admin/propiedades/${projectId}`);
+      router.push(`/admin/inmobiliaria/${projectId}`);
     },
     [router]
   );

@@ -20,7 +20,7 @@ export function ProjectManagerHeader({
           { "mb-10": isProperty, "mb-16": !isProperty }
         )}
       >
-        Gestión de {isProperty ? "Propiedades" : "Proyectos"}
+        Gestión de {isProperty ? "Inmobiliaria" : "Proyectos"}
       </h1>
       {children}
     </div>

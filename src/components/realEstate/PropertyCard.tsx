@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import clsx from "clsx";
 import Link from "next/link";
@@ -89,19 +91,19 @@ export function PropertyCard({
               {images.map((img, index) => {
                 const shouldPrioritize = priorityImage && index === 0;
                 return (
-                <Image
-                  key={index + img.projectId}
-                  src={img.url}
-                  alt={img.tag}
-                  fill
-                  priority={shouldPrioritize}
-                  loading={shouldPrioritize ? "eager" : "lazy"}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className={clsx(
-                    "absolute left-0 top-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out",
-                    index === currentImage ? "opacity-100" : "opacity-0"
-                  )}
-                />
+                  <Image
+                    key={index + img.projectId}
+                    src={img.url}
+                    alt={img.tag}
+                    fill
+                    priority={shouldPrioritize}
+                    loading={shouldPrioritize ? "eager" : "lazy"}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className={clsx(
+                      "absolute left-0 top-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out",
+                      index === currentImage ? "opacity-100" : "opacity-0"
+                    )}
+                  />
                 );
               })}
             </div>

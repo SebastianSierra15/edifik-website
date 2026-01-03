@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useMemo } from "react";
+import { memo, useMemo } from "react";
 import dynamic from "next/dynamic";
 import clsx from "clsx";
+import type { LatLngBounds } from "leaflet";
 import { ProjectView } from "@/src/interfaces";
-import { useProjectsMetadata } from "@/src/hooks/projects/metadata";
+import { useProjectsMetadata } from "@/src/hooks/projects";
 import { PropertyCard } from "@/src/components/realEstate";
-import ProjectsMap from "./projectsMap";
+import { ProjectsMap } from "./ProjectsMap";
 
 const ProjectFilter = dynamic(
-  () => import("@/app/ui/realEstate/projectFilter"),
+  () => import("@/src/components/realEstate").then((mod) => mod.ProjectFilter),
   {
     ssr: false,
     loading: () => null,
@@ -30,11 +31,11 @@ interface ProjectsContainerProps {
   setSelectedButtons: React.Dispatch<
     React.SetStateAction<Record<string, number[]>>
   >;
-  setBounds: (bounds: google.maps.LatLngBounds | null) => void;
+  setBounds: (bounds: LatLngBounds | null) => void;
   highlightCoords?: { latitude: number; longitude: number } | null;
 }
 
-const ProjectsContainer = ({
+const ProjectsContainerComponent = ({
   projects,
   totalEntries,
   isLoading,
@@ -152,14 +153,17 @@ const ProjectsContainer = ({
   );
 };
 
-export default React.memo(ProjectsContainer, (prevProps, nextProps) => {
-  return (
-    prevProps.projects.length === nextProps.projects.length &&
-    prevProps.isLoading === nextProps.isLoading &&
-    prevProps.totalEntries === nextProps.totalEntries &&
-    JSON.stringify(prevProps.selectedButtons) ===
-      JSON.stringify(nextProps.selectedButtons) &&
-    prevProps.filterOpen === nextProps.filterOpen &&
-    prevProps.showMap === nextProps.showMap
-  );
-});
+export const ProjectsContainer = memo(
+  ProjectsContainerComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.projects.length === nextProps.projects.length &&
+      prevProps.isLoading === nextProps.isLoading &&
+      prevProps.totalEntries === nextProps.totalEntries &&
+      JSON.stringify(prevProps.selectedButtons) ===
+        JSON.stringify(nextProps.selectedButtons) &&
+      prevProps.filterOpen === nextProps.filterOpen &&
+      prevProps.showMap === nextProps.showMap
+    );
+  }
+);

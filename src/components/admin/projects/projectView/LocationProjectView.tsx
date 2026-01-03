@@ -18,7 +18,7 @@ export function LocationProjectView({
   onPrevious,
   onNext,
 }: LocationProjectViewProps) {
-  const isMapsReady = typeof window !== "undefined" && !!window.google?.maps;
+  const isMapsReady = typeof window !== "undefined";
 
   return (
     <div className="container mx-auto w-full rounded-lg bg-premium-backgroundLight p-6 shadow-lg dark:bg-premium-backgroundDark">

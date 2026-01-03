@@ -12,7 +12,7 @@ interface FilterMapControlsProps {
   totalEntries: number;
 }
 
-export default function FilterMapControls({
+export function FilterMapControls({
   filterOpen,
   setFilterOpen,
   showMap,

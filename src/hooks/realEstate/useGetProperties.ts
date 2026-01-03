@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import type { LatLngBounds } from "leaflet";
 import { ProjectView } from "@/src/interfaces";
 import { RealEstateService } from "@/src/services/realEstate";
 
@@ -8,7 +9,7 @@ interface UseGetPropertiesOptions {
   entriesPerPage: number;
   selectedButtons: Record<string, number[]>;
   projectTypeId: number | null;
-  bounds?: google.maps.LatLngBounds | null;
+  bounds?: LatLngBounds | null;
   showMap: boolean;
   searchCoords?: { latitude: number; longitude: number } | null;
 }
@@ -28,7 +29,10 @@ export function useGetProperties({
   const [errorProjects, setErrorProjects] = useState<string | null>(null);
 
   const pageRef = useRef(1);
-  const lastFiltersRef = useRef<string>("");
+  const boundsRef = useRef<LatLngBounds | null>(bounds);
+  const isLoadingRef = useRef(false);
+  const lastQueryRef = useRef<string>("");
+  const lastBoundsRef = useRef<string>("");
 
   const resetProjects = useCallback(() => {
     setProjects([]);
@@ -36,23 +40,33 @@ export function useGetProperties({
     pageRef.current = 1;
   }, []);
 
+  useEffect(() => {
+    boundsRef.current = bounds ?? null;
+  }, [bounds]);
+
   const fetchProjects = useCallback(
     async (isLoadMore = false, page = 1) => {
-      if (isLoading) return;
+      if (isLoadingRef.current) return;
 
-      const filterSignature = JSON.stringify({
+      const activeBounds = boundsRef.current;
+      const boundsSignature =
+        showMap && activeBounds ? activeBounds.toBBoxString() : null;
+      const querySignature = JSON.stringify({
         selectedButtons,
         projectTypeId,
         showMap,
-        bounds: showMap && bounds ? bounds.toUrlValue() : null,
+        bounds: boundsSignature,
         searchCoords,
       });
 
-      if (!isLoadMore && filterSignature === lastFiltersRef.current) {
+      if (!isLoadMore && querySignature === lastQueryRef.current) {
         return;
       }
 
-      lastFiltersRef.current = filterSignature;
+      if (!isLoadMore) {
+        lastQueryRef.current = querySignature;
+      }
+      isLoadingRef.current = true;
       setIsLoading(true);
       setErrorProjects(null);
 
@@ -63,12 +77,12 @@ export function useGetProperties({
           selectedButtons,
           projectTypeId,
           bounds:
-            showMap && bounds
+            showMap && activeBounds
               ? {
-                  minLat: bounds.getSouthWest().lat(),
-                  maxLat: bounds.getNorthEast().lat(),
-                  minLng: bounds.getSouthWest().lng(),
-                  maxLng: bounds.getNorthEast().lng(),
+                  minLat: activeBounds.getSouthWest().lat,
+                  maxLat: activeBounds.getNorthEast().lat,
+                  minLng: activeBounds.getSouthWest().lng,
+                  maxLng: activeBounds.getNorthEast().lng,
                 }
               : undefined,
           searchCoords,
@@ -89,6 +103,7 @@ export function useGetProperties({
       } catch (error: any) {
         setErrorProjects(error.message || "Error al cargar propiedades");
       } finally {
+        isLoadingRef.current = false;
         setIsLoading(false);
       }
     },
@@ -97,20 +112,37 @@ export function useGetProperties({
       selectedButtons,
       projectTypeId,
       showMap,
-      bounds,
       searchCoords,
-      isLoading,
     ]
   );
 
   useEffect(() => {
     resetProjects();
+    lastQueryRef.current = "";
+    lastBoundsRef.current = "";
     const timeout = setTimeout(() => {
       fetchProjects(false, 1);
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(timeout);
-  }, [selectedButtons, projectTypeId, showMap, bounds, searchCoords]);
+  }, [selectedButtons, projectTypeId, showMap, searchCoords, fetchProjects, resetProjects]);
+
+  useEffect(() => {
+    if (!showMap || !bounds) return;
+
+    const boundsSignature = bounds.toBBoxString();
+    if (boundsSignature === lastBoundsRef.current) {
+      return;
+    }
+
+    lastBoundsRef.current = boundsSignature;
+
+    const timeout = setTimeout(() => {
+      fetchProjects(false, 1);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [bounds, showMap, fetchProjects]);
 
   const fetchMoreProjects = useCallback(() => {
     if (isLoading) return;

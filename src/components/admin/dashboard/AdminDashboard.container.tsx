@@ -40,9 +40,9 @@ export function AdminDashboardContainer() {
       permission: "Gestionar proyectos",
     },
     {
-      href: "/admin/propiedades",
+      href: "/admin/inmobiliaria",
       Icon: House,
-      title: "Propiedades",
+      title: "Inmobiliaria",
       description:
         "Gestiona las propiedades disponibles para venta y arriendo, incluyendo tipos de vivienda y características.",
       permission: "Gestionar propiedades",

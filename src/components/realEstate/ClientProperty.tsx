@@ -3,22 +3,15 @@
 import { useEffect } from "react";
 import { useProjectById } from "@/src/hooks/projects";
 import { useLoading } from "@/src/providers";
-import { ProjectView } from "@/src/components/realEstate/project";
-import type { ProjectDetails } from "@/src/interfaces";
+import { ProjectView } from "@/src/components/realEstate";
 
-interface ClientProjectProps {
+interface ClientPropertyProps {
   id: string;
-  initialProject?: ProjectDetails;
 }
 
-export function ClientProject({ id, initialProject }: ClientProjectProps) {
+export function ClientProperty({ id }: ClientPropertyProps) {
   const projectId = decodeURIComponent(id);
-  const { project, loading } = useProjectById(
-    Number(projectId),
-    true,
-    false,
-    initialProject
-  );
+  const { project, loading } = useProjectById(Number(projectId), false);
   const { showLoader, hideLoader } = useLoading();
 
   useEffect(() => {

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { ProjectFormData } from "@/src/interfaces";
 import { getBasicProjectSchema as getProjectBasicProjectSchema } from "@/src/schemas/admin/proyectos/basic-project.schema";
-import { getBasicProjectSchema as getPropertyBasicProjectSchema } from "@/src/schemas/admin/propiedades/basic-project.schema";
+import { getBasicProjectSchema as getPropertyBasicProjectSchema } from "@/src/schemas/admin/inmobiliaria/basic-project.schema";
 import { useCheckName } from "../../checkName";
 
 interface BasicProjectErrors {

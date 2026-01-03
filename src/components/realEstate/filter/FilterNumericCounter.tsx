@@ -1,9 +1,5 @@
-import dynamic from "next/dynamic";
 import clsx from "clsx";
-
-const ChevronDown = dynamic(() =>
-  import("lucide-react").then((mod) => mod.ChevronDown)
-);
+import { ChevronDown } from "lucide-react";
 
 interface NumericCounterProps {
   label: string;
@@ -15,7 +11,7 @@ interface NumericCounterProps {
   decrement: () => void;
 }
 
-export default function FilterNumericCounter({
+export function FilterNumericCounter({
   label,
   icon,
   isOpen,

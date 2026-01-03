@@ -1,33 +1,23 @@
 "use client";
 
 import { memo, useState, useEffect, useRef } from "react";
-import dynamic from "next/dynamic";
-import FilterOption from "./filter/filterOption";
-import FilterNumericCounter from "./filter/filterNumericCounter";
-import FilterOptionSlider from "./filter/filterOptionSlider";
-import FilterSkeleton from "../skeletons/filterSkeleton";
-
-const Building2 = dynamic(() =>
-  import("lucide-react").then((mod) => mod.Building2)
-);
-const Building = dynamic(() =>
-  import("lucide-react").then((mod) => mod.Building)
-);
-const House = dynamic(() => import("lucide-react").then((mod) => mod.House));
-const DollarSign = dynamic(() =>
-  import("lucide-react").then((mod) => mod.DollarSign)
-);
-const Bed = dynamic(() => import("lucide-react").then((mod) => mod.Bed));
-const Toilet = dynamic(() => import("lucide-react").then((mod) => mod.Toilet));
-const Sofa = dynamic(() => import("lucide-react").then((mod) => mod.Sofa));
-const Warehouse = dynamic(() =>
-  import("lucide-react").then((mod) => mod.Warehouse)
-);
-const ConciergeBell = dynamic(() =>
-  import("lucide-react").then((mod) => mod.ConciergeBell)
-);
-const X = dynamic(() => import("lucide-react").then((mod) => mod.X));
-const Ruler = dynamic(() => import("lucide-react").then((mod) => mod.Ruler));
+import {
+  Building2,
+  Building,
+  House,
+  Bed,
+  Toilet,
+  DollarSign,
+  Sofa,
+  Warehouse,
+  ConciergeBell,
+  X,
+  Ruler,
+} from "lucide-react";
+import { FilterOption } from "./filter/FilterOption";
+import { FilterNumericCounter } from "./filter/FilterNumericCounter";
+import { FilterOptionSlider } from "./filter/FilterOptionSlider";
+import { FilterSkeleton } from "./filter/FilterSkeleton";
 
 type Category =
   | "cities"
@@ -53,7 +43,7 @@ interface ProjectFilterProps {
   isLoading: boolean;
 }
 
-const ProjectFilter = ({
+const ProjectFilterComponent = ({
   selectedButtons,
   setSelectedButtons,
   setFilterOpen,
@@ -329,4 +319,4 @@ const ProjectFilter = ({
   );
 };
 
-export default memo(ProjectFilter);
+export const ProjectFilter = memo(ProjectFilterComponent);

@@ -1,5 +1,3 @@
-"use client";
-
 import { House, Map } from "lucide-react";
 
 interface MapToggleButtonProps {
@@ -7,10 +5,7 @@ interface MapToggleButtonProps {
   setShowMap: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function MapToggleButton({
-  showMap,
-  setShowMap,
-}: MapToggleButtonProps) {
+export function MapToggleButton({ showMap, setShowMap }: MapToggleButtonProps) {
   const handleClick = () => {
     setShowMap((prev) => !prev);
   };
