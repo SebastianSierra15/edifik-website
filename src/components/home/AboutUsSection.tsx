@@ -1,4 +1,5 @@
 import { AnimatedStats } from "./AnimatedStats";
+import { BRAND } from "@/src/config";
 
 const stats = [
   { label: "Años en el mercado", value: 2 },
@@ -23,7 +24,9 @@ export function AboutUsSection() {
             <span className="font-semibold text-white">EXPERIENCIA</span> Y EL{" "}
             <span className="font-semibold text-white">CONOCIMIENTO</span> PARA
             DISEÑAR TU ESPACIO, SOMOS{" "}
-            <span className="font-semibold text-white">EDIFIK.</span>
+            <span className="font-semibold uppercase text-white">
+              ${BRAND.name}.
+            </span>
           </h2>
         </div>
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BRAND } from "@/src/config";
 import {
   InstagramIcon,
   TikTokIcon,
@@ -123,7 +124,7 @@ export function Footer() {
 
       <div className="flex justify-between items-center text-sm mx-10">
         <span>
-          &copy; {currentYear} Edifik - Todos los derechos reservados.
+          &copy; {currentYear} {BRAND.name} - Todos los derechos reservados.
         </span>
 
         <div className="flex space-x-4">

@@ -1,4 +1,5 @@
 import { buildDefaultEmailTemplate } from "../../shared";
+import { BRAND } from "@/src/config";
 
 export class PasswordRecoveryEmailTemplate {
   build(code: string): string {
@@ -9,7 +10,7 @@ export class PasswordRecoveryEmailTemplate {
       items: [{ label: "Código temporal", value: code }],
       body: "Usa este código como contraseña temporal para iniciar sesión. Una vez dentro, podrás cambiar tu contraseña desde tu perfil.",
       buttonText: "Ir a iniciar sesión",
-      buttonUrl: "https://edifik.co/auth/login",
+      buttonUrl: `${BRAND.appUrl}/auth/login`,
     });
   }
 }

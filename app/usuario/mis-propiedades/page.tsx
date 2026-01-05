@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import { BRAND } from "@/src/config";
 import { ClientMyPropertiesPage } from "@/src/components/user";
 
 export const metadata: Metadata = {
-  title: "Mis Propiedades | EdifiK",
-  description:
-    "Gestiona tus propiedades publicadas, edita información y revisa el estado de cada una desde tu cuenta.",
+  title: `Mis Propiedades`,
+  description: `Gestiona tus propiedades publicadas, edita información y revisa el estado de cada una desde tu cuenta en ${BRAND.name}.`,
 };
 
 export default function MyPropertiesPage() {

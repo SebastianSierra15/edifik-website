@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import { BRAND } from "@/src/config";
 import { ClientUploadPropertyPage } from "@/src/components/user";
 import { Permission, requireAuthWithPermissions } from "@/src/modules/auth";
 
 export const metadata: Metadata = {
-  title: "Publicar Propiedad | EdifiK",
-  description:
-    "Sube una propiedad en pocos pasos. Agrega fotos, precios, ubicación y comienza a recibir contactos.",
+  title: `Publicar Propiedad`,
+  description: `Sube una propiedad en pocos pasos. Agrega fotos, precios, ubicación y comienza a recibir contactos en ${BRAND.name}.`,
 };
 
 export default async function Page() {

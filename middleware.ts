@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
-import { withPath } from "@/lib/middleware/withPath";
+import { withPath } from "@/lib/withPath";
 import { isAdmin, AppJWT } from "./src/shared";
 import { Permission } from "./src/modules/auth";
-import { PROTECTED_ROUTES } from "./src/config";
+import { PROTECTED_ROUTES } from "./src/config/protectedRoutes";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { AdminDashboardView } from "./AdminDashboard.view";
-import type { Permission } from "@/src/interfaces"; // ajusta si tu Permission vive en otro path
+import type { UserPermission } from "@/src/modules/auth";
 
 // Icons (se mantienen dinámicos)
 const Building2 = dynamic(() =>
@@ -79,7 +79,7 @@ export function AdminDashboardContainer() {
     },
   ];
 
-  const userPermissions: Permission[] = session?.user?.permissions ?? [];
+  const userPermissions: UserPermission[] = session?.user?.permissions ?? [];
 
   const filteredCards =
     status === "authenticated"

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { BRAND } from "@/src/config";
 import {
   BimHero,
   BrandsShowcase,
@@ -8,9 +9,8 @@ import {
 } from "@/src/components/bim";
 
 export const metadata: Metadata = {
-  title: "BIM | Tecnología en EdifiK",
-  description:
-    "Descubre cómo la metodología BIM transforma la planificación, diseño y construcción de nuestros proyectos inmobiliarios en EdifiK.",
+  title: `BIM`,
+  description: `Descubre cómo la metodología BIM transforma la planificación, diseño y construcción de nuestros proyectos inmobiliarios en ${BRAND.name}.`,
 };
 
 export default function page() {

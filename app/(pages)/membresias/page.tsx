@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { ClientMembershipsPage } from "@/src/components/memberships";
 
 export const metadata: Metadata = {
-  title: "Membresías | EdifiK",
+  title: `Membresías`,
   description:
     "Activa una membresía para publicar más propiedades, mejorar tu visibilidad y acceder a herramientas premium.",
 };

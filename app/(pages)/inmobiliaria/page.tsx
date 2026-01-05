@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ClientRealEstatePage } from "@/src/components/realEstate";
 
 export const metadata: Metadata = {
-  title: "Inmobiliaria | EdifiK",
+  title: `Inmobiliaria`,
   description:
     "Descubre propiedades en venta, arriendo y sobre planos con filtros, mapas, y toda la información que necesitas.",
 };

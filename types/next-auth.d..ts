@@ -1,5 +1,5 @@
 import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
-import { Permission } from "@/lib/definitios";
+import { UserPermission } from "@/src/modules/auth";
 
 declare module "next-auth" {
   interface Session {
@@ -7,7 +7,7 @@ declare module "next-auth" {
       id?: string | null;
       role?: string | null;
       membershipId?: string | null;
-      permissions?: Permission[] | null;
+      permissions?: UserPermission[] | null;
     } & DefaultSession["user"];
   }
 
@@ -15,7 +15,7 @@ declare module "next-auth" {
     id: string;
     role: string;
     membershipId: string;
-    permissions: Permission[];
+    permissions: UserPermission[];
   }
 }
 
@@ -24,6 +24,6 @@ declare module "next-auth/jwt" {
     id: string;
     role: string;
     membershipId: string;
-    permissions: Permission[];
+    permissions: UserPermission[];
   }
 }

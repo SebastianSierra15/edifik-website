@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { BRAND } from "@/src/config";
 import {
   AboutUsSection,
   HeroSection,
@@ -11,9 +12,8 @@ import {
 import { getHomeProjectsServer } from "@/src/hooks/projects";
 
 export const metadata: Metadata = {
-  title: "Inicio | EdifiK",
-  description:
-    "Explora las mejores propiedades, proyectos y servicios inmobiliarios en un solo lugar con EdifiK.",
+  title: `Inicio`,
+  description: `Explora las mejores propiedades, proyectos y servicios inmobiliarios en un solo lugar con ${BRAND.name}.`,
 };
 
 export default async function Home() {

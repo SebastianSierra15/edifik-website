@@ -1,3 +1,5 @@
+﻿import { BRAND } from "@/src/config";
+
 export type EmailTemplateOptions = {
   title: string;
   greeting?: string;
@@ -15,8 +17,8 @@ export function buildDefaultEmailTemplate(options: EmailTemplateOptions) {
     intro,
     items = [],
     body,
-    buttonText = "Ir a EdifiK",
-    buttonUrl = "https://edifik.co/auth/login",
+    buttonText = `Ir a ${BRAND.name}`,
+    buttonUrl = `${BRAND.appUrl}/auth/login`,
   } = options;
 
   const itemsHtml = items
@@ -109,7 +111,7 @@ export function buildDefaultEmailTemplate(options: EmailTemplateOptions) {
       <body>
           <div class="container">
               <div class="header">
-                  <img src="https://tu-dominio.com/images/logo.webp" alt="EdifiK Logo">
+                  <img src="https://tu-dominio.com/images/logo.webp" alt="${BRAND.name} Logo">
               </div>
               <div class="content">
                   <h2>${title}</h2>
@@ -122,8 +124,8 @@ export function buildDefaultEmailTemplate(options: EmailTemplateOptions) {
                   </div>
               </div>
               <div class="footer">
-                  <p>© ${new Date().getFullYear()} EdifiK. Todos los derechos reservados.</p>
-                  <p><a href="https://edifik.com">Sitio Web</a> | <a href="mailto:edifik.arquitectos23@edifik.com">Soporte</a></p>
+                  <p>Â© ${new Date().getFullYear()} ${BRAND.name}. Todos los derechos reservados.</p>
+                  <p><a href="https://${BRAND.domain}">Sitio Web</a> | <a href="mailto:${BRAND.supportEmail}">Soporte</a></p>
               </div>
           </div>
       </body>

@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { BRAND } from "@/src/config";
 import {
   X,
   Home,
@@ -63,7 +64,7 @@ export function SideBarMenu({ isOpen, onClose }: SidebarMenuProps) {
 
         <ul className="py-2 text-black">
           <li className="px-6 text-sm font-semibold text-premium-textSecondary uppercase">
-            EdifiK
+            {BRAND.name}
           </li>
 
           <li>

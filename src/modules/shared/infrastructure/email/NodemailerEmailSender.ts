@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { BRAND } from "@/src/config";
 import { EmailSender } from "../../domain/email/EmailSender";
 
 export class NodemailerEmailSender implements EmailSender {
@@ -12,7 +13,7 @@ export class NodemailerEmailSender implements EmailSender {
     });
 
     await transporter.sendMail({
-      from: `"EdifiK" <${process.env.EMAIL_USER}>`,
+      from: `"${BRAND.name}" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,

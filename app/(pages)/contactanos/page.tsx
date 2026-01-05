@@ -7,7 +7,7 @@ import {
 } from "@/src/components/contact";
 
 export const metadata: Metadata = {
-  title: "Contáctanos | EdifiK",
+  title: `Contáctanos`,
   description:
     "¿Tienes preguntas o deseas más información? Nuestro equipo está listo para ayudarte en tu camino inmobiliario.",
 };

@@ -1,3 +1,4 @@
+﻿import { BRAND } from "@/src/config";
 import Image from "next/image";
 import { ProfileCard } from "./ProfileCard";
 
@@ -8,7 +9,7 @@ export function WhoWeAreSection() {
         <div className="relative w-[500px] h-[500px] mx-auto lg:mx-0 lg:ml-auto mt-12 lg:mt-0">
           <Image
             src="https://d3fhc8hmbgwz4k.cloudfront.net/projects/images/Casa/1111/Vista Aérea/1732917153053/93863f76-3413-4b02-82f4-77ac0edb9d66.webp"
-            alt="Edifik"
+            alt={BRAND.name}
             fill
             className="object-cover grayscale bg-black"
           />
@@ -16,7 +17,7 @@ export function WhoWeAreSection() {
           <div className="absolute inset-0 z-20 flex items-center justify-center w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] m-auto">
             <Image
               src="/images/logo.webp"
-              alt="Logo Edifik"
+              alt={`Logo ${BRAND.name}`}
               fill
               className="object-contain"
             />
@@ -30,13 +31,13 @@ export function WhoWeAreSection() {
         </h2>
 
         <div className="bg-white rounded-r-3xl p-8 max-w-[90%] text-sm text-black">
-          Edifik se especializa en el diseño y desarrollo de proyectos urbanos
-          sostenibles. Nos comprometemos con la innovación y la protección del
-          medio ambiente, creando espacios que mejoran la calidad de vida.
-          Ejemplos como Quintas del Lago reflejan nuestra dedicación a integrar
-          modernidad y naturaleza, usando recursos naturales y prácticas
-          eco-amigables. En Edifik, diseñamos entornos funcionales y ecológicos
-          para un futuro sostenible.
+          {BRAND.name} se especializa en el diseño y desarrollo de proyectos
+          urbanos sostenibles. Nos comprometemos con la innovación y la
+          protección del medio ambiente, creando espacios que mejoran la calidad
+          de vida. Ejemplos como Quintas del Lago reflejan nuestra dedicación a
+          integrar modernidad y naturaleza, usando recursos naturales y
+          prácticas eco-amigables. En {BRAND.name}, diseñamos entornos
+          funcionales y ecológicos para un futuro sostenible.
         </div>
 
         <div className="flex flex-col sm:flex-row gap-10 items-center justify-center mt-6">
@@ -45,7 +46,7 @@ export function WhoWeAreSection() {
             image="/images/profile/Alejandro.webp"
             name="ALEJANDRO TORRES"
             title="Arquitecto Universidad Piloto"
-            role="CEO Edifik Estudios de Arquitectura"
+            role={`CEO ${BRAND.name} Estudios de Arquitectura`}
             specialty="Arquitectura"
           />
           */}
@@ -54,7 +55,7 @@ export function WhoWeAreSection() {
             image="/images/profile/Andres.webp"
             name="ANDRÉS TRUJILLO"
             title="Arquitecto Universidad Piloto"
-            role="CEO Edifik Estudios de Arquitectura"
+            role={`CEO ${BRAND.name} Estudios de Arquitectura`}
             specialty="Arquitectura"
           />
         </div>

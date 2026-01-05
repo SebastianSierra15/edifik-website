@@ -1,3 +1,4 @@
+﻿import { BRAND } from "@/src/config";
 import { SocialResponsibility } from "./SocialResponsibility";
 
 export function SocialSection() {
@@ -5,7 +6,7 @@ export function SocialSection() {
     <div className="-translate-y-10 bg-client-background pt-12 space-y-4">
       <SocialResponsibility
         title="Diseño con propósito"
-        description="En EdifiK creemos que la arquitectura debe servir a las personas, al entorno y al futuro, generando impacto positivo en cada proyecto."
+        description={`En ${BRAND.name} creemos que la arquitectura debe servir a las personas, al entorno y al futuro, generando impacto positivo en cada proyecto.`}
         points={[
           {
             title: "Arquitectura con sentido social",

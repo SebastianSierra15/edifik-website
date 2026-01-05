@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BRAND } from "@/src/config";
 import { getProjectById } from "@/src/hooks/projects";
 import { ClientEditPropertyPage } from "@/src/components/user";
 import { Permission, requireAuthWithPermissions } from "@/src/modules/auth";
@@ -15,19 +16,17 @@ export async function generateMetadata({
   const project = await getProjectById(projectId, false, false);
 
   return {
-    title: project?.name
-      ? `Editar: ${project.name} | EdifiK`
-      : "Editar Propiedad | EdifiK",
+    title: project?.name ? `Editar: ${project.name}` : `Editar Propiedad`,
     description:
       project?.shortDescription ||
-      "Edita los datos de tu propiedad publicada en EdifiK.",
+      `Edita los datos de tu propiedad publicada en ${BRAND.name}.`,
     openGraph: {
-      title: project?.name || "Editar Propiedad en EdifiK",
+      title: project?.name || `Editar Propiedad en ${BRAND.name}`,
       description:
         project?.shortDescription ||
-        "Edita tu propiedad publicada en la plataforma EdifiK.",
-      url: `http://edifika.co/usuario/${id}`,
-      siteName: "EdifiK",
+        `Edita tu propiedad publicada en la plataforma ${BRAND.name}.`,
+      url: `${BRAND.appUrl}/usuario/${id}`,
+      siteName: BRAND.name,
       type: "website",
     },
   };
@@ -47,5 +46,7 @@ export default async function EditPropertyPage({
       (perm) => perm.name === Permission.ManageOwnProperties
     ) || false;
 
-  return <ClientEditPropertyPage projectId={id} hasPermission={hasPermission} />;
+  return (
+    <ClientEditPropertyPage projectId={id} hasPermission={hasPermission} />
+  );
 }

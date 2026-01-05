@@ -1,13 +1,13 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { BRAND } from "@/src/config";
 import { Logo } from "@/src/components/auth/Logo";
 import { LoginForm, AuthProviders } from "@/src/components/auth";
 
 export const metadata: Metadata = {
-  title: "Iniciar Sesión | EdifiK",
-  description:
-    "Accede a tu cuenta para gestionar tus propiedades, proyectos y membresías en la plataforma inmobiliaria EdifiK.",
+  title: `Iniciar Sesión | ${BRAND.name}`,
+  description: `Accede a tu cuenta para gestionar tus propiedades, proyectos y membresías en la plataforma inmobiliaria ${BRAND.name}.`,
 };
 
 export default function LoginPage() {
@@ -30,7 +30,7 @@ export default function LoginPage() {
           </div>
 
           <h1 className="text-3xl font-bold text-client-text mb-2">
-            Bienvenido a Edifik
+            Bienvenido a {BRAND.name}
           </h1>
 
           <p className="text-client-textSecondary">

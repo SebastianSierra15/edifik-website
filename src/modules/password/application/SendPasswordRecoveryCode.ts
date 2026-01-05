@@ -1,3 +1,4 @@
+﻿import { BRAND } from "@/src/config";
 import { BadRequestError } from "@/src/shared";
 import { PasswordRecoveryEmailTemplate } from "../domain/PasswordRecoveryEmailTemplate";
 import { PasswordRepository } from "../domain/PasswordRepository";
@@ -31,7 +32,7 @@ export class SendPasswordRecoveryCode {
 
     await this.emailSender.send(
       email,
-      "Recuperación de contraseña - EdifiK",
+      `Recuperación de contraseña - ${BRAND.name}`,
       html
     );
 

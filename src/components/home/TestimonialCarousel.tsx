@@ -1,5 +1,6 @@
 "use client";
 
+import { BRAND } from "@/src/config";
 import { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -7,30 +8,43 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const testimonials = [
   {
-    text: "Desde el primer momento en que contacté a Edifik, supe que estaba en buenas manos. Su equipo de arquitectos escuchó atentamente mis ideas y necesidades, y me presentó un diseño que superó mis expectativas.",
+    text: `Desde el primer momento en que contacté a ${BRAND.name}, supe que estaba en buenas manos. Su equipo de arquitectos escuchó atentamente mis ideas y necesidades, y me presentó un diseño que superó mis expectativas.`,
     name: "Natalia Ortega",
-    role: "Cliente Edifik",
+    role: `Cliente ${BRAND.name}`,
     image: "/images/home/avatar.webp",
   },
   {
-    text: "Trabajar con Edifik fue una experiencia increíble. No solo entendieron mi visión, sino que la llevaron a otro nivel con su profesionalismo y creatividad.",
+    text: `Trabajar con ${BRAND.name} fue una experiencia increíble. No solo entendieron mi visión, sino que la llevaron a otro nivel con su profesionalismo y creatividad.`,
     name: "Laura y Sebastián",
-    role: "Clientes Edifik",
+    role: `Clientes ${BRAND.name}`,
     image: "/images/home/avatar.webp",
   },
   {
-    text: "La dedicación y atención al detalle de Edifik me dejaron completamente satisfecho. Recomiendo sus servicios sin dudarlo.",
+    text: `La dedicación y atención al detalle de ${BRAND.name} me dejaron completamente satisfecho. Recomiendo sus servicios sin dudarlo.`,
     name: "María Fernanda Ríos",
-    role: "Cliente Edifik",
+    role: `Cliente ${BRAND.name}`,
     image: "/images/home/avatar.webp",
   },
 ];
 
+const fallbackTestimonial = {
+  text: "",
+  name: "",
+  role: "",
+  image: "/images/home/avatar.webp",
+};
+
 export function TestimonialCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const activeTestimonial =
+    testimonials[currentIndex] ??
+    testimonials[0] ??
+    fallbackTestimonial;
 
   const nextSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+    setCurrentIndex(
+      (prevIndex) => (prevIndex + 1) % testimonials.length
+    );
   }, []);
 
   const prevSlide = () => {
@@ -55,13 +69,13 @@ export function TestimonialCarousel() {
 
       <div className="max-w-2xl text-center text-client-textSecondary gap-y-16">
         <p className="text-lg h-60 sm:h-36 md:text-xl font-light leading-relaxed">
-          {testimonials[currentIndex].text}
+          {activeTestimonial.text}
         </p>
 
         <div className="mt-6 flex justify-center items-center gap-x-4">
           <Image
-            src={testimonials[currentIndex].image}
-            alt={testimonials[currentIndex].name}
+            src={activeTestimonial.image}
+            alt={activeTestimonial.name}
             width={50}
             height={50}
             className="rounded-full border border-client-primary"
@@ -69,10 +83,10 @@ export function TestimonialCarousel() {
 
           <div className="flex flex-col pr-2 w-36">
             <p className="mt-2 font-semibold">
-              {testimonials[currentIndex].name}
+              {activeTestimonial.name}
             </p>
             <span className="text-sm text-client-textSecondary">
-              {testimonials[currentIndex].role}
+              {activeTestimonial.role}
             </span>
           </div>
         </div>

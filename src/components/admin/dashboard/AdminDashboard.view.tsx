@@ -1,3 +1,4 @@
+﻿import { BRAND } from "@/src/config";
 import { AdminCard } from "./AdminCard";
 import { AdminCardSkeleton } from "./AdminCardSkeleton";
 
@@ -18,7 +19,7 @@ export function AdminDashboardView({ status, cards, skeletonCount }: Props) {
   return (
     <div className="container mx-auto min-h-[calc(100vh-200px)] bg-premium-background px-4 pb-12 dark:bg-premium-background">
       <h1 className="mb-10 text-center text-4xl font-semibold text-premium-primary dark:text-premium-primaryLight min-h-[4rem]">
-        Bienvenido al Panel de Administración de EdifiK
+        Bienvenido al Panel de Administración de {BRAND.name}
       </h1>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">

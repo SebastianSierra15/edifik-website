@@ -1,3 +1,4 @@
+﻿import { BRAND } from "@/src/config";
 import { BadRequestError } from "@/src/shared";
 import { RegisterUserRepository } from "../domain/RegisterUserRepository";
 import { PasswordHasher } from "../../password/domain/Password";
@@ -56,7 +57,7 @@ export class RegisterUser {
       phoneNumber,
     });
 
-    await this.emailSender.send(email, "Bienvenido a EdifiK", html);
+    await this.emailSender.send(email, `Bienvenido a ${BRAND.name}`, html);
 
     return { message: "Usuario registrado exitosamente" };
   }

@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
+
+import { BRAND } from "@/src/config";
 import { AlertProvider, ConfirmationProvider } from "@/src/providers";
 import { AdminHeader, AdminFooter } from "@/src/components/layout";
+
+export const metadata: Metadata = {
+  title: `Admin | ${BRAND.name}`,
+  description: `Panel de administracion de ${BRAND.name}.`,
+};
 
 export default function AdminLayout({
   children,

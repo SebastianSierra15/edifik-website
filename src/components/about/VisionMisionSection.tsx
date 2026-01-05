@@ -1,3 +1,4 @@
+﻿import { BRAND } from "@/src/config";
 import { VisionMisionCard } from "./VisionMisionCard";
 
 export function VisionMisionSection() {
@@ -27,9 +28,9 @@ export function VisionMisionSection() {
 
             <VisionMisionCard
               title="Misión"
-              description="En Edifik, somos una empresa de arquitectura e inmobiliaria que diseña, construye y comercializa espacios con propósito.
+              description={`En ${BRAND.name}, somos una empresa de arquitectura e inmobiliaria que diseña, construye y comercializa espacios con propósito.
               Combinamos la creatividad del diseño arquitectónico, la eficiencia constructiva y la inteligencia del mercado inmobiliario para ofrecer soluciones completas, sostenibles y emocionalmente conectadas.
-              Nuestro compromiso es acompañar a cada cliente desde la idea hasta la entrega, desde el diseño hasta la venta, creando espacios que se habitan, se valoran y se sienten."
+              Nuestro compromiso es acompañar a cada cliente desde la idea hasta la entrega, desde el diseño hasta la venta, creando espacios que se habitan, se valoran y se sienten.`}
               imageSrc="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/about/Vision2.webp"
               bgColor="bg-client-accentLight"
             />

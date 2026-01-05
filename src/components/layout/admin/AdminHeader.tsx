@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useAdminMenu } from "@/src/hooks/admin";
+import { BRAND } from "@/src/config";
 import { AdminNav } from "./AdminNav";
 import { AdminMenuContainer } from "./AdminMenuContainer";
 
@@ -16,7 +17,7 @@ export function AdminHeader() {
           <div className="flex items-center justify-start w-[100px] h-[38px]">
             <Image
               src="/images/logo.webp"
-              alt="Logo de EdifiK"
+              alt={`Logo de ${BRAND.name}`}
               title="Ir al inicio"
               width={80}
               height={35}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BRAND } from "@/src/config";
 import { getProjectById } from "@/src/hooks/projects";
 import { ClientProperty } from "@/src/components/realEstate";
 
@@ -14,16 +15,16 @@ export async function generateMetadata({
   const project = await getProjectById(numericId, false, false);
 
   return {
-    title: project?.name ? `${project.name} | EdifiK` : "Propiedad | EdifiK",
+    title: project?.name ? `${project.name}` : `Propiedad`,
     description:
       project?.shortDescription ||
-      "Descubre esta increíble propiedad con EdifiK.",
+      `Descubre esta increíble propiedad con ${BRAND.name}.`,
     openGraph: {
-      title: project?.name || "Propiedad en EdifiK",
+      title: project?.name || `Propiedad en ${BRAND.name}`,
       description:
-        project?.shortDescription || "Propiedad destacada en EdifiK.",
-      url: `http://edifik.co/inmobiliaria/${id}`,
-      siteName: "EdifiK",
+        project?.shortDescription || `Propiedad destacada en ${BRAND.name}.`,
+      url: `${BRAND.appUrl}/inmobiliaria/${id}`,
+      siteName: BRAND.name,
       type: "website",
     },
   };

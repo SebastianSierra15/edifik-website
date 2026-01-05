@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { BRAND } from "@/src/config";
 import { HeroSection } from "@/src/components/home";
 import {
   AboutSection,
@@ -8,9 +9,8 @@ import {
 } from "@/src/components/about";
 
 export const metadata: Metadata = {
-  title: "¿Quiénes somos? | EdifiK",
-  description:
-    "Conoce al equipo detrás de EdifiK y nuestra misión de transformar el mercado inmobiliario en Colombia.",
+  title: `¿Quiénes somos?`,
+  description: `Conoce al equipo detrás de ${BRAND.name} y nuestra misión de transformar el mercado inmobiliario en Colombia.`,
 };
 
 export default function AboutUsPage() {
@@ -18,9 +18,9 @@ export default function AboutUsPage() {
     <div className="">
       <HeroSection
         srcImage="https://d3fhc8hmbgwz4k.cloudfront.net/public/images/bim/QuintasLago/QuintasLago6.webp"
-        altImage="Vista del interior de un proyecto de EdifiK"
+        altImage={`Vista del interior de un proyecto de ${BRAND.name}`}
         title="Sobre Nosotros"
-        description="Conoce más sobre EdifiK y nuestro compromiso con la calidad y la innovación."
+        description={`Conoce más sobre ${BRAND.name} y nuestro compromiso con la calidad y la innovación.`}
       />
 
       <div className="flex flex-col flex-grow bg-client-backgroundAlt mt-8">

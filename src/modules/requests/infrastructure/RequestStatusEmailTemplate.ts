@@ -1,5 +1,6 @@
 import { buildDefaultEmailTemplate } from "@/src/modules/shared";
 import { RequestStatus } from "../domain/Request";
+import { BRAND } from "@/src/config";
 
 export class RequestStatusEmailTemplate {
   build(status: RequestStatus, responseMessage: string) {
@@ -17,7 +18,7 @@ export class RequestStatusEmailTemplate {
       intro: `Hemos revisado tu solicitud y ha sido <strong>${statusName}</strong>.`,
       body: `<strong>Respuesta del revisor:</strong> ${responseMessage}`,
       buttonText: "Ver mis propiedades",
-      buttonUrl: "https://edifik.co/usuario/mis-propiedades",
+      buttonUrl: `${BRAND.appUrl}/usuario/mis-propiedades`,
     });
   }
 }

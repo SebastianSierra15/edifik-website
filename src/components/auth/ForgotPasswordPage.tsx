@@ -8,6 +8,7 @@ import { useResetPassword } from "@/src/hooks/auth";
 import { forgotPasswordSchema } from "@/src/schemas/auth";
 import { Logo } from "@/src/components/auth";
 import { ClientFormInput } from "@/src/components/shared";
+import { BRAND } from "@/src/config";
 
 export function ForgotPasswordPage() {
   const router = useRouter();
@@ -99,7 +100,7 @@ export function ForgotPasswordPage() {
           type="button"
           onClick={() => router.push("/")}
         >
-          Volver a EdifiK
+          Volver a {BRAND.name}
         </button>
 
         <div className="flex justify-center mt-4">

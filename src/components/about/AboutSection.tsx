@@ -1,3 +1,4 @@
+﻿import { BRAND } from "@/src/config";
 import Image from "next/image";
 
 export function AboutSection() {
@@ -5,7 +6,7 @@ export function AboutSection() {
     <section className="p-4 lg:px-10 lg:pb-10 mx-auto grid grid-cols-1 gap-10 lg:grid-cols-2 text-client-text bg-client-background">
       <div className="md:mx-8 text-center lg:text-left">
         <h1 className="mb-10 text-3xl font-bold text-client-text lg:text-5xl">
-          Te damos la bienvenida a EdifiK
+          Te damos la bienvenida a {BRAND.name}
         </h1>
 
         <h2 className="mb-10 text-xl font-medium lg:text-4xl">
@@ -13,12 +14,12 @@ export function AboutSection() {
         </h2>
 
         <p className="text-justify text-sm lg:text-base text-client-textPlaceholder">
-          Somos EdifiK, tu socio ideal en diseño y desarrollo de proyectos
+          Somos {BRAND.name}, tu socio ideal en diseño y desarrollo de proyectos
           arquitectónicos. Especializados en metodología BIM, nos dedicamos a
           crear y planificar cada etapa de tu proyecto con precisión y
           eficiencia. Desde el modelado y renderizado hasta la planificación
           detallada, garantizamos soluciones innovadoras que transforman tus
-          ideas en realidades tangibles. Con EdifiK, cada proyecto es una
+          ideas en realidades tangibles. Con {BRAND.name}, cada proyecto es una
           oportunidad para plasmar tus ideas y volverlas realidad.
         </p>
       </div>

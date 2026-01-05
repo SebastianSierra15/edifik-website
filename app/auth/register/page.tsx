@@ -1,12 +1,12 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { BRAND } from "@/src/config";
 import { Logo, RegisterForm, AuthProviders } from "@/src/components/auth";
 
 export const metadata: Metadata = {
-  title: "Crear Cuenta | EdifiK",
-  description:
-    "Regístrate en EdifiK y comienza a publicar tus propiedades o explorar nuestros proyectos inmobiliarios.",
+  title: `Crear Cuenta | ${BRAND.name}`,
+  description: `Regístrate en ${BRAND.name} y comienza a publicar tus propiedades o explorar nuestros proyectos inmobiliarios.`,
 };
 
 export default function RegisterPage() {
