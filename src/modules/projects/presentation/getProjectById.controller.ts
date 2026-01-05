@@ -6,6 +6,7 @@ export async function getProjectByIdController(input: {
   isProject: number;
   isAdmin: number;
   canSeeMembership: boolean;
+  ownerId?: number | null;
 }) {
   return new GetProjectById(new MysqlGetProjectByIdRepo()).execute(input);
 }

@@ -5,6 +5,7 @@ export * from "./FeaturesProjectForm";
 export * from "./ImageUploadSection";
 export * from "./ImageWithTag";
 export * from "./ImagesProjectForm";
+export * from "./LocationMapSection";
 export * from "./LocationProjectForm";
 export * from "./ProgressBar";
 export * from "./ProjectForm";

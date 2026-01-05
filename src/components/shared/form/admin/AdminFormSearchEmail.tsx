@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import clsx from "clsx";
 import { Mail } from "lucide-react";
-import { useSearchEmails } from "@/app/hooks/users/useSearchEmails";
+import { useSearchEmails } from "@/src/hooks/users";
 import { AdminTooltipIcon } from "./AdminTooltipIcon";
 import { AdminFormErrorMessage } from "./AdminFormErrorMessage";
 

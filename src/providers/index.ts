@@ -1,4 +1,5 @@
 export * from "./AlertProvider";
+export * from "./ClientConfirmationProvider";
 export * from "./ConfirmationProvider";
 export * from "./GoogleMapsProvider";
 export * from "./LoadingProvider";

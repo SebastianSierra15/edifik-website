@@ -14,8 +14,18 @@ export function useUserProfile() {
     const fetchProfile = async () => {
       try {
         const { user, genders } = await UserProfileService.getProfile();
+        const birthdate = user.birthdate
+          ? new Date(user.birthdate)
+          : undefined;
+        const normalizedUser = {
+          ...user,
+          birthdate:
+            birthdate && !Number.isNaN(birthdate.getTime())
+              ? birthdate
+              : undefined,
+        };
 
-        setUser(user);
+        setUser(normalizedUser);
         setGenders(genders);
       } catch (err: any) {
         setError(err.message || "Error al obtener el perfil");

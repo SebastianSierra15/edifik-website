@@ -9,10 +9,11 @@ export class MysqlGetProjectByIdRepo implements GetProjectByIdRepository {
     isProject,
     isAdmin,
     canSeeMembership,
+    ownerId,
   }: any): Promise<ProjectDetails | null> {
     const [result] = await db.query<RowDataPacket[][]>(
-      "CALL get_project_by_id(?, ?, ?)",
-      [projectId, isProject, isAdmin]
+      "CALL get_project_by_id(?, ?, ?, ?)",
+      [projectId, isProject, isAdmin, ownerId ?? null]
     );
 
     const [

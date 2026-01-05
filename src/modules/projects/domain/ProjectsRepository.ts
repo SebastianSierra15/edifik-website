@@ -50,6 +50,7 @@ export interface GetProjectByIdRepository {
     isProject: number;
     isAdmin: number;
     canSeeMembership: boolean;
+    ownerId?: number | null;
   }): Promise<ProjectDetails | null>;
 }
 

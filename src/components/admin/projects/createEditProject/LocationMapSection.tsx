@@ -24,6 +24,8 @@ interface LocationMapSectionProps {
   label: string;
   error?: string;
   tooltipText: string;
+  showSearch?: boolean;
+  showUserLocationButton?: boolean;
 }
 
 export function LocationMapSection({
@@ -36,27 +38,31 @@ export function LocationMapSection({
   label,
   error,
   tooltipText,
+  showSearch = true,
+  showUserLocationButton = true,
 }: LocationMapSectionProps) {
   return (
     <>
-      <div className="relative z-20 space-y-4">
-        <AdminFormSearchAddress
-          label={label}
-          value={mapAddress || ""}
-          onChange={onMapAddressChange}
-          onSelect={onAddressSelect}
-          error={error}
-          isLoaded={isMapsReady}
-          tooltipText={tooltipText}
-        />
-      </div>
+      {showSearch && (
+        <div className="relative z-20 space-y-4">
+          <AdminFormSearchAddress
+            label={label}
+            value={mapAddress || ""}
+            onChange={onMapAddressChange}
+            onSelect={onAddressSelect}
+            error={error}
+            isLoaded={isMapsReady}
+            tooltipText={tooltipText}
+          />
+        </div>
+      )}
 
       <div className="relative z-0 h-64 w-full">
         <LocationMap
           isLoaded={isMapsReady}
           coordinates={coordinates}
           onLocationSelect={onLocationSelect}
-          showUserLocationButton={true}
+          showUserLocationButton={showUserLocationButton}
         />
       </div>
     </>

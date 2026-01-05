@@ -15,6 +15,7 @@ interface ClientFormDatePickerProps {
   dateMin?: Date;
   dateMax?: Date;
   isAccent?: boolean;
+  isEdit?: boolean;
 }
 
 export function ClientFormDatePicker({
@@ -28,6 +29,7 @@ export function ClientFormDatePicker({
   dateMin,
   dateMax,
   isAccent = false,
+  isEdit = true,
 }: ClientFormDatePickerProps) {
   return (
     <div>
@@ -47,6 +49,7 @@ export function ClientFormDatePicker({
         onChange={onChange}
         minDate={dateMin || new Date()}
         maxDate={dateMax}
+        disabled={!isEdit}
         showYearDropdown
         scrollableYearDropdown
         yearDropdownItemNumber={100}

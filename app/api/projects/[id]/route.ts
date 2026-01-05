@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { handleHttpError } from "@/src/shared";
 import {
+  getServerSession,
   requireAuthWithPermissions,
   Permission,
 } from "@/src/modules/auth";
@@ -16,24 +17,30 @@ export async function GET(
   try {
     const { id } = await params;
     const { searchParams } = new URL(req.url);
-    const isAdmin = Number(searchParams.get("isAdmin") ?? 0);
     const isProject = Number(searchParams.get("isProject") ?? 0);
+    const session = await getServerSession();
 
-    let canSeeMembership = false;
+    const permissions = session?.user?.permissions ?? [];
+    const canManageAll = permissions.some(
+      (perm) =>
+        perm.name === Permission.ManageProjects ||
+        perm.name === Permission.ManageProperties
+    );
+    const canManageOwn = permissions.some(
+      (perm) => perm.name === Permission.ManageOwnProperties
+    );
 
-    if (isAdmin) {
-      await requireAuthWithPermissions([
-        Permission.ManageProjects,
-        Permission.ManageProperties,
-        Permission.ManageOwnProperties,
-      ]);
-      canSeeMembership = true;
-    }
+    const isAdmin = canManageAll ? 1 : 0;
+    const ownerId =
+      !isAdmin && canManageOwn ? Number(session?.user?.id ?? 0) : null;
+    const canSeeMembership = isAdmin === 1;
+
     const result = await getProjectByIdController({
       projectId: Number(id),
       isProject,
       isAdmin,
       canSeeMembership,
+      ownerId,
     });
 
     return NextResponse.json(result);
