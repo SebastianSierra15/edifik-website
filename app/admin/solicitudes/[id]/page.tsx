@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { ProjectView } from "@/src/components/admin";
 
 export default function ViewPropertyPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const params = useParams();
 
   if (status !== "authenticated") return null;

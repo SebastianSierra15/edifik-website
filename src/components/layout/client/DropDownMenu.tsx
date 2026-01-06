@@ -3,6 +3,7 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { User, HousePlus, Upload, LogOut, MonitorCog } from "lucide-react";
+import type { Permission } from "@/src/interfaces";
 
 interface DropDownMenuProps {
   onClose: () => void;
@@ -29,7 +30,7 @@ export function DropDownMenu({ onClose }: DropDownMenuProps) {
         </li>
 
         {session?.user?.permissions?.some(
-          (perm: any) => perm.name !== "Gestionar propiedades propias"
+          (perm: Permission) => perm.name !== "Gestionar propiedades propias"
         ) && (
           <li>
             <Link

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { BRAND } from "@/src/config";
+import type { Permission } from "@/src/interfaces";
 import {
   X,
   Home,
@@ -131,7 +132,7 @@ export function SideBarMenu({ isOpen, onClose }: SidebarMenuProps) {
               </li>
 
               {session?.user?.permissions?.some(
-                (perm: any) => perm.name !== "Gestionar propiedades propias"
+                (perm: Permission) => perm.name !== "Gestionar propiedades propias"
               ) && (
                 <li>
                   <Link

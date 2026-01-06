@@ -42,7 +42,8 @@ export function ModalChangePassword({
   const clearFieldError = (field: string) => {
     setErrors((prev) => {
       if (!prev[field]) return prev;
-      const { [field]: _removed, ...rest } = prev;
+      const rest = { ...prev };
+      delete rest[field];
       return rest;
     });
   };

@@ -25,13 +25,13 @@ export function useGetProjects({
 }: UseProjectsOptions) {
   const [projects, setProjects] = useState<ProjectSummary[]>(currentProjects);
   const [totalEntries, setTotalEntries] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorProjects, setErrorProjects] = useState<string | null>(null);
 
   const lastFetchedKeyRef = useRef<string | null>(null);
   const requestControllerRef = useRef<AbortController | null>(null);
+  const currentPageRef = useRef(1);
 
   useEffect(() => {
     return () => {
@@ -46,7 +46,7 @@ export function useGetProjects({
 
   const resetProjects = useCallback(() => {
     setProjects([]);
-    setCurrentPage(1);
+    currentPageRef.current = 1;
   }, []);
 
   const fetchProjects = useCallback(
@@ -73,6 +73,10 @@ export function useGetProjects({
       }
 
       lastFetchedKeyRef.current = currentKey;
+
+      if (!isLoadMore) {
+        currentPageRef.current = page;
+      }
 
       requestControllerRef.current?.abort();
       const controller = new AbortController();
@@ -123,12 +127,15 @@ export function useGetProjects({
         );
 
         setTotalEntries(total);
-      } catch (error: any) {
-        if (error.name !== "AbortError") {
+      } catch (error: unknown) {
+        const isAbortError =
+          error instanceof Error && error.name === "AbortError";
+        if (!isAbortError) {
           if (requestControllerRef.current !== controller) {
             return;
           }
-          setErrorProjects(error.message || "Error desconocido");
+          const message = error instanceof Error ? error.message : null;
+          setErrorProjects(message || "Error desconocido");
         }
       } finally {
         if (requestControllerRef.current === controller) {
@@ -154,22 +161,18 @@ export function useGetProjects({
   const fetchMoreProjects = useCallback(() => {
     if (isLoading) return;
 
-    setCurrentPage((prevPage) => {
-      const nextPage = prevPage + 1;
-
-      fetchProjects(
-        true,
-        nextPage,
-        showMap && bounds !== null ? bounds : undefined
-      );
-
-      return nextPage;
-    });
+    const nextPage = currentPageRef.current + 1;
+    currentPageRef.current = nextPage;
+    fetchProjects(
+      true,
+      nextPage,
+      showMap && bounds !== null ? bounds : undefined
+    );
   }, [isLoading, fetchProjects, showMap, bounds]);
 
   const refreshProjects = useCallback(() => {
     setProjects([]);
-    setCurrentPage(1);
+    currentPageRef.current = 1;
     fetchProjects(
       false,
       1,

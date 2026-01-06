@@ -187,23 +187,27 @@ export function useUsersPage() {
       const newValue =
         type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
 
-      const updateNestedValue = (obj: Record<string, any>, path: string) => {
+      const updateNestedValue = (obj: UserFormState, path: string) => {
         const keys = path.split(".");
-        let current = obj;
+        const result = { ...(obj || {}) } as Record<string, unknown>;
+        let current: Record<string, unknown> = result;
 
         keys.forEach((key, index) => {
           if (index === keys.length - 1) {
             current[key] = newValue;
           } else {
-            if (!current[key]) current[key] = {};
-            current = current[key];
+            const nextValue = current[key];
+            if (!nextValue || typeof nextValue !== "object") {
+              current[key] = {};
+            }
+            current = current[key] as Record<string, unknown>;
           }
         });
 
-        return { ...obj };
+        return result as UserFormState;
       };
 
-      setTempUser((prev) => updateNestedValue({ ...(prev || {}) }, name));
+      setTempUser((prev) => updateNestedValue(prev || {}, name));
     },
     []
   );

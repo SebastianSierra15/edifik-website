@@ -20,7 +20,7 @@ export class MysqlProjectsCitiesMetadataRepository
           name: departamentName,
         })
       ),
-      cities: citiesRows.map((row: any) => ({
+      cities: (citiesRows as RowDataPacket[]).map((row) => ({
         id: row.cityId,
         name: row.cityName,
         departament: {

@@ -32,10 +32,9 @@ export function ProjectForm({
   projectId,
   hasPermission,
 }: ProjectFormProps) {
-  const projectQuery = isEdit
-    ? useProjectById(projectId, !isProperty)
-    : { project: null, loading: false };
-  const { project, loading: loadingProject } = projectQuery;
+  const projectQuery = useProjectById(projectId, !isProperty, true);
+  const project = isEdit ? projectQuery.project : null;
+  const loadingProject = isEdit ? projectQuery.loading : false;
 
   const [projectData, setProjectData] = useState<ProjectFormData>(
     isEdit ? {} : { projectType: { id: 1, name: "Sobre Planos" }, media: [] }

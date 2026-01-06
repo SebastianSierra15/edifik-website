@@ -42,10 +42,11 @@ export class MysqlAdminProjectsRepository implements AdminProjectsRepository {
     const [projectsRows = [], projectMediaRows = [], [totalEntriesRow] = []] =
       result;
 
-    const totalEntries = (totalEntriesRow as any)?.totalEntries ?? 0;
+    const totalEntries =
+      (totalEntriesRow as RowDataPacket | undefined)?.totalEntries ?? 0;
 
     const projectMediaMap: Record<number, ProjectSummary["projectMedia"]> = {};
-    projectMediaRows.forEach((media: any) => {
+    (projectMediaRows as RowDataPacket[]).forEach((media) => {
       projectMediaMap[media.projectId] ||= [];
       projectMediaMap[media.projectId].push({
         url: media.url,
@@ -54,28 +55,30 @@ export class MysqlAdminProjectsRepository implements AdminProjectsRepository {
       });
     });
 
-    const projects: ProjectSummary[] = projectsRows.map((row: any) => ({
-      id: row.id,
-      name: row.name,
-      price: row.price || null,
-      totalArea: row.area,
-      bedrooms: row.bedrooms || null,
-      bathrooms: row.bathrooms || null,
-      parkingSpots: row.parkingSpots || null,
-      longitude: row.longitude as number,
-      latitude: row.latitude as number,
-      address: row.address,
-      city: {
-        id: row.cityId,
-        name: row.cityName,
-        departament: {
-          id: row.departamentId,
-          name: row.departamentName,
+    const projects: ProjectSummary[] = (projectsRows as RowDataPacket[]).map(
+      (row) => ({
+        id: row.id,
+        name: row.name,
+        price: row.price || null,
+        totalArea: row.area,
+        bedrooms: row.bedrooms || null,
+        bathrooms: row.bathrooms || null,
+        parkingSpots: row.parkingSpots || null,
+        longitude: row.longitude as number,
+        latitude: row.latitude as number,
+        address: row.address,
+        city: {
+          id: row.cityId,
+          name: row.cityName,
+          departament: {
+            id: row.departamentId,
+            name: row.departamentName,
+          },
         },
-      },
-      email: row.email ?? null,
-      projectMedia: projectMediaMap[row.id] || [],
-    }));
+        email: row.email ?? null,
+        projectMedia: projectMediaMap[row.id] || [],
+      })
+    );
 
     return { projects, totalEntries };
   }

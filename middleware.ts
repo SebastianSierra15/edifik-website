@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 import { withPath } from "@/lib/withPath";
-import { isAdmin, AppJWT } from "./src/shared";
-import { Permission } from "./src/modules/auth";
+import { isAdmin } from "./src/shared/auth/isAdmin";
+import type { AppJWT } from "./src/shared/auth/jwt";
+import { Permission } from "./src/modules/auth/domain/Permission";
 import { PROTECTED_ROUTES } from "./src/config/protectedRoutes";
 
 export async function middleware(req: NextRequest) {
@@ -60,7 +61,7 @@ export async function middleware(req: NextRequest) {
   const membershipId = Number(token?.membershipId);
 
   const userPermissions = (token?.permissions ?? []).map(
-    (p: any) => p.name as Permission
+    (p) => p.name as Permission
   );
 
   const userIsAdmin = isAdmin(userPermissions);

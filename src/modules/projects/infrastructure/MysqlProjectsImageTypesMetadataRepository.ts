@@ -13,7 +13,7 @@ export class MysqlProjectsImageTypesMetadataRepository
 
     const rows = result[0] ?? [];
 
-    return rows.map((row: any) => ({
+    return (rows as RowDataPacket[]).map((row) => ({
       id: row.id,
       name: row.name,
       description: row.description ?? null,

@@ -4,7 +4,18 @@ import { BcryptPasswordHasher } from "../../password/infrastructure/BcryptPasswo
 import { NodemailerEmailSender } from "../../shared";
 import { WelcomeEmailTemplateHtml } from "../infrastructure/WelcomeEmailTemplateHtml";
 
-export async function registerUserController(body: any) {
+interface RegisterUserControllerInput {
+  names: string;
+  lastnames: string;
+  birthdate: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+}
+
+export async function registerUserController(
+  body: RegisterUserControllerInput
+) {
   const useCase = new RegisterUser(
     new MysqlRegisterUserRepository(),
     new BcryptPasswordHasher(),

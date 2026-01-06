@@ -1,5 +1,4 @@
 import { BadRequestError } from "@/src/shared";
-import { Permission } from "@/src/interfaces";
 import { CreateRoleRepository } from "../domain/RoleRepository";
 
 export class CreateRole {
@@ -7,7 +6,7 @@ export class CreateRole {
 
   async execute(input: {
     name: string;
-    permissions: Permission[];
+    permissions: number[];
     userId: number;
   }) {
     const { name, permissions, userId } = input;

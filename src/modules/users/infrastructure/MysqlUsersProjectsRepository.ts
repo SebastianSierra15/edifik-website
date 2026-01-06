@@ -16,11 +16,11 @@ export class MysqlUsersProjectsRepository implements UsersProjectsRepository {
       [params.userId, params.page, params.pageSize]
     );
 
-    const [projectsRows = [], mediaRows = [], [totalRow] = []] = result as any;
+    const [projectsRows = [], mediaRows = [], [totalRow] = []] = result;
 
-    const mediaMap: Record<number, any[]> = {};
+    const mediaMap: Record<number, ProjectSummary["projectMedia"]> = {};
 
-    for (const media of mediaRows) {
+    for (const media of mediaRows as RowDataPacket[]) {
       if (!mediaMap[media.projectId]) {
         mediaMap[media.projectId] = [];
       }
@@ -31,7 +31,8 @@ export class MysqlUsersProjectsRepository implements UsersProjectsRepository {
       });
     }
 
-    const projects: ProjectSummary[] = projectsRows.map((row: any) => ({
+    const projects: ProjectSummary[] = (projectsRows as RowDataPacket[]).map(
+      (row) => ({
       id: row.id,
       name: row.name,
       price: row.price ?? null,
@@ -51,7 +52,8 @@ export class MysqlUsersProjectsRepository implements UsersProjectsRepository {
         },
       },
       projectMedia: mediaMap[row.id] ?? [],
-    }));
+    })
+    );
 
     return {
       projects,

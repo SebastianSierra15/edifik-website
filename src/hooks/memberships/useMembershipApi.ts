@@ -13,8 +13,9 @@ export function useMembershipApi() {
     try {
       await MembershipService.updateMembership(membership);
       return true;
-    } catch (err: any) {
-      setError(err.message || "Error al actualizar la membresía");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      setError(message || "Error al actualizar la membresía");
       return false;
     } finally {
       setIsUpdating(false);

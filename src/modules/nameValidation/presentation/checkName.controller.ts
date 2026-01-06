@@ -1,5 +1,6 @@
 import { CheckNameAvailability } from "../application/CheckNameAvailability";
 import { MysqlNameValidationRepository } from "../infrastructure/MysqlNameValidationRepository";
+import { NameValidationTarget } from "../domain/NameValidationTarget";
 
 export async function checkNameController(input: {
   target?: string;
@@ -11,7 +12,7 @@ export async function checkNameController(input: {
   );
 
   return useCase.execute({
-    target: input.target as any,
+    target: input.target as NameValidationTarget | undefined,
     name: input.name,
     excludeId: input.excludeId,
   });

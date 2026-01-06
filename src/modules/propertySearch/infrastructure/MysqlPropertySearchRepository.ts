@@ -38,7 +38,7 @@ export class MysqlPropertySearchRepository implements PropertySearchRepository {
 
     const mediaMap: Record<number, ProjectView["images"]> = {};
 
-    mediaRows.forEach((m: any) => {
+    (mediaRows as RowDataPacket[]).forEach((m) => {
       mediaMap[m.projectId] ||= [];
       mediaMap[m.projectId].push({
         url: m.url,
@@ -47,19 +47,21 @@ export class MysqlPropertySearchRepository implements PropertySearchRepository {
       });
     });
 
-    const projects: ProjectView[] = projectsRows.map((row: any) => ({
-      id: row.id,
-      name: row.name,
-      cityName: row.cityName,
-      price: row.price,
-      area: row.area,
-      bathrooms: row.bathrooms,
-      parkingSpots: row.parkingSpots,
-      bedrooms: row.bedrooms,
-      longitude: row.longitude,
-      latitude: row.latitude,
-      images: mediaMap[row.id] || [],
-    }));
+    const projects: ProjectView[] = (projectsRows as RowDataPacket[]).map(
+      (row) => ({
+        id: row.id,
+        name: row.name,
+        cityName: row.cityName,
+        price: row.price,
+        area: row.area,
+        bathrooms: row.bathrooms,
+        parkingSpots: row.parkingSpots,
+        bedrooms: row.bedrooms,
+        longitude: row.longitude,
+        latitude: row.latitude,
+        images: mediaMap[row.id] || [],
+      })
+    );
 
     return {
       projects,

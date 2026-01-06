@@ -1,23 +1,16 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import dynamic from "next/dynamic";
+import {
+  Building2,
+  House,
+  Users,
+  ShieldCheck,
+  Tag,
+  ClipboardList,
+} from "lucide-react";
 import { AdminDashboardView } from "./AdminDashboard.view";
 import type { UserPermission } from "@/src/modules/auth";
-
-// Icons (se mantienen dinámicos)
-const Building2 = dynamic(() =>
-  import("lucide-react").then((mod) => mod.Building2)
-);
-const House = dynamic(() => import("lucide-react").then((mod) => mod.House));
-const Users = dynamic(() => import("lucide-react").then((mod) => mod.Users));
-const ShieldCheck = dynamic(() =>
-  import("lucide-react").then((mod) => mod.ShieldCheck)
-);
-const Tag = dynamic(() => import("lucide-react").then((mod) => mod.Tag));
-const ClipboardList = dynamic(() =>
-  import("lucide-react").then((mod) => mod.ClipboardList)
-);
 
 interface DashboardCardConfig {
   href: string;

@@ -82,11 +82,11 @@ export function CarouselRecommendedProjects({
                   images={project.projectMedia || []}
                   name={project.name}
                   location={project.city.name}
-                  price={project.price}
+                  price={project.price ?? undefined}
                   area={project.totalArea}
-                  bedrooms={project.bedrooms}
-                  bathrooms={project.bathrooms}
-                  parkingSpots={project.parkingSpots}
+                  bedrooms={project.bedrooms ?? undefined}
+                  bathrooms={project.bathrooms ?? undefined}
+                  parkingSpots={project.parkingSpots ?? undefined}
                 />
               </div>
             ))}

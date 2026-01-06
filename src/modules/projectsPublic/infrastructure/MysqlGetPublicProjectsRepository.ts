@@ -13,7 +13,7 @@ export class MysqlGetPublicProjectsRepository
 
     const mediaMap: Record<number, ProjectView["images"]> = {};
 
-    for (const media of projectMediaRows as any[]) {
+    for (const media of projectMediaRows as RowDataPacket[]) {
       mediaMap[media.projectId] ||= [];
       mediaMap[media.projectId].push({
         url: media.url,
@@ -22,7 +22,8 @@ export class MysqlGetPublicProjectsRepository
       });
     }
 
-    const projects: ProjectView[] = (projectsRows as any[]).map((row) => ({
+    const projects: ProjectView[] = (projectsRows as RowDataPacket[]).map(
+      (row) => ({
       id: row.id,
       name: row.name,
       cityName: row.cityName,
@@ -32,7 +33,8 @@ export class MysqlGetPublicProjectsRepository
       parkingSpots: row.parkingSpots,
       bedrooms: row.bedrooms,
       images: mediaMap[row.id] || [],
-    }));
+    })
+    );
 
     return {
       projects,

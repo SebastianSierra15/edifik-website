@@ -15,14 +15,17 @@ export const useRoleValidation = (role: RoleWrite, isEdit: boolean) => {
   const { checkName } = useCheckName();
   const roleSchema = isEdit ? updateRoleSchema : createRoleSchema;
 
-  const validateField = async (fieldName: keyof typeof errors, value: any) => {
+  const validateField = async (
+    fieldName: keyof typeof errors,
+    value: unknown
+  ) => {
     if (fieldName === "nameError") {
       const result = roleSchema.shape.name.safeParse(value);
       let errorMessage = result.success
         ? ""
         : (result.error.issues[0]?.message ?? "");
 
-      if (!errorMessage && value) {
+      if (!errorMessage && typeof value === "string" && value) {
         const total = await checkName(
           "role",
           value,

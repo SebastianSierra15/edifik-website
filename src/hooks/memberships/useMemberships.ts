@@ -42,8 +42,10 @@ export function useMemberships(
 
       setMemberships(memberships);
       setTotalEntries(totalEntries);
-    } catch (error: any) {
-      if (error.name !== "AbortError") {
+    } catch (error: unknown) {
+      const isAbortError =
+        error instanceof Error && error.name === "AbortError";
+      if (!isAbortError) {
         if (requestControllerRef.current !== controller) {
           return;
         }

@@ -38,8 +38,6 @@ export function MembershipPaymentModal({
     setBase(parseFloat(totalWithDiscount.toFixed(2)));
   }, [months, membership]);
 
-  if (!isOpen) return null;
-
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -51,6 +49,8 @@ export function MembershipPaymentModal({
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">

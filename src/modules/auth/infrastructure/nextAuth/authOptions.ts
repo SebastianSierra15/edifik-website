@@ -38,7 +38,7 @@ export const authOptions: NextAuthOptions = {
           [email]
         );
 
-        let [userRows = [], permissionsRows = []] = result;
+        const [userRows = [], permissionsRows = []] = result;
 
         if (userRows.length === 0) {
           return null;

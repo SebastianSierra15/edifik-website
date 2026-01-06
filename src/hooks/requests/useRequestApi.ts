@@ -29,8 +29,9 @@ export function useRequestApi() {
       });
 
       return true;
-    } catch (err: any) {
-      setError(err.message || "Error al procesar la solicitud");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      setError(message || "Error al procesar la solicitud");
       return false;
     } finally {
       setIsProcessing(false);

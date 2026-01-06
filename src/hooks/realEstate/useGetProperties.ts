@@ -24,7 +24,6 @@ export function useGetProperties({
 }: UseGetPropertiesOptions) {
   const [projects, setProjects] = useState<ProjectView[]>([]);
   const [totalEntries, setTotalEntries] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [errorProjects, setErrorProjects] = useState<string | null>(null);
 
@@ -36,7 +35,6 @@ export function useGetProperties({
 
   const resetProjects = useCallback(() => {
     setProjects([]);
-    setCurrentPage(1);
     pageRef.current = 1;
   }, []);
 
@@ -65,6 +63,7 @@ export function useGetProperties({
 
       if (!isLoadMore) {
         lastQueryRef.current = querySignature;
+        pageRef.current = page;
       }
       isLoadingRef.current = true;
       setIsLoading(true);
@@ -100,8 +99,9 @@ export function useGetProperties({
         );
 
         setTotalEntries(response.totalEntries);
-      } catch (error: any) {
-        setErrorProjects(error.message || "Error al cargar propiedades");
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : null;
+        setErrorProjects(message || "Error al cargar propiedades");
       } finally {
         isLoadingRef.current = false;
         setIsLoading(false);
@@ -147,11 +147,9 @@ export function useGetProperties({
   const fetchMoreProjects = useCallback(() => {
     if (isLoading) return;
 
-    setCurrentPage((prev) => {
-      const next = prev + 1;
-      fetchProjects(true, next);
-      return next;
-    });
+    const next = pageRef.current + 1;
+    pageRef.current = next;
+    fetchProjects(true, next);
   }, [fetchProjects, isLoading]);
 
   return {

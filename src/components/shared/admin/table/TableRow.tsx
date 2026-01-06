@@ -1,17 +1,13 @@
 import React from "react";
 import clsx from "clsx";
+import type { Header } from "@/src/interfaces";
 import { formatNumber } from "@/utils/formatters";
 import { getNestedValue } from "@/utils/getNestedValue";
 import { Edit, Trash2 } from "lucide-react";
 
 interface TableRowProps<T> {
   item: T;
-  headers: {
-    key: keyof T | string;
-    type: string;
-    subKey?: string;
-    statusMapping?: Record<string, { label: string; className: string }>;
-  }[];
+  headers: Header<T>[];
   onEditClick?: (item: T) => void;
   onDeleteClick?: (item: T) => void;
   actions?: {
@@ -43,11 +39,20 @@ export function TableRow<T>({
           case "array":
             content = Array.isArray(value) ? (
               <ul className="list-none pl-5 text-premium-textSecondary dark:text-premium-textSecondary">
-                {value.map((subItem: any, i: number) => (
-                  <li key={i}>
-                    {subKey ? subItem[subKey] : JSON.stringify(subItem)}
-                  </li>
-                ))}
+                {value.map((subItem: unknown, i: number) => {
+                  const subItemValue =
+                    subKey && subItem && typeof subItem === "object"
+                      ? (subItem as Record<string, unknown>)[subKey]
+                      : subItem;
+
+                  return (
+                    <li key={i}>
+                      {subKey
+                        ? String(subItemValue ?? "")
+                        : JSON.stringify(subItemValue)}
+                    </li>
+                  );
+                })}
               </ul>
             ) : null;
             break;

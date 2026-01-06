@@ -4,7 +4,9 @@ import { UpdateMembershipRepository } from "../domain/MembershipRepository";
 export class MysqlUpdateMembershipRepository
   implements UpdateMembershipRepository
 {
-  async update(data: any): Promise<void> {
+  async update(
+    data: Parameters<UpdateMembershipRepository["update"]>[0]
+  ): Promise<void> {
     await db.query("CALL update_membership(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
       data.id,
       data.name,

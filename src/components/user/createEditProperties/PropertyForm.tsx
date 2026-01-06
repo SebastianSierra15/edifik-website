@@ -33,10 +33,10 @@ export function PropertyForm({
   projectId,
   hasPermission,
 }: PropertyFormProps) {
-  const projectQuery = isEdit
-    ? useProjectById(projectId, false, true)
-    : { project: null, loading: false, error: null };
-  const { project, loading: loadingProject, error } = projectQuery;
+  const projectQuery = useProjectById(projectId, false, true);
+  const project = isEdit ? projectQuery.project : null;
+  const loadingProject = isEdit ? projectQuery.loading : false;
+  const error = isEdit ? projectQuery.error : null;
 
   const [projectData, setProjectData] = useState<Partial<ProjectFormData>>(
     isEdit ? {} : { projectType: { id: 2, name: "Venta" }, media: [] }

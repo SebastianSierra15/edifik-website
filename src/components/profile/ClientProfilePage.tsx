@@ -69,8 +69,8 @@ export function ClientProfilePage() {
       const success = await updateUserProfile(data);
       if (success) {
         const { genderId, birthdate, ...rest } = data;
-        const nextGender = data.genderId
-          ? genders.find((gender) => gender.id === data.genderId)
+        const nextGender = genderId
+          ? genders.find((gender) => gender.id === genderId)
           : undefined;
         setUserState((prev) =>
           prev

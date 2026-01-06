@@ -21,9 +21,10 @@ export const useUserApi = () => {
       }
 
       return true;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error al procesar el usuario:", err);
-      setError(err.message || "Error desconocido");
+      const message = err instanceof Error ? err.message : null;
+      setError(message || "Error desconocido");
       return false;
     } finally {
       setIsProcessing(false);

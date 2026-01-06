@@ -5,19 +5,37 @@ import { NodemailerEmailSender } from "../../shared";
 import { ProjectCreateInput } from "../domain/ProjectCreateInput";
 import { CreateProjectPolicy } from "../domain/ProjectPolicy";
 
+interface CreateProjectControllerInput extends Partial<ProjectCreateInput> {
+  propertyType?: { id?: number };
+  housingType?: { id?: number };
+  city?: { id?: number };
+  membership?: number | null;
+  projectType?: { id?: number };
+  commonAreas?: Array<{ id: number }>;
+  nearbyServices?: Array<{ id: number }>;
+}
+
 export async function createProjectController(
-  body: any,
+  body: CreateProjectControllerInput,
   policy: CreateProjectPolicy
 ): Promise<number> {
+  const baseInput = body as ProjectCreateInput;
+
   const input: ProjectCreateInput = {
-    ...body,
-    propertyTypeId: body.propertyType?.id,
-    housingTypeId: body.housingType?.id,
-    cityId: body.city?.id,
-    membershipId: body.membership,
-    projectTypeId: body.projectType?.id,
-    commonAreaIds: body.commonAreas?.map((a: { id: number }) => a.id),
-    nearbyServiceIds: body.nearbyServices?.map((s: { id: number }) => s.id),
+    ...baseInput,
+    propertyTypeId: body.propertyType?.id ?? baseInput.propertyTypeId,
+    housingTypeId: body.housingType?.id ?? baseInput.housingTypeId,
+    cityId: body.city?.id ?? baseInput.cityId,
+    membershipId: body.membership ?? baseInput.membershipId,
+    projectTypeId: body.projectType?.id ?? baseInput.projectTypeId,
+    commonAreaIds:
+      body.commonAreas?.map((a) => a.id) ??
+      baseInput.commonAreaIds ??
+      null,
+    nearbyServiceIds:
+      body.nearbyServices?.map((s) => s.id) ??
+      baseInput.nearbyServiceIds ??
+      null,
   };
 
   const useCase = new CreateProject(

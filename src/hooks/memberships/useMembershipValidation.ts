@@ -53,7 +53,7 @@ export const useMembershipValidation = (
 
   const validateField = async (
     fieldName: keyof MembershipErrors,
-    value: any
+    value: unknown
   ) => {
     if (fieldName === "nameError") {
       const result = membershipSchema.shape.name.safeParse(value);
@@ -61,7 +61,7 @@ export const useMembershipValidation = (
         ? ""
         : (result.error.issues[0]?.message ?? "");
 
-      if (!errorMessage && value) {
+      if (!errorMessage && typeof value === "string" && value) {
         const total = await checkName(
           NameValidationTarget.Membership,
           value,

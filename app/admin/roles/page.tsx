@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import dynamic from "next/dynamic";
 
 import { useRolesPage } from "@/src/hooks/roles";
+import type { Header, RoleWithPermissions } from "@/src/interfaces";
 
 import { Table, TableSkeleton } from "@/src/components/shared";
 
@@ -41,7 +42,7 @@ export default function RolesPage() {
   } = useRolesPage();
 
   // headers (mantengo tu Table actual)
-  const headers = useMemo(
+  const headers = useMemo<Header<RoleWithPermissions>[]>(
     () => [
       { label: "Id", key: "id", type: "number" },
       { label: "Nombre", key: "name", type: "string" },
@@ -71,7 +72,7 @@ export default function RolesPage() {
       ) : (
         <Table
           data={roles}
-          headers={headers as any}
+          headers={headers}
           totalEntries={totalEntries}
           entry="roles"
           currentPage={currentPage}

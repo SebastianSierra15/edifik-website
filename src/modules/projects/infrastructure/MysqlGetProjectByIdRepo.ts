@@ -10,7 +10,7 @@ export class MysqlGetProjectByIdRepo implements GetProjectByIdRepository {
     isAdmin,
     canSeeMembership,
     ownerId,
-  }: any): Promise<ProjectDetails | null> {
+  }: Parameters<GetProjectByIdRepository["getById"]>[0]): Promise<ProjectDetails | null> {
     const [result] = await db.query<RowDataPacket[][]>(
       "CALL get_project_by_id(?, ?, ?, ?)",
       [projectId, isProject, isAdmin, ownerId ?? null]
@@ -25,7 +25,7 @@ export class MysqlGetProjectByIdRepo implements GetProjectByIdRepository {
 
     if (!projectsRows.length) return null;
 
-    const row = projectsRows[0] as any;
+    const row = projectsRows[0] as RowDataPacket;
 
     return {
       id: row.id,
@@ -99,15 +99,15 @@ export class MysqlGetProjectByIdRepo implements GetProjectByIdRepository {
       residentialProjectId: row.residentialProjectId,
       warehouseProjectId: row.warehouseProjectId,
 
-      commonAreas: commonAreasRows.map((r: any) => ({
+      commonAreas: (commonAreasRows as RowDataPacket[]).map((r) => ({
         id: r.id,
         name: r.name,
       })),
-      nearbyServices: nearbyServicesRows.map((r: any) => ({
+      nearbyServices: (nearbyServicesRows as RowDataPacket[]).map((r) => ({
         id: r.id,
         name: r.name,
       })),
-      projectMedia: projectMediaRows.map((r: any) => ({
+      projectMedia: (projectMediaRows as RowDataPacket[]).map((r) => ({
         id: r.id,
         url: r.url,
         tag: r.tag,

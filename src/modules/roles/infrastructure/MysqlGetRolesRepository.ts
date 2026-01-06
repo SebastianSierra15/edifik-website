@@ -25,7 +25,7 @@ export class MysqlGetRolesRepository implements GetRolesRepository {
 
     const permissionsByRole: Record<number, Permission[]> = {};
 
-    for (const row of permissionRows as any[]) {
+    for (const row of permissionRows as RowDataPacket[]) {
       permissionsByRole[row.id_role] ||= [];
       permissionsByRole[row.id_role].push({
         id: row.id_permission,
@@ -33,7 +33,7 @@ export class MysqlGetRolesRepository implements GetRolesRepository {
       });
     }
 
-    const roles = (rolesRows as any[]).map(({ id, name }) => ({
+    const roles = (rolesRows as RowDataPacket[]).map(({ id, name }) => ({
       id,
       name,
       permissions: permissionsByRole[id] || [],

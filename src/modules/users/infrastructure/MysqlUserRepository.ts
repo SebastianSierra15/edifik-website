@@ -27,7 +27,7 @@ export class MysqlUserRepository implements UserRepository {
     const totalEntriesRow =
       Array.isArray(result[1]) && result[1].length > 0 ? result[1][0] : null;
 
-    const users: User[] = rows.map((row: any) => ({
+    const users: User[] = (rows as RowDataPacket[]).map((row) => ({
       id: row.id,
       names: row.names,
       lastnames: row.lastnames,

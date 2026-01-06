@@ -19,8 +19,9 @@ export function useChangePassword() {
       await AuthService.changePassword(data);
       setSuccess(true);
       return true;
-    } catch (err: any) {
-      setError(err.message || "No se pudo cambiar la contraseña");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      setError(message || "No se pudo cambiar la contraseña");
       return false;
     } finally {
       setLoading(false);

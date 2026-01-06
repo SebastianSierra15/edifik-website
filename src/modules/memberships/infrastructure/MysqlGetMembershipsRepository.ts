@@ -5,7 +5,15 @@ import { escapeSearchTerm } from "@/utils";
 import { GetMembershipsRepository } from "../domain/MembershipRepository";
 
 export class MysqlGetMembershipsRepository implements GetMembershipsRepository {
-  async getAll({ page, pageSize, searchTerm }: any) {
+  async getAll({
+    page,
+    pageSize,
+    searchTerm,
+  }: {
+    page: number;
+    pageSize: number;
+    searchTerm?: string | null;
+  }) {
     const safeSearchTerm = escapeSearchTerm(searchTerm ?? null);
 
     const [result] = await db.query<RowDataPacket[][]>(

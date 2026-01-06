@@ -22,7 +22,7 @@ interface NominatimResponse {
 
 export function useLocationGeocoder() {
   const resolveLocation = useCallback(
-    async (coords: { lat: number; lng: number }) => {
+    async (coords: { lat: number; lng: number }): Promise<GeocoderResult | null> => {
       try {
         const params = new URLSearchParams({
           format: "json",

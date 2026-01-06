@@ -21,12 +21,17 @@ export function useGetUserProjects({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorProjects, setErrorProjects] = useState<string | null>(null);
   const requestControllerRef = useRef<AbortController | null>(null);
+  const isLoadingRef = useRef(false);
 
   useEffect(() => {
     return () => {
       requestControllerRef.current?.abort();
     };
   }, []);
+
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
 
   const resetProjects = useCallback(() => {
     setProjects([]);
@@ -41,7 +46,7 @@ export function useGetUserProjects({
   const fetchUserProjects = useCallback(
     async (isLoadMore = false, page = 1) => {
       if (userId <= 0) return;
-      if (isLoadMore && isLoading) return;
+      if (isLoadMore && isLoadingRef.current) return;
 
       requestControllerRef.current?.abort();
       const controller = new AbortController();
@@ -78,12 +83,15 @@ export function useGetUserProjects({
         );
 
         setTotalEntries(totalEntries);
-      } catch (error: any) {
-        if (error.name !== "AbortError") {
+      } catch (error: unknown) {
+        const isAbortError =
+          error instanceof Error && error.name === "AbortError";
+        if (!isAbortError) {
           if (requestControllerRef.current !== controller) {
             return;
           }
-          setErrorProjects(error.message || "Error al cargar proyectos");
+          const message = error instanceof Error ? error.message : null;
+          setErrorProjects(message || "Error al cargar proyectos");
         }
       } finally {
         if (requestControllerRef.current === controller) {
@@ -92,12 +100,12 @@ export function useGetUserProjects({
         }
       }
     },
-    [entriesPerPage, isLoading, searchTerm, userId]
+    [entriesPerPage, searchTerm, userId]
   );
 
   useEffect(() => {
     fetchUserProjects(false, 1);
-  }, [searchTerm, userId]);
+  }, [fetchUserProjects]);
 
   const fetchMoreUserProjects = useCallback(() => {
     if (isLoading) return;

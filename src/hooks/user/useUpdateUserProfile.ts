@@ -28,8 +28,9 @@ export function useUpdateUserProfile() {
       await UserProfileService.updateProfile(data);
       setSuccess(true);
       return true;
-    } catch (err: any) {
-      setError(err.message || "Error inesperado");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      setError(message || "Error inesperado");
       return false;
     } finally {
       setLoading(false);

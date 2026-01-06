@@ -53,8 +53,9 @@ export function useGetMyProjects({
         );
 
         setTotalEntries(totalEntries);
-      } catch (err: any) {
-        setErrorProjects(err.message || "Error al cargar proyectos");
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : null;
+        setErrorProjects(message || "Error al cargar proyectos");
       } finally {
         setIsLoading(false);
       }

@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
         }
       };
 
-      const send = (data: any) => {
+      const send = (data: unknown) => {
         if (isClosed || req.signal.aborted) return;
 
         try {

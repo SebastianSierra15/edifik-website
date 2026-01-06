@@ -17,8 +17,9 @@ export function useUserProjectApi() {
         await UserProjectsService.deleteProject(projectId);
       }
       return true;
-    } catch (err: any) {
-      setError(err.message || "Error desconocido");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      setError(message || "Error desconocido");
       return false;
     } finally {
       setIsProcessing(false);

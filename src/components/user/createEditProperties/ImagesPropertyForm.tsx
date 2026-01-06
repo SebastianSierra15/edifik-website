@@ -33,7 +33,7 @@ export function ImagesPropertyForm({
     Record<string, boolean>
   >({});
   const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertMessage] = useState("");
 
   const { errors, validateFields, validateField } = useImagesProjectValidation(
     formData,

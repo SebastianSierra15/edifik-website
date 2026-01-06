@@ -17,8 +17,9 @@ export function useRegisterUser() {
       await AuthService.register(data);
       setSuccess(true);
       return true;
-    } catch (err: any) {
-      setError(err.message || "Error al registrar el usuario");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      setError(message || "Error al registrar el usuario");
       return false;
     } finally {
       setLoading(false);

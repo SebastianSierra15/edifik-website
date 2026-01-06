@@ -28,7 +28,7 @@ export class MysqlUserProfileRepository implements UserProfileRepository {
       provider: userRow.providerId,
     };
 
-    const genders: Gender[] = genderRows.map((row: any) => ({
+    const genders: Gender[] = (genderRows as RowDataPacket[]).map((row) => ({
       id: row.genderId,
       name: row.genderName,
     }));
@@ -36,7 +36,10 @@ export class MysqlUserProfileRepository implements UserProfileRepository {
     return { user, genders };
   }
 
-  async updateProfile(userId: number, data: any): Promise<void> {
+  async updateProfile(
+    userId: number,
+    data: Parameters<UserProfileRepository["updateProfile"]>[1]
+  ): Promise<void> {
     // Normalizar la fecha antes de enviarla
     const birthdate = data.birthdate
       ? new Date(data.birthdate).toISOString().slice(0, 19).replace("T", " ")

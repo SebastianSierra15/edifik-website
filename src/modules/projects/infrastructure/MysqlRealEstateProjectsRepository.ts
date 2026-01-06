@@ -19,7 +19,7 @@ export class MysqlRealEstateProjectsRepository
       { url: string; tag: string; projectId: number }[]
     > = {};
 
-    projectMediaRows.forEach((media: any) => {
+    (projectMediaRows as RowDataPacket[]).forEach((media) => {
       mediaMap[media.projectId] ||= [];
       mediaMap[media.projectId].push({
         url: media.url,
@@ -28,7 +28,7 @@ export class MysqlRealEstateProjectsRepository
       });
     });
 
-    return projectsRows.map((row: any) => ({
+    return (projectsRows as RowDataPacket[]).map((row) => ({
       id: row.id,
       name: row.name,
       cityName: row.cityName,

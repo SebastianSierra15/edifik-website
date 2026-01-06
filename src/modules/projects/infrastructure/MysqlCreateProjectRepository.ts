@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { RowDataPacket } from "mysql2";
 import { formatDateForMySQL } from "@/utils";
 import { CreateProjectRepository } from "../domain/ProjectsRepository";
 import { ProjectCreateInput } from "../domain/ProjectCreateInput";
@@ -59,6 +60,7 @@ export class MysqlCreateProjectRepository implements CreateProjectRepository {
       params
     );
 
-    return (result as any[][])[0][0]?.projectId;
+    const [rows = []] = result as RowDataPacket[][];
+    return rows[0]?.projectId as number;
   }
 }

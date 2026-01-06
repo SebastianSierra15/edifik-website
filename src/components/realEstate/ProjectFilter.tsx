@@ -14,6 +14,7 @@ import {
   X,
   Ruler,
 } from "lucide-react";
+import type { ProjectsMetadata } from "@/src/interfaces";
 import { FilterOption } from "./filter/FilterOption";
 import { FilterNumericCounter } from "./filter/FilterNumericCounter";
 import { FilterOptionSlider } from "./filter/FilterOptionSlider";
@@ -39,7 +40,7 @@ interface ProjectFilterProps {
   setFilterOpen: (open: boolean) => void;
   priceRange: { min: number; max: number };
   areaRange: { min: number; max: number };
-  metadata: any;
+  metadata: ProjectsMetadata;
   isLoading: boolean;
 }
 

@@ -11,6 +11,6 @@ export class MysqlPermissionRepository implements PermissionRepository {
 
     const [rows = []] = result;
 
-    return rows.map(({ id, name }: any) => ({ id, name }));
+    return (rows as RowDataPacket[]).map(({ id, name }) => ({ id, name }));
   }
 }

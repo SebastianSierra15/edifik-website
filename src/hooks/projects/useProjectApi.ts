@@ -30,8 +30,9 @@ export function useProjectApi() {
       }
 
       return null;
-    } catch (err: any) {
-      setError(err.message || "Error al procesar el proyecto");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      setError(message || "Error al procesar el proyecto");
       return null;
     } finally {
       setIsProcessing(false);

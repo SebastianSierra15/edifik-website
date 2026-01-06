@@ -34,8 +34,9 @@ export function useProjectById(
           isAdmin
         );
         setProject(project);
-      } catch (err: any) {
-        setError(err.message || "No se pudo cargar el proyecto");
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : null;
+        setError(message || "No se pudo cargar el proyecto");
       } finally {
         setLoading(false);
       }

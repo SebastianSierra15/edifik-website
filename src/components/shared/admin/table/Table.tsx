@@ -8,7 +8,7 @@ import { TableRow } from "./TableRow";
 import { TablePagination } from "./TablePagination";
 import { TableSearch } from "./TableSearch";
 
-type TableProps<T extends Record<string, any>> = {
+type TableProps<T extends { id?: number }> = {
   data: T[];
   headers: Header<T>[];
   totalEntries: number;

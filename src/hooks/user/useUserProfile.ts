@@ -27,8 +27,9 @@ export function useUserProfile() {
 
         setUser(normalizedUser);
         setGenders(genders);
-      } catch (err: any) {
-        setError(err.message || "Error al obtener el perfil");
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : null;
+        setError(message || "Error al obtener el perfil");
       } finally {
         setLoading(false);
       }

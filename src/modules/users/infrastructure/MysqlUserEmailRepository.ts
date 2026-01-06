@@ -17,7 +17,9 @@ export class MysqlUserEmailRepository implements UserEmailRepository {
       return [];
     }
 
-    return (result[0] as any[]).map((row) => ({
+    const rows = result[0] as RowDataPacket[];
+
+    return rows.map((row) => ({
       id: row.id,
       email: row.email,
     }));

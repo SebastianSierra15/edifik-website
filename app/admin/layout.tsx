@@ -5,7 +5,7 @@ import { AlertProvider, ConfirmationProvider } from "@/src/providers";
 import { AdminHeader, AdminFooter } from "@/src/components/layout";
 
 export const metadata: Metadata = {
-  title: `Admin | ${BRAND.name}`,
+  title: `Admin`,
   description: `Panel de administracion de ${BRAND.name}.`,
 };
 

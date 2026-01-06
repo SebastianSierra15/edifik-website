@@ -17,8 +17,9 @@ export function useResetPassword() {
       await AuthService.resetPassword(email);
       setSuccess(true);
       return true;
-    } catch (err: any) {
-      setError(err.message || "Error al solicitar recuperación de contraseña");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      setError(message || "Error al solicitar recuperación de contraseña");
       return false;
     } finally {
       setLoading(false);

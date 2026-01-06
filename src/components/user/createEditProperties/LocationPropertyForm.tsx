@@ -72,7 +72,7 @@ export function LocationPropertyForm({
   return (
     <div className="container mx-auto w-full rounded-lg p-6 shadow-lg bg-client-background">
       <h2 className="mb-6 text-center text-2xl font-bold text-client-accent">
-        Ubicación de la Propiedad"
+        Ubicación de la Propiedad&quot;
       </h2>
 
       <form className="space-y-6">

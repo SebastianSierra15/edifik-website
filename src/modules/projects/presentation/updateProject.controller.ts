@@ -5,20 +5,35 @@ import { MysqlUpdateProjectRepository } from "../infrastructure/MysqlUpdateProje
 import { ProjectEditedNotifier } from "../infrastructure/mail/ProjectEditedNotifier";
 import { NodemailerEmailSender } from "../../shared";
 
+interface UpdateProjectControllerInput extends ProjectUpdateInput {
+  propertyType?: { id?: number };
+  housingType?: { id?: number };
+  city?: { id?: number };
+  projectType?: { id?: number };
+  commonAreas?: Array<{ id: number }>;
+  nearbyServices?: Array<{ id: number }>;
+}
+
 export async function updateProjectController(
-  body: any,
+  body: UpdateProjectControllerInput,
   policy: UpdateProjectPolicy
 ): Promise<void> {
+  const baseInput = body as ProjectUpdateInput;
+
   const input: ProjectUpdateInput = {
-    ...body,
-    propertyTypeId: body.propertyType?.id,
-    housingTypeId: body.housingType?.id,
-    cityId: body.city?.id,
-    projectTypeId: body.projectType?.id,
-    commonAreaIds: body.commonAreas?.map((area: { id: number }) => area.id),
-    nearbyServiceIds: body.nearbyServices?.map(
-      (service: { id: number }) => service.id
-    ),
+    ...baseInput,
+    propertyTypeId: body.propertyType?.id ?? baseInput.propertyTypeId,
+    housingTypeId: body.housingType?.id ?? baseInput.housingTypeId,
+    cityId: body.city?.id ?? baseInput.cityId,
+    projectTypeId: body.projectType?.id ?? baseInput.projectTypeId,
+    commonAreaIds:
+      body.commonAreas?.map((area) => area.id) ??
+      baseInput.commonAreaIds ??
+      null,
+    nearbyServiceIds:
+      body.nearbyServices?.map((service) => service.id) ??
+      baseInput.nearbyServiceIds ??
+      null,
   };
 
   const useCase = new UpdateProject(
