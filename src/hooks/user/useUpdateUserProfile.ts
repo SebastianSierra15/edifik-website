@@ -1,0 +1,41 @@
+"use client";
+
+import { useState } from "react";
+import { UserProfileService } from "@/src/services/user";
+
+interface UpdateProfileInput {
+  identityDocument?: string;
+  names?: string;
+  lastnames?: string;
+  birthdate?: Date | null;
+  phoneNumber?: string;
+  genderId?: number | null;
+}
+
+export function useUpdateUserProfile() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const updateUserProfile = async (
+    data: UpdateProfileInput
+  ): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      await UserProfileService.updateProfile(data);
+      setSuccess(true);
+      return true;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : null;
+      setError(message || "Error inesperado");
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { updateUserProfile, loading, error, success };
+}

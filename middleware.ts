@@ -1,42 +1,32 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
-import { Permission } from "./lib/definitios";
-import { withPath } from "./lib/middleware/withPath";
+import { withPath } from "@/lib/withPath";
+import { isAdmin } from "./src/shared/auth/isAdmin";
+import type { AppJWT } from "./src/shared/auth/jwt";
+import { Permission } from "./src/modules/auth/domain/Permission";
+import { PROTECTED_ROUTES } from "./src/config/protectedRoutes";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const protectedRoutes: Record<string, string[] | null> = {
-    "/admin": [
-      "Gestionar proyectos",
-      "Gestionar propiedades",
-      "Gestionar usuarios",
-      "Gestionar roles",
-      "Gestionar membresias",
-      "Gestionar solicitudes",
-    ],
+  if (pathname.startsWith("/login")) {
+    const redirectUrl = req.nextUrl.clone();
+    let targetPath = pathname.replace(/^\/login/, "/auth");
 
-    "/admin/proyectos": ["Gestionar proyectos"],
-    "/admin/propiedades": ["Gestionar propiedades"],
-    "/admin/usuarios": ["Gestionar usuarios"],
-    "/admin/roles": ["Gestionar roles"],
-    "/admin/membresias": ["Gestionar membresias"],
-    "/admin/solicitudes": ["Gestionar solicitudes"],
+    if (targetPath === "/auth") {
+      targetPath = "/auth/login";
+    }
 
-    "/usuario": null,
-    "/usuario/perfil": null,
-    "/usuario/mis-propiedades": ["Gestionar propiedades propias"],
-    "/usuario/subir-propiedad": ["Gestionar propiedades propias"],
+    if (targetPath.startsWith("/auth/forget-password")) {
+      targetPath = "/auth/forgot-password";
+    }
 
-    "/membresias": null,
+    redirectUrl.pathname = targetPath;
+    return withPath(NextResponse.redirect(redirectUrl), pathname);
+  }
 
-    "/login": null,
-    "/login/register": null,
-    "/login/forget-password": null,
-  };
-
-  const matchedRoute = Object.keys(protectedRoutes)
+  const matchedRoute = Object.keys(PROTECTED_ROUTES)
     .sort((a, b) => b.length - a.length)
     .find((route) => pathname.startsWith(route));
 
@@ -44,72 +34,87 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const requiredPermissions = protectedRoutes[matchedRoute];
+  const routeConfig = PROTECTED_ROUTES[matchedRoute];
 
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-
-  const userPermissions = token?.permissions as Permission[];
-
-  const adminPermissions = [
-    "Gestionar proyectos",
-    "Gestionar propiedades",
-    "Gestionar usuarios",
-    "Gestionar roles",
-    "Gestionar membresias",
-    "Gestionar solicitudes",
-  ];
-
-  const isAdmin = adminPermissions.some((perm) =>
-    userPermissions?.some((p) => p.name === perm)
+  const hasSessionCookie = Boolean(
+    req.cookies.get("__Secure-next-auth.session-token")?.value ??
+      req.cookies.get("__Host-next-auth.session-token")?.value ??
+      req.cookies.get("next-auth.session-token")?.value
   );
 
-  if (pathname === "/membresias" && token && token.role != 2) {
+  if (!hasSessionCookie) {
+    if (pathname.startsWith("/auth")) {
+      return withPath(NextResponse.next(), pathname);
+    }
+
     return withPath(
-      NextResponse.redirect(new URL("/unauthorized", req.url)),
+      NextResponse.redirect(new URL("/auth/login", req.url)),
       pathname
     );
   }
 
-  if (pathname === "/usuario/subir-propiedad" && token && !token.membershipId) {
+  const token = (await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+  })) as AppJWT | null;
+
+  const membershipId = Number(token?.membershipId);
+
+  const userPermissions = (token?.permissions ?? []).map(
+    (p) => p.name as Permission
+  );
+
+  const userIsAdmin = isAdmin(userPermissions);
+
+  /**
+   * NO autenticado
+   */
+  if (!token && !pathname.startsWith("/auth")) {
+    return withPath(
+      NextResponse.redirect(new URL("/auth/login", req.url)),
+      pathname
+    );
+  }
+
+  /**
+   * Usuario logueado intentando ir a login
+   */
+  if (pathname.startsWith("/auth") && token) {
+    return withPath(
+      NextResponse.redirect(new URL(userIsAdmin ? "/admin" : "/", req.url)),
+      pathname
+    );
+  }
+
+  /**
+   * Subir propiedad requiere membresía
+   */
+  if (pathname === "/usuario/subir-propiedad" && token && !membershipId) {
     return withPath(
       NextResponse.redirect(new URL("/membresias", req.url)),
       pathname
     );
   }
 
-  if (
-    (pathname === "/login" ||
-      pathname === "/login/register" ||
-      pathname === "/login/forget-password") &&
-    token
-  ) {
-    const redirectUrl = isAdmin ? "/admin" : "/";
-    return withPath(
-      NextResponse.redirect(new URL(redirectUrl, req.url)),
-      pathname
-    );
-  }
-
-  if (!token && !pathname.startsWith("/login")) {
-    return withPath(
-      NextResponse.redirect(new URL("/login", req.url)),
-      pathname
-    );
-  }
-
-  if (!requiredPermissions) {
+  /**
+   * Ruta sin permisos específicos
+   */
+  if (!routeConfig.permissions) {
     return withPath(NextResponse.next(), pathname);
   }
 
-  if (!userPermissions?.length) {
+  /**
+   * Sin permisos
+   */
+  if (!userPermissions.length) {
     return withPath(
       NextResponse.redirect(new URL("/unauthorized", req.url)),
       pathname
     );
   }
 
-  const hasPermission = requiredPermissions.some((perm) =>
-    userPermissions?.some((userPerm) => userPerm.name === perm)
+  const hasPermission = routeConfig.permissions.some((perm) =>
+    userPermissions.includes(perm)
   );
 
   if (!hasPermission) {
@@ -123,5 +128,10 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/usuario/:path*", "/login/:path*", "/membresias"],
+  matcher: [
+    "/admin/:path*",
+    "/usuario/:path*",
+    "/auth/:path*",
+    "/login/:path*",
+  ],
 };

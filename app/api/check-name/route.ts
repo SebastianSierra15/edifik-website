@@ -1,37 +1,25 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { RowDataPacket } from "mysql2";
+import { handleHttpError } from "@/src/shared";
+import { checkNameController } from "@/src/modules/nameValidation";
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const table = searchParams.get("table");
-    const name = searchParams.get("name");
-    const id = searchParams.get("id");
+    const { searchParams } = new URL(req.url);
 
-    if (!name) {
-      return NextResponse.json(
-        { error: "El nombre es requerido" },
-        { status: 400 }
-      );
-    }
+    const target = searchParams.get("target") ?? undefined;
+    const name = searchParams.get("name") ?? undefined;
+    const excludeId = searchParams.get("id")
+      ? Number(searchParams.get("id"))
+      : null;
 
-    const procedureName = `check_${table}_name`;
+    const result = await checkNameController({
+      target,
+      name,
+      excludeId,
+    });
 
-    const [result] = await db.query<RowDataPacket[][]>(
-      `CALL ${procedureName}(?, ?)`,
-      [id || null, name]
-    );
-
-    const total = (result[0] as RowDataPacket[])[0]?.total || 0;
-
-    const response = NextResponse.json({ total }, { status: 200 });
-
-    return response;
+    return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json(
-      { error: "Error al verificar el nombre" },
-      { status: 500 }
-    );
+    return handleHttpError(error);
   }
 }

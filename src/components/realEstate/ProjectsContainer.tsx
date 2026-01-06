@@ -1,0 +1,169 @@
+"use client";
+
+import { memo, useMemo } from "react";
+import dynamic from "next/dynamic";
+import clsx from "clsx";
+import type { LatLngBounds } from "leaflet";
+import { ProjectView } from "@/src/interfaces";
+import { useProjectsMetadata } from "@/src/hooks/projects";
+import { PropertyCard } from "@/src/components/realEstate";
+import { ProjectsMap } from "./ProjectsMap";
+
+const ProjectFilter = dynamic(
+  () => import("@/src/components/realEstate").then((mod) => mod.ProjectFilter),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+interface ProjectsContainerProps {
+  projects: ProjectView[];
+  totalEntries: number;
+  isLoading: boolean;
+  fetchMoreProjects: () => void;
+  filterOpen: boolean;
+  showMap: boolean;
+  setFilterOpen: (open: boolean) => void;
+  priceRange: { min: number; max: number };
+  areaRange: { min: number; max: number };
+  selectedButtons: Record<string, number[]>;
+  setSelectedButtons: React.Dispatch<
+    React.SetStateAction<Record<string, number[]>>
+  >;
+  setBounds: (bounds: LatLngBounds | null) => void;
+  highlightCoords?: { latitude: number; longitude: number } | null;
+}
+
+const ProjectsContainerComponent = ({
+  projects,
+  totalEntries,
+  isLoading,
+  fetchMoreProjects,
+  filterOpen,
+  showMap,
+  setFilterOpen,
+  priceRange,
+  areaRange,
+  selectedButtons,
+  setSelectedButtons,
+  setBounds,
+  highlightCoords,
+}: ProjectsContainerProps) => {
+  const { metadata, isLoadingMetadata } = useProjectsMetadata();
+
+  const projectCards = useMemo(
+    () =>
+      projects.map((project) => (
+        <div
+          key={project.id}
+          className="relative flex items-center justify-center"
+        >
+          <div className="w-full max-w-xs h-80">
+            <PropertyCard
+              id={project.id}
+              name={project.name}
+              location={project.cityName}
+              images={project.images}
+              price={project.price || 0}
+              area={project.area}
+              bedrooms={project.bedrooms || undefined}
+              bathrooms={project.bathrooms || undefined}
+              parkingSpots={project.parkingSpots || undefined}
+              url="/inmobiliaria"
+            />
+          </div>
+        </div>
+      )),
+    [projects]
+  );
+
+  return (
+    <div
+      className={clsx(
+        "flex flex-col sm:flex-row sm:justify-between",
+        filterOpen && "gap-4 sm:space-x-6"
+      )}
+    >
+      {filterOpen && (
+        <div
+          className={clsx(
+            "sm:ml-6 lg:ml-8 xl:ml-20 w-full flex flex-col items-center sm:w-72 sm:px-10",
+            !showMap ? "-mt-10 mb-10 py-4" : ""
+          )}
+        >
+          <ProjectFilter
+            selectedButtons={selectedButtons}
+            setSelectedButtons={setSelectedButtons}
+            setFilterOpen={setFilterOpen}
+            priceRange={priceRange}
+            areaRange={areaRange}
+            metadata={metadata}
+            isLoading={isLoadingMetadata}
+          />
+        </div>
+      )}
+
+      {showMap ? (
+        <div className="relative h-screen w-full transition-transform duration-300">
+          <ProjectsMap
+            projects={projects}
+            setBounds={setBounds}
+            showMap={showMap}
+            highlightCoords={highlightCoords}
+          />
+        </div>
+      ) : (
+        <div
+          className={clsx(
+            "-mt-10 mb-10 flex w-full flex-col",
+            !filterOpen
+              ? "px-6 py-4 lg:px-8 xl:px-20"
+              : "pr-6 p-4 lg:pr-8 xl:pr-20"
+          )}
+        >
+          <div
+            className={clsx(
+              "mb-8 grid gap-x-4 gap-y-6",
+              filterOpen
+                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
+                : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5"
+            )}
+          >
+            {projectCards}
+          </div>
+
+          {projects.length < totalEntries && (
+            <button
+              onClick={fetchMoreProjects}
+              disabled={isLoading}
+              className={clsx(
+                "mt-6 self-center bg-client-backgroundAlt border border-white rounded-full px-6 py-2 text-white shadow-lg transition-colors",
+                isLoading
+                  ? "cursor-not-allowed"
+                  : "hover:bg-client-white hover:text-black"
+              )}
+            >
+              {isLoading ? "Cargando..." : "Mostrar más"}
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const ProjectsContainer = memo(
+  ProjectsContainerComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.projects.length === nextProps.projects.length &&
+      prevProps.isLoading === nextProps.isLoading &&
+      prevProps.totalEntries === nextProps.totalEntries &&
+      JSON.stringify(prevProps.selectedButtons) ===
+        JSON.stringify(nextProps.selectedButtons) &&
+      prevProps.filterOpen === nextProps.filterOpen &&
+      prevProps.showMap === nextProps.showMap
+    );
+  }
+);

@@ -1,18 +1,18 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
-import PropertieView from "@/app/ui/user/propertieView/propertieView";
+import { useAuth } from "@/src/hooks/auth";
+import { PropertyView } from "@/src/components/user";
 
 export default function ViewPropertyPage() {
-  const { data: session, status } = useSession();
+  const { isAuthenticated, isLoading } = useAuth();
   const params = useParams();
 
-  if (status !== "authenticated") return null;
+  if (isLoading || !isAuthenticated) return null;
 
   const projectId = params?.id ? decodeURIComponent(params.id as string) : "";
 
   if (!projectId) return null;
 
-  return <PropertieView projectId={Number(projectId)} />;
+  return <PropertyView projectId={Number(projectId)} />;
 }

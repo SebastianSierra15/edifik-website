@@ -2,10 +2,10 @@
 
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import ProjectView from "@/app/ui/admin/projects/projectView/projectView";
+import { ProjectView } from "@/src/components/admin";
 
 export default function ViewPropertyPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const params = useParams();
 
   if (status !== "authenticated") return null;
@@ -14,5 +14,5 @@ export default function ViewPropertyPage() {
 
   if (!projectId) return null;
 
-  return <ProjectView projectId={Number(projectId)} isProperty={false} />;
+  return <ProjectView projectId={Number(projectId)} isProperty={true} />;
 }

@@ -1,91 +1,89 @@
 import { NextRequest } from "next/server";
-import { db } from "@/lib/db";
-import { RowDataPacket } from "mysql2";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import {
+  requireAuthWithPermissions,
+  Permission,
+} from "@/src/modules/auth";
+import { observePendingRequestsController } from "@/src/modules/requests";
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return new Response("No autenticado", { status: 401 });
-  }
-
-  const permissions = session?.user?.permissions;
-  const hasPermission = permissions?.some(
-    (perm) => perm.name === "Gestionar solicitudes"
-  );
-
-  if (!hasPermission) {
-    return new Response("Acceso denegado", { status: 403 });
-  }
+  await requireAuthWithPermissions([Permission.ManageRequests]);
 
   const encoder = new TextEncoder();
+  const controllerApi = observePendingRequestsController();
+  let isClosed = false;
+  let interval: ReturnType<typeof setInterval> | null = null;
+  let heartbeat: ReturnType<typeof setInterval> | null = null;
+
   const stream = new ReadableStream({
     async start(controller) {
-      const sendEvent = (data: any) => {
-        try {
-          if (controller.desiredSize !== null) {
-            controller.enqueue(
-              encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
-            );
-          }
-        } catch (err) {
-          console.error("⚠️ Error en sendEvent: Stream cerrado", err);
+      let lastData: string | null = null;
+
+      const closeStream = () => {
+        if (isClosed) return;
+        isClosed = true;
+
+        if (interval) {
+          clearInterval(interval);
         }
-      };
 
-      const heartbeat = setInterval(() => {
-        if (controller.desiredSize !== null) {
-          sendEvent({ type: "heartbeat", message: "Conexión activa" });
+        if (heartbeat) {
+          clearInterval(heartbeat);
         }
-      }, 10000);
 
-      let lastRequests: any[] = [];
-
-      const checkForNewRequests = async () => {
-        try {
-          const [result] = await db.query<RowDataPacket[][]>(
-            "CALL get_pending_requests()"
-          );
-
-          const requestRows = result[0] || [];
-          const requests = requestRows.map((row: any) => ({
-            id: row.id,
-            date: row.date,
-            operation: row.operation ? "agregar" : "editar",
-            userEmail: row.userEmail,
-            statusRequestName: row.statusRequestName,
-            projectName: row.projectName,
-          }));
-
-          const hasChanged =
-            JSON.stringify(requests) !== JSON.stringify(lastRequests);
-
-          if (hasChanged) {
-            sendEvent({ type: "newRequests", data: requests });
-            lastRequests = requests;
-          }
-        } catch (error) {
-          console.error(
-            "Error al recuperar las solicitudes pendientes:",
-            error
-          );
-        }
-      };
-
-      const interval = setInterval(checkForNewRequests, 10000);
-
-      req.signal.onabort = () => {
-        console.warn("🔴 Conexión SSE cerrada por el cliente");
-        clearInterval(interval);
-        clearInterval(heartbeat);
         try {
           controller.close();
-        } catch (err) {
-          console.error("⚠️ Error al cerrar el stream:", err);
+        } catch {
+          // Ignore close errors from already closed controller.
         }
       };
+
+      const send = (data: unknown) => {
+        if (isClosed || req.signal.aborted) return;
+
+        try {
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
+          );
+        } catch {
+          closeStream();
+        }
+      };
+
+      heartbeat = setInterval(() => {
+        send({ type: "heartbeat" });
+      }, 10_000);
+
+      const poll = async () => {
+        if (isClosed || req.signal.aborted) return;
+
+        try {
+          const data = await controllerApi.fetch();
+          const serialized = JSON.stringify(data);
+
+          if (serialized !== lastData) {
+            send({ type: "pendingRequests", data });
+            lastData = serialized;
+          }
+        } catch {
+          // Avoid unhandled rejections during streaming errors.
+        }
+      };
+
+      interval = setInterval(poll, 10_000);
+      void poll();
+
+      req.signal.addEventListener("abort", closeStream);
+    },
+    cancel() {
+      isClosed = true;
+
+      if (interval) {
+        clearInterval(interval);
+      }
+
+      if (heartbeat) {
+        clearInterval(heartbeat);
+      }
     },
   });
 

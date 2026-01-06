@@ -1,28 +1,13 @@
 import { NextResponse } from "next/server";
-import { sendEmail } from "@/lib/email/sendEmail";
-import { generateEmailTemplate } from "@/utils/emailTemplates";
+import { handleHttpError } from "@/src/shared";
+import { sendContactMessageController } from "@/src/modules/contact";
 
 export async function POST(req: Request) {
   try {
-    const { name, phone, email, message, toEmail } = await req.json();
-
-    const html = generateEmailTemplate({
-      title: "Nuevo mensaje de contacto",
-      intro:
-        "Has recibido un nuevo mensaje a través del formulario de contacto.",
-      items: [
-        { label: "Nombre", value: name },
-        { label: "Teléfono", value: phone },
-        { label: "Correo", value: email },
-        { label: "Mensaje", value: message },
-      ],
-    });
-
-    await sendEmail(toEmail, "Nuevo mensaje de contacto", html);
-
-    return NextResponse.json({ ok: true });
+    const body = await req.json();
+    const result = await sendContactMessageController(body);
+    return NextResponse.json(result);
   } catch (error) {
-    console.error("❌ Error en el envío:", error);
-    return NextResponse.json({ ok: false }, { status: 500 });
+    return handleHttpError(error);
   }
 }
