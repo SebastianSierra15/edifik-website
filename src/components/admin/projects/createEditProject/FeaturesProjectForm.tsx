@@ -51,7 +51,7 @@ export function FeaturesProjectForm({
       onChange({ [name]: updatedValue });
       validateField(`${name}Error` as keyof typeof errors, updatedValue);
     },
-    [onChange, validateField, errors]
+    [onChange, validateField]
   );
 
   const handleSelectChange = useCallback(
@@ -62,7 +62,7 @@ export function FeaturesProjectForm({
       onChange({ [name]: selectedValue });
       validateField(`${name}Error` as keyof typeof errors, selectedValue);
     },
-    [onChange, validateField, errors]
+    [onChange, validateField]
   );
 
   const handleNext = useCallback(

@@ -65,7 +65,7 @@ export function useGetMyProjects({
 
   useEffect(() => {
     fetchMyProjects(false, 1);
-  }, [statusProject]);
+  }, [statusProject, fetchMyProjects]);
 
   const fetchMoreMyProjects = useCallback(() => {
     if (isLoading) return;

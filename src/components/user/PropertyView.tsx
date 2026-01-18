@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ProjectDetails } from "@/src/interfaces";
 import {
@@ -22,11 +22,11 @@ interface PropertyViewProps {
 }
 
 export function PropertyView({ projectId }: PropertyViewProps) {
-  const { project, loading: loadingProject, error } = useProjectById(
-    projectId,
-    false,
-    true
-  );
+  const {
+    project,
+    loading: loadingProject,
+    error,
+  } = useProjectById(projectId, false, true);
 
   const [currentStep, setCurrentStep] = useState(0);
   const totalSteps = 5;
@@ -43,19 +43,22 @@ export function PropertyView({ projectId }: PropertyViewProps) {
     }
   }, [error, router]);
 
-  const handleNextStep = () => {
+  const handleNextStep = useCallback(() => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep((prevStep) => prevStep + 1);
     }
-  };
+  }, [currentStep, totalSteps]);
 
-  const handlePreviousStep = () => {
+  const handlePreviousStep = useCallback(() => {
     if (currentStep > 0) {
       setCurrentStep((prevStep) => prevStep - 1);
     }
-  };
+  }, [currentStep]);
 
-  const projectData: Partial<ProjectDetails> = project ?? {};
+  const projectData = useMemo(
+    () => project ?? {},
+    [project]
+  ) as Partial<ProjectDetails>;
 
   const currentView = useMemo(() => {
     if (!metadata || !locations || loadingProject || loadingImages) {
@@ -114,6 +117,8 @@ export function PropertyView({ projectId }: PropertyViewProps) {
     );
   }, [
     currentStep,
+    handlePreviousStep,
+    handleNextStep,
     metadata,
     locations,
     loadingProject,

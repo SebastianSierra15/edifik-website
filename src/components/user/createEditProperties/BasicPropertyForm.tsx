@@ -88,7 +88,7 @@ export function BasicPropertyForm({
 
       onNext();
     },
-    [validateFields, onNext, formData, onChange, validateField]
+    [validateFields, onNext]
   );
 
   const tooltipTexts = useMemo(

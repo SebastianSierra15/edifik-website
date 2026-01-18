@@ -43,7 +43,7 @@ export function PropertiesContainer({
           </div>
         </div>
       )),
-    [projects]
+    [projects, onDelete, statusFilter]
   );
 
   return (

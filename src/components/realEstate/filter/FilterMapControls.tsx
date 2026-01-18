@@ -26,7 +26,7 @@ export function FilterMapControls({
   const handleToggleMap = useCallback(() => {
     setShowMap((prev) => !prev);
     setFilterOpen(false);
-  }, [setShowMap]);
+  }, [setShowMap, setFilterOpen]);
 
   return (
     <div className="flex items-center gap-x-2 sm:gap-x-4 mt-4 justify-between">

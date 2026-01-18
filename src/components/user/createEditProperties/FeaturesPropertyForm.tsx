@@ -77,6 +77,13 @@ export function FeaturesPropertyForm({
     [formData.propertyType?.id]
   );
 
+  type FeatureErrors = ReturnType<typeof useFeaturesProjectValidation>["errors"];
+
+  const formatFieldError = useCallback(
+    (name: string) => `${name}Error` as keyof FeatureErrors,
+    []
+  );
+
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value, type } = e.target;
@@ -84,9 +91,9 @@ export function FeaturesPropertyForm({
         type === "number" ? (value === "" ? "" : parseFloat(value)) : value;
 
       onChange({ [name]: updatedValue });
-      validateField(`${name}Error` as keyof typeof errors, updatedValue);
+      validateField(formatFieldError(name), updatedValue);
     },
-    [onChange, validateField, errors]
+    [onChange, validateField, formatFieldError]
   );
 
   const handleSelectChange = useCallback(
@@ -95,9 +102,9 @@ export function FeaturesPropertyForm({
       const selectedValue = parseInt(value, 10);
 
       onChange({ [name]: selectedValue });
-      validateField(`${name}Error` as keyof typeof errors, selectedValue);
+      validateField(formatFieldError(name), selectedValue);
     },
-    [onChange, validateField, errors]
+    [onChange, validateField, formatFieldError]
   );
 
   const handleNext = useCallback(

@@ -150,7 +150,7 @@ export function DetailsProjectForm({
         ? "Seleccione los servicios cercanos a la propiedad."
         : "Seleccione los servicios cercanos al proyecto.",
     }),
-    [formData.projectType?.id]
+    [isPropertyType]
   );
 
   return (

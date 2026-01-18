@@ -138,35 +138,38 @@ export function ProjectForm({
       handleUpdateProject(data);
       handleNextStep();
     },
-    [handleUpdateProject, handleNextStep]
+    [handleNextStep, handleUpdateProject]
   );
 
-  const handleOpenModal = (media: Media[], validateFields: () => boolean) => {
-    setProjectData((prevData) => ({
-      ...prevData,
-      media,
-    }));
+  const handleOpenModal = useCallback(
+    (media: Media[], validateFields: () => boolean) => {
+      setProjectData((prevData) => ({
+        ...prevData,
+        media,
+      }));
 
-    setTimeout(() => {
-      if (!validateFields()) {
-        console.error("🚨 Validación fallida antes de abrir el modal.");
-        return;
-      }
-      confirm({
-        title: "Confirmar Accion",
-        message: isEdit
-          ? "Deseas guardar los cambios?"
-          : "Estas seguro de que quieres subir este proyecto?",
-        action: isEdit ? "edit" : "create",
-      }).then((confirmed) => {
-        if (!confirmed) return;
+      setTimeout(() => {
+        if (!validateFields()) {
+          console.error("🚨 Validación fallida antes de abrir el modal.");
+          return;
+        }
+        confirm({
+          title: "Confirmar Accion",
+          message: isEdit
+            ? "Deseas guardar los cambios?"
+            : "Estas seguro de que quieres subir este proyecto?",
+          action: isEdit ? "edit" : "create",
+        }).then((confirmed) => {
+          if (!confirmed) return;
 
-        submitProjectForm(media).then(({ redirectPath }) => {
-          router.push(redirectPath);
+          submitProjectForm(media).then(({ redirectPath }) => {
+            router.push(redirectPath);
+          });
         });
-      });
-    }, 100);
-  };
+      }, 100);
+    },
+    [confirm, isEdit, router, submitProjectForm]
+  );
 
   const currentForm = useMemo(() => {
     if (!metadata || !locations || (loadingProject && isEdit)) {
@@ -252,7 +255,22 @@ export function ProjectForm({
         )}
       </>
     );
-  }, [currentStep, metadata, locations, projectData]);
+  }, [
+    currentStep,
+    handleNextStep,
+    handleOpenModal,
+    handlePreviousStep,
+    handleSubmit,
+    handleUpdateProject,
+    hasPermission,
+    imagesTypes,
+    isEdit,
+    isProperty,
+    loadingProject,
+    locations,
+    metadata,
+    projectData,
+  ]);
 
   return (
     <div className="container mx-auto px-6 pb-6">

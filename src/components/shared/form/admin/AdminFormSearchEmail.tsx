@@ -63,7 +63,7 @@ export function AdminFormSearchEmail({
         setIsListVisible(false);
       }
     },
-    [onChange, fetchEmails, value]
+    [onChange, fetchEmails, value, onSelect]
   );
 
   const handleSelect = (email: string, ownerId: number) => {

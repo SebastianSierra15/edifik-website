@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { ProjectFormData } from "@/src/interfaces";
 import {
@@ -36,19 +36,19 @@ export function ProjectView({ projectId, isProperty }: ProjectViewProps) {
   const { metadata } = useBasicMetadata();
   const { imagesTypes, loadingImages } = useImageTypes();
 
-  const handleNextStep = () => {
+  const projectData = useMemo<ProjectFormData>(() => project ?? {}, [project]);
+
+  const handleNextStep = useCallback(() => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep((prevStep) => prevStep + 1);
     }
-  };
+  }, [currentStep, totalSteps]);
 
-  const handlePreviousStep = () => {
+  const handlePreviousStep = useCallback(() => {
     if (currentStep > 0) {
       setCurrentStep((prevStep) => prevStep - 1);
     }
-  };
-
-  const projectData: ProjectFormData = project ?? {};
+  }, [currentStep]);
 
   const currentView = useMemo(() => {
     if (!metadata || !locations || loadingProject || loadingImages) {
@@ -105,7 +105,17 @@ export function ProjectView({ projectId, isProperty }: ProjectViewProps) {
         )}
       </>
     );
-  }, [currentStep, metadata, locations, project, imagesTypes, loadingImages]);
+  }, [
+    currentStep,
+    metadata,
+    locations,
+    projectData,
+    imagesTypes,
+    loadingImages,
+    loadingProject,
+    handleNextStep,
+    handlePreviousStep,
+  ]);
 
   return (
     <div className="container mx-auto p-6">
