@@ -180,7 +180,14 @@ export function useImagesProjectForm({
 
     onSubmit(mediaData, validateFields);
     onNext();
-  }, [formData.media, onNext, onSubmit, showModalAlert, validateFields]);
+  }, [
+    formData.media,
+    formData.name,
+    onNext,
+    onSubmit,
+    showModalAlert,
+    validateFields,
+  ]);
 
   return {
     errors,

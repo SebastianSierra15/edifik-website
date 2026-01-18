@@ -69,7 +69,7 @@ export function ImagesPropertyForm({
 
     onChange({ media: transformedMedia });
     setInitialized(true);
-  }, [formData.projectMedia]);
+  }, [formData.projectMedia, initialized, onChange]);
 
   useEffect(() => {
     setExpandedSections(
@@ -82,7 +82,7 @@ export function ImagesPropertyForm({
     setTimeout(() => {
       validateFields();
     }, 100);
-  }, [formData.media]);
+  }, [formData.media, validateFields]);
 
   const toggleSection = useCallback((category: string) => {
     setExpandedSections((prev) => ({ ...prev, [category]: !prev[category] }));
@@ -115,7 +115,7 @@ export function ImagesPropertyForm({
 
       onChange({ media: updatedMedia });
     },
-    [onChange, formData.media, imagesTypes]
+    [onChange, formData.media]
   );
 
   const handleRemoveImage = useCallback(

@@ -124,220 +124,245 @@ export function PropertyForm({
     [handleUpdateProject, handleNextStep]
   );
 
-  const handleFinalSubmit = async (media: Media[]) => {
-    try {
-      showLoader();
-
-      const finalProjectData = { ...projectData, media };
-
-      const projectId = await createOrUpdateProject(finalProjectData);
-      if (!projectId) {
-        console.error("No se pudo obtener un ID de propiedad válido.");
-        return;
-      }
+  const createOrUpdateProject = useCallback(
+    async (
+      projectData: Partial<ProjectFormData>
+    ) => {
+      const result = await submitProject(projectData, isEdit ? "edit" : "create");
 
       if (isEdit) {
-        await handleEditMedia(projectId, media);
+        if (!result) {
+          console.error("Error al editar la propiedad.");
+          sessionStorage.setItem(
+            "projectMessage",
+            JSON.stringify({
+              type: "error",
+              message: "Error al editar la propiedad.",
+            })
+          );
+          return null;
+        }
+        return projectData.id ?? null;
       } else {
-        await handleNewMedia(projectId, media);
-      }
+        if (typeof result === "number") return result;
 
-      sessionStorage.setItem(
-        "projectMessage",
-        JSON.stringify({
-          type: "success",
-          message: isEdit
-            ? "Propiedad editada exitosamente."
-            : "Propiedad creada exitosamente.",
-        })
-      );
-    } catch (err) {
-      console.error("Error general al crear proyecto:", err);
-
-      console.error("Error durante el proceso:", err);
-      sessionStorage.setItem(
-        "projectMessage",
-        JSON.stringify({
-          type: "error",
-          message: "Hubo un problema al procesar la propiedad.",
-        })
-      );
-    } finally {
-      hideLoader();
-      router.push("/usuario/mis-propiedades");
-    }
-  };
-
-  const createOrUpdateProject = async (
-    projectData: Partial<ProjectFormData>
-  ) => {
-    const result = await submitProject(projectData, isEdit ? "edit" : "create");
-
-    if (isEdit) {
-      if (!result) {
-        console.error("Error al editar la propiedad.");
+        console.error("Error al crear la propiedad.");
         sessionStorage.setItem(
           "projectMessage",
           JSON.stringify({
             type: "error",
-            message: "Error al editar la propiedad.",
+            message: "Error al crear la propiedad.",
           })
         );
         return null;
       }
-      return projectData.id ?? null;
-    } else {
-      if (typeof result === "number") return result;
+    },
+    [isEdit, submitProject]
+  );
 
-      console.error("Error al crear la propiedad.");
-      sessionStorage.setItem(
-        "projectMessage",
-        JSON.stringify({
-          type: "error",
-          message: "Error al crear la propiedad.",
-        })
+  const deleteUnusedImages = useCallback(
+    async (
+      previousUrls: string[],
+      currentUrls: string[]
+    ) => {
+      const imagesToDelete = previousUrls.filter(
+        (url) => !currentUrls.includes(url)
       );
-      return null;
-    }
-  };
 
-  const handleEditMedia = async (projectId: number, media: Media[]) => {
-    const existingMedia = media.filter((m) => typeof m.file === "string");
-    const newMedia = media.filter((m) => m.file instanceof File);
+      if (imagesToDelete.length > 0) {
+        await deleteImages(imagesToDelete);
 
-    const mediaUrls = existingMedia.map((m) => m.file as string);
-    const previousMediaUrls = projectData.projectMedia?.map((m) => m.url) || [];
+        const mediaIdsToDelete =
+          projectData.projectMedia
+            ?.filter((m) => imagesToDelete.includes(m.url))
+            .map((m) => m.id)
+            .filter((id): id is number => id !== undefined) || [];
 
-    await deleteUnusedImages(previousMediaUrls, mediaUrls);
-
-    if (newMedia.length > 0) {
-      await uploadAndInsertMedia(projectId, newMedia);
-    }
-
-    await updateExistingMedia(media);
-  };
-
-  const handleNewMedia = async (projectId: number, media: Media[]) => {
-    await uploadAndInsertMedia(projectId, media);
-  };
-
-  const deleteUnusedImages = async (
-    previousUrls: string[],
-    currentUrls: string[]
-  ) => {
-    const imagesToDelete = previousUrls.filter(
-      (url) => !currentUrls.includes(url)
-    );
-
-    if (imagesToDelete.length > 0) {
-      await deleteImages(imagesToDelete);
-
-      const mediaIdsToDelete =
-        projectData.projectMedia
-          ?.filter((m) => imagesToDelete.includes(m.url))
-          .map((m) => m.id)
-          .filter((id): id is number => id !== undefined) || [];
-
-      if (mediaIdsToDelete.length > 0) {
-        await deleteProjectMedia(mediaIdsToDelete);
+        if (mediaIdsToDelete.length > 0) {
+          await deleteProjectMedia(mediaIdsToDelete);
+        }
       }
-    }
-  };
+    },
+    [deleteImages, deleteProjectMedia, projectData.projectMedia]
+  );
 
-  const uploadAndInsertMedia = async (projectId: number, media: Media[]) => {
-    const uploadResult = await uploadImages(
-      projectId,
-      media,
-      projectData.propertyType?.name ?? "default"
-    );
-
-    if (!uploadResult || uploadResult.length === 0) {
-      console.error(
-        "No se pudieron subir imágenes. Eliminando la propiedad..."
+  const uploadAndInsertMedia = useCallback(
+    async (projectId: number, media: Media[]) => {
+      const uploadResult = await uploadImages(
+        projectId,
+        media,
+        projectData.propertyType?.name ?? "default"
       );
-      await deleteProject(projectId);
-      throw new Error("Error al subir las imágenes. Propiedad eliminada.");
-    }
 
-    try {
-      await insertProjectMedia(uploadResult);
-    } catch (error) {
-      console.error(
-        "Error al insertar imágenes en la base de datos. Eliminando la propiedad..."
-      );
-      await deleteProject(projectId);
-      throw new Error(
-        "Error al insertar imágenes en la BD. Propiedad eliminada."
-      );
-    }
-  };
-
-  const updateExistingMedia = async (media: Media[]): Promise<void> => {
-    const mediaToUpdate =
-      projectData.projectMedia
-        ?.map((original) => {
-          const updated = media.find(
-            (m) => typeof m.file === "string" && m.file === original.url
-          );
-
-          if (
-            updated &&
-            (updated.tag.trim() !== original.tag.trim() ||
-              (updated.description?.trim() || "") !==
-                (original.description?.trim() || ""))
-          ) {
-            return {
-              id: original.id!,
-              tag: updated.tag,
-              description: updated.description ?? "",
-            };
-          }
-          return null;
-        })
-        .filter(
-          (item): item is { id: number; tag: string; description: string } =>
-            item !== null
-        ) || [];
-
-    if (mediaToUpdate.length > 0) {
-      await updateProjectMedia(mediaToUpdate);
-    }
-  };
-  const handleOpenModal = (media: Media[], validateFields: () => boolean) => {
-    setProjectData((prevData) => ({
-      ...prevData,
-      media,
-    }));
-    setTimeout(async () => {
-      if (!validateFields()) {
-        console.error("Validación fallida antes de abrir el modal.");
-        return;
+      if (!uploadResult || uploadResult.length === 0) {
+        console.error(
+          "No se pudieron subir imágenes. Eliminando la propiedad..."
+        );
+        await deleteProject(projectId);
+        throw new Error("Error al subir las imágenes. Propiedad eliminada.");
       }
-
-      const confirmed = await confirm({
-        title: "Confirmar Acción",
-        message: isEdit
-          ? "¿Deseas guardar los cambios?"
-          : "¿Estás seguro de que quieres subir esta propiedad?",
-        confirmLabel: "Confirmar",
-        cancelLabel: "Cancelar",
-      });
-
-      if (!confirmed) return;
-
-      setTimeout(() => {
-        showLoader();
-      }, 100);
 
       try {
-        await handleFinalSubmit(media);
+        await insertProjectMedia(uploadResult);
       } catch (error) {
-        console.error("Error en la confirmación de envío:", error);
+        console.error(
+          "Error al insertar imágenes en la base de datos. Eliminando la propiedad..."
+        );
+        await deleteProject(projectId);
+        throw new Error(
+          "Error al insertar imágenes en la BD. Propiedad eliminada."
+        );
+      }
+    },
+    [deleteProject, insertProjectMedia, projectData.propertyType?.name, uploadImages]
+  );
+
+  const updateExistingMedia = useCallback(
+    async (media: Media[]): Promise<void> => {
+      const mediaToUpdate =
+        projectData.projectMedia
+          ?.map((original) => {
+            const updated = media.find(
+              (m) => typeof m.file === "string" && m.file === original.url
+            );
+
+            if (
+              updated &&
+              (updated.tag.trim() !== original.tag.trim() ||
+                (updated.description?.trim() || "") !==
+                  (original.description?.trim() || ""))
+            ) {
+              return {
+                id: original.id!,
+                tag: updated.tag,
+                description: updated.description ?? "",
+              };
+            }
+            return null;
+          })
+          .filter(
+            (item): item is { id: number; tag: string; description: string } =>
+              item !== null
+          ) || [];
+
+      if (mediaToUpdate.length > 0) {
+        await updateProjectMedia(mediaToUpdate);
+      }
+    },
+    [projectData.projectMedia, updateProjectMedia]
+  );
+
+  const handleEditMedia = useCallback(
+    async (projectId: number, media: Media[]) => {
+      const existingMedia = media.filter((m) => typeof m.file === "string");
+      const newMedia = media.filter((m) => m.file instanceof File);
+
+      const mediaUrls = existingMedia.map((m) => m.file as string);
+      const previousMediaUrls = projectData.projectMedia?.map((m) => m.url) || [];
+
+      await deleteUnusedImages(previousMediaUrls, mediaUrls);
+
+      if (newMedia.length > 0) {
+        await uploadAndInsertMedia(projectId, newMedia);
+      }
+
+      await updateExistingMedia(media);
+    },
+    [deleteUnusedImages, projectData.projectMedia, updateExistingMedia, uploadAndInsertMedia]
+  );
+
+  const handleNewMedia = useCallback(
+    async (projectId: number, media: Media[]) => {
+      await uploadAndInsertMedia(projectId, media);
+    },
+    [uploadAndInsertMedia]
+  );
+
+  const handleFinalSubmit = useCallback(
+    async (media: Media[]) => {
+      try {
+        showLoader();
+
+        const finalProjectData = { ...projectData, media };
+
+        const projectId = await createOrUpdateProject(finalProjectData);
+        if (!projectId) {
+          console.error("No se pudo obtener un ID de propiedad válido.");
+          return;
+        }
+
+        if (isEdit) {
+          await handleEditMedia(projectId, media);
+        } else {
+          await handleNewMedia(projectId, media);
+        }
+
+        sessionStorage.setItem(
+          "projectMessage",
+          JSON.stringify({
+            type: "success",
+            message: isEdit
+              ? "Propiedad editada exitosamente."
+              : "Propiedad creada exitosamente.",
+          })
+        );
+      } catch (err) {
+        console.error("Error general al crear proyecto:", err);
+
+        console.error("Error durante el proceso:", err);
+        sessionStorage.setItem(
+          "projectMessage",
+          JSON.stringify({
+            type: "error",
+            message: "Hubo un problema al procesar la propiedad.",
+          })
+        );
       } finally {
         hideLoader();
+        router.push("/usuario/mis-propiedades");
       }
-    }, 100);
-  };
+    },
+    [createOrUpdateProject, handleEditMedia, handleNewMedia, hideLoader, isEdit, projectData, router, showLoader]
+  );
+
+  const handleOpenModal = useCallback(
+    (media: Media[], validateFields: () => boolean) => {
+      setProjectData((prevData) => ({
+        ...prevData,
+        media,
+      }));
+      setTimeout(async () => {
+        if (!validateFields()) {
+          console.error("Validación fallida antes de abrir el modal.");
+          return;
+        }
+
+        const confirmed = await confirm({
+          title: "Confirmar Acción",
+          message: isEdit
+            ? "¿Deseas guardar los cambios?"
+            : "¿Estás seguro de que quieres subir esta propiedad?",
+          confirmLabel: "Confirmar",
+          cancelLabel: "Cancelar",
+        });
+
+        if (!confirmed) return;
+
+        setTimeout(() => {
+          showLoader();
+        }, 100);
+
+        try {
+          await handleFinalSubmit(media);
+        } catch (error) {
+          console.error("Error en la confirmación de envío:", error);
+        } finally {
+          hideLoader();
+        }
+      }, 100);
+    },
+    [confirm, handleFinalSubmit, hideLoader, isEdit, showLoader]
+  );
 
   const currentForm = useMemo(() => {
     if (!metadata || !locations || (loadingProject && isEdit)) {
@@ -418,7 +443,21 @@ export function PropertyForm({
         )}
       </>
     );
-  }, [currentStep, metadata, locations, projectData]);
+  }, [
+    currentStep,
+    metadata,
+    locations,
+    projectData,
+    handleUpdateProject,
+    handleSubmit,
+    handlePreviousStep,
+    handleNextStep,
+    handleOpenModal,
+    hasPermission,
+    isEdit,
+    imagesTypes,
+    loadingProject,
+  ]);
 
   return (
     <div className="bg-client-backgroundLight w-full p-6">

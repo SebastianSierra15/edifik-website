@@ -82,6 +82,9 @@ export function ImageUploadSection({
     handleRemoveImage,
     handleTagChange,
     handleDescriptionChange,
+    imageType.id,
+    imageType.name,
+    category,
   ]);
 
   const handleImageChange = useCallback(
@@ -110,7 +113,13 @@ export function ImageUploadSection({
 
       onImageChange(event);
     },
-    [images.length, imageType.maxImagesAllowed, imageType.name, onImageChange]
+    [
+      images.length,
+      imageType.maxImagesAllowed,
+      imageType.name,
+      imageType.id,
+      onImageChange,
+    ]
   );
 
   return (

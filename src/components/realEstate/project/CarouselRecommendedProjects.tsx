@@ -9,20 +9,21 @@ interface CarouselRecommendedProjectsProps {
   projects: ProjectSummary[];
 }
 
+const VISIBLE_CARDS_MAP = { base: 2, sm: 3, lg: 4, xl: 5 };
+
 export function CarouselRecommendedProjects({
   projects,
 }: CarouselRecommendedProjectsProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const visibleCardsMap = { base: 2, sm: 3, lg: 4, xl: 5 };
 
-  const [visibleCards, setVisibleCards] = useState(visibleCardsMap.xl);
+  const [visibleCards, setVisibleCards] = useState(VISIBLE_CARDS_MAP.xl);
 
   useEffect(() => {
     const updateVisibleCards = () => {
-      if (window.innerWidth >= 1280) setVisibleCards(visibleCardsMap.xl);
-      else if (window.innerWidth >= 1024) setVisibleCards(visibleCardsMap.lg);
-      else if (window.innerWidth >= 640) setVisibleCards(visibleCardsMap.sm);
-      else setVisibleCards(visibleCardsMap.base);
+      if (window.innerWidth >= 1280) setVisibleCards(VISIBLE_CARDS_MAP.xl);
+      else if (window.innerWidth >= 1024) setVisibleCards(VISIBLE_CARDS_MAP.lg);
+      else if (window.innerWidth >= 640) setVisibleCards(VISIBLE_CARDS_MAP.sm);
+      else setVisibleCards(VISIBLE_CARDS_MAP.base);
     };
 
     updateVisibleCards();

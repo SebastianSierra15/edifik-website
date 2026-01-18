@@ -121,7 +121,7 @@ export function LeafletProjectsMap({
         setCurrentCenter(defaultCenter);
       }
     );
-  }, [defaultCenter, onUserLocationChange]);
+  }, [centerOnUser, defaultCenter, onUserLocationChange]);
 
   useEffect(() => {
     if (!resolvedHighlight || !mapRef.current) return;

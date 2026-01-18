@@ -65,6 +65,9 @@ export function ImageUploadSection({
     errors,
     handleRemoveImage,
     handleDescriptionChange,
+    category,
+    imageType.id,
+    imageType.name,
   ]);
 
   const handleImageChange = useCallback(

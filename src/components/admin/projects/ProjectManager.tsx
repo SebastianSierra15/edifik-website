@@ -115,7 +115,7 @@ export function ProjectManager({
 
     setPriceRange({ min: 0, max: 2500000000 });
     setAreaRange({ min: 0, max: 5000 });
-  }, []);
+  }, [showAlert]);
 
   useEffect(() => {
     if (!showMap) {
