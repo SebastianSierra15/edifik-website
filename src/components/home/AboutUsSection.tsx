@@ -25,7 +25,7 @@ export function AboutUsSection() {
             <span className="font-semibold text-white">CONOCIMIENTO</span> PARA
             DISEÑAR TU ESPACIO, SOMOS{" "}
             <span className="font-semibold uppercase text-white">
-              ${BRAND.name}.
+              {BRAND.name}.
             </span>
           </h2>
         </div>

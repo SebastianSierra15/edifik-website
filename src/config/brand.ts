@@ -1,9 +1,9 @@
 export const BRAND = {
-  name: "Edifik",
-  legalName: "Edifik",
-  domain: "edifik.co",
-  appUrl: "https://edifik.co",
-  supportEmail: "soporte@edifik.co",
+  name: "Habitta",
+  legalName: "Habitta",
+  domain: "habitta.co",
+  appUrl: "https://habitta.co",
+  supportEmail: "soporte@habitta.co",
   year: new Date().getFullYear(),
   description:
     "Plataforma digital para la gestión y administración de propiedades.",
