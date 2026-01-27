@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { ImageType, Media, SimpleCatalog } from "@/src/interfaces";
+import { isValidYouTubeUrl } from "@/utils";
 
 interface ImagesProjectSchemaOptions {
   imagesTypes: ImageType[];
@@ -12,10 +13,13 @@ export const getImagesProjectSchema = ({
     .object({
       media: z.array(z.any()).optional(),
       commonAreas: z.array(z.any()).optional(),
+      videoUrl: z.string().optional(),
     })
     .superRefine((data, ctx) => {
       const media = (data.media ?? []) as Media[];
       const commonAreas = (data.commonAreas ?? []) as SimpleCatalog[];
+      const videoUrl =
+        typeof data.videoUrl === "string" ? data.videoUrl.trim() : "";
       const imagesByCategory: Record<string, Media[]> = {};
       const imageDescriptionsByCategory: Record<string, string[]> = {};
 
@@ -72,4 +76,12 @@ export const getImagesProjectSchema = ({
           }
         });
       });
+
+      if (videoUrl && !isValidYouTubeUrl(videoUrl)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["videoUrl"],
+          message: "Ingrese una URL valida de YouTube.",
+        });
+      }
     });

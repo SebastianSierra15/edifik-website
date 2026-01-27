@@ -5,7 +5,8 @@ import { ProjectFormData, ImageType, Media } from "@/src/interfaces";
 import { useImagesProjectValidation } from "@/src/hooks/projects";
 import { StepNavigationButtons } from "@/src/components/user";
 import { ImageUploadSection } from "./ImageUploadSection";
-import { ModalAlert } from "@/src/components/shared";
+import { ClientFormInput, ModalAlert } from "@/src/components/shared";
+import { getYouTubeEmbedUrl } from "@/utils";
 
 interface ImagesPropertyFormProps {
   formData: ProjectFormData;
@@ -35,11 +36,8 @@ export function ImagesPropertyForm({
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage] = useState("");
 
-  const { errors, validateFields, validateField } = useImagesProjectValidation(
-    formData,
-    imagesTypes,
-    true
-  );
+  const { errors, validateFields, validateField, validateVideoUrl } =
+    useImagesProjectValidation(formData, imagesTypes, true);
 
   const imagesByCategory = useMemo(() => {
     const grouped: Record<string, Media[]> = {};
@@ -190,6 +188,22 @@ export function ImagesPropertyForm({
     [formData.media, imagesByCategory, onChange, validateField]
   );
 
+  const handleVideoUrlChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      const trimmed = value.trim();
+      const nextValue = trimmed ? value : undefined;
+      onChange({ videoUrl: nextValue });
+      validateVideoUrl(nextValue);
+    },
+    [onChange, validateVideoUrl]
+  );
+
+  const videoEmbedUrl = useMemo(
+    () => getYouTubeEmbedUrl(formData.videoUrl),
+    [formData.videoUrl]
+  );
+
   const handleSubmit = useCallback(() => {
     if (validateFields()) {
       const mediaData: Media[] =
@@ -244,6 +258,33 @@ export function ImagesPropertyForm({
           }
         />
       ))}
+
+      <div className="rounded-md border border-client-secondaryLight bg-client-backgroundLight p-4">
+        <ClientFormInput
+          label="Video de YouTube (opcional)"
+          type="text"
+          name="videoUrl"
+          value={formData.videoUrl ?? ""}
+          placeholder="https://www.youtube.com/watch?v=..."
+          onChange={handleVideoUrlChange}
+          error={formData.videoUrl ? errors.videoUrl : undefined}
+          tooltipText="Puedes pegar una URL de YouTube o Shorts."
+          isAccent={true}
+        />
+
+        {videoEmbedUrl && (
+          <div className="mt-4 overflow-hidden rounded-md border border-client-secondaryLight">
+            <iframe
+              src={videoEmbedUrl}
+              title="Video de la propiedad"
+              className="h-64 w-full"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+        )}
+      </div>
 
       {formData.commonAreas && formData.commonAreas.length > 0 && (
         <h3 className="my-6 text-center text-xl font-bold text-client-accent">

@@ -106,6 +106,7 @@ export interface ProjectDetails {
   latitude: number;
   longitude: number;
   availableDate?: Date;
+  videoUrl?: string | null;
 
   propertyType: {
     id: number;

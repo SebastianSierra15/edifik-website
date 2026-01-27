@@ -63,6 +63,7 @@ export class MysqlGetProjectByIdRepo implements GetProjectByIdRepository {
       availableDate: row.availableDate
         ? new Date(row.availableDate)
         : undefined,
+      videoUrl: row.videoUrl ?? null,
 
       propertyType: {
         id: row.propertyTypeId,

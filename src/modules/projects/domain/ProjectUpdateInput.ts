@@ -39,6 +39,7 @@ export interface ProjectUpdateInput {
   latitude: number;
   longitude: number;
   availableDate?: string | Date | null;
+  videoUrl?: string | null;
 
   propertyTypeId: number;
   housingTypeId?: number | null;
