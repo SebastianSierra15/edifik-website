@@ -7,12 +7,12 @@ import { ProjectCreatedNotifier } from "../../infrastructure/mail/ProjectCreated
 export class CreateProject {
   constructor(
     private readonly repo: CreateProjectRepository,
-    private readonly notifier: ProjectCreatedNotifier
+    private readonly notifier: ProjectCreatedNotifier,
   ) {}
 
   async execute(
     input: ProjectCreateInput,
-    policy: CreateProjectPolicy
+    policy: CreateProjectPolicy,
   ): Promise<number> {
     if (
       !input.name ||
@@ -27,11 +27,11 @@ export class CreateProject {
       !input.cityId
     ) {
       throw new BadRequestError(
-        "Faltan datos obligatorios para crear el proyecto"
+        "Faltan datos obligatorios para crear el proyecto",
       );
     }
 
-    const state = policy.isClient ? "2" : "1";
+    const state = "0";
 
     const finalOwnerId = policy.canManageAll
       ? (input.ownerId ?? 1)

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { useDebouncedCallback } from "use-debounce";
 import clsx from "clsx";
 import type { ProjectFormData, SimpleCatalog } from "@/src/interfaces";
 import { useBasicProjectValidation } from "@/src/hooks/projects";
@@ -41,20 +40,10 @@ export function BasicProjectForm({
   onNext,
   hasPermission,
 }: BasicProjectFormProps) {
-  const { errors, validateFields, validateField } = useBasicProjectValidation(
-    formData,
-    isProperty,
-    isEdit
-  );
+  const { errors, validateFields, validateField, validateName } =
+    useBasicProjectValidation(formData, isProperty, isEdit);
   const { checkEmailExists } = useCheckEmail();
   const [ownerEmail, setOwnerEmail] = useState(formData.email || "");
-  const debouncedValidateName = useDebouncedCallback(
-    (value: string) => {
-      void validateField("nameError", value);
-    },
-    300
-  );
-
   const handleEmailChange = (email: string, ownerId: number | undefined) => {
     setOwnerEmail(email);
     onChange({ email, ownerId });
@@ -71,13 +60,13 @@ export function BasicProjectForm({
       if (formData[name as keyof ProjectFormData] !== value) {
         onChange({ [name]: value });
         if (name === "name") {
-          debouncedValidateName(value);
+          validateName(value);
         } else {
           validateField(`${name}Error` as keyof typeof errors, value);
         }
       }
     },
-    [onChange, validateField, formData, debouncedValidateName]
+    [onChange, validateField, validateName, formData]
   );
 
   const handleCheckboxChange = useCallback(

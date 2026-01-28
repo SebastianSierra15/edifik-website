@@ -26,7 +26,7 @@ interface AdminFormSearchAddressProps {
 
 export function AdminFormSearchAddress({
   label,
-  value,
+  value = "",
   onChange,
   onSelect,
   error,
@@ -142,7 +142,7 @@ export function AdminFormSearchAddress({
         id="searchAddress"
         type="text"
         name="address"
-        defaultValue={value}
+        value={value}
         onChange={(e) => {
           handleInputChange(e);
         }}

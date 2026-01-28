@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ProjectFormData } from "@/src/interfaces";
 import { getBasicProjectSchema as getProjectBasicProjectSchema } from "@/src/schemas/admin/proyectos/basic-project.schema";
 import { getBasicProjectSchema as getPropertyBasicProjectSchema } from "@/src/schemas/admin/inmobiliaria/basic-project.schema";
@@ -55,6 +55,8 @@ export function useBasicProjectValidation(
   });
 
   const { checkName } = useCheckName();
+  const nameDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestNameRef = useRef("");
   const schema = useMemo(() => {
     const getSchema = isProperty
       ? getPropertyBasicProjectSchema
@@ -121,6 +123,58 @@ export function useBasicProjectValidation(
     }));
   };
 
+  const validateName = useCallback(
+    (value: string) => {
+      latestNameRef.current = value;
+      if (nameDebounceRef.current) {
+        clearTimeout(nameDebounceRef.current);
+      }
+
+      const errorMessage = getFieldError(
+        "nameError",
+        buildSchemaData({ name: value })
+      );
+
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        nameError: errorMessage,
+      }));
+
+      if (isProperty || !value || errorMessage) {
+        return;
+      }
+
+      nameDebounceRef.current = setTimeout(async () => {
+        const currentValue = latestNameRef.current;
+        if (currentValue !== value) {
+          return;
+        }
+
+        const total = await checkName(
+          "project",
+          value,
+          isEdit ? formData.id : undefined
+        );
+
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          nameError: total
+            ? "El nombre del proyecto ya estÃ¡ en uso, elige otro."
+            : prevErrors.nameError,
+        }));
+      }, 300);
+    },
+    [buildSchemaData, checkName, formData.id, isEdit, isProperty]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (nameDebounceRef.current) {
+        clearTimeout(nameDebounceRef.current);
+      }
+    };
+  }, []);
+
   const validateFields = async () => {
     const result = schema.safeParse(buildSchemaData());
 
@@ -174,5 +228,5 @@ export function useBasicProjectValidation(
     return Object.values(newErrors).every((error) => error === "");
   };
 
-  return { errors, validateFields, validateField };
+  return { errors, validateFields, validateField, validateName };
 }

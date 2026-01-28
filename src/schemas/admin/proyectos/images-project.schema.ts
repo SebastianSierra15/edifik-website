@@ -1,13 +1,15 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 import type { ImageType, Media, SimpleCatalog } from "@/src/interfaces";
 import { isValidYouTubeUrl } from "@/utils";
 
 interface ImagesProjectSchemaOptions {
   imagesTypes: ImageType[];
+  requirePlanDescription?: boolean;
 }
 
 export const getImagesProjectSchema = ({
   imagesTypes,
+  requirePlanDescription = true,
 }: ImagesProjectSchemaOptions) =>
   z
     .object({
@@ -62,20 +64,22 @@ export const getImagesProjectSchema = ({
         }
       });
 
-      Object.entries(imagesByCategory).forEach(([category, files]) => {
-        files.forEach((_, index) => {
-          if (
-            imagesTypes.find((type) => type.name === category)?.id === 1005 &&
-            !imageDescriptionsByCategory[category]?.[index]
-          ) {
-            ctx.addIssue({
-              code: "custom",
-              path: [`${category}-description-${index}`],
-              message: "La descripción es obligatoria.",
-            });
-          }
+      if (requirePlanDescription) {
+        Object.entries(imagesByCategory).forEach(([category, files]) => {
+          files.forEach((_, index) => {
+            if (
+              imagesTypes.find((type) => type.name === category)?.id === 1005 &&
+              !imageDescriptionsByCategory[category]?.[index]
+            ) {
+              ctx.addIssue({
+                code: "custom",
+                path: [`${category}-description-${index}`],
+                message: "La descripciÃ³n es obligatoria.",
+              });
+            }
+          });
         });
-      });
+      }
 
       if (videoUrl && !isValidYouTubeUrl(videoUrl)) {
         ctx.addIssue({
@@ -85,3 +89,4 @@ export const getImagesProjectSchema = ({
         });
       }
     });
+

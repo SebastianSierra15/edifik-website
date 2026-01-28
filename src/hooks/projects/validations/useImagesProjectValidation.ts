@@ -17,7 +17,10 @@ export function useImagesProjectValidation(
     const getSchema = isProperty
       ? getPropertyImagesProjectSchema
       : getProjectImagesProjectSchema;
-    return getSchema({ imagesTypes });
+    return getSchema({
+      imagesTypes,
+      requirePlanDescription: !isProperty,
+    });
   }, [imagesTypes, isProperty]);
 
   (formData.media || []).forEach((media) => {

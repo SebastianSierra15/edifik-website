@@ -12,6 +12,8 @@ interface ImageWithTagProps {
   onRemove: () => void;
   onDescriptionChange: (newDescription: string) => void;
   descriptionError?: string;
+  showDescription?: boolean;
+  className?: string;
 }
 
 export function ImageWithTag({
@@ -22,6 +24,8 @@ export function ImageWithTag({
   onRemove,
   onDescriptionChange,
   descriptionError,
+  showDescription = true,
+  className,
 }: ImageWithTagProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [localDescription, setLocalDescription] = useState(description);
@@ -55,7 +59,9 @@ export function ImageWithTag({
   );
 
   return (
-    <div className="relative w-full rounded-md border border-gray-300 bg-premium-backgroundLight p-3 dark:border-gray-700 dark:bg-premium-backgroundDark space-y-4">
+    <div
+      className={`relative w-full rounded-md border border-gray-300 bg-premium-backgroundLight p-3 dark:border-gray-700 dark:bg-premium-backgroundDark space-y-4 ${className ?? ""}`}
+    >
       {imageUrl && (
         <div
           className="relative h-32 w-full rounded-md bg-cover bg-center"
@@ -72,7 +78,7 @@ export function ImageWithTag({
         </div>
       )}
 
-      {imageTypeId === 1005 && category === "imageType" && (
+      {showDescription && imageTypeId === 1005 && category === "imageType" && (
         <AdminFormTextArea
           label="Descripción"
           name="description"
@@ -88,3 +94,5 @@ export function ImageWithTag({
     </div>
   );
 }
+
+
