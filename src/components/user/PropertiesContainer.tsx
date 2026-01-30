@@ -37,6 +37,7 @@ export function PropertiesContainer({
               bathrooms={project.bathrooms || undefined}
               parkingSpots={project.parkingSpots || undefined}
               url={"/usuario/mis-propiedades"}
+              openInNewTab={false}
               showActions={statusFilter === "pendiente" ? false : true}
               onDelete={onDelete}
             />

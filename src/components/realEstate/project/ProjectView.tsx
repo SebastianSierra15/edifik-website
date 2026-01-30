@@ -1,10 +1,11 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import type { ProjectDetails } from "@/src/interfaces";
 import { useIsLgUp } from "@/src/hooks/ui";
 
+import { getYouTubeEmbedUrl } from "@/utils";
 import { ProjectHeader } from "./ProjectHeader";
 import { ProjectCarousel } from "./ProjectCarousel";
 import { ProjectPlansSkeleton } from "./ProjectPlansSkeleton";
@@ -14,35 +15,35 @@ import { ProjectCommonAreasSkeleton } from "./ProjectCommonAreasSkeleton";
 
 const ProjectPlans = dynamic(
   () => import("./ProjectPlans").then((mod) => mod.ProjectPlans),
-  { loading: () => <ProjectPlansSkeleton /> }
+  { loading: () => <ProjectPlansSkeleton /> },
 );
 
 const ProjectDetails = dynamic(
   () => import("./ProjectDetails").then((mod) => mod.ProjectDetails),
-  { loading: () => <ProjectDetailsSkeleton /> }
+  { loading: () => <ProjectDetailsSkeleton /> },
 );
 
 const ProjectNearbyServices = dynamic(
   () =>
     import("./ProjectNearbyServices").then((mod) => mod.ProjectNearbyServices),
-  { loading: () => <ProjectNearbyServicesSkeleton /> }
+  { loading: () => <ProjectNearbyServicesSkeleton /> },
 );
 
 const ProjectCommonAreas = dynamic(
   () => import("./ProjectCommonAreas").then((mod) => mod.ProjectCommonAreas),
-  { loading: () => <ProjectCommonAreasSkeleton /> }
+  { loading: () => <ProjectCommonAreasSkeleton /> },
 );
 
 const ProjectLocation = dynamic(
   () => import("./ProjectLocation").then((mod) => mod.ProjectLocation),
-  { loading: () => <ProjectCommonAreasSkeleton /> }
+  { loading: () => <ProjectCommonAreasSkeleton /> },
 );
 
 const ContactFormSection = dynamic(
   () => import("./ContactFormSection").then((mod) => mod.ContactFormSection),
   {
     loading: () => <div>Cargando formulario de contacto...</div>,
-  }
+  },
 );
 
 interface ProjectViewProps {
@@ -55,22 +56,26 @@ export function ProjectView({ project }: ProjectViewProps) {
   const isLgUp = useIsLgUp();
   const projectMedia = useMemo(
     () => project.projectMedia ?? [],
-    [project.projectMedia]
+    [project.projectMedia],
   );
   const galleryMedia = useMemo(
     () =>
       projectMedia.filter(
-        (media) => media.imageType !== null && media.imageType !== 1005
+        (media) => media.imageType !== null && media.imageType !== 1005,
       ),
-    [projectMedia]
+    [projectMedia],
   );
   const planMedia = useMemo(
     () => projectMedia.filter((media) => media.imageType === 1005),
-    [projectMedia]
+    [projectMedia],
   );
   const commonAreaMedia = useMemo(
     () => projectMedia.filter((media) => media.commonArea !== null),
-    [projectMedia]
+    [projectMedia],
+  );
+  const videoEmbedUrl = useMemo(
+    () => getYouTubeEmbedUrl(project.videoUrl),
+    [project.videoUrl],
   );
 
   return (
@@ -87,7 +92,7 @@ export function ProjectView({ project }: ProjectViewProps) {
         <div className="px-4 sm:px-6 lg:px-12 lg:col-span-2 lg:pr-10">
           {planMedia.length > 0 && <ProjectPlans projectMedia={planMedia} />}
 
-          <p className="my-8 text-lg text-client-text">
+          <p className="my-8 text-lg text-client-text break-words">
             {project.shortDescription}
           </p>
 
@@ -98,10 +103,30 @@ export function ProjectView({ project }: ProjectViewProps) {
               Descripción General
             </h2>
 
-            <p className="whitespace-pre-line text-client-text">
+            <p className="whitespace-pre-line text-client-text break-words">
               {project.detailedDescription}
             </p>
           </div>
+
+          {videoEmbedUrl && (
+            <div className="my-8 text-base">
+              <h2 className="mb-2 text-2xl font-semibold text-white">
+                {project.projectType?.id === 1
+                  ? "Video del Proyecto"
+                  : "Video de la Propiedad"}
+              </h2>
+              <div className="overflow-hidden rounded-md">
+                <iframe
+                  src={videoEmbedUrl}
+                  title="Video del proyecto"
+                  className="h-64 w-full"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          )}
 
           {project.nearbyServices && project.nearbyServices.length > 0 && (
             <ProjectNearbyServices services={project.nearbyServices} />

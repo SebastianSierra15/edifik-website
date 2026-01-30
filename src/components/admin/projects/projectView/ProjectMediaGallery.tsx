@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import type { ImageType, ProjectMedia, SimpleCatalog } from "@/src/interfaces";
@@ -47,18 +47,22 @@ export function ProjectMediaGallery({
         />
       ))}
 
-      <h2 className="text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight mt-6">
-        Imágenes de Áreas Comunes
-      </h2>
+      {commonAreas.length > 0 && (
+        <>
+          <h2 className="text-center text-2xl font-bold text-premium-primary dark:text-premium-primaryLight mt-6">
+            Imágenes de Áreas Comunes
+          </h2>
 
-      {imagesByCommonArea.map(({ areaName, images }) => (
-        <ImageSection
-          key={areaName}
-          category={areaName}
-          images={images}
-          onImageClick={handleImageClick}
-        />
-      ))}
+          {imagesByCommonArea.map(({ areaName, images }) => (
+            <ImageSection
+              key={areaName}
+              category={areaName}
+              images={images}
+              onImageClick={handleImageClick}
+            />
+          ))}
+        </>
+      )}
 
       <ImageModal
         isOpen={isModalOpen}
