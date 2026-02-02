@@ -64,30 +64,43 @@ export function useBasicProjectValidation(
     return getSchema({ isProperty });
   }, [isProperty]);
 
-  const buildSchemaData = (overrides?: Partial<Record<string, unknown>>) => ({
-    name: overrides?.name ?? formData.name,
-    email: overrides?.email ?? formData.email,
-    shortDescription:
-      overrides?.shortDescription ?? formData.shortDescription ?? "",
-    detailedDescription:
-      overrides?.detailedDescription ?? formData.detailedDescription ?? "",
-    propertyTypeId: overrides?.propertyTypeId ?? formData.propertyType?.id,
-    projectTypeId: overrides?.projectTypeId ?? formData.projectType?.id,
-  });
+  const buildSchemaData = useCallback(
+    (overrides?: Partial<Record<string, unknown>>) => ({
+      name: overrides?.name ?? formData.name,
+      email: overrides?.email ?? formData.email,
+      shortDescription:
+        overrides?.shortDescription ?? formData.shortDescription ?? "",
+      detailedDescription:
+        overrides?.detailedDescription ?? formData.detailedDescription ?? "",
+      propertyTypeId: overrides?.propertyTypeId ?? formData.propertyType?.id,
+      projectTypeId: overrides?.projectTypeId ?? formData.projectType?.id,
+    }),
+    [
+      formData.name,
+      formData.email,
+      formData.shortDescription,
+      formData.detailedDescription,
+      formData.propertyType?.id,
+      formData.projectType?.id,
+    ]
+  );
 
-  const getFieldError = (fieldName: keyof BasicProjectErrors, data: object) => {
-    const result = schema.safeParse(data);
+  const getFieldError = useCallback(
+    (fieldName: keyof BasicProjectErrors, data: object) => {
+      const result = schema.safeParse(data);
 
-    if (result.success) {
-      return "";
-    }
+      if (result.success) {
+        return "";
+      }
 
-    const issue = result.error.issues.find(
-      (item) => item.path[0] === fieldSchemaMap[fieldName]
-    );
+      const issue = result.error.issues.find(
+        (item) => item.path[0] === fieldSchemaMap[fieldName]
+      );
 
-    return issue?.message ?? "";
-  };
+      return issue?.message ?? "";
+    },
+    [schema]
+  );
 
   const validateField = async (
     fieldName: keyof BasicProjectErrors,
@@ -164,7 +177,7 @@ export function useBasicProjectValidation(
         }));
       }, 300);
     },
-    [buildSchemaData, checkName, formData.id, isEdit, isProperty]
+    [buildSchemaData, checkName, formData.id, getFieldError, isEdit, isProperty]
   );
 
   useEffect(() => {
