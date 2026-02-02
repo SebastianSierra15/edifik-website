@@ -17,7 +17,10 @@ export function useImagesProjectValidation(
     const getSchema = isProperty
       ? getPropertyImagesProjectSchema
       : getProjectImagesProjectSchema;
-    return getSchema({ imagesTypes });
+    return getSchema({
+      imagesTypes,
+      requirePlanDescription: !isProperty,
+    });
   }, [imagesTypes, isProperty]);
 
   (formData.media || []).forEach((media) => {
@@ -60,6 +63,7 @@ export function useImagesProjectValidation(
     const result = schema.safeParse({
       media: formData.media ?? [],
       commonAreas: formData.commonAreas ?? [],
+      videoUrl: formData.videoUrl ?? undefined,
     });
 
     if (!result.success) {
@@ -76,5 +80,31 @@ export function useImagesProjectValidation(
     return Object.keys(newErrors).length === 0;
   };
 
-  return { errors, validateFields, validateField };
+  const validateVideoUrl = (value: string | undefined) => {
+    const result = schema.safeParse({
+      media: formData.media ?? [],
+      commonAreas: formData.commonAreas ?? [],
+      videoUrl: value,
+    });
+
+    const videoIssue = result.success
+      ? undefined
+      : result.error.issues.find((issue) => issue.path[0] === "videoUrl");
+
+    setErrors((prevErrors) => {
+      const nextErrors = { ...prevErrors };
+
+      if (value && videoIssue) {
+        nextErrors.videoUrl = videoIssue.message;
+      } else {
+        delete nextErrors.videoUrl;
+      }
+
+      return nextErrors;
+    });
+
+    return !videoIssue;
+  };
+
+  return { errors, validateFields, validateField, validateVideoUrl };
 }

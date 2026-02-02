@@ -1,11 +1,17 @@
-﻿"use client";
+"use client";
 
+import clsx from "clsx";
 import { useState, ChangeEvent, useEffect, useCallback, useMemo } from "react";
 import { ProjectFormData, ImageType, Media } from "@/src/interfaces";
 import { useImagesProjectValidation } from "@/src/hooks/projects";
 import { StepNavigationButtons } from "@/src/components/user";
 import { ImageUploadSection } from "./ImageUploadSection";
-import { ModalAlert } from "@/src/components/shared";
+import {
+  ClientFormErrorMessage,
+  ClientTooltipIcon,
+  ModalAlert,
+} from "@/src/components/shared";
+import { getYouTubeEmbedUrl } from "@/utils";
 
 interface ImagesPropertyFormProps {
   formData: ProjectFormData;
@@ -35,11 +41,8 @@ export function ImagesPropertyForm({
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage] = useState("");
 
-  const { errors, validateFields, validateField } = useImagesProjectValidation(
-    formData,
-    imagesTypes,
-    true
-  );
+  const { errors, validateFields, validateField, validateVideoUrl } =
+    useImagesProjectValidation(formData, imagesTypes, true);
 
   const imagesByCategory = useMemo(() => {
     const grouped: Record<string, Media[]> = {};
@@ -73,7 +76,7 @@ export function ImagesPropertyForm({
 
   useEffect(() => {
     setExpandedSections(
-      imagesTypes.reduce((acc, item) => ({ ...acc, [item.name]: false }), {})
+      imagesTypes.reduce((acc, item) => ({ ...acc, [item.name]: false }), {}),
     );
   }, [imagesTypes]);
 
@@ -93,7 +96,7 @@ export function ImagesPropertyForm({
       category: string,
       categoryId: number,
       isImageType: boolean,
-      event: ChangeEvent<HTMLInputElement>
+      event: ChangeEvent<HTMLInputElement>,
     ) => {
       if (!event.target.files || event.target.files.length === 0) return;
 
@@ -115,53 +118,26 @@ export function ImagesPropertyForm({
 
       onChange({ media: updatedMedia });
     },
-    [onChange, formData.media]
+    [onChange, formData.media],
   );
 
   const handleRemoveImage = useCallback(
     (category: string, index: number) => {
       const imageToRemove = imagesByCategory[category]?.[index];
       if (!imageToRemove) {
-        console.error(
-          `ƒ?O No se encontrÇü la imagen en la categorÇða ${category}`
-        );
+        console.error(`No se encontró la imagen en la categoría ${category}`);
         return;
       }
 
       const updatedMedia = (formData.media || []).filter(
-        (media) => media.file !== imageToRemove.file
+        (media) => media.file !== imageToRemove.file,
       );
 
       onChange({ media: updatedMedia });
     },
-    [onChange, formData.media, imagesByCategory]
+    [onChange, formData.media, imagesByCategory],
   );
 
-  const handleTagChange = useCallback(
-    (category: string, index: number, tag: string) => {
-      if (!formData.media) return;
-
-      const imageToUpdate = imagesByCategory[category]?.[index];
-      if (!imageToUpdate) {
-        console.error(
-          `No se encontró la imagen en ${category} con índice ${index}`
-        );
-        return;
-      }
-
-      const updatedMedia = formData.media.map((mediaItem) =>
-        mediaItem.file === imageToUpdate.file
-          ? { ...mediaItem, tag }
-          : mediaItem
-      );
-      onChange({ media: updatedMedia });
-
-      setTimeout(() => {
-        validateField(`${category}-tag-${index}`, tag);
-      }, 100);
-    },
-    [formData.media, imagesByCategory, onChange, validateField]
-  );
 
   const handleDescriptionChange = useCallback(
     (category: string, index: number, description: string) => {
@@ -170,7 +146,7 @@ export function ImagesPropertyForm({
       const imageToUpdate = imagesByCategory[category]?.[index];
       if (!imageToUpdate) {
         console.error(
-          `No se encontró la imagen en ${category} con índice ${index}`
+          `No se encontró la imagen en ${category} con índice ${index}`,
         );
         return;
       }
@@ -178,7 +154,7 @@ export function ImagesPropertyForm({
       const updatedMedia = formData.media.map((mediaItem) =>
         mediaItem.file === imageToUpdate.file
           ? { ...mediaItem, description }
-          : mediaItem
+          : mediaItem,
       );
 
       onChange({ media: updatedMedia });
@@ -187,25 +163,42 @@ export function ImagesPropertyForm({
         validateField(`${category}-description-${index}`, description);
       }, 100);
     },
-    [formData.media, imagesByCategory, onChange, validateField]
+    [formData.media, imagesByCategory, onChange, validateField],
+  );
+
+  const handleVideoUrlChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      const trimmed = value.trim();
+      const nextValue = trimmed ? value : undefined;
+      onChange({ videoUrl: nextValue });
+      validateVideoUrl(nextValue);
+    },
+    [onChange, validateVideoUrl],
+  );
+
+  const videoEmbedUrl = useMemo(
+    () => getYouTubeEmbedUrl(formData.videoUrl),
+    [formData.videoUrl],
   );
 
   const handleSubmit = useCallback(() => {
-    if (validateFields()) {
-      const mediaData: Media[] =
-        formData.media?.map((mediaItem) => ({
-          tag: mediaItem.tag || "",
-          file: mediaItem.file,
-          description: mediaItem.description || "",
-          idType: mediaItem.idType || 0,
-          type: mediaItem.type,
-          category: mediaItem.category,
-        })) || [];
+    if (!validateFields()) return;
 
-      onSubmit(mediaData, validateFields);
-      onNext();
-    }
-  }, [validateFields, formData.media, onSubmit, onNext]);
+    const baseName = formData.name?.trim() || "Propiedad";
+    const mediaData: Media[] =
+      formData.media?.map((mediaItem, index) => ({
+        tag: mediaItem.tag || `${baseName}-${index + 1}`,
+        file: mediaItem.file,
+        description: mediaItem.description || "",
+        idType: mediaItem.idType || 0,
+        type: mediaItem.type,
+        category: mediaItem.category,
+      })) || [];
+
+    onSubmit(mediaData, validateFields);
+    onNext();
+  }, [validateFields, formData.media, formData.name, onSubmit, onNext]);
 
   return (
     <div className="container mx-auto w-full rounded-lg bg-client-background p-6 shadow-lg space-y-3">
@@ -221,12 +214,9 @@ export function ImagesPropertyForm({
           expanded={expandedSections[type.name]}
           images={
             imagesByCategory[type.name]?.map((media) =>
-              typeof media.file === "string"
-                ? media.file
-                : URL.createObjectURL(media.file)
+              media.file,
             ) || []
           }
-          tags={imagesByCategory[type.name]?.map((img) => img.tag) || []}
           descriptions={
             imagesByCategory[type.name]?.map((img) => img.description || "") ||
             []
@@ -236,14 +226,53 @@ export function ImagesPropertyForm({
           onToggleExpand={() => toggleSection(type.name)}
           onImageChange={(e) => handleImageChange(type.name, type.id, true, e)}
           onRemoveImage={(index) => handleRemoveImage(type.name, index)}
-          onTagChange={(index, newTag) =>
-            handleTagChange(type.name, index, newTag)
-          }
           onDescriptionChange={(index, newDescription) =>
             handleDescriptionChange(type.name, index, newDescription)
           }
         />
       ))}
+
+      <div
+        className={clsx(
+          "rounded-md pb-1 transition bg-client-backgroundLight hover:bg-client-backgroundAlt",
+          formData.videoUrl && errors.videoUrl
+            ? "border border-red-500"
+            : "border-none",
+        )}
+      >
+        <div className="p-4 space-y-4">
+          <label className="mb-2 flex items-center gap-2 text-client-text">
+            Video de YouTube
+            <ClientTooltipIcon tooltipText="Puedes pegar una URL de YouTube o Shorts." />
+          </label>
+
+          <input
+            type="text"
+            name="videoUrl"
+            value={formData.videoUrl ?? ""}
+            placeholder="https://www.youtube.com/watch?v=..."
+            onChange={handleVideoUrlChange}
+            className="w-full rounded-lg bg-transparent px-3 py-2 text-client-text border border-gray-400 focus:outline-none"
+          />
+
+          {formData.videoUrl && errors.videoUrl && (
+            <ClientFormErrorMessage error={errors.videoUrl} />
+          )}
+
+          {videoEmbedUrl && (
+            <div className="mt-2 overflow-hidden rounded-md">
+              <iframe
+                src={videoEmbedUrl}
+                title="Video de la propiedad"
+                className="h-64 w-full"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+          )}
+        </div>
+      </div>
 
       {formData.commonAreas && formData.commonAreas.length > 0 && (
         <h3 className="my-6 text-center text-xl font-bold text-client-accent">
@@ -270,10 +299,9 @@ export function ImagesPropertyForm({
             images={
               imagesByCategory[areaName]?.map((media) => media.file) || []
             }
-            tags={imagesByCategory[areaName]?.map((media) => media.tag) || []}
             descriptions={
               imagesByCategory[areaName]?.map(
-                (media) => media.description || ""
+                (media) => media.description || "",
               ) || []
             }
             error={errors[areaName] || null}
@@ -283,9 +311,6 @@ export function ImagesPropertyForm({
               handleImageChange(areaName, area.id, false, e)
             }
             onRemoveImage={(index) => handleRemoveImage(areaName, index)}
-            onTagChange={(index, newTag) =>
-              handleTagChange(areaName, index, newTag)
-            }
             onDescriptionChange={(index, newDescription) =>
               handleDescriptionChange(areaName, index, newDescription)
             }
@@ -309,3 +334,4 @@ export function ImagesPropertyForm({
     </div>
   );
 }
+

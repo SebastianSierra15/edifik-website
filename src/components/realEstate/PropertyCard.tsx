@@ -24,6 +24,7 @@ interface PropertyCardProps {
   showActions?: boolean;
   onDelete?: (id: number, name: string) => void;
   priorityImage?: boolean;
+  openInNewTab?: boolean;
 }
 
 export function PropertyCard({
@@ -42,6 +43,7 @@ export function PropertyCard({
   showActions = false,
   onDelete,
   priorityImage = true,
+  openInNewTab = true,
 }: PropertyCardProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -57,7 +59,11 @@ export function PropertyCard({
   }, [isHovered, images]);
 
   return (
-    <Link href={`${url}/${id}`} target="_blank" rel="noopener noreferrer">
+    <Link
+      href={`${url}/${id}`}
+      target={openInNewTab ? "_blank" : undefined}
+      rel={openInNewTab ? "noopener noreferrer" : undefined}
+    >
       <div
         className={clsx(
           "relative w-full h-full cursor-pointer overflow-hidden rounded-lg bg-client-primary shadow-sm shadow-white",

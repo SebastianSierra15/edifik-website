@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { ImageType, Media, ProjectFormData } from "@/src/interfaces";
 import { useImagesProjectValidation } from "../validations";
+import { getYouTubeEmbedUrl } from "@/utils";
 
 interface UseImagesProjectFormOptions {
   formData: ProjectFormData;
@@ -34,11 +35,8 @@ export function useImagesProjectForm({
     Record<string, boolean>
   >({});
 
-  const { errors, validateFields, validateField } = useImagesProjectValidation(
-    formData,
-    imagesTypes,
-    isProperty
-  );
+  const { errors, validateFields, validateField, validateVideoUrl } =
+    useImagesProjectValidation(formData, imagesTypes, isProperty);
 
   const imagesByCategory = useMemo(() => {
     const grouped: Record<string, Media[]> = {};
@@ -158,11 +156,27 @@ export function useImagesProjectForm({
     [formData.media, imagesByCategory, onChange, validateField]
   );
 
+  const handleVideoUrlChange = useCallback(
+    (value: string) => {
+      const trimmed = value.trim();
+      const nextValue = trimmed ? value : undefined;
+      onChange({ videoUrl: nextValue });
+      validateVideoUrl(nextValue);
+    },
+    [onChange, validateVideoUrl]
+  );
+
+  const videoEmbedUrl = useMemo(
+    () => getYouTubeEmbedUrl(formData.videoUrl),
+    [formData.videoUrl]
+  );
+
   const handleSubmit = useCallback(() => {
     if (!validateFields()) {
       showModalAlert({
         title: "Advertencia",
-        message: "Revisa las imagenes requeridas antes de continuar.",
+        message:
+          "Revisa las imagenes requeridas y la URL del video antes de continuar.",
       });
       return;
     }
@@ -197,6 +211,8 @@ export function useImagesProjectForm({
     handleImageChange,
     handleRemoveImage,
     handleDescriptionChange,
+    handleVideoUrlChange,
+    videoEmbedUrl,
     handleSubmit,
   };
 }

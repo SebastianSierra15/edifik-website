@@ -1,21 +1,27 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 import type { ImageType, Media, SimpleCatalog } from "@/src/interfaces";
+import { isValidYouTubeUrl } from "@/utils";
 
 interface ImagesProjectSchemaOptions {
   imagesTypes: ImageType[];
+  requirePlanDescription?: boolean;
 }
 
 export const getImagesProjectSchema = ({
   imagesTypes,
+  requirePlanDescription = true,
 }: ImagesProjectSchemaOptions) =>
   z
     .object({
       media: z.array(z.any()).optional(),
       commonAreas: z.array(z.any()).optional(),
+      videoUrl: z.string().optional(),
     })
     .superRefine((data, ctx) => {
       const media = (data.media ?? []) as Media[];
       const commonAreas = (data.commonAreas ?? []) as SimpleCatalog[];
+      const videoUrl =
+        typeof data.videoUrl === "string" ? data.videoUrl.trim() : "";
       const imagesByCategory: Record<string, Media[]> = {};
       const imageDescriptionsByCategory: Record<string, string[]> = {};
 
@@ -58,18 +64,29 @@ export const getImagesProjectSchema = ({
         }
       });
 
-      Object.entries(imagesByCategory).forEach(([category, files]) => {
-        files.forEach((_, index) => {
-          if (
-            imagesTypes.find((type) => type.name === category)?.id === 1005 &&
-            !imageDescriptionsByCategory[category]?.[index]
-          ) {
-            ctx.addIssue({
-              code: "custom",
-              path: [`${category}-description-${index}`],
-              message: "La descripción es obligatoria.",
-            });
-          }
+      if (requirePlanDescription) {
+        Object.entries(imagesByCategory).forEach(([category, files]) => {
+          files.forEach((_, index) => {
+            if (
+              imagesTypes.find((type) => type.name === category)?.id === 1005 &&
+              !imageDescriptionsByCategory[category]?.[index]
+            ) {
+              ctx.addIssue({
+                code: "custom",
+                path: [`${category}-description-${index}`],
+                message: "La descripciÃ³n es obligatoria.",
+              });
+            }
+          });
         });
-      });
+      }
+
+      if (videoUrl && !isValidYouTubeUrl(videoUrl)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["videoUrl"],
+          message: "Ingrese una URL valida de YouTube.",
+        });
+      }
     });
+

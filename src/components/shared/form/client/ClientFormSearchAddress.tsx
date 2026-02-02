@@ -142,7 +142,7 @@ export function ClientFormSearchAddress({
         id="searchAddress"
         type="text"
         name="address"
-        defaultValue={value}
+        value={value}
         onChange={(e) => {
           handleInputChange(e);
         }}

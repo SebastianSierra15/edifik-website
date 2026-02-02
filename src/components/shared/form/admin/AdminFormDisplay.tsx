@@ -23,7 +23,7 @@ export function AdminFormDisplay({
 
       <div
         className={clsx(
-          "w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover",
+          "w-full rounded-md border bg-premium-background px-3 py-2 text-premium-textPrimary dark:bg-premium-backgroundLight dark:text-premium-textPrimary border-premium-borderColor dark:border-premium-borderColorHover break-words overflow-x-hidden",
           rows > 1 ? `h-${rows * 8} overflow-y-auto` : "h-auto"
         )}
         style={{ minHeight: `${rows * 1.5}rem` }}

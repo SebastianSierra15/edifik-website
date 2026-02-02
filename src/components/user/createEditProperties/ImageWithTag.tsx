@@ -31,6 +31,9 @@ interface ImageWithTagProps {
   descriptionError?: string;
 }
 
+/**
+ * @deprecated Use src/components/admin/projects/createEditProject/ImageWithTag.tsx instead.
+ */
 export function ImageWithTag({
   id,
   file,
@@ -86,7 +89,7 @@ export function ImageWithTag({
   );
 
   return (
-    <div className="relative w-full rounded-md border border-gray-700 bg-client-background p-3 space-y-4">
+    <div className="relative w-full rounded-md border border-gray-300 bg-premium-backgroundLight p-3 dark:border-gray-700 dark:bg-premium-backgroundDark space-y-4">
       {imageUrl && (
         <div
           className="relative h-32 w-full rounded-md bg-cover bg-center"
