@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: `Gestiona tus propiedades publicadas, edita información y revisa el estado de cada una desde tu cuenta en ${BRAND.name}.`,
 };
 
+export const dynamic = "force-dynamic";
+
 export default function MyPropertiesPage() {
   return <ClientMyPropertiesPage />;
 }

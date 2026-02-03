@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   description: `Explora las mejores propiedades, proyectos y servicios inmobiliarios en un solo lugar con ${BRAND.name}.`,
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [companyProjects, realEstateProjects] = await Promise.all([
     getHomeProjectsServer(3, false),

@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: `Conoce los proyectos inmobiliarios desarrollados por ${BRAND.name}, pensados para transformar espacios con calidad, diseño y visión de futuro.`,
 };
 
+export const dynamic = "force-dynamic";
+
 export default function ProjectPage() {
   return <ClientProjectsPage />;
 }

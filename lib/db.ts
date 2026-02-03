@@ -19,11 +19,3 @@ export const db = mysql.createPool({
       }
     : {}),
 });
-
-console.log("[db] config", {
-  host: process.env.DB_HOST ?? "",
-  port: Number(process.env.DB_PORT) || 0,
-  user: process.env.DB_USER ? "set" : "missing",
-  database: process.env.DB_NAME ?? "",
-  sslEnabled,
-});

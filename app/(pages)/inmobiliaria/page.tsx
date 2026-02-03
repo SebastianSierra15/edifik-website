@@ -7,6 +7,8 @@ export const metadata: Metadata = {
     "Descubre propiedades en venta, arriendo y sobre planos con filtros, mapas, y toda la información que necesitas.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function RealEstatePage() {
   return <ClientRealEstatePage />;
 }
